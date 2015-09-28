@@ -2,10 +2,21 @@
 # Change working directory to the project root since Lua include paths rely on it
 cd "$(dirname "$0")"
 
+function get_config {
+	lua -e "c = require('config'); print(c.$1)"
+}
+
+function get_ip {
+	# Echo is used to remove trailing whitespace
+	echo $(hostname -I)
+}
+
 if [ "$1" == "logger" ]; then
-	ip=$(hostname -I)
+	# Read IP from system
+	ip=$(get_ip)
+
 	# Extract port from the config file
-	port=$(lua -e 'c = require("config"); print(c.logging.listener[2])')
+	port=$(get_config 'logging.listener[2]');
 
 	echo "Listening for messages on $ip:$port"
 	netcat -ul "$port"
@@ -24,7 +35,32 @@ elif [ "$1" == "doc" ]; then
 	sensible-browser doc/index.html
 elif [ "$1" == "install" ]; then
 	echo "Installing necessary packages"
-	sudo apt-get install lua5.1 lua-ldoc lua-discount love
+	sudo apt-get install lua5.1 lua-ldoc lua-discount love expect python-tftpy
+elif [ "$1" == "export" ]; then
+	# Read IP from system
+	ip=$(get_ip)
+
+	# Read box IP from config
+	box_ip=$(get_config 'box_ip')
+
+	echo "Packing local files"
+	tar -cf build.tar start.lua config.lua lib/
+
+	echo "Starting TFTP server on $ip:9000"
+	python -c 'import tftpy; s = tftpy.TftpServer("."); s.listen("0.0.0.0", 9000)' &
+	tftp_pid="$!"
+
+	echo "Connecting through telnet to set-top box at $box_ip"
+	echo
+	./backpack_upload_file $box_ip $ip build.tar
+	echo
+	echo
+
+	echo "Killing TFTP server"
+	kill $tftp_pid
+
+	echo "Removing local file package"
+	rm build.tar
 elif [ "$1" == "run" -o "$1" == "" ]; then
 	echo "Starting emulator"
 	love .

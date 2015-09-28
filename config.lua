@@ -1,10 +1,13 @@
 return {
 	-- True when running inside an emulator
 	is_emulator = love ~= nil,
+	-- IP of set-top box (used by debugging functions in backpack script)
+	box_ip = "192.168.1.102",
+	-- Logging specific config options
 	logging = {
 		-- Logging level:
 		--   May be either TRACE, DEBUG, WARN or ERROR
-		level = "TRACE",
+		level = "WARN",
 		-- Logging mode:
 		--   CONSOLE means log messages will be printed to STDOUT
 		--   UDP means log messages will be sent over UDO to listener defined below

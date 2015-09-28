@@ -34,6 +34,20 @@ This program depends on a number of external libraries:
    Used for data serialization in logging.
 
 
+Hardware
+========
+The set-top box provided by Zenterio
+
+- **CPU:** Broadcom BMIPS5000 V1.1 @ 1305 MHz (Dual core)
+- **RAM:** About 670 MiB (reported as 705540 kB)
+- **HDD:** Unknown
+
+Lua Environment
+---------------
+- **Lua version:** 5.2
+- **Graphics memory limit:** 10 MiB (one full 720p surface is about 3.5 MiB)
+- **Video output:** 1280x720p
+
 License
 =======
 

@@ -1,9 +1,16 @@
+local logger = require("lib.logger")
+
 --- This function runs every time a key is pressed
 -- The current mapping for the emulator can be found in emulator/zto.lua
 -- @param key Key that was pressed
 -- @param state Either up or repeat
 function onKey(key, state)
-	Logger.trace("OnKey(" .. key .. ", " .. state .. ")")
+	logger.trace("OnKey(" .. key .. ", " .. state .. ")")
+
+	-- Terminate program when exit key is pressed
+	if key == "exit" and state == "up" then
+		sys.stop()
+	end
 end
 
 -- This function is called at the start of the program

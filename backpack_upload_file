@@ -1,0 +1,20 @@
+#!/usr/bin/expect
+set timeout 20
+
+set host [lindex $argv 0]
+set remote [lindex $argv 1]
+set file [lindex $argv 2]
+
+spawn telnet $host
+
+expect "/ #"
+send "cd /mnt/*\n"
+
+expect " # "
+send "tftp -g -r $file $remote 9000\n"
+
+expect " # "
+send "tar -xf build.tar\n"
+
+expect " # "
+send "exit\n"
