@@ -1,6 +1,3 @@
-local Serpent = require("lib.serpent")
-local Logger = require("lib.logger")
-
 --- This function runs every time a key is pressed
 -- The current mapping for the emulator can be found in emulator/zto.lua
 -- @param key Key that was pressed

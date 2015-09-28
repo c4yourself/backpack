@@ -28,15 +28,15 @@ if has_socket then
 		Logger.__init(self, level, log_memory)
 
 		self.udp = socket.udp()
-		self.udp.settimeout(0)
-		self.udp.setpeername(ip_address, port)
+		self.udp:settimeout(0)
+		self.udp:setpeername(ip_address, port)
 	end
 
 	--- @local
 	function UDPLogger:_write(message, obj)
-		self.udp:send(message)
+		self.udp:send(message .. "\n")
 		if obj ~= nil then
-			self.udp:send("               " .. serpent.line(obj))
+			self.udp:send("               " .. serpent.line(obj) .. "\n")
 		end
 	end
 end
