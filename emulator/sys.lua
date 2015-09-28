@@ -14,14 +14,18 @@ local sys = {}
 -- @return @{emulator.timer|timer} instance
 -- @see emulator.timer
 function sys.new_timer(interval_millisec, callback)
-	logger.trace("New timer created. Calling: " .. callback .. " every " .. interval_millisec)
+	logger.trace(string.format(
+		"New timer created, calling every %d ms",
+		interval_millisec))
+
 	new_timer = timer(interval_millisec, callback)
 	new_timer:start()
 	table.insert(sys.timers, new_timer)
+
 	return new_timer
 end
 
---- Get time
+--- Get time since program start.
 -- Useful to measure lengths of time.
 -- @return Time since system start in seconds with decimal precision.
 function sys.time()
@@ -29,7 +33,7 @@ function sys.time()
 end
 
 
----Stop
+--- Terminate execution.
 --
 -- Terminates the execution of the script. The rest of the currently executing
 -- code will be run, but all timers are stopped and the current script
@@ -39,17 +43,18 @@ function sys.stop()
 	love.event.quit()
 end
 
---- Get Root Path
+--- Get root path.
 --
--- If a script was started with "sendcmd LuaEngine run", this variable  contains
+-- If a script was started with _sendcmd LuaEngine run_, this variable  contains
 -- the path of that script, to allow finding files related to the script.
 --
--- @return Path where start.lua is
+-- @return Path to directory where start.lua is
 function sys.root_path()
 	return love.filesystem.getUserDirectory()
 end
 
---- Create new player
+--- Create new player.
+--
 -- Create a new media @{emulator.player|player} instance.
 --
 -- @return Player instance
@@ -59,15 +64,19 @@ function sys.new_player()
 	return player
 end
 
---- New freetype
+--- New freetype.
 --
--- Create new @{emulator.freetype|freetype} instance, which draw a text on the
--- surface. Font -- parameters: color, size, and path to .ttf file are a input
--- arguments. Argument <drawingStartPoint> is a left upper corner a start point
--- to a drawing text.
+-- Create new @{emulator.freetype|freetype} instance. This is the only was to
+-- construct a freetype instance on the set-top box.
 --
+-- @param fontColor Color of text
+-- @param fontSize Size of text
+-- @param drawingStartPoint Upper left corner of first character to be drawn
+-- @param fontPath Path to font. Use absolute path, for compatibility with
+--                 set-top box.
 -- @return Freetype instance
 -- @see emulator.freetype
+-- @see utils.absolute_path
 function sys.new_freetype(fontColor, fontSize, drawingStartPoint, fontPath)
 	local freetype = freetype(fontColor, fontSize, drawingStartPoint, fontPath)
 	return freetype

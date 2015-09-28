@@ -68,7 +68,7 @@ function Logger:print(level, message, obj)
 			os.date("%H:%M:%S"),
 			level,
 			calling_function,
-			message,
+			message or "", -- Prevent error if message is nil
 			memory_message)
 
 		self:_write(output_text, obj)

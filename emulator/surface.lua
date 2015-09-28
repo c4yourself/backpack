@@ -68,7 +68,6 @@ function surface:clear(color, rectangle)
 	end
 end
 
-
 --- Blends the surface with a solid color, weighing alpha values (SRCOVER).
 --
 -- Uses hardware acceleration on set-top box.
@@ -84,9 +83,7 @@ function surface:fill(color, rectangle)
 	self:clear(color, rectangle)
 end
 
-
-
---- Copy pixels from one surface to another
+--- Copy pixels from one surface to another.
 --
 -- Uses hardware acceleration on set-top box.
 --
@@ -157,20 +154,19 @@ function surface:copyfrom(src_surface, src_rectangle, dest_rectangle, blend_opti
 end
 
 
-
---- Get surface width
+--- Get surface width.
 -- @return Width of surface in pixels
 function surface:get_width()
 	return self.image_data:getWidth()
 end
 
---- Get surface height
+--- Get surface height.
 -- @return Height of surface in pixels
 function surface:get_height()
 	return self.image_data:getHeight()
 end
 
---- Get color of pixel
+--- Get color of pixel.
 --
 -- Useful for testing. Not optimized for speed
 --
@@ -182,7 +178,7 @@ function surface:get_pixel(x, y)
 	return r, g, b, a
 end
 
---- Set color of pixel
+--- Set color of pixel.
 --
 -- Useful for testing. Not optimized for speed
 --
@@ -193,7 +189,8 @@ function surface:set_pixel(x, y, color)
 	self.image_data:setPixel(x, y, color.r, color.g, color.b, color.a)
 end
 
---- Premultiply surface
+--- Premultiply surface.
+--
 -- Changes the surface pixel components by multiplying the alpha channel into
 -- the color channels. This prepares some images for blending with transparency.
 --
@@ -202,7 +199,8 @@ function surface:premultiply()
 	-- TODO: Implement this
 end
 
---- Free this surface from memory
+--- Free this surface from memory.
+--
 -- Frees the graphics memory used by this surface. The same is eventually done
 -- automatically by Lua garbage collection for unreferenced surfaces but doing
 -- it by hand guarantees the memory is returned at once.
@@ -212,7 +210,7 @@ function surface:destroy()
 	self.image_data = nil
 end
 
---- Set alpha channel for entire surface
+--- Set alpha channel for entire surface.
 -- @param alpha Alpha value between 0-255 (0 is transparent, 255 is opaque)
 function surface:set_alpha(alpha)
 	for i = 0, self.image_data:getWidth()-1 do
@@ -225,7 +223,7 @@ end
 
 -- Functions below this point are not part of Zenterio's API
 
---- Constructor for new surfaces
+--- Constructor for new surfaces.
 -- Not part of Zenterio's Lua API!
 --
 -- @param width Width of surface in pixels
@@ -242,7 +240,7 @@ function surface:__init(width, height)
 	end
 end
 
---- Load image from given path
+--- Load image from given path.
 -- Not part of Zenterio's Lua API!
 -- @param path Path to the image
 -- @local
@@ -261,7 +259,7 @@ function surface:loadImage(path)
 
 end
 
---- Emulator function to write text on surface
+--- Emulator function to write text on surface.
 --
 -- Not part of Zenterio's Lua API!
 --
@@ -299,7 +297,7 @@ function surface:draw()
 	end
 end
 
---- Get Löve image data from this surface
+--- Get Löve image data from this surface.
 -- Not part of Zenterio's Lua API!
 -- @return Löve image data of this surface
 -- @local
@@ -307,6 +305,4 @@ function surface:get()
 	return self.image_data
 end
 
-
 return surface
-

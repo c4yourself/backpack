@@ -45,3 +45,5 @@ end
 function timer:start()
 	self.running = true
 end
+
+return timer

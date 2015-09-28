@@ -3,11 +3,10 @@ return {
 	is_emulator = love ~= nil,
 	-- IP of set-top box (used by debugging functions in backpack script)
 	box_ip = "192.168.1.102",
-	-- Logging specific config options
 	logging = {
 		-- Logging level:
 		--   May be either TRACE, DEBUG, WARN or ERROR
-		level = "WARN",
+		level = "TRACE",
 		-- Logging mode:
 		--   CONSOLE means log messages will be printed to STDOUT
 		--   UDP means log messages will be sent over UDO to listener defined below
@@ -16,7 +15,7 @@ return {
 		-- Listener:
 		--   Target for all log messages when mode is UDP
 		--   {"ipaddressoftarget", port}
-		listener = {"127.0.0.1", 12024},
+		listener = {"192.168.1.2", 12024},
 		-- Log memory:
 		--   When true all log messages will include current memory usage
 		log_memory = false

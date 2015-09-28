@@ -6,12 +6,9 @@ local class = require("lib.classy")
 
 local player = class("player")
 
---- Play URL
+--- Play video from URL.
 --
--- Start playback a video context from <url>. URL should meet the requirements
--- of the specification.
---
--- The specification is unknown.
+-- Start playback of a video from URL. Format of URL is not specified.
 --
 -- @param url URL for media
 function player:play_url(url)
@@ -19,26 +16,26 @@ function player:play_url(url)
 	self.state = 4
 end
 
---- Stop playback
+--- Stop playback.
 -- Stop playback a video (player switches to 0 state)
 function player:stop()
 	self.state = 0
 end
 
---- Bind callback for when media reaches end of stream
+--- Bind callback for when media reaches end of stream.
 -- @param callback Callback to run at end of stream
 function player:set_on_eos_pseudocallback(callback)
 	self.cb = callback
 end
 
---- Get state
+--- Get state.
 -- State of player; 0 means stopped, 4 means playing
 -- @return state Current state of media playback
 function player:get_state()
 	return self.state
 end
 
---- Set aspect ratio
+--- Set aspect ratio.
 --
 -- Set aspect ratio for video context. Details on this functions are unknown.
 --
@@ -47,7 +44,7 @@ function player:set_aspect_ratio(aspect_ratio)
 	self.aspect_ratio = aspect_ratio
 end
 
---- Set player window position and size
+--- Set player window position and size.
 --
 -- If refW and refH are set to 100. All other parameters are interpreted in
 -- percent instead of pixels.
