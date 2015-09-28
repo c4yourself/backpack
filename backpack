@@ -1,0 +1,28 @@
+#!/bin/bash
+# Change working directory to the project root since Lua include paths rely on it
+cd "$(dirname "$0")"
+
+if [ "$1" == "logger" ]; then
+	ip=$(hostname -I)
+	# Extract port from the config file
+	port=$(lua -e 'c = require("config"); print(c.logging.listener[2])')
+
+	echo "Listening for messages on $ip:$port"
+	netcat -ul "$port"
+elif [ "$1" == "test" ]; then
+	echo "Running unit tests"
+
+	# Tests must be run within the context of the test folder
+	cd tests
+	lua tests.lua -v
+elif [ "$1" == "doc" ]; then
+	echo "Removing old documentation"
+	rm -rf doc
+
+	echo "Running LDoc"
+	ldoc .
+	sensible-browser doc/index.html
+elif [ "$1" == "run" -o "$1" == "" ]; then
+	echo "Starting emulator"
+	love .
+fi
