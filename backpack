@@ -22,6 +22,9 @@ elif [ "$1" == "doc" ]; then
 	echo "Running LDoc"
 	ldoc .
 	sensible-browser doc/index.html
+elif [ "$1" == "install" ]; then
+	echo "Installing necessary packages"
+	sudo apt-get install lua5.1 lua-ldoc lua-discount love
 elif [ "$1" == "run" -o "$1" == "" ]; then
 	echo "Starting emulator"
 	love .
