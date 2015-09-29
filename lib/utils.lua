@@ -5,7 +5,7 @@ local utils = {}
 
 --- Split string into a table of parts
 -- @param str String to split into parts
--- @param delimiter String to split at, defaults to ""
+-- @param[opt=""] delimiter String to split at
 -- @return Table of parts that were separated by delimiter
 function utils.split(str, delimiter)
 	local output = {}

@@ -1,4 +1,4 @@
---- System module
+--- System module.
 -- Part of Zenterio Lua API.
 -- @module emulator.sys
 -- @alias sys
@@ -13,6 +13,7 @@ local sys = {}
 -- @param callback Callback function or string name of global function
 -- @return @{emulator.timer|timer} instance
 -- @see emulator.timer
+-- @zenterio
 function sys.new_timer(interval_millisec, callback)
 	logger.trace(string.format(
 		"New timer created, calling every %d ms",
@@ -28,6 +29,7 @@ end
 --- Get time since program start.
 -- Useful to measure lengths of time.
 -- @return Time since system start in seconds with decimal precision.
+-- @zenterio
 function sys.time()
 	return love.timer.getTime()
 end
@@ -38,6 +40,7 @@ end
 -- Terminates the execution of the script. The rest of the currently executing
 -- code will be run, but all timers are stopped and the current script
 -- environment will never be called again.
+-- @zenterio
 function sys.stop()
 	-- TODO: This is probably not a correct implementation
 	love.event.quit()
@@ -49,6 +52,7 @@ end
 -- the path of that script, to allow finding files related to the script.
 --
 -- @return Path to directory where start.lua is
+-- @zenterio
 function sys.root_path()
 	return love.filesystem.getUserDirectory()
 end
@@ -59,6 +63,7 @@ end
 --
 -- @return Player instance
 -- @see emulator.player
+-- @zenterio
 function sys.new_player()
 	local player = player()
 	return player
@@ -77,6 +82,7 @@ end
 -- @return Freetype instance
 -- @see emulator.freetype
 -- @see utils.absolute_path
+-- @zenterio
 function sys.new_freetype(fontColor, fontSize, drawingStartPoint, fontPath)
 	local freetype = freetype(fontColor, fontSize, drawingStartPoint, fontPath)
 	return freetype

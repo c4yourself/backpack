@@ -1,4 +1,7 @@
---- Media player implementation
+--- Media player implementation.
+--
+-- Part of Zenterio Lua API.
+--
 -- @classmod emulator.player
 -- @alias player
 
@@ -11,6 +14,7 @@ local player = class("player")
 -- Start playback of a video from URL. Format of URL is not specified.
 --
 -- @param url URL for media
+-- @zenterio
 function player:play_url(url)
 	self.url = url
 	self.state = 4
@@ -18,12 +22,14 @@ end
 
 --- Stop playback.
 -- Stop playback a video (player switches to 0 state)
+-- @zenterio
 function player:stop()
 	self.state = 0
 end
 
 --- Bind callback for when media reaches end of stream.
 -- @param callback Callback to run at end of stream
+-- @zenterio
 function player:set_on_eos_pseudocallback(callback)
 	self.cb = callback
 end
@@ -31,6 +37,7 @@ end
 --- Get state.
 -- State of player; 0 means stopped, 4 means playing
 -- @return state Current state of media playback
+-- @zenterio
 function player:get_state()
 	return self.state
 end
@@ -40,6 +47,7 @@ end
 -- Set aspect ratio for video context. Details on this functions are unknown.
 --
 -- @param aspect_ratio Numeric representation of aspect ratio
+-- @zenterio
 function player:set_aspect_ratio(aspect_ratio)
 	self.aspect_ratio = aspect_ratio
 end
@@ -55,6 +63,7 @@ end
 -- @param height Height in pixels of window
 -- @param refW Reference width of screen
 -- @param refH Reference height of screen
+-- @zenterio
 function player:set_player_window(x, y, width, height, refW, refH)
 	self.x = x or 0
 	self.y = y or 0

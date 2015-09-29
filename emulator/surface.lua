@@ -20,6 +20,7 @@ local surface = class("surface")
 --              completely transparent.
 -- @param rectangle Area to fill with color. Defaults to whole surface. Parts
 --                  outside the rectangle are not affected.
+-- @zenterio
 function surface:clear(color, rectangle)
 	--Defaults to transparent black
 	local c = {
@@ -78,6 +79,7 @@ end
 -- @param rectangle Area to blend with color. Defaults to whole surface. Parts
 --                  outside the rectangle are not affected.
 -- @see emulator.surface:clear
+-- @zenterio
 function surface:fill(color, rectangle)
 	--Not currently implemented - same as surface:clear
 	self:clear(color, rectangle)
@@ -97,6 +99,7 @@ end
 --                       Defaults src_rectangle's width and height at position
 --                       {x = 0, y = 0}.
 -- @param blend_option true if alpha blending should occur, otherwise false.
+-- @zenterio
 function surface:copyfrom(src_surface, src_rectangle, dest_rectangle, blend_option)
 
 	--Defaults to entire surface
@@ -156,12 +159,14 @@ end
 
 --- Get surface width.
 -- @return Width of surface in pixels
+-- @zenterio
 function surface:get_width()
 	return self.image_data:getWidth()
 end
 
 --- Get surface height.
 -- @return Height of surface in pixels
+-- @zenterio
 function surface:get_height()
 	return self.image_data:getHeight()
 end
@@ -173,6 +178,7 @@ end
 -- @param x X position (starting at 0)
 -- @param y Y position (starting at 0)
 -- @return red, green, blue, alpha
+-- @zenterio
 function surface:get_pixel(x, y)
 	r, g, b, a = self.image_data:getPixel( x, y )
 	return r, g, b, a
@@ -185,6 +191,7 @@ end
 -- @param x X position (starting at 0)
 -- @param y Y position (starting at 0)
 -- @param color Color of pixel
+-- @zenterio
 function surface:set_pixel(x, y, color)
 	self.image_data:setPixel(x, y, color.r, color.g, color.b, color.a)
 end
@@ -195,6 +202,7 @@ end
 -- the color channels. This prepares some images for blending with transparency.
 --
 -- Currently not implemented in emulator!
+-- @zenterio
 function surface:premultiply()
 	-- TODO: Implement this
 end
@@ -206,6 +214,7 @@ end
 -- it by hand guarantees the memory is returned at once.
 --
 -- The surface can not be used again after this operation.
+-- @zenterio
 function surface:destroy()
 	self.image_data = nil
 end

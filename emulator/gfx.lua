@@ -1,5 +1,7 @@
---- Graphics module
+--- Graphics module.
+--
 -- Part of Zenterio Lua API.
+--
 -- @module emulator.gfx
 -- @alias gfx
 
@@ -20,6 +22,7 @@ local gfx = class("gfx")
 --
 -- @raise Error if enough graphics memory cannot be allocated.
 -- @return New instance of surface
+-- @zenterio
 function gfx.new_surface(width, height)
 	--local image_data = surface()
 	--image_data:change_size(width, height)
@@ -39,6 +42,7 @@ end
 -- @raise Error if enough graphics memory cannot be allocated.
 -- @return Surface with image contents
 -- @see emulator.gfx.loadjpeg
+-- @zenterio
 function gfx.loadpng(path)
 	local image_data = surface()
 	image_data:loadImage(path)
@@ -56,13 +60,14 @@ end
 -- @raise Error if enough graphics memory cannot be allocated.
 -- @return Surface with image contents
 -- @see emulator.gfx.loadpng
+-- @zenterio
 function gfx.loadjpeg(path)
 	local image_data = surface()
 	image_data:loadImage(path)
 	return image_data
 end
 
---- Get memory usage in bytes
+--- Get memory usage in bytes.
 --
 -- Returns the number of bytes of graphics memory the application currently uses.
 -- Each allocated pixel uses 4 bytes since all surfaces are 32-bit. A limit of
@@ -70,27 +75,30 @@ end
 --
 -- @return Number of bytes of memory used
 -- @see emulator.gfx.get_memory_limit
+-- @zenterio
 function gfx.get_memory_use()
 	--Not currently implemented
 end
 
 
---- Get memory limit in bytes
+--- Get memory limit in bytes.
 -- @return Maximum memory usage in bytes
 -- @see emulator.gfx.get_memory_use
+-- @zenterio
 function gfx.get_memory_limit()
 	--Not currently implemented
 end
 
 
---- Redraw screen
+--- Redraw screen.
 -- Makes any pending changes to gfx.screen visible.
 -- @see emulator.gfx.set_auto_update
+-- @zenterio
 function gfx.update()
 	screen:draw()
 end
 
---- Set auto update
+--- Set auto update.
 --
 -- If set to true, any change to gfx.screen immediately triggers gfx.update()
 -- to make the change visible. This slows the system if the screen is updated
@@ -100,6 +108,7 @@ end
 --
 -- @param bool True when auto update is desired, otherwise false
 -- @see emulator.gfx.update
+-- @zenterio
 function gfx.set_auto_update(bool)
 	--Not currently implemented
 end
@@ -112,6 +121,8 @@ end
 -- is changed (for development; too slow for animations)
 --
 -- The main screen defaults to 1280x720 in emulator.
+--
+-- @zenterio
 screen = gfx.new_surface(1280, 720)
 
 
