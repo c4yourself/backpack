@@ -25,7 +25,7 @@ elif [ "$1" == "test" ]; then
 
 	# Tests must be run within the context of the test folder
 	cd tests
-	lua tests.lua -v
+	lua tests.lua
 elif [ "$1" == "doc" ]; then
 	echo "Removing old documentation"
 	rm -rf doc
