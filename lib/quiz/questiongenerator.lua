@@ -30,26 +30,14 @@ questiongenerator.token_table = {
 function questiongenerator.generate(difficulty)
 	local operators, operands = questiongenerator._fetch_ops(difficulty)
 	local question, answer  = questiongenerator._build_expression(operators, operands)
-	--local number_of_operands = questiongenerator.diff_operand_map[difficulty]
---	local tokens = questiongenerator.token_table[level]
---	local question = ""
 
---	math.randomseed(os.time())
---	question = "" .. math.random(10)
---	for i=1, number_of_operands-1 do
---		question = question .. tokens[math.random(#tokens)]
---		question = question .. math.random(10)
---	end
-	print("Question" .. question)
-	print("Answer" .. answer)
 	return question, answer
 end
 
---- Generates a random
+--- Generates a set of random operators and a set of random operands
 -- @return a table with operands and a table with operators given a difficulty
 -- level
-function questiongenerator._fetch_ops(difficulty)
-	-- Generate random operands and operators
+function questiongenerator._generate_ops(difficulty)
 	local number_of_operands = questiongenerator.diff_operand_map[difficulty]
 	local tokens = questiongenerator.token_table[difficulty]
 	local operands = {}
@@ -66,7 +54,8 @@ end
 
 ---Builds a mathematical expression given operators and operands
 -- Note: #operands needs to be #operators + 1
--- @return String representing a mathematical expression
+-- @return String representing a mathematical expression and the correct answer
+-- as a Number
 function questiongenerator._build_expression(operators, operands)
 	local question = ""
 
