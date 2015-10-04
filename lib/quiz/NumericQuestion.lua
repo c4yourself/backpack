@@ -3,7 +3,7 @@
 
 local class = require("lib.classy")
 
-local NumericQuestion = class("NumericQuestion")
+local NumericQuestion = class("NumericQuestion", Question)
 
 --- Constructor for NumericQuestion
 -- @param image_path path to the image as a string
@@ -12,6 +12,7 @@ local NumericQuestion = class("NumericQuestion")
 function NumericQuestion:__init(image_path, question, correct_answer)
 	self.correct_answer = correct_answer
 	self.question = question
+	self.image = image_path
 end
 
 -- Evaluates if a mathematical expression is correct
