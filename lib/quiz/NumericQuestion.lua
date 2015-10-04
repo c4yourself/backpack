@@ -2,6 +2,7 @@
 -- @classmod NumericQuestion
 
 local class = require("lib.classy")
+local Question = require("lib.quiz.Question")
 
 local NumericQuestion = class("NumericQuestion", Question)
 
@@ -10,9 +11,8 @@ local NumericQuestion = class("NumericQuestion", Question)
 -- @param question string representing a mathematical expression
 -- @param correct_answer number representing the correct answer
 function NumericQuestion:__init(image_path, question, correct_answer)
+	Question.__init(self, image_path, question, correct_answer)
 	self.correct_answer = correct_answer
-	self.question = question
-	self.image = image_path
 end
 
 -- Evaluates if a mathematical expression is correct
