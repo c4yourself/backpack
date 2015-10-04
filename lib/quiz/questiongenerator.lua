@@ -32,10 +32,11 @@ function questiongenerator.generate(level)
 	math.randomseed(os.time())
 	question = "" .. math.random(10)
 	for i=1, number_of_operands-1 do
-		question = question .. "+"
+		question = question .. tokens[math.random(#tokens)]
 		question = question .. math.random(10)
 	end
-	return question
+	answer = load("return " .. question)()
+	return question, answer
 end
 
 return questiongenerator
