@@ -19,7 +19,8 @@ function Quiz:__init()
 end
 
 --- Returns the next question in the quiz
--- @return String representing the next question
+-- @return String representing the next question or nil when there's no
+-- questions left
 function Quiz:get_question()
 	self.current_question = self.current_question + 1
 	return self.questions[self.current_question].question
@@ -28,12 +29,16 @@ end
 --- Checks if the users answer to the current question is correct
 -- @return Boolean to show if the answer was correct or not
 function Quiz:answer(answer)
+	if self.questions[self.current_question]:is_correct(answer) == true then
+		self.correct_answers = self.correct_answers + 1
+	else
+		self.wrong_answers = self.wrong_answers + 1
+	end
 	return self.questions[self.current_question]:is_correct(answer)
 end
 
 -- Generates a numerical quiz of a given size and difficulty
 function Quiz:generate_numerical_quiz(level, quiz_size, image_path)
-	--TODO image_path needs to be properly implemented
 	for i=1, quiz_size do
 		local question = questiongenerator.generate(level, image_path)
 		self.questions[i] = question
