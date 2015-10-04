@@ -23,13 +23,17 @@ end
 -- @return String representing the next question
 function Quiz:get_question()
 	self.current_question = self.current_question + 1
-	return self.questions[self.current_question]
+	return self.questions[self.current_question].question
 end
 
 --- Checks if the users answer to the current question is correct
 -- @return Boolean to show if the answer was correct or not
 function Quiz:answer(answer)
-	return self.questions[current_question]:is_correct(answer)
+	print("CQ " .. self.current_question)
+	print("Type")
+	print(type(self.questions[self.current_question]))
+	print(self.questions[self.current_question].correct_answer)
+	return self.questions[self.current_question]:is_correct(answer)
 end
 
 -- Generates a numerical quiz
