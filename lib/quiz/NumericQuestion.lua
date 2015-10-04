@@ -17,7 +17,7 @@ end
 -- Evaluates if a mathematical expression is correct
 -- @param user_answer Number representing the user answer
 -- @return Boolean value
-function NumericQuestion:_is_correct (user_answer)
+function NumericQuestion:is_correct (user_answer)
 	return user_answer == self.correct_answer
 end
 
