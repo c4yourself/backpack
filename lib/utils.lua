@@ -3,42 +3,6 @@
 
 local utils = {}
 
---- Split string into a table of parts
--- @param str String to split into parts
--- @param[opt=""] delimiter String to split at
--- @return Table of parts that were separated by delimiter
-function utils.split(str, delimiter)
-	local output = {}
-
-	if delimiter == nil then
-		delimiter = ""
-	end
-
-	local i = 1
-	local current = ""
-	while i <= #str do
-		if delimiter == "" then
-			table.insert(output, str:sub(i, i))
-			current = ""
-			i = i + 1
-		elseif str:sub(i, i + #delimiter - 1) == delimiter then
-			table.insert(output, current)
-			current = ""
-
-			i = i + #delimiter
-		else
-			current = current .. str:sub(i, i)
-			i = i + 1
-		end
-	end
-
-	if delimiter ~= "" then
-		table.insert(output, current)
-	end
-
-	return output
-end
-
 --- Convert a path to an absolute path relative to the program root
 -- The returned path is canonical. Useful since working directory behaves
 -- differently on emulator compared to set-top box.
@@ -83,6 +47,83 @@ function utils.canonicalize_path(path)
 	end
 
 	return table.concat(output, "/")
+end
+
+--- Wrap function with partial application of the given arguments and keywords.
+-- This is an implementation of function currying. This function is mostly used
+-- when binding class instance methods to Event class instances.
+--
+-- @param func Function to wrap
+-- @param[opt] ...  Default arguments that will be passed to the wrapped function
+-- @return A wrapper function that applies the given function function arguments
+--
+-- @usage
+-- local class_instance = SampleClass()
+-- local method = utils.partial(class_instance.method, class_instance)(1, 2, 3)
+--
+-- -- The following are the same
+-- class_instance:method(1, 2, 3) == method(1, 2, 3)
+function utils.partial(func, ...)
+	-- Default arguments
+	local curry = {...}
+
+	function wrapper(...)
+		-- Arguments from this function call
+		local args = {...}
+
+		-- Final arguments list
+		local call_args = {}
+
+		-- Apply default arguments
+		for i = 1, #curry do
+			table.insert(call_args, curry[i])
+		end
+
+		-- Apply the arguments from this call
+		for i = 1, #args do
+			table.insert(call_args, args[i])
+		end
+
+		return func(unpack(call_args))
+	end
+
+	return wrapper
+end
+
+--- Split string into a table of parts
+-- @param str String to split into parts
+-- @param[opt=""] delimiter String to split at
+-- @return Table of parts that were separated by delimiter
+function utils.split(str, delimiter)
+	local output = {}
+
+	if delimiter == nil then
+		delimiter = ""
+	end
+
+	local i = 1
+	local current = ""
+	while i <= #str do
+		if delimiter == "" then
+			table.insert(output, str:sub(i, i))
+			current = ""
+			i = i + 1
+		elseif str:sub(i, i + #delimiter - 1) == delimiter then
+			table.insert(output, current)
+			current = ""
+
+			i = i + #delimiter
+		else
+			current = current .. str:sub(i, i)
+			i = i + 1
+		end
+	end
+
+	if delimiter ~= "" then
+		table.insert(output, current)
+	end
+
+	return output
 end
 
 return utils

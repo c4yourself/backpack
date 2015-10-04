@@ -3,6 +3,30 @@ local utils = require("lib.utils")
 
 local TestUtils = {}
 
+function TestUtils:test_canonicalize_path()
+	luaunit.assertEquals(utils.canonicalize_path("./test"), "test")
+	luaunit.assertEquals(utils.canonicalize_path("../test"), "../test")
+	luaunit.assertEquals(utils.canonicalize_path("/test"), "/test")
+
+	luaunit.assertEquals(utils.canonicalize_path("/test//test"), "/test/test")
+	luaunit.assertEquals(utils.canonicalize_path("test//test"), "test/test")
+
+	luaunit.assertEquals(utils.canonicalize_path("./test/../test"), "test")
+	luaunit.assertEquals(utils.canonicalize_path("/../test"), "/test")
+end
+
+function TestUtils:test_partial()
+	local tuple = function(...) return {...} end
+
+	luaunit.assertEquals(utils.partial(tuple, 1)(), {1})
+	luaunit.assertEquals(utils.partial(tuple, 1, 2)(), {1, 2})
+	luaunit.assertEquals(utils.partial(tuple, 1, 2, 3)(), {1, 2, 3})
+
+	luaunit.assertEquals(utils.partial(tuple)(1, 2, 3), {1, 2, 3})
+	luaunit.assertEquals(utils.partial(tuple, 1)(2, 3), {1, 2, 3})
+	luaunit.assertEquals(utils.partial(tuple, 1, 2)(3), {1, 2, 3})
+end
+
 function TestUtils:test_split_no_delimiter()
 	luaunit.assertEquals(utils.split("test"), {"t", "e", "s", "t"})
 	luaunit.assertEquals(utils.split("foo"), {"f", "o", "o"})
@@ -18,18 +42,6 @@ end
 function TestUtils:test_split_multi_char_delimiter()
 	luaunit.assertEquals(utils.split("1, 2, 3", ", "), {"1", "2", "3"})
 	luaunit.assertEquals(utils.split("4, 5, 6", ", "), {"4", "5", "6"})
-end
-
-function TestUtils:test_canonicalize_path()
-	luaunit.assertEquals(utils.canonicalize_path("./test"), "test")
-	luaunit.assertEquals(utils.canonicalize_path("../test"), "../test")
-	luaunit.assertEquals(utils.canonicalize_path("/test"), "/test")
-
-	luaunit.assertEquals(utils.canonicalize_path("/test//test"), "/test/test")
-	luaunit.assertEquals(utils.canonicalize_path("test//test"), "test/test")
-
-	luaunit.assertEquals(utils.canonicalize_path("./test/../test"), "test")
-	luaunit.assertEquals(utils.canonicalize_path("/../test"), "/test")
 end
 
 return TestUtils
