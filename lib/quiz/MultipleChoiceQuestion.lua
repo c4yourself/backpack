@@ -5,39 +5,39 @@
 local class = require("lib.classy")
 local Question = require("lib.quiz.Question")
 
-local MutipleChoiceQuestion = class("MutipleChoiceQuestion", Question)
+local MultipleChoiceQuestion = class("MultipleChoiceQuestion", Question)
 
-MutipleChoiceQuestion.category=""
-MutipleChoiceQuestion.correct_answers_number=0
-MutipleChoiceQuestion.wrong_answers_number=0
-MutipleChoiceQuestion.credit=0
+MultipleChoiceQuestion.category=""
+MultipleChoiceQuestion.correct_answers_number=0
+MultipleChoiceQuestion.wrong_answers_number=0
+MultipleChoiceQuestion.credit=0
 
-function MutipleChoiceQuestion:__init(image_path,question,correct_answers)
+function MultipleChoiceQuestion:__init(image_path,question,correct_answers)
 	table.sort(correct_answers)
 	Question.__init(self,image_path,question,correct_answers)
 end
-function MutipleChoiceQuestion:get_image_path()
+function MultipleChoiceQuestion:get_image_path()
 	return self.image_path
 end
-function MutipleChoiceQuestion:get_correct_answers_number()
+function MultipleChoiceQuestion:get_correct_answers_number()
 	return self.correct_answers_number
 end
-function MutipleChoiceQuestion:get_wrong_answers_number()
+function MultipleChoiceQuestion:get_wrong_answers_number()
 	return self.wrong_answers_number
 end
-function MutipleChoiceQuestion:calculate_credit()
+function MultipleChoiceQuestion:calculate_credit()
 
 end
-function MutipleChoiceQuestion:get_credit()
+function MultipleChoiceQuestion:get_credit()
 	return self.credit
 end
-function MutipleChoiceQuestion:set_category(category)
+function MultipleChoiceQuestion:set_category(category)
 	self.category=category
 end
-function MutipleChoiceQuestion:get_category()
+function MultipleChoiceQuestion:get_category()
 	return self.category
 end
-function MutipleChoiceQuestion:is_correct(answer)
+function MultipleChoiceQuestion:is_correct(answer)
 	table.sort(answer)
 	for i=1, table.maxn(self.correct_answers), 1 do
 		for j=1, table.maxn(answer),1 do
@@ -54,4 +54,4 @@ function MutipleChoiceQuestion:is_correct(answer)
 		return false
 	end
 end
-return MutipleChoiceQuestion
+return MultipleChoiceQuestion
