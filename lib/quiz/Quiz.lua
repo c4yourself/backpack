@@ -6,6 +6,8 @@
 -- @field wrong_answers keeping track of the wrong answers
 
 local class = require("lib.classy")
+local questiongenerator = require("lib.quiz.questiongenerator")
+local NumericQuestion = require("lib.quiz.NumericQuestion")
 
 local Quiz = class("Quiz")
 
@@ -28,6 +30,16 @@ end
 -- @return Boolean to show if the answer was correct or not
 function Quiz:answer(answer)
 	return self.questions[current_question]:is_correct(answer)
+end
+
+-- Generates a numerical quiz
+function Quiz:generate_numerical_quiz(level, quiz_size, image_path)
+--TODO add image path
+	for i=1, quiz_size do
+		local question, answer = questiongenerator.generate(level)
+		local question = NumericQuestion(image_path, question, answer)
+		self.questions[i] = question
+	end
 end
 
 return Quiz
