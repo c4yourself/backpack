@@ -35,8 +35,7 @@ end
 function Quiz:generate_numerical_quiz(level, quiz_size, image_path)
 	--TODO image_path needs to be properly implemented
 	for i=1, quiz_size do
-		local question, answer = questiongenerator.generate(level)
-		local question = NumericQuestion(image_path, question, answer)
+		local question = questiongenerator.generate(level, image_path)
 		self.questions[i] = question
 	end
 end

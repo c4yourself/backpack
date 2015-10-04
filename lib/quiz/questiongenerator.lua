@@ -3,6 +3,7 @@
 
 -- Module table
 local questiongenerator = {}
+local NumericQuestion = require("lib.quiz.NumericQuestion")
 
 -- table mapping the constant difficulty levels to the number of operands that
 -- will be included in the question
@@ -25,13 +26,12 @@ questiongenerator.token_table = {
 -- Input string should be one of the constants in the questiongenerator module,
 -- i.e. BEGINNER, NOVICE, ADVANCED, or EXPERT
 -- @param difficulty String representing the difficulty level
--- @return question Mathematical expression as a String
--- @return answer The correct answer to the question as a Number
-function questiongenerator.generate(difficulty)
+-- @return NumericQuestion
+function questiongenerator.generate(difficulty, image_path)
 	local operators, operands = questiongenerator._generate_ops(difficulty)
 	local question, answer  = questiongenerator._build_expression(operators, operands)
-
-	return question, answer
+	local num_q = NumericQuestion(image_path, question, answer)
+	return num_q
 end
 
 --- Generates a set of random operators and a set of random operands
@@ -55,7 +55,7 @@ end
 ---Builds a mathematical expression given operators and operands
 -- Note: #operands needs to be #operators + 1
 -- @return String representing a mathematical expression and the correct answer
--- as a Number
+-- @return Number answer to the question
 function questiongenerator._build_expression(operators, operands)
 	local question = ""
 
