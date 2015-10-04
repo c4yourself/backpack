@@ -28,7 +28,7 @@ questiongenerator.token_table = {
 -- @return question Mathematical expression as a String
 -- @return answer The correct answer to the question as a Number
 function questiongenerator.generate(difficulty)
-	local operators, operands = questiongenerator._fetch_ops(difficulty)
+	local operators, operands = questiongenerator._generate_ops(difficulty)
 	local question, answer  = questiongenerator._build_expression(operators, operands)
 
 	return question, answer
