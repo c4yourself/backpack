@@ -1,5 +1,6 @@
 local event = require("lib.event")
 local logger = require("lib.logger")
+local utils = require("lib.utils")
 
 --- This function runs every time a key is pressed
 -- The current mapping for the emulator can be found in emulator/zto.lua
@@ -39,6 +40,14 @@ function onStart()
 	for i, color in ipairs(rainbow) do
 		screen:clear(color, {width = width, height = 100, x = width * (i - 1)})
 	end
+
+	-- Example of how to print
+	font = sys.new_freetype(
+		{r = 255, g = 255, b = 255, a = 255},
+		32,
+		{x = 100, y = 300},
+		utils.absolute_path("data/fonts/DroidSans.ttf"))
+	font:draw_over_surface(screen, "Hello World!")
 
 	-- Refresh screen to make changes visible
 	gfx.update()
