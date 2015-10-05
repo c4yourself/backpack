@@ -1,3 +1,4 @@
+local Event = require("/lib/event.Event")
 local logger = require("lib.logger")
 
 --- This function runs every time a key is pressed
@@ -7,6 +8,11 @@ local logger = require("lib.logger")
 function onKey(key, state)
 	logger.trace("OnKey(" .. key .. ", " .. state .. ")")
 
+	--testing remote control
+	if state == "up" then
+		remote_control:trigger("button", key)
+	end
+
 	-- Terminate program when exit key is pressed
 	if key == "exit" and state == "up" then
 		sys.stop()
@@ -15,6 +21,10 @@ end
 
 -- This function is called at the start of the program
 function onStart()
+	-- instace of remote control
+	remote_control = Event()
+	remote_control:on("button", function(button) print() end)
+
 	-- Table with different colors to be drawn as boxes
 	local rainbow = {
 		{r = 255, g = 0, b = 0},

@@ -14,7 +14,9 @@ end
 
 
 --- Create On Event listener
--- This function adds a listener to the Event and stores a connected callback function
+-- stores a callback function to an event_type
+-- @param event_type this is the event type that the callback function will be conneted to
+-- @param callback this is the stored funciton which the trigger function will execute
 function Event:on(event_type, callback)
 	if (self.event_callbacks[event_type] == nil) then
 		self.event_callbacks[event_type] = {}
@@ -23,19 +25,14 @@ function Event:on(event_type, callback)
 end
 
 
---- Triggers all callbacks connected to the event_type
+--- Triggers all callback functions connected to the event_type
+-- @param event_type the acctual event_type
+-- @param ... this is the parameters for the callback functions
 function Event:trigger(event_type, ...)
-	-- var args, tillåter att skicka med okänt antal argument
-	-- print("list length: " .. #self.event_callbacks[event_type])
+
 	print("event_type: " .. event_type)
-	-- samma inargument för en button_press, får första
-	--print("antal element: " .. select('#', ...))
 	for index, value in ipairs(self.event_callbacks[event_type]) do
 		value(...)
-		--for n=1, select('#', ...) do
-		--	local e = select(n,...)
-		--end
-		--a = select(1,...)
 	end
 end
 
