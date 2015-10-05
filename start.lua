@@ -41,5 +41,6 @@ function onStart()
 	--local color = {r = 255, g = 255, b = 255}
 	--local point = {x = 50, y = 50}
 	--surf:writeOver("1", color, point)
+	
 	gfx.update()
 end
