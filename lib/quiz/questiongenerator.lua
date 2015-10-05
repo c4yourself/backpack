@@ -22,6 +22,9 @@ questiongenerator.token_table = {
 	["EXPERT"] = {"+","-","*","/"}
 }
 
+questiongenerator.seed = os.time()
+questiongenerator.var = math.randomseed(questiongenerator.seed)
+
 --- Generates a numerical (arithmetic) question based on the difficulty level
 -- Input string should be one of the constants in the questiongenerator module,
 -- i.e. BEGINNER, NOVICE, ADVANCED, or EXPERT
@@ -59,7 +62,8 @@ end
 function questiongenerator._build_expression(operators, operands)
 	local question = ""
 
-	math.randomseed(os.time())
+	--questiongenerator.var
+	questiongenerator.seed = questiongenerator.seed + 13
 	question = "" .. operands[1]
 	for i=2, #operands do
 		question = question .. operators[i-1]
