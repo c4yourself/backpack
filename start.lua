@@ -1,4 +1,4 @@
-local logger = require("lib.logger")
+
 
 --- This function runs every time a key is pressed
 -- The current mapping for the emulator can be found in emulator/zto.lua
@@ -6,7 +6,6 @@ local logger = require("lib.logger")
 -- @param state Either up or repeat
 function onKey(key, state)
 	logger.trace("OnKey(" .. key .. ", " .. state .. ")")
-
 	-- Terminate program when exit key is pressed
 	if key == "exit" and state == "up" then
 		sys.stop()
@@ -28,10 +27,19 @@ function onStart()
 
 	-- Create one box per color
 	local width = math.floor(screen:get_width() / #rainbow)
-	for i, color in ipairs(rainbow) do
-		screen:clear(color, {width = width, height = 100, x = width * (i - 1)})
-	end
+	--for i, color in ipairs(rainbow) do
+	--	screen:clear(color, {width = width, height = 100, x = width * (i - 1)})
+	--end
 
 	-- Refresh screen to make changes visible
+	--gfx.update()
+
+	-- Changes made by numerical_quiz team
+	surf = gfx.new_surface(100,100)
+	local color1 = {r = 255, g = 0, b = 0}
+	surf:clear(color1, {width = width, height = 100, x = 0})
+	--local color = {r = 255, g = 255, b = 255}
+	--local point = {x = 50, y = 50}
+	--surf:writeOver("1", color, point)
 	gfx.update()
 end
