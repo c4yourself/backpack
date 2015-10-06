@@ -4,13 +4,16 @@
 local NumericQuestion = require("lib.quiz.NumericQuestion")
 local Quiz = require("lib.quiz.Quiz")
 local utils = require("lib.utils")
+local event = require("lib.event")
 
 -- Generates a global numerical quiz intance
 num_quiz = Quiz()
 num_quiz:generate_numerical_quiz("NOVICE", 10, "image_path")
 
 -- Module table
-local numerical_quiz = {}
+local numerical_quiz = {
+	input = ""
+}
 
 --- Renders a surface for a numerical quiz
 function numerical_quiz.render(surface)
@@ -32,6 +35,16 @@ function numerical_quiz.render(surface)
 		-- Draw question
 		font:draw_over_surface(screen, question .. " =  ?")
 		-- Await user input
+
+	event.remote_control:on("button_press", function(key)
+		numerical_quiz.input = numerical_quiz.input .. key
+		print(numerical_quiz.input)
+	end)
+
+
+
+
+
 
 		-- Show if question is correct
 		--answer = 1
