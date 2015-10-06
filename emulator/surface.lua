@@ -280,12 +280,14 @@ end
 --
 -- @local
 function surface:writeOver(text, fontColor, drawingStartPoint)
-	local canvas = love.graphics.newCanvas(self.image_data:getDimensions())
-	love.graphics.setCanvas( canvas )
+	local canvas = love.graphics.newCanvas(
+		self.image_data:getWidth(), self.image_data:getHeight())
+	love.graphics.setCanvas(canvas)
 
 	love.graphics.draw(love.graphics.newImage(self.image_data))
 
-	local r, g, b, a = love.graphics.getColor( )
+	local r, g, b, a = love.graphics.getColor()
+
 	love.graphics.setColor(fontColor.r, fontColor.g, fontColor.b, fontColor.a)
 	love.graphics.print(text, drawingStartPoint.x, drawingStartPoint.y)
 	love.graphics.setColor(r, g, b, a)
