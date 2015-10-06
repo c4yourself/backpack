@@ -6,7 +6,7 @@ return {
 	logging = {
 		-- Logging level:
 		--   May be either TRACE, DEBUG, WARN or ERROR
-		level = "WARN",
+		level = "TRACE",
 		-- Logging mode:
 		--   CONSOLE means log messages will be printed to STDOUT
 		--   UDP means log messages will be sent over UDO to listener defined below

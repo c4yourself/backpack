@@ -1,6 +1,6 @@
 -- Bootstrap for emulator
-gfx = require("emulator.gfx")
 zto = require("emulator.zto")
+gfx = require("emulator.gfx")
 surface = require("emulator.surface")
 player = require("emulator.player")
 freetype = require("emulator.freetype")
