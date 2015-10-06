@@ -4,8 +4,13 @@
 
 -- call the onStart function once the Love2D app is loaded
 function love.load()
-	-- TODO: Make compatible with Löve 0.9
-	love.graphics.setMode(1280, 720)
+	if love.window and love.window.setMode then
+		-- Compatible with Löve 0.9
+		love.window.setMode(1280, 720)
+	else
+		love.graphics.setMode(1280, 720)
+	end
+
 	onStart()
 end
 
