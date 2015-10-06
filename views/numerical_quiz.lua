@@ -19,16 +19,33 @@ function numerical_quiz.render(surface)
 	local question = num_quiz:get_question()
 
 
-	if question == nil then
-		-- Print quiz is over
 		font = sys.new_freetype(
 			{r = 255, g = 255, b = 255, a = 255},
 			32,
 			{x = 100, y = 300},
 			utils.absolute_path("data/fonts/DroidSans.ttf"))
+
+	if question == nil then
+		-- Print quiz is over
 		font:draw_over_surface(screen, "You answered " .. num_quiz.correct_answers .. " questions correctly")
 	else
 		-- Draw question
+		font:draw_over_surface(screen, question .. " =  ?")
+		-- Await user input
+
+		-- Show if question is correct
+		--answer = 1
+		--local output = "Your answer is "
+		--if num_quiz:answer(answer) then
+		--	output = output .. "correct"
+		--else
+		--	output = output .. "wrong"
+		--end
+
+		--font:draw_over_surface(screen, output)
+
+
+
 	end
 end
 
