@@ -2,6 +2,8 @@ local event = require("lib.event")
 local logger = require("lib.logger")
 local utils = require("lib.utils")
 
+local numerical_quiz = require("views.numerical_quiz")
+
 --- This function runs every time a key is pressed
 -- The current mapping for the emulator can be found in emulator/zto.lua
 -- @param key Key that was pressed
@@ -47,6 +49,7 @@ function onStart()
 		32,
 		{x = 100, y = 300},
 		utils.absolute_path("data/fonts/DroidSans.ttf"))
+
 	font:draw_over_surface(screen, "Hello World!")
 
 	-- Refresh screen to make changes visible
@@ -60,5 +63,8 @@ function onStart()
 	--local point = {x = 50, y = 50}
 	--surf:writeOver("1", color, point)
 
+	gfx.update()
+
+	numerical_quiz.render(screen)
 	gfx.update()
 end
