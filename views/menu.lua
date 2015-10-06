@@ -4,8 +4,9 @@ local menu = {}
 function menu.render(surface)
 	local backgroundColor = {r=0, g=0, b=0}
 	surface:clear(backgroundColor)
+	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/paris.png")))
 
-	local buttonColor = {r=255, g=255, b=255}
+	local buttonColor = {r=0, g=0, b=0}
 	local textColor = {r=155, g=100, b=255}
 	local textButton1 = sys.new_freetype(textColor, 20, {x=200,y=80}, utils.absolute_path("data/fonts/DroidSans.ttf"))
 	local textButton2 = sys.new_freetype(textColor, 20, {x=200,y=280}, utils.absolute_path("data/fonts/DroidSans.ttf"))
