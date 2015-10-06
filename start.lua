@@ -12,7 +12,7 @@ function onKey(key, state)
 
 	--testing remote control
 	if state == "up" then
-		event.remote_control:trigger("button", key)
+		event.remote_control:trigger("button_release", key)
 	end
 	-- Terminate program when exit key is pressed
 	if key == "exit" and state == "up" then
@@ -22,8 +22,6 @@ end
 
 -- This function is called at the start of the program
 function onStart()
-	-- instace of remote control
-	event.remote_control:on("button", function(button) print(button) end)
 
 	menu.render(screen)
 

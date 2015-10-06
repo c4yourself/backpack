@@ -1,5 +1,8 @@
 local utils = require("lib.utils")
+local event = require("lib.event")
 local menu = {}
+
+
 
 function menu.render(surface)
 	local backgroundColor = {r=0, g=0, b=0}
@@ -20,6 +23,17 @@ function menu.render(surface)
 
 	surface:fill(buttonColor, {width=500, height=100, x=100, y=450})
 	textButton3:draw_over_surface(surface, "3. Exit")
+
+	event.remote_control:on("button_release", function(button)
+		if button == "1" then
+			print("Numerical")
+		elseif button == "2" then
+			print("Multiple")
+		elseif button == "3" then
+			print("Shut down program")
+			sys.stop()
+		end
+	end)
 
 end
 
