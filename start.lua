@@ -2,6 +2,9 @@ local event = require("lib.event")
 local logger = require("lib.logger")
 local utils = require("lib.utils")
 
+
+local menu = require("views.menu")
+
 --- This function runs every time a key is pressed
 -- The current mapping for the emulator can be found in emulator/zto.lua
 -- @param key Key that was pressed
@@ -12,6 +15,8 @@ function onKey(key, state)
 	--testing remote control
 	if state == "up" then
 		event.remote_control:trigger("button", key)
+		event.remote_control:trigger("button_release", key)
+
 	end
 	-- Terminate program when exit key is pressed
 	if key == "exit" and state == "up" then
@@ -24,6 +29,10 @@ function onStart()
 	-- instace of remote control
 	event.remote_control:on("button", function(button) print(button) end)
 
+
+	menu.render(screen)
+
+	--[[
 	-- Table with different colors to be drawn as boxes
 	local rainbow = {
 		{r = 255, g = 0, b = 0},
@@ -48,6 +57,8 @@ function onStart()
 		{x = 100, y = 300},
 		utils.absolute_path("data/fonts/DroidSans.ttf"))
 	font:draw_over_surface(screen, "Hello World!")
+
+	]]--
 
 	-- Refresh screen to make changes visible
 	gfx.update()
