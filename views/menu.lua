@@ -3,6 +3,17 @@ local event = require("lib.event")
 local numerical_quiz = require("views.numerical_quiz")
 local menu = {}
 
+function menu.load_view(button)
+	if button == "1" then
+		numerical_quiz.render(screen)
+		gfx.update()
+	elseif button == "2" then
+		print("Multiple")
+	elseif button == "3" then
+		print("Shut down program")
+		sys.stop()
+	end
+end
 
 -- This functions renders the menu view
 function menu.render(surface)
@@ -38,16 +49,7 @@ function menu.render(surface)
 	textButton3:draw_over_surface(surface, "3. Exit")
 
 	-- Instance remote control and mapps it to the buttons
-	event.remote_control:on("button_release", function(button)
-		if button == "1" then
-			numerical_quiz.render(surface)
-		elseif button == "2" then
-			print("Multiple")
-		elseif button == "3" then
-			print("Shut down program")
-			sys.stop()
-		end
-	end)
+	event.remote_control:on("button_release", menu.load_view)
 
 end
 

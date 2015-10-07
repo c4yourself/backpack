@@ -2,7 +2,7 @@
 -- @classmod Event
 
 local class = require("lib.classy")
-
+local logger = require("lib.logger")
 local Event = class("Event")
 
 --- Constructor for Event.
@@ -18,19 +18,27 @@ end
 -- @param event_type this is the event type that the callback function will be conneted to
 -- @param callback this is the stored funciton which the trigger function will execute
 function Event:on(event_type, callback)
+	logger.trace("Event listener added for " .. event_type)
 	if (self.event_callbacks[event_type] == nil) then
 		self.event_callbacks[event_type] = {}
 	end
 	table.insert(self.event_callbacks[event_type],callback)
 end
 
+function Event:once(event_type, callback)
+	logger.trace("One time event listener added for " .. event_type)
+
+	self:on(event_type, function(...)
+		callback(...)
+		self:off(event_type, callback)
+	end)
+end
 
 --- Triggers all callback functions connected to the event_type
 -- @param event_type the acctual event_type
 -- @param ... this is the parameters for the callback functions
 function Event:trigger(event_type, ...)
-
-	print("event_type: " .. event_type)
+	logger.trace("Event callbacks triggered for " .. event_type)
 	for index, value in ipairs(self.event_callbacks[event_type]) do
 		value(...)
 	end
@@ -38,9 +46,11 @@ end
 
 -- Remove On Event listener
 -- This function removes an On-listener to the Event
--- function Event:off(event_type, callback)
+function Event:off(event_type)
+	logger.trace("Event listener are removed for " .. event_type)
+	self.event_callbacks[event_type] = nil
 --	table.remove(self.event_callbacks[event_type])
--- end
+end
 
 
 return Event

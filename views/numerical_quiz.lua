@@ -18,7 +18,7 @@ local numerical_quiz = {
 --- Renders a surface for a numerical quiz
 function numerical_quiz.render(surface)
 	surface:clear(color)
-
+	event.remote_control:off("button_release")
 	local question = num_quiz:get_question()
 
 
