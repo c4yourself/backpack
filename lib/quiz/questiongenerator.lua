@@ -16,10 +16,10 @@ questiongenerator.diff_operand_map = {
 
 -- table mapping different difficulty levels to different operators
 questiongenerator.token_table = {
-	["BEGINNER"] = {"+","-"},
-	["NOVICE"] = {"+","-","*"},
-	["ADVANCED"] = {"+","-","*","/"},
-	["EXPERT"] = {"+","-","*","/"}
+	["BEGINNER"] = {"+"},
+	["NOVICE"] = {"+","*"},
+	["ADVANCED"] = {"+","*"},
+	["EXPERT"] = {"+","*"}
 }
 
 questiongenerator.seed = os.time()
@@ -62,7 +62,6 @@ end
 function questiongenerator._build_expression(operators, operands)
 	local question = ""
 
-	--questiongenerator.var
 	questiongenerator.seed = questiongenerator.seed + 13
 	question = "" .. operands[1]
 	for i=2, #operands do
@@ -70,8 +69,7 @@ function questiongenerator._build_expression(operators, operands)
 		question = question .. operands[i]
 	end
 
-	--TODO local answer = load("return " .. question)()
-	local answer = 2
+	local answer = loadstring("return " .. question)()
 	return question, answer
 end
 
