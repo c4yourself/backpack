@@ -38,22 +38,32 @@ function Event:trigger(event_type, ...)
 	end
 end
 
+
 --[[function Event:once(event_type, callback)
+=======
+--[[
+function Event:once(event_type, callback)
+end
+>>>>>>> d2c2537b4404805b466228a32093c346ecf46940
 --put stuff here
 
 function Event:listen_to(object, event_type, callback)
+end
 --put stuff here
 
 function Event:listen_to_once(object, event_type, callback)
+end
 --put stuff here
 
 function Event:Stop_listening(object, event_type, callback)
+end
+]]
 --put stuff here
 
 
 -- Remove On Event listener
 -- This function removes an On-listener to the Event
--- function Event:off(event_type, callback)
+-- function Event:off(event_type, callback
 --	self.event_callbacks[event_type] = nil
 --	table.remove(self.event_callbacks[event_type])
 -- end

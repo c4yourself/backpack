@@ -69,7 +69,6 @@ function onStart()
 	--local point = {x = 50, y = 50}
 	--surf:writeOver("1", color, point)
 
-	gfx.update()
 
 	--numerical_quiz.render(screen)
 	gfx.update()

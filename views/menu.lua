@@ -1,6 +1,8 @@
 local utils = require("lib.utils")
 local event = require("lib.event")
-local multipleChoice=require("views.multiple_quiz")
+local multipleChoice=require ("views.multiple_quiz")
+local numeric=require ("views.numerical_quiz")
+
 local menu = {}
 
 
@@ -43,9 +45,9 @@ function menu.render(surface)
 	-- Instance remote control and mapps it to the buttons
 	event.remote_control:on("button_release", function(button)
 		if button == "1" then
-			print("Numerical")
+			numeric.render(screen)
 		elseif button == "2" then
-			print("Multiple")
+			print("Multipleeeeeee")
 			multipleChoice.render(screen)
 		elseif button == "3" then
 			print("Shut down program")
