@@ -1,7 +1,7 @@
 local utils = require("lib.utils")
 local event = require("lib.event")
-local multiple_quiz = require("views.multiple_quiz")
 local numerical_quiz = require("views.numerical_quiz")
+local multiplechoice_quiz = require("views.multiplechoice_quiz")
 
 local menu = {}
 
@@ -10,7 +10,8 @@ function menu.load_view(button)
 		numerical_quiz.render(screen)
 		gfx.update()
 	elseif button == "2" then
-		multiple_quiz.render(screen)
+		multiplechoice_quiz.render(screen)
+		gfx.update()
 	elseif button == "3" then
 		print("Shut down program")
 		sys.stop()

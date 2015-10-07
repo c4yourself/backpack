@@ -12,12 +12,27 @@ MultipleChoiceQuestion.correct_answers_number=0
 MultipleChoiceQuestion.wrong_answers_number=0
 MultipleChoiceQuestion.credit=0
 
-function MultipleChoiceQuestion:__init(image_path,question,correct_answers)
+MultipleChoiceQuestion.correct_answers={}
+MultipleChoiceQuestion.Choices={}
+
+function MultipleChoiceQuestion:__init(image_path,question,correct_answers,choices)
 	table.sort(correct_answers)
-	Question.__init(self,image_path,question,correct_answers)
+	self.image_path=image_path
+	self.question=question
+	self.correct_answers=correct_answers
+	self.Choices=choices
+	--Question.__init(self,image_path,question,correct_answers)
 end
 function MultipleChoiceQuestion:get_image_path()
 	return self.image_path
+end
+function MultipleChoiceQuestion:set_choices(choice)
+	for i=1, 4, 1 do
+		self.Choices[i]=choice[i]
+	end
+end
+function MultipleChoiceQuestion:get_choices()
+	return self.Choices
 end
 function MultipleChoiceQuestion:get_correct_answers_number()
 	return self.correct_answers_number
@@ -39,19 +54,24 @@ function MultipleChoiceQuestion:get_category()
 end
 function MultipleChoiceQuestion:is_correct(answer)
 	table.sort(answer)
-	for i=1, table.maxn(self.correct_answers), 1 do
-		for j=1, table.maxn(answer),1 do
-			if self.correct_answers[i] ==answer[j] then
-				self.correct_answers_number=self.correct_answers_number+1
-				break
-			end
+	table.sort(self.correct_answers)
+	result_flag=0
+	if #answer~=#self.correct_answers then
+		return false
+	else
+		for i=1,#self.correct_answers,1 do
+			print(self.correct_answers[i])
+			print(answer[i])
+				if self.correct_answers[i]~=answer[i] then
+					result_flag=-1
+					break
+				end
 		end
 	end
-	self.wrong_answers_number=table.maxn(answer)-self.correct_answers_number
-	if self.wrong_answers_number==0 then
-		return true
-	else
+	if result_flag==-1 then
 		return false
+	else
+		return true
 	end
 end
 return MultipleChoiceQuestion
