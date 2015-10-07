@@ -13,6 +13,7 @@ mulchoice_quiz:generate_multiplechoice_quiz("image_path",10)
 local multiplechoice_quiz={}
 local user_input=""
 local answer={}
+local end_flag=0
 --- Renders a surface for a MultipleChoice quiz
 function multiplechoice_quiz.render(surface)
 	surface:clear(color)
@@ -53,6 +54,11 @@ function multiplechoice_quiz.render(surface)
 					surface:clear(color)
 					answer={}
 					user_input=""
+
+					if end_flag==1 then
+						surface:clear(color)
+						font:draw_over_surface(screen, "You answered " .. correct_answer_number .. " questions correctly")
+					end
 					if i<10 then
 						i=i+1
 						print (mulchoice_quiz.questions[i].question)
@@ -65,10 +71,9 @@ function multiplechoice_quiz.render(surface)
 						choiceButton3:draw_over_surface(surface, mulchoice_quiz.questions[i].Choices[3])
 						surface:fill(buttonColor, {width=200, height=60, x=850, y=400})
 						choiceButton4:draw_over_surface(surface, mulchoice_quiz.questions[i].Choices[4])
-					end
-					if i==10 then
-						surface:clear(color)
-						font:draw_over_surface(screen, "You answered " .. correct_answer_number .. " questions correctly")
+						if i==10 then
+							end_flag=1
+						end
 					end
 				else
 					if(#user_input<=3) then
