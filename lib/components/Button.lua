@@ -1,12 +1,13 @@
 local class=require("lib.classy")
 local Button=class("Button")
 local event = require("lib.event")
+local utils = require("lib.utils")
 
 Button.diff_button_map = {"quadrangle","radio"}
 Button.type = ""
 Button.text = ""
 indexx=0;
-function Button:__init(type,length,width,xoffset,yoffset, view, keyInput)
+function Button:__init(type,length,width,xoffset,yoffset,surface, keyInput, text)
 
 event.remote_control:on("button_release", function(key)
      if key==keyInput then
@@ -14,7 +15,10 @@ event.remote_control:on("button_release", function(key)
      else
          self:show(100, 50, 50)
    end
+   local textButton = sys.new_freetype({r = 250, g = 250, b = 250}, 30, {x=xoffset,y=yoffset}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+   textButton:draw_over_surface(surface, text)
  end)
+
 
 
     self.type=type
