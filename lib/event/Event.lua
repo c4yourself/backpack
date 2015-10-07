@@ -55,7 +55,7 @@ function Event:off(event_type)
 --	table.remove(self.event_callbacks[event_type])
 end
 
-]]
+
 return Event
 
 -- remote_control = Event()
