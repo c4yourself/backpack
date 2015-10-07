@@ -9,7 +9,9 @@ local Event = class("Event")
 -- The constructor only creates the list for the remote control events at this stage,
 -- it has to be general and have lists for all types of events
 function Event:__init()
-	self.event_callbacks = {}
+	self.event_callbacks = {
+		button_press = {}
+	}
 end
 
 
@@ -35,10 +37,29 @@ function Event:trigger(event_type, ...)
 		value(...)
 	end
 end
+--[[
+function Event:once(event_type, callback)
+end
+--put stuff here
+
+function Event:listen_to(object, event_type, callback)
+end
+--put stuff here
+
+function Event:listen_to_once(object, event_type, callback)
+end
+--put stuff here
+
+function Event:Stop_listening(object, event_type, callback)
+end
+]]
+--put stuff here
+
 
 -- Remove On Event listener
 -- This function removes an On-listener to the Event
 -- function Event:off(event_type, callback)
+	-- self.event_callbacks[event_type] = nil
 --	table.remove(self.event_callbacks[event_type])
 -- end
 

@@ -8,6 +8,8 @@ local menu = {}
 
 -- This functions renders the menu view
 function menu.render(surface)
+
+
 	-- Resets the surface and draws the background
 	local backgroundColor = {r=0, g=0, b=0}
 	surface:clear(backgroundColor)
@@ -45,6 +47,7 @@ function menu.render(surface)
 		if button == "1" then
 			numeric.render(screen)
 		elseif button == "2" then
+			print("Multipleeeeeee")
 			multipleChoice.render(screen)
 		elseif button == "3" then
 			print("Shut down program")

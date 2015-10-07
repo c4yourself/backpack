@@ -61,5 +61,15 @@ function onStart()
 
 	]]--
 
+	-- Refresh screen to make changes visible
+	--gfx.update()
+
+	-- Changes made by numerical_quiz team
+	--local color = {r = 255, g = 255, b = 255}
+	--local point = {x = 50, y = 50}
+	--surf:writeOver("1", color, point)
+
+
+	--numerical_quiz.render(screen)
 	gfx.update()
 end
