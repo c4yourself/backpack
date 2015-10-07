@@ -59,15 +59,12 @@ function onStart()
 	--gfx.update()
 
 	-- Changes made by numerical_quiz team
-	surf = gfx.new_surface(100,100)
-	local color1 = {r = 255, g = 0, b = 0}
-	surf:clear(color1, {width = width, height = 100, x = 0})
 	--local color = {r = 255, g = 255, b = 255}
 	--local point = {x = 50, y = 50}
 	--surf:writeOver("1", color, point)
 
 	gfx.update()
 
-	numerical_quiz.render(screen)
+	--numerical_quiz.render(screen)
 	gfx.update()
 end
