@@ -22,7 +22,7 @@ function multiple_quiz.render(surface)
          --create 4 buttons
          butt1=Button("quadrangle",100,100,500,300, surface, "6", "hej")
          butt1:show(100,150,200)
-         butt2=Button("quadrangle", 100, 100, 700, 300, surface, "7", "hej")
+         butt2=Button("quadrangle", 100, 100, 700, 300, surface, "7", "tja")
          butt2:show(100, 150, 250)
          butt3=Button("quadrangle", 100, 100, 500, 600, surface, "8", "hej")
          butt3:show(100, 150, 250)
