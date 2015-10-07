@@ -1,10 +1,13 @@
 local utils = require("lib.utils")
 local event = require("lib.event")
+local MultipleChoiceInterface = require("lib.components.MultipleChoiceInterface")
 local menu = {}
 
 
 -- This functions renders the menu view
 function menu.render(surface)
+
+
 	-- Resets the surface and draws the background
 	local backgroundColor = {r=0, g=0, b=0}
 	surface:clear(backgroundColor)
@@ -43,6 +46,8 @@ function menu.render(surface)
 			print("Numerical")
 		elseif button == "2" then
 			print("Multiple")
+			ml=MultipleChoiceInterface()
+			ml:render(1)
 		elseif button == "3" then
 			print("Shut down program")
 			sys.stop()
