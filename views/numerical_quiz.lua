@@ -42,7 +42,6 @@ function numerical_quiz.render(surface)
 			-- If: the user are pressing a number key
 			if key == "backspace" then
 				if #numerical_quiz.input > 0 then
-					print("message")
 					numerical_quiz.input = numerical_quiz.input:sub(1,-2)
 					output = num_quiz.current_question .. ")   " .. question .. " = " .. numerical_quiz.input
 				end
