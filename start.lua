@@ -3,8 +3,6 @@ local logger = require("lib.logger")
 local utils = require("lib.utils")
 local menu = require("views.menu")
 
-local numerical_quiz = require("views.numerical_quiz")
-
 --- This function runs every time a key is pressed
 -- The current mapping for the emulator can be found in emulator/zto.lua
 -- @param key Key that was pressed

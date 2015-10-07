@@ -1,6 +1,5 @@
 local utils = require("lib.utils")
 local event = require("lib.event")
-local MultipleChoiceInterface = require("lib.components.MultipleChoiceInterface")
 local menu = {}
 
 
@@ -15,6 +14,7 @@ function menu.render(surface)
 
 	--creates some colors
 	local buttonColor = {r=0, g=128, b=225}
+	local exit_buttonColor = {r=255, g=102, b=0}
 	local textColor = {r=0, g=0, b=0}
 	local score_textColor = {r=255, g=255, b=255}
 
@@ -36,7 +36,7 @@ function menu.render(surface)
 	textButton2:draw_over_surface(surface, "2. Multiple choice question")
 
 	-- Implements the exit button
-	surface:fill(buttonColor, {width=500, height=100, x=100, y=450})
+	surface:fill(exit_buttonColor, {width=500, height=100, x=100, y=450})
 	textButton3:draw_over_surface(surface, "3. Exit")
 
 	-- Instance remote control and mapps it to the buttons
@@ -45,8 +45,6 @@ function menu.render(surface)
 			print("Numerical")
 		elseif button == "2" then
 			print("Multiple")
-			ml=MultipleChoiceInterface()
-			ml:render(1)
 		elseif button == "3" then
 			print("Shut down program")
 			sys.stop()
