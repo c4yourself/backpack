@@ -39,6 +39,7 @@ end
 
 -- Generates a numerical quiz of a given size and difficulty
 function Quiz:generate_numerical_quiz(level, quiz_size, image_path)
+	print(type(quiz_size))
 	for i=1, quiz_size do
 		local question = questiongenerator.generate(level, image_path)
 		self.questions[i] = question
