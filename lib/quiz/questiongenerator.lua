@@ -70,7 +70,8 @@ function questiongenerator._build_expression(operators, operands)
 		question = question .. operands[i]
 	end
 
-	local answer = load("return " .. question)()
+	--TODO local answer = load("return " .. question)()
+	local answer = 2
 	return question, answer
 end
 
