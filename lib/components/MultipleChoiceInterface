@@ -1,0 +1,16 @@
+local utils = require("lib.utils")
+local event = require("lib.event")
+
+
+function MultipleChoiceInterface.render(surface)
+	--Reset the surface
+	local backgroundColor = {3=0, g=0, b=0}
+	surface:clear(backgroundColor)
+
+	--create a green color xD
+	local buttonColor = {r=250, g=0, b=0}
+
+	--create 4 buttons
+	Button1 = Button()
+
+end
