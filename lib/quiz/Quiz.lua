@@ -23,16 +23,21 @@ end
 -- questions left
 function Quiz:get_question()
 	self.current_question = self.current_question + 1
+	if self.questions[self.current_question] == nil then
+		return self.questions[self.current_question]
+	end
 	return self.questions[self.current_question].question
 end
 
 --- Checks if the users answer to the current question is correct
 -- @return Boolean to show if the answer was correct or not
 function Quiz:answer(answer)
-	if self.questions[self.current_question]:is_correct(answer) == true then
-		self.correct_answers = self.correct_answers + 1
-	else
-		self.wrong_answers = self.wrong_answers + 1
+	if self.questions[self.current_question] ~= nil then
+		if self.questions[self.current_question]:is_correct(answer) == true then
+			self.correct_answers = self.correct_answers + 1
+		else
+			self.wrong_answers = self.wrong_answers + 1
+		end
 	end
 	return self.questions[self.current_question]:is_correct(answer)
 end
