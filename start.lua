@@ -3,8 +3,6 @@ local logger = require("lib.logger")
 local utils = require("lib.utils")
 local menu = require("views.menu")
 
-local numerical_quiz = require("views.numerical_quiz")
-
 --- This function runs every time a key is pressed
 -- The current mapping for the emulator can be found in emulator/zto.lua
 -- @param key Key that was pressed
@@ -55,19 +53,5 @@ function onStart()
 	font:draw_over_surface(screen, "Hello World!")
 	]]--
 
-	-- Refresh screen to make changes visible
-	--gfx.update()
-
-	-- Changes made by numerical_quiz team
-	surf = gfx.new_surface(100,100)
-	local color1 = {r = 255, g = 0, b = 0}
-	surf:clear(color1, {width = width, height = 100, x = 0})
-	--local color = {r = 255, g = 255, b = 255}
-	--local point = {x = 50, y = 50}
-	--surf:writeOver("1", color, point)
-
-	gfx.update()
-
-	numerical_quiz.render(screen)
 	gfx.update()
 end
