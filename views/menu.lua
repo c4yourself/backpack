@@ -1,5 +1,6 @@
 local utils = require("lib.utils")
 local event = require("lib.event")
+local multipleChoice=require("views.multiple_quiz")
 local menu = {}
 
 
@@ -45,6 +46,7 @@ function menu.render(surface)
 			print("Numerical")
 		elseif button == "2" then
 			print("Multiple")
+			multipleChoice.render(screen)
 		elseif button == "3" then
 			print("Shut down program")
 			sys.stop()
