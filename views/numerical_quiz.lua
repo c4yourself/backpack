@@ -22,11 +22,11 @@ function numerical_quiz.render(surface)
 	local question = num_quiz:get_question()
 
 
-		font = sys.new_freetype(
-			{r = 255, g = 255, b = 255, a = 255},
-			32,
-			{x = 100, y = 300},
-			utils.absolute_path("data/fonts/DroidSans.ttf"))
+	font = sys.new_freetype(
+		{r = 255, g = 255, b = 255, a = 255},
+		32,
+		{x = 100, y = 300},
+		utils.absolute_path("data/fonts/DroidSans.ttf"))
 
 	if question == nil then
 		-- Print quiz is over
@@ -36,16 +36,19 @@ function numerical_quiz.render(surface)
 		font:draw_over_surface(screen, question .. " =  ?")
 		-- Await user input
 
-	event.remote_control:on("button_press", function(key)
-		numerical_quiz.input = numerical_quiz.input .. key
+		event.remote_control:on("button_release", function(key)
+			-- If: the user are pressing a number key
+
+			numerical_quiz.input = numerical_quiz.input .. key
+		 	--print(numerical_quiz.input)
+			--print("TEST1")
+			surface:clear(color)
+			font:draw_over_surface(screen, question .. " = " .. numerical_quiz.input)
+			-- Else: the user pressed the ok button
+			gfx.update()
+		end)
+		print("TEST2")
 		print(numerical_quiz.input)
-	end)
-
-
-
-
-
-
 		-- Show if question is correct
 		--answer = 1
 		--local output = "Your answer is "
