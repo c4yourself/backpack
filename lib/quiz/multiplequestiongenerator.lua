@@ -1,3 +1,5 @@
+--- Question generator module. Module used for generating MultipleChoice questions
+-- @module multiplequestiongenerator
 
 local multiplequestiongenerator = {}
 local MultipleChoiceQuestion = require("lib.quiz.MultipleChoiceQuestion")
@@ -11,16 +13,16 @@ questions={"Which of following countries in Europe?",
 			"Which of following cities in North America?",
 			"Which of following cities in South America?",
 			"Which of following cities in Asia?",}
-choices={{"Italy","England","Sweden","South Africa"},
-		 {"Sweden","France","Mexico","South Africa"},
+choices={{"Italy","England","Sweden","Egypt"},
+		 {"Sweden","France","Mexico","Egypt"},
 		 {"Sweden","America","Canada","Korea"},
 		 {"Sweden","Japan","Brazil","America"},
 		 {"Sweden","Japan","Korea","America"},
-		 {"Chaigo","Pairs","Stockholm","New York"},
-		 {"Stockholm","Pairs","Cairo","New York"},
-		 {"Stockholm","Pairs","Shanghai","New York"},
+		 {"Chaigo","Pairs","Stockholm","Seattle"},
+		 {"Stockholm","Pairs","Cairo","Seattle"},
+		 {"Stockholm","Pairs","Shanghai","Seattle"},
 		 {"Stockholm","Pairs","Shanghai","Lima"},
-		 {"Stockholm","Pairs","Roma","Hong Kong"}
+		 {"Stockholm","Pairs","Roma","Shanghai"}
 		 }
 correct_answers={{1,2,3},
 				 {4},
