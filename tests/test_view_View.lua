@@ -1,6 +1,7 @@
 local class = require("lib.classy")
 local luaunit = require("luaunit")
 local View = require("lib.view.View")
+local event = require("lib.event")
 
 local TestView = {}
 
@@ -44,6 +45,26 @@ end
 -- Makes sure View:render() function throws an error when called
 function TestView:test_render()
 	luaunit.assertEquals(pcall(self.view.render), false)
+end
+
+-- Tests if the View:destroy() function works for a parent view
+function TestView:test_destroy_parent()
+	local remote_event = event.Event()
+	self.view:listen_to(remote_event, "test_event", function() error() end)
+	self.view:destroy()
+	remote_event:trigger("test_event")
+end
+
+--Tests if View:destroy() also makes child views stop listening
+function TestView:test_destroy_child_views()
+	local remote_event = event.Event()
+	local view1 = View()
+	local view2 = View()
+	self.view.views = {view1, view2}
+
+	view2:listen_to(remote_event, "test_event", function() error() end)
+	self.view:destroy()
+	remote_event:trigger("test_event")
 end
 
 return TestView

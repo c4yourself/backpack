@@ -23,9 +23,9 @@ function View:destroy()
 		local view = self.views[i]
 		view:destroy()
 	end
-	--TODO
-	--self:stop_listening()
+	self:stop_listening()
 end
+
 --- Checks if view or childviews is dirty
 function View:is_dirty()
 	if self.dirty_flag then
