@@ -49,6 +49,19 @@ function utils.canonicalize_path(path)
 	return table.concat(output, "/")
 end
 
+--- Extract table keys.
+-- @param input_table Table to extract keys from
+-- @return A table containing keys of input_table
+function utils.keys(input_table)
+	local output = {}
+
+	for key, _ in pairs(input_table) do
+		table.insert(output, key)
+	end
+
+	return output
+end
+
 --- Wrap function with partial application of the given arguments and keywords.
 -- This is an implementation of function currying. This function is mostly used
 -- when binding class instance methods to Event class instances.

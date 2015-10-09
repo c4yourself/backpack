@@ -15,6 +15,11 @@ function TestUtils:test_canonicalize_path()
 	luaunit.assertEquals(utils.canonicalize_path("/../test"), "/test")
 end
 
+function TestUtils:test_keys()
+	luaunit.assertItemsEquals(utils.keys({a = 1, b = 2}), {"a", "b"})
+	luaunit.assertItemsEquals(utils.keys({c = 1, d = 2}), {"c", "d"})
+end
+
 function TestUtils:test_partial()
 	local tuple = function(...) return {...} end
 
