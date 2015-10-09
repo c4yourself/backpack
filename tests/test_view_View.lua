@@ -17,7 +17,6 @@ end
 -- all childviews are not dirty
 function TestView:test_is_dirty_when_clean()
 	-- Set up a clean view hiearchy
-	self:setUp()
 	self.view.dirty_flag = false
 	local view1 = View()
 	local view2 = View()
@@ -32,7 +31,6 @@ end
 -- dirty
 function TestView:test_is_dirty_when_dirty()
 	-- Set up a dirty view hiearchy
-	self:setUp()
 	self.view.dirty_flag = false
 	local view1 = View()
 	local view2 = View()
@@ -45,7 +43,6 @@ end
 
 -- Makes sure View:render() function throws an error when called
 function TestView:test_render()
-	self:setUp()
 	luaunit.assertEquals(pcall(self.view.render), false)
 end
 
