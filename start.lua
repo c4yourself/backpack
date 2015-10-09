@@ -10,14 +10,20 @@ local menu = require("views.menu")
 -- @param key Key that was pressed
 -- @param state Either up or repeat
 function onKey(key, state)
-	logger.trace("OnKey(" .. key .. ", " .. state .. ")")
+	logger.trace("Remote control input (" .. key .. ", " .. state .. ")")
 
 	--testing remote control
-	if state == "up" then
-		event.remote_control:trigger("button", key)
-		event.remote_control:trigger("button_release", key)
+	if state == "down" then
+		event.remote_control:trigger("button_press", key)
 
+		-- Legacy
+		event.remote_control:trigger("button", key)
+	elseif state == "up" then
+		event.remote_control:trigger("button_release", key)
+	else
+		event.remote_control:trigger("button_repeat", key)
 	end
+
 	-- Terminate program when exit key is pressed
 	if key == "exit" and state == "up" then
 		sys.stop()

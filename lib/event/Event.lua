@@ -1,4 +1,4 @@
---- Event class
+--- Event class.
 -- @classmod Event
 
 local class = require("lib.classy")
@@ -8,41 +8,30 @@ local utils = require("lib.utils")
 local Event = class("Event")
 
 --- Constructor for Event.
--- The constructor only creates the list for the remote control events at this stage,
--- it has to be general and have lists for all types of events
 function Event:__init()
 	self.event_callbacks = {}
+	self.listening_to = {}
 end
 
-
-function Event:_on(event_type, callback, callback_type)
-	if (self.event_callbacks[event_type] == nil) then
-		self.event_callbacks[event_type] = {}
-	end
-
-	self.event_callbacks[event_type][callback] = callback_type
-end
-
---- Create On Event listener
--- stores a callback function to an event_type
--- @param event_type this is the event type that the callback function will be conneted to
--- @param callback this is the stored funciton which the trigger function will execute
+--- Bind a callback function to the given event type.
+-- @param event_type Type of event to trigger callback function on.
+-- @param callback Callback function to trigger on event type.
 function Event:on(event_type, callback)
 	logger.trace("Event listener added for " .. event_type)
-
 	self:_on(event_type, callback, 0)
 end
 
--- preform the on function and then remove the event listner
+--- Works like on but the callback will trigger once.
+-- @param event_type Type of event to trigger callback function on.
+-- @param callback Callback function to trigger on event_type
 function Event:once(event_type, callback)
 	logger.trace("One time event listener added for " .. event_type)
-
 	self:_on(event_type, callback, 1)
 end
 
---- Triggers all callback functions connected to the event_type
--- @param event_type the acctual event_type
--- @param ... this is the parameters for the callback functions
+--- Triggers all callback functions bound to the event_type
+-- @param event_type the acctual event_type.
+-- @param[opt] ... Parameters to pass to callback functions.
 function Event:trigger(event_type, ...)
 	logger.trace("Event callbacks triggered for " .. event_type)
 
@@ -61,11 +50,10 @@ function Event:trigger(event_type, ...)
 	end
 end
 
--- Remove listener.
--- This function removes an On-listener to the Event
---
--- @param[opt] event_type Type to unbind listeners from
--- @param[opt] callback Callback function to remove
+--- Unbind a listener.
+-- Prevents this callback from triggering again. Any parameter may be omitted.
+-- @param[opt] event_type Event type to trigger on.
+-- @param[opt] callback Callback function to run on trigger.
 function Event:off(event_type, callback)
 	-- Since both arguments are optional, we must check if event_type is actually
 	-- a callback function.
@@ -93,6 +81,107 @@ function Event:off(event_type, callback)
 			end
 		end
 	end
+end
+
+--- Make this object listen to triggers on another event object.
+-- @param object Object to listen on.
+-- @param event_type Event type to listen on.
+-- @param callback Callback function to call when event type is triggered.
+function Event:listen_to(object, event_type, callback)
+	self:_listen_to(object, event_type, callback, 0)
+end
+
+--- Works like listen_to, but the callback will trigger once.
+-- @param object Object to listen on.
+-- @param event_type Event type to listen on.
+-- @param callback Callback function to call when event type is triggered.
+function Event:listen_to_once(object, event_type, callback)
+	self:_listen_to(object, event_type, callback, 1)
+end
+
+--- Unbind a listener.
+-- Any parameter may be left out.
+-- @param[opt] object Object that this object should listen on.
+-- @param[opt] event_type Event type to trigger on.
+-- @param[opt] callback Callback function to run on trigger.
+function Event:stop_listening(object, event_type, callback)
+	-- Guess what arguments that were provided since all are optional
+	if type(object) == "string" then
+		object = nil
+		event_type = object
+		callback = nil
+	elseif type(object) == "function" then
+		callback = object
+
+		object = nil
+		event_type = nil
+	end
+
+	if type(event_type) == "function" then
+		callback = event_type
+
+		object = nil
+		event_type = nil
+	end
+
+	-- If not object was given, default to all objects
+	local objects = {object}
+	if object == nil then
+		objects = utils.keys(self.listening_to)
+	end
+
+	for _, obj in ipairs(objects) do
+		-- If no event type was given, default to all event types
+		local event_types = {event_type}
+		if event_type == nil then
+			event_types = utils.keys(self.listening_to[obj])
+		end
+
+		for _, et in ipairs(event_types) do
+			-- If no callback was given, default to all callbacks
+			local callbacks = {callback}
+			if callback == nil then
+				callbacks = utils.keys(self.listening_to[obj][et])
+			end
+
+			for _, cb in ipairs(callbacks) do
+				obj:off(et, cb)
+			end
+		end
+	end
+end
+
+--- Internal function for binding callbacks.
+-- @param event_type Event type to trigger on
+-- @param callback Callback function to run on trigger
+-- @param callback_type 0 if callback is permanent, 1 for once only
+-- @local
+function Event:_on(event_type, callback, callback_type)
+	if self.event_callbacks[event_type] == nil then
+		self.event_callbacks[event_type] = {}
+	end
+
+	self.event_callbacks[event_type][callback] = callback_type
+end
+
+--- Internal function for binding callbacks.
+-- @param object Object to listen on
+-- @param event_type Event type to trigger on
+-- @param callback Callback function to run on trigger
+-- @param callback_type 0 if callback is permanent, 1 for once only
+-- @local
+function Event:_listen_to(object, event_type, callback, callback_type)
+	if self.listening_to[object] == nil then
+		self.listening_to[object] = {}
+	end
+
+	if self.listening_to[object][event_type] == nil then
+		self.listening_to[object][event_type] = {}
+	end
+
+	self.listening_to[object][event_type][callback] = callback_type
+
+	object:_on(event_type, callback, callback_type)
 end
 
 return Event

@@ -48,11 +48,11 @@ end
 -- @param obj Object to serialize as the second row
 function Logger:print(level, message, obj)
 	-- Determine name of calling function
-	local calling_function = debug.getinfo(3)
-	if calling_function and calling_function.name then
-		calling_function = calling_function.name
+	local calling_function = debug.getinfo(4, "nSl")
+	if calling_function then
+		calling_function = calling_function.short_src .. ":" .. calling_function.currentline
 	else
-		calling_function = "Anonymous"
+		calling_function = "unknown"
 	end
 
 	-- Make string for memory logging if needed
