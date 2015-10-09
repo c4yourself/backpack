@@ -90,4 +90,16 @@ function TestEvent:test_off_precision()
 	self.callback_data = nil
 end
 
+function TestEvent:test_once()
+	self.event:once("test_event", self.callback)
+
+	self.event:trigger("test_event")
+	luaunit.assertNotNil(self.callback_data)
+	self.callback_data = nil
+
+
+	self.event:trigger("test_event")
+	luaunit.assertNil(self.callback_data)
+end
+
 return TestEvent
