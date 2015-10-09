@@ -43,4 +43,10 @@ function TestView:test_is_dirty_when_dirty()
 	luaunit.assertEquals(self.view:is_dirty(), true)
 end
 
+-- Makes sure View:render() function throws an error when called
+function TestView:test_render()
+	self:setUp()
+	luaunit.assertEquals(pcall(self.view.render), false)
+end
+
 return TestView
