@@ -5,6 +5,7 @@ local NumericQuestion = require("lib.quiz.NumericQuestion")
 local Quiz = require("lib.quiz.Quiz")
 local utils = require("lib.utils")
 local event = require("lib.event")
+--local menu = require("views.menu")
 
 -- Generates a global numerical quiz intance
 num_quiz = Quiz()
@@ -66,6 +67,10 @@ function numerical_quiz.render(surface)
 						output = num_quiz.current_question .. ")   " .. question .. " =  ?"
 					end
 				end
+			elseif key == "exit" then
+				--TODO
+			--	menu.render(screen)
+				--gfx.update()
 			else
 				numerical_quiz.input = numerical_quiz.input .. key
 				output = num_quiz.current_question .. ")   " .. question .. " = " .. numerical_quiz.input
