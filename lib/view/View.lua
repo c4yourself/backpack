@@ -11,8 +11,8 @@ local View = class("View", Event)
 -- @param question string representing a mathematical expression
 -- @param correct_answer number representing the correct answer
 function View:__init()
-	View.views = {}
-	View.dirty_flag = true
+	self.views = {}
+	self.dirty_flag = true
 	Event.__init(self)
 end
 
@@ -28,7 +28,7 @@ function View:destroy()
 end
 --- Checks if view or childviews is dirty
 function View:is_dirty()
-	if dirty_flag then
+	if self.dirty_flag then
 		return true
 	end
 	for i = 1, #self.views do
