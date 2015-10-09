@@ -12,7 +12,7 @@ local View = class("View", Event)
 -- @param correct_answer number representing the correct answer
 function View:__init()
 	View.views = {}
-	View.dirty_flag = false
+	View.dirty_flag = true
 	Event.__init(self)
 end
 
