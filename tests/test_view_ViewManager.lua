@@ -17,11 +17,8 @@ function TestViewManager:test_set_view()
 	mockView = {destroy = function() mockView.destroy_flag = true end; render =function() end; destroy_flag = false}
 
 	-- Run test
-	--view_manager = ViewManager()
 	view_manager:set_view(mockView)
 	view_manager:set_view(mockView)
-	--print(mockView.destroy())
-	print(mockView.destroy_flag)
 	luaunit.assertEquals(mockView.destroy_flag, true)
 end
 
