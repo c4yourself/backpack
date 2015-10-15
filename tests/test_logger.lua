@@ -28,7 +28,7 @@ end
 
 -- Test to break jenkins
 function TestLogger:test_break()
-	luaunit.assertFalse(false)
+	luaunit.assertFalse(true)
 end
 
 
