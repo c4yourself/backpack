@@ -26,6 +26,12 @@ function TestLogger:test_defaults()
 	luaunit.assertFalse(self.logger.log_memory)
 end
 
+-- Test to break jenkins
+function TestLogger:test_break()
+	luaunit.assertFalse(true)
+end
+
+
 -- Test that log level is respected
 function TestLogger:test_level()
 	self.logger:trace("TEST 1")
