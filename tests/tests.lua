@@ -14,7 +14,6 @@ TestUtils = require("test_utils")
 TestView = require("test_view_View")
 TestViewManager = require("test_view_ViewManager")
 
---nothing
 
 lu = LuaUnit.LuaUnit.new()
 lu:setOutputType("tap")
