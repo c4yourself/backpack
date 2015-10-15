@@ -11,7 +11,8 @@ config.logging.mode = "DISABLED"
 TestEvent = require("test_event")
 TestLogger = require("test_logger")
 TestUtils = require("test_utils")
-TestView = require("test_viewview")
+TestView = require("test_view_View")
+TestViewManager = require("test_view_ViewManager")
 
 --nothing
 
