@@ -15,9 +15,6 @@ function onKey(key, state)
 	--testing remote control
 	if state == "down" then
 		event.remote_control:trigger("button_press", key)
-
-		-- Legacy
-		event.remote_control:trigger("button", key)
 	elseif state == "up" then
 		event.remote_control:trigger("button_release", key)
 	else
