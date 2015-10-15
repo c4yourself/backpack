@@ -11,7 +11,7 @@ config.logging.mode = "DISABLED"
 TestEvent = require("test_event")
 TestLogger = require("test_logger")
 TestUtils = require("test_utils")
-TestView = require("test_view_View")
+TestView = require("test_viewview")
 
 lu = LuaUnit.LuaUnit.new()
 lu:setOutputType("tap")
