@@ -13,6 +13,8 @@ TestLogger = require("test_logger")
 TestUtils = require("test_utils")
 TestView = require("test_viewview")
 
+-- Empty comment
+
 lu = LuaUnit.LuaUnit.new()
 lu:setOutputType("tap")
 os.exit(lu:runSuite())
