@@ -7,7 +7,7 @@
 
 local class = require("lib.classy")
 local questiongenerator = require("lib.quiz.questiongenerator")
-local multiplequestiongenerator=require("lib.quiz.multiplequestiongenerator")
+local TSVReader=require("lib.quiz.TSVReader")
 local NumericQuestion = require("lib.quiz.NumericQuestion")
 local Quiz = class("Quiz")
 
@@ -53,10 +53,11 @@ function Quiz:generate_numerical_quiz(level, quiz_size, image_path)
 end
 
 function Quiz:generate_multiplechoice_quiz(image_path,quiz_size)
+	local tsvreader=TSVReader(image_path)
+	tsvreader:get_question("single_choice")
 	for i=1, quiz_size,1 do
-		local multiplechoicequestion=multiplequestiongenerator.generate(image_path,i)
+		local multiplechoicequestion=tsvreader:generate_question(i)
 		self.questions[i]=multiplechoicequestion
-
 	end
 end
 return Quiz

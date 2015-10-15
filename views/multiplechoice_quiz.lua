@@ -8,7 +8,7 @@ local event = require("lib.event")
 
 -- Generates a global multiplrchoice quiz intance
 mulchoice_quiz = Quiz()
-mulchoice_quiz:generate_multiplechoice_quiz("image_path",10)
+--mulchoice_quiz:generate_multiplechoice_quiz("image_path",10)
 --mulchoice_quiz:get_choices()
 local multiplechoice_quiz={}
 local user_input=""
@@ -18,6 +18,7 @@ local check_question_flag=0
 local last_check=0
 --- Renders a surface for a MultipleChoice quiz
 function multiplechoice_quiz.render(surface)
+	mulchoice_quiz:generate_multiplechoice_quiz("paris",10)
 	surface:clear(color)
 
 	event.remote_control:off("button_release")
