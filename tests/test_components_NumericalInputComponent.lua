@@ -1,6 +1,7 @@
 local class = require("lib.classy")
 local luaunit = require("luaunit")
 local NumericalInputComponent = require("lib.components.NumericalInputComponent")
+local event = require("lib.event")
 
 local TestNumericalInputComponent = {}
 
@@ -20,15 +21,21 @@ end
 -- Test if the NumericalInputComponent responds to events after it has been
 -- focused
 function TestNumericalInputComponent:test_focus()
-	--TODO
-	luaunit.assertEquals(false,true)
+	self.num_component.test_trigger_flag = false
+	self.num_component.focused = false
+	self.num_component:focus()
+	event.remote_control:trigger("button_press")
+	luaunit.assertEquals(self.num_component.test_trigger_flag,true)
 end
 
 -- Test if the NumericalInputComponent stops responding to events after it has
 -- been blurred
 function TestNumericalInputComponent:test_blur()
-	--TODO
-	luaunit.assertEquals(false,true)
+	self.num_component.test_trigger_flag = false
+	self.num_component.focused = true
+	self.num_component:blur()
+	event.remote_control:trigger("button_press")
+	luaunit.assertEquals(self.num_component.test_trigger_flag,false)
 end
 
 -- Tests if an error is thrown when non-numeric input is fed to the component

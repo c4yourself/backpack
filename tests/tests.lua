@@ -13,6 +13,7 @@ TestLogger = require("test_logger")
 TestUtils = require("test_utils")
 TestView = require("test_view_View")
 TestViewManager = require("test_view_ViewManager")
+TestNumericalInputComponent = require("test_components_NumericalInputComponent")
 
 
 lu = LuaUnit.LuaUnit.new()

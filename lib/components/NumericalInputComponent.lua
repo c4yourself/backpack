@@ -14,11 +14,7 @@ function NumericalInputComponent:__init(remote_control)
 	View.__init(self)
 	self.input = ""
 	self.focused = false
-	if remote_control ~= nil then
-		self:listen_to(remote_control, "button_press", utils.partial(self.press, self))
-	else
-		self:listen_to(event.remote_control, "button_press", utils.partial(self.press, self))
-	end
+	self.test_trigger_flag = false -- variable used for testing
 end
 
 -- NumericalInputComponent responds to a button press event
@@ -36,6 +32,7 @@ function NumericalInputComponent:press(button)
 			self.trigger("change")
 		end
 	end
+	self.test_trigger_flag = true
 end
 
 --- Renders the NumericalInputField
@@ -46,20 +43,19 @@ function NumericalInputComponent:render()
 	self.is_dirty = false
 end
 
---- defocuses the NumericalInputComponent
+--- De-focuses the NumericalInputComponent, i.e. stops listening to events
 function NumericalInputComponent:blur()
 	if self:is_focused() then
-		-- stop_listening to this component
-		self:stop_listening() -- make sure this works
+		self:stop_listening()
 		self.focused = false
 	end
 end
 
---- Focuses the NumericalInputComponent
+--- Focuses the NumericalInputComponent, i.e. starts to listening to events
 function NumericalInputComponent:focus()
 	if not self:is_focused() then
-		self.listen_to(
-			remote_control,
+		self:listen_to(
+			event.remote_control,
 			"button_press",
 			utils.partial(self.press, self)
 		)
