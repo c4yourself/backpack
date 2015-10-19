@@ -15,6 +15,11 @@ function NumericalInputComponent:__init(remote_control)
 	self.input = ""
 	self.focused = false
 	self.test_trigger_flag = false -- variable used for testing
+	if remote_control ~= nil then
+		self.event_listener = remote_control
+	else
+		self.event_listener = event.remote_control
+	end
 end
 
 -- NumericalInputComponent responds to a button press event
@@ -55,7 +60,7 @@ end
 function NumericalInputComponent:focus()
 	if not self:is_focused() then
 		self:listen_to(
-			event.remote_control,
+			self.event_listener,
 			"button_press",
 			utils.partial(self.press, self)
 		)
