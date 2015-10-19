@@ -26,6 +26,7 @@ function TestLogger:test_defaults()
 	luaunit.assertFalse(self.logger.log_memory)
 end
 
+
 -- Test that log level is respected
 function TestLogger:test_level()
 	self.logger:trace("TEST 1")

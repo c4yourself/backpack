@@ -15,9 +15,6 @@ function onKey(key, state)
 	--testing remote control
 	if state == "down" then
 		event.remote_control:trigger("button_press", key)
-
-		-- Legacy
-		event.remote_control:trigger("button", key)
 	elseif state == "up" then
 		event.remote_control:trigger("button_release", key)
 	else
@@ -32,50 +29,6 @@ end
 
 -- This function is called at the start of the program
 function onStart()
-	-- instace of remote control
-	event.remote_control:on("button", function(button) print(button) end)
-
-
 	menu.render(screen)
-
-	--[[
-	-- Table with different colors to be drawn as boxes
-	local rainbow = {
-		{r = 255, g = 0, b = 0},
-		{r = 0, g = 255, b = 0},
-		{r = 0, g = 0, b = 255},
-		{r = 255, g = 255, b = 0},
-		{r = 255, g = 0, b = 255},
-		{r = 0, g = 255, b = 255},
-		{r = 255, g = 255, b = 255},
-	}
-
-	-- Create one box per color
-	local width = math.floor(screen:get_width() / #rainbow)
-	--for i, color in ipairs(rainbow) do
-	--	screen:clear(color, {width = width, height = 100, x = width * (i - 1)})
-	--end
-
-	-- Example of how to print
-	font = sys.new_freetype(
-		{r = 255, g = 255, b = 255, a = 255},
-		32,
-		{x = 100, y = 300},
-		utils.absolute_path("data/fonts/DroidSans.ttf"))
-
-	font:draw_over_surface(screen, "Hello World!")
-
-	]]--
-
-	-- Refresh screen to make changes visible
-	--gfx.update()
-
-	-- Changes made by numerical_quiz team
-	--local color = {r = 255, g = 255, b = 255}
-	--local point = {x = 50, y = 50}
-	--surf:writeOver("1", color, point)
-
-
-	--numerical_quiz.render(screen)
 	gfx.update()
 end
