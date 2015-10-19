@@ -5,16 +5,19 @@
 local class = require("lib.classy")
 local View = require("lib.view.View")
 local NumericalInputComponent = class("NumericalInputComponent", View)
+local event = require("lib.event")
+local utils = require("lib.utils")
 
 --- Constructor for NumericalInputComponent
 -- @param event_listener Remote control to listen to
 function NumericalInputComponent:__init(remote_control)
+	View.__init(self)
 	self.input = ""
 	self.focused = false
-	if event_listener ~= nil then
-		self:listen_to(remote_control, "button_press", partial(self.press, self))
+	if remote_control ~= nil then
+		self:listen_to(remote_control, "button_press", utils.partial(self.press, self))
 	else
-		self:listen_to(event.remote_control, "button_press", partial(self.press, self))
+		self:listen_to(event.remote_control, "button_press", utils.partial(self.press, self))
 	end
 end
 
@@ -28,7 +31,7 @@ function NumericalInputComponent:press(button)
 	elseif button == "ok" then
 		self.trigger("submit")
 	else
-		if button ~= nil
+		if button ~= nil then
 			self.set_text(self.input .. button)
 			self.trigger("change")
 		end
@@ -58,7 +61,7 @@ function NumericalInputComponent:focus()
 		self.listen_to(
 			remote_control,
 			"button_press",
-			partial(self.press, self)
+			utils.partial(self.press, self)
 		)
 		self.focused = true
 	end
@@ -73,7 +76,7 @@ end
 -- @param text String to be displayed in the input field
 -- @throws Error if text can't be parsed as a number
 function NumericalInputComponent:set_text(text)
-	if tonumber(button) ~= nil then
+	if tonumber(text) ~= nil then
 		self.input = text
 		self.dirty_flag = true
 	else
