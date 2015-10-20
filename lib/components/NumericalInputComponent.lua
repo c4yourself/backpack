@@ -43,9 +43,6 @@ end
 --- Renders the NumericalInputField
 function NumericalInputComponent:render()
 	-- TODO
-	font:draw_over_surface(screen, self.input)
-	gfx.update()
-	self.is_dirty = false
 end
 
 --- De-focuses the NumericalInputComponent, i.e. stops listening to events
