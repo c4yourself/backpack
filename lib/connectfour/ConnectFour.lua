@@ -60,6 +60,14 @@ function ConnectFour:__init()
   self.board[4][1] = "X"
   self.board[3][1] = "O"
   self.board[2][1] = "X"
+
+  self.board[1][1] = "X"
+  self.board[1][2] = "X"
+  self.board[1][3] = "X"
+  self.board[1][4] = "X"
+  self.board[1][5] = "X"
+  self.board[1][6] = "X"
+  self.board[1][7] = "X"
   --self.board[1][1] = "X"
 end
 
@@ -112,7 +120,7 @@ function ConnectFour:get_player()
 end
 
 function ConnectFour:get_current_row(column)
-  local row=6
+  local row=7
   repeat
     row=row-1
     if row<1 then
@@ -141,12 +149,48 @@ function ConnectFour:is_valid_move(player, column)
 end
 
 --Drops a disc of the given player into the given column. If the move is invalid an error is raised. If it is not the given player’s turn an error is raised
---[[function ConnectFour:move(player, column)
+function ConnectFour:move(player, column)
   if self:is_valid_move(player, column) then
-    self.board[]
+    self.board[self:get_current_row(column)][column] = player
   end
 
-end--]]
+end
+
+function ConnectFour:get_winner(player, row, column)
+  local count = 0
+  local currentrow = row
+  local currentcolumn = column
+
+  -- check row
+  currentcolumn = 1
+  repeat
+    if self:get(row, currentcolumn) == player then
+      count = count +1
+    else
+      count = 0
+    end
+
+    if count == 4 then
+      return player
+      --break
+    end
+
+    currentcolumn = currentcolumn +1
+
+  until currentcolumn >7
+
+
+  ----------
+
+
+  -- check column
+
+  -- check diagonal 1
+
+  -- check diagonal 2
+
+
+end
 
 --[[- Internal function for binding callbacks.
 -- @param event_type Event type to trigger on
