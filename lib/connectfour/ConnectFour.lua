@@ -55,8 +55,14 @@ function ConnectFour:__init()
   self.board[6][5] = "X"
   self.board[6][6] = "X"
   self.board[6][7] = "X" --]]
+
+  self.board[5][1] = "X"
+  self.board[4][2] = "X"
+  self.board[3][3] = "X"
+  self.board[2][4] = "X"
+
   self.board[6][1] = "X"
-  self.board[5][1]="O"
+  --self.board[5][1] = "O"
   self.board[4][1] = "X"
   self.board[3][1] = "O"
   self.board[2][1] = "X"
@@ -64,8 +70,8 @@ function ConnectFour:__init()
   self.board[1][1] = "X"
   self.board[1][2] = "X"
   self.board[1][3] = "X"
-  self.board[1][4] = "X"
-  self.board[1][5] = "X"
+  self.board[1][4] = "O"
+  --self.board[1][5] = "X"
   self.board[1][6] = "X"
   self.board[1][7] = "X"
   --self.board[1][1] = "X"
@@ -86,6 +92,17 @@ function ConnectFour:serialize()
     end
   return output
 end
+
+--[[
+function ConnectFour:unserialize(state)
+  local ConnectFourCopy = class("ConnectFour")
+  for row = 1, 6 do
+    for column = 1, 7 do
+      ConnectFourCopy[row][column] = self.board[row][column]
+    end
+  end
+end
+--]]
 
 --Returns the color of the disc at the given position. If there is no disc in the given column nil is returned
 function ConnectFour:get(row, column)
@@ -172,22 +189,92 @@ function ConnectFour:get_winner(player, row, column)
 
     if count == 4 then
       return player
-      --break
     end
 
     currentcolumn = currentcolumn +1
 
   until currentcolumn >7
 
-
-  ----------
-
-
   -- check column
+  count = 0
+  currentrow = 1
+  repeat
+    if self:get(currentrow, column) == player then
+      count = count +1
+    else
+      count = 0
+    end
+
+    if count == 4 then
+      return player
+    end
+
+    currentrow = currentrow +1
+
+  until currentrow >6
 
   -- check diagonal 1
+  currentrow = row
+  currentcolumn = column
+  count = 0
+
+  if currentrow~=6 and currentcolumn~=1 then
+  repeat
+    currentrow = currentrow +1
+    currentcolumn = currentcolumn -1
+  until currentrow==6 or currentcolumn==1
+  end
+
+  repeat
+    if self:get(currentrow, currentcolumn) == player then
+      count = count +1
+    else
+      count = 0
+    end
+
+    if count == 4 then
+          print("X vann på diagonal 1")
+      return player
+    end
+
+    currentrow = currentrow -1
+    currentcolumn = currentcolumn +1
+
+  until currentrow <1 or currentcolumn >7
+
+
 
   -- check diagonal 2
+  currentrow = row
+  currentcolumn = column
+  count = 0
+
+  if currentrow~=1 and currentcolumn~=1 then
+  repeat
+    currentrow = currentrow -1
+    currentcolumn = currentcolumn -1
+  until currentrow==1 or currentcolumn==1
+  end
+
+  repeat
+    if self:get(currentrow, currentcolumn) == player then
+      count = count +1
+    else
+      count = 0
+    end
+
+    if count == 4 then
+      print("X vann på diagonal 2")
+      return player
+    end
+
+    currentrow = currentrow +1
+    currentcolumn = currentcolumn +1
+
+  until currentrow >6 or currentcolumn >7
+
+  print(currentrow)
+  print(currentcolumn)
 
 
 end

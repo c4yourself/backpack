@@ -12,4 +12,4 @@ print(a:get(6,1))--]]
 --a:move("O",2)
 
 print(a:serialize())
---print(a:get_winner(X, 1, 1))
+--print(a:get_winner("X", 2, 4))
