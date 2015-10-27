@@ -1,7 +1,7 @@
 local class = require("lib.classy")
-local luaunit = require("luaunit")
-local NumericalInputComponent = require("lib.components.NumericalInputComponent")
 local event = require("lib.event")
+local luaunit = require("luaunit")
+local NumericalInputComponent = require("components.NumericalInputComponent")
 
 local TestNumericalInputComponent = {}
 
