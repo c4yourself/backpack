@@ -56,24 +56,24 @@ function ConnectFour:__init()
   self.board[6][6] = "X"
   self.board[6][7] = "X" --]]
 
-  self.board[5][1] = "X"
-  self.board[4][2] = "X"
-  self.board[3][3] = "X"
-  self.board[2][4] = "X"
+  --self.board[5][1] = "X"
+  --self.board[4][2] = "X"
+  --self.board[3][3] = "X"
+  --self.board[2][4] = "X"
 
-  self.board[6][1] = "X"
+  --self.board[6][1] = "X"
   --self.board[5][1] = "O"
-  self.board[4][1] = "X"
-  self.board[3][1] = "O"
-  self.board[2][1] = "X"
+  --self.board[4][1] = "X"
+  --self.board[3][1] = "O"
+  --self.board[2][1] = "X"
 
-  self.board[1][1] = "X"
-  self.board[1][2] = "X"
-  self.board[1][3] = "X"
-  self.board[1][4] = "O"
+  --self.board[1][1] = "X"
+  --self.board[1][2] = "X"
+  --self.board[1][3] = "X"
+  --self.board[1][4] = "O"
   --self.board[1][5] = "X"
-  self.board[1][6] = "X"
-  self.board[1][7] = "X"
+  --self.board[1][6] = "X"
+  --self.board[1][7] = "X"
   --self.board[1][1] = "X"
 end
 
@@ -160,6 +160,7 @@ function ConnectFour:is_valid_move(player, column)
   if row>0 and self:get_player()==player then
     return true
   else
+    print("inte ett giltligt drag")
     return false
   end
 
@@ -168,7 +169,12 @@ end
 --Drops a disc of the given player into the given column. If the move is invalid an error is raised. If it is not the given player’s turn an error is raised
 function ConnectFour:move(player, column)
   if self:is_valid_move(player, column) then
-    self.board[self:get_current_row(column)][column] = player
+   local row1=self:get_current_row(column)
+    self.board[row1][column] = player
+    local winner=self:get_winner(player, row1, column)
+    if winner then
+    print("spelare "..winner.." vann")
+    end
   end
 
 end
@@ -250,17 +256,26 @@ function ConnectFour:get_winner(player, row, column)
   count = 0
 
   if currentrow~=1 and currentcolumn~=1 then
+    print("loopen")
   repeat
     currentrow = currentrow -1
     currentcolumn = currentcolumn -1
   until currentrow==1 or currentcolumn==1
   end
 
+  print(currentrow)
+  print(currentcolumn)
+
   repeat
     if self:get(currentrow, currentcolumn) == player then
       count = count +1
+      print("count")
+      print(count)
     else
       count = 0
+      print("fel bricka")
+      print(currentrow)
+      print(currentcolumn)
     end
 
     if count == 4 then
@@ -273,8 +288,8 @@ function ConnectFour:get_winner(player, row, column)
 
   until currentrow >6 or currentcolumn >7
 
-  print(currentrow)
-  print(currentcolumn)
+--  print(currentrow)
+  --Sprint(currentcolumn)
 
 
 end
