@@ -40,12 +40,17 @@ function Event:trigger(event_type, ...)
 		return
 	end
 
+	callbacks = {}
 	for callback, callback_type in pairs(self.event_callbacks[event_type]) do
+		callbacks[callback] = callback_type
+	end
+
+	for callback, callback_type in pairs(callbacks) do
 		callback(...)
 
 		-- If callback type is once, then it must be removed after being called
 		if callback_type == 1 then
-			self.event_callbacks[event_type][callback] = nil
+			callbacks[callback] = nil
 		end
 	end
 end
