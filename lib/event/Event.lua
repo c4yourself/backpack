@@ -50,7 +50,7 @@ function Event:trigger(event_type, ...)
 
 		-- If callback type is once, then it must be removed after being called
 		if callback_type == 1 then
-			callbacks[callback] = nil
+			self.event_callbacks[event_type][callback] = nil
 		end
 	end
 end
