@@ -14,6 +14,7 @@ TestUtils = require("test_utils")
 TestView = require("test_view_View")
 TestViewManager = require("test_view_ViewManager")
 TestNumericalInputComponent = require("test_components_NumericalInputComponent")
+TestNumerical = require("test_numerical")
 
 
 lu = LuaUnit.LuaUnit.new()
