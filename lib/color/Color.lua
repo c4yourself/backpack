@@ -85,7 +85,6 @@ function Color.from_html(string)
 		error("Invalid hex format provided")
 	end
 
-
 	-- Expand length if shorthands are provided
 	if #hex == 3 or #hex == 4 then
 		hex = (

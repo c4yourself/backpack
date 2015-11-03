@@ -38,6 +38,24 @@ function View:is_dirty()
 	return false
 end
 
+--- Mark this View as being dirty, or unmark it.
+-- This triggers the `dirty` event when marking as dirty.
+-- @param[opt] status True (default) to mark View as dirty, otherwise unmark as dirty.
+function View:dirty(status)
+	-- Set default value of status
+	if status == nil then
+		status = true
+	end
+
+	local old_dirty = self.dirty_flag
+	self.dirty_flag = status
+
+	-- Only fire event if we are not dirty before
+	if not old_dirty and self.dirty_flag then
+		self:trigger("dirty")
+	end
+end
+
 --- Renders a view
 -- NOTE: Must be overloaded by a subclass
 function View:render(surface)
