@@ -8,6 +8,8 @@ local utils = require("lib.utils")
 --local Event = class("Event")
 local ConnectFour = class("ConnectFour")
 
+
+
 --Constructor for ConnectFour
 function ConnectFour:__init()
  --table som innehåller spelplan
@@ -61,12 +63,6 @@ function ConnectFour:__init()
   --self.board[3][3] = "X"
   --self.board[2][4] = "X"
 
-  self.board[6][1] = "X"
-  self.board[5][1] = "O"
-  self.board[4][1] = "X"
-  self.board[3][1] = "O"
-  self.board[2][1] = "X"
-
   --self.board[1][1] = "X"
   --self.board[1][2] = "X"
   --self.board[1][3] = "X"
@@ -93,16 +89,31 @@ function ConnectFour:serialize()
   return output
 end
 
---[[
-function ConnectFour:unserialize(state)
-  local ConnectFourCopy = class("ConnectFour")
+
+function ConnectFour.unserialize(state)
+  local connect_four = ConnectFour()
+
+  local position  = 1
+
   for row = 1, 6 do
+
     for column = 1, 7 do
-      ConnectFourCopy[row][column] = self.board[row][column]
+
+      if string.sub(state, position, position)=="~" then
+        connect_four.board[row][column] = nil
+      else
+      connect_four.board[row][column] = string.sub(state, position, position)
+      end
+
+      position = position +1
     end
+
+
+    position = position +1
   end
+return connect_four
 end
---]]
+
 
 --Returns the color of the disc at the given position. If there is no disc in the given column nil is returned
 function ConnectFour:get(row, column)
@@ -157,10 +168,10 @@ function ConnectFour:is_valid_move(player, column)
   --print(row)
   --print(self:get_player())
 
-  if row>0 and self:get_player()==player then
+  if row>0 and column>=1 and column<=7 and self:get_player()==player then
     return true
   else
-    print("inte ett giltligt drag")
+    --print("inte ett giltligt drag")
     return false
   end
 
@@ -168,15 +179,17 @@ end
 
 --Drops a disc of the given player into the given column. If the move is invalid an error is raised. If it is not the given player’s turn an error is raised
 function ConnectFour:move(player, column)
-  if self:is_valid_move(player, column) then
+  if not self:is_valid_move(player, column) then
+    error("invalid move")
+  end
+  --if pcall(self.errorhandler(player, column)) then
    local row1=self:get_current_row(column)
     self.board[row1][column] = player
     local winner=self:get_winner(player, row1, column)
     if winner then
-    print("spelare "..winner.." vann")
+    --print("spelare "..winner.." vann")
     end
-  end
-
+  --end
 end
 
 function ConnectFour:get_winner(player, row, column)
@@ -239,7 +252,7 @@ function ConnectFour:get_winner(player, row, column)
     end
 
     if count == 4 then
-          print("X vann på diagonal 1")
+      --    print("X vann på diagonal 1")
       return player
     end
 
@@ -256,30 +269,30 @@ function ConnectFour:get_winner(player, row, column)
   count = 0
 
   if currentrow~=1 and currentcolumn~=1 then
-    print("loopen")
+    --print("loopen")
   repeat
     currentrow = currentrow -1
     currentcolumn = currentcolumn -1
   until currentrow==1 or currentcolumn==1
   end
 
-  print(currentrow)
-  print(currentcolumn)
+  --print(currentrow)
+  --print(currentcolumn)
 
   repeat
     if self:get(currentrow, currentcolumn) == player then
       count = count +1
-      print("count")
-      print(count)
+    --  print("count")
+    --  print(count)
     else
       count = 0
-      print("fel bricka")
-      print(currentrow)
-      print(currentcolumn)
+    --  print("fel bricka")
+    --  print(currentrow)
+    --  print(currentcolumn)
     end
 
     if count == 4 then
-      print("X vann på diagonal 2")
+    --  print("X vann på diagonal 2")
       return player
     end
 
@@ -291,7 +304,7 @@ function ConnectFour:get_winner(player, row, column)
 --  print(currentrow)
   --Sprint(currentcolumn)
 
-
+  return nil
 end
 
 --[[- Internal function for binding callbacks.
