@@ -8,6 +8,7 @@ local config = require("config")
 config.logging.mode = "DISABLED"
 
 -- All tests should be included from here
+TestColor = require("test_color")
 TestEvent = require("test_event")
 TestLogger = require("test_logger")
 TestUtils = require("test_utils")

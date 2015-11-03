@@ -139,4 +139,26 @@ function utils.split(str, delimiter)
 	return output
 end
 
+function utils.to_base(number, base)
+	base = base or 10
+	is_negative = number < 0
+	number = math.abs(number)
+
+	local base_characters = utils.split("0123456789abcdef")
+
+	if base > #base_characters or base < 2 then
+		error("Base out of range")
+	elseif number ~= math.floor(number) then
+		error("Only integer numbers supported")
+	end
+
+	local digits = {}
+	repeat
+		table.insert(digits, base_characters[(number % base) + 1])
+		number = math.floor(number / base)
+	until number == 0
+
+	return (is_negative and "-" or "") .. table.concat(digits):reverse()
+end
+
 return utils
