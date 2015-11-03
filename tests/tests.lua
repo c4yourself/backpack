@@ -16,6 +16,8 @@ TestView = require("test_view_View")
 TestViewManager = require("test_view_ViewManager")
 TestNumericalInputComponent = require("test_components_NumericalInputComponent")
 TestNumerical = require("test_numerical")
+TestMockSurface = require("test_mock_SurfaceMock")
+TestIntegrationNumerical = require("test_integration_numerical")
 
 
 lu = LuaUnit.LuaUnit.new()
