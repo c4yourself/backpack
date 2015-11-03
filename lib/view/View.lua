@@ -9,7 +9,7 @@ local View = class("View", Event)
 --- Constructor for View
 function View:__init()
 	self.views = {}
-	self.dirty_flag = true
+	self._dirty = true
 	Event.__init(self)
 end
 
@@ -26,7 +26,7 @@ end
 --- Checks if the view or child views is dirty
 -- @return boolean
 function View:is_dirty()
-	if self.dirty_flag then
+	if self._dirty then
 		return true
 	end
 	for i = 1, #self.views do
@@ -47,11 +47,11 @@ function View:dirty(status)
 		status = true
 	end
 
-	local old_dirty = self.dirty_flag
-	self.dirty_flag = status
+	local old_dirty = self._dirty
+	self._dirty = status
 
 	-- Only fire event if we are not dirty before
-	if not old_dirty and self.dirty_flag then
+	if not old_dirty and self._dirty then
 		self:trigger("dirty")
 	end
 end

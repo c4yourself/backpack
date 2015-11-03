@@ -13,9 +13,9 @@ end
 -- Make sure the is_dirty flag is changed from false to true when set_text
 -- is called
 function TestNumericalInputComponent:test_set_flag()
-	self.num_component.dirty_flag = false
+	self.num_component:dirty(false)
 	self.num_component:set_text("1337")
-	luaunit.assertEquals(self.num_component.dirty_flag, true)
+	luaunit.assertEquals(self.num_component:is_dirty(), true)
 end
 
 -- Test if the NumericalInputComponent responds to events after it has been
