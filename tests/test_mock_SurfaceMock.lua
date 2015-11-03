@@ -12,8 +12,8 @@ end
 
 --Tests the default dimension of the surface
 function TestMockSurface:test_default_dimensions()
-    --luaunit.assertEquals(self.SurfaceMock.get_width, 720)
-    --luaunit.assertEquals(self.SurfaceMock.get_height, 1080)
+    --luaunit.assertEquals(self.SurfaceMock.get_width(), 720)
+    --luaunit.assertEquals(self.SurfaceMock.get_height(), 1080)
 end
 
 --Tests that the default color of the surface is black
