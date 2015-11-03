@@ -20,7 +20,8 @@ local numerical_quiz = {
 	quiz_flag = false,
 	--Instanciate a numerical input component and make the quiz listen for changes
 	num_input_comp = NumericalInputComponent(),
-	listener = Event()
+	listener = Event(),
+	num_comp_surf = Surface(300, 150)
 }
 
 --- Renders a surface for a numerical quiz
@@ -32,20 +33,21 @@ function numerical_quiz.render(surface)
 		{x = 100, y = 300},
 		utils.absolute_path("data/fonts/DroidSans.ttf"))
 	surface:clear(color)
-	event.remote_control:off("button_release")
-
-	numerical_quiz.num_input_comp:set_text("12345")
+	--numerical_quiz.num_input_comp:set_text("12345")
+	local callback = utils.partial(numerical_quiz.num_input_comp.render, numerical_quiz.num_input_comp, numerical_quiz.num_comp_surf)
 	numerical_quiz.listener:listen_to(
 		numerical_quiz.num_input_comp,
 		"change",
-		utils.partial(numerical_quiz.num_input_comp.render, surface)
+		callback
 	)
-	numerical_quiz.listener:listen_to(
+	--[[numerical_quiz.listener:listen_to(
 		numerical_quiz.num_input_comp,
 		"submit",
 		numerical_quiz.show_answer -- TODO Display result
-	)
+	)]]
 	numerical_quiz.num_input_comp:focus()
+	--numerical_quiz.num_input_comp:trigger("submit")
+	numerical_quiz.num_input_comp:trigger("change")
 
 	-- Draw question
 	local question = num_quiz:get_question()
@@ -55,8 +57,8 @@ function numerical_quiz.render(surface)
 	event.remote_control:on("button_release", function(key)
 		-- Checks if the user wants to progress to the next question or exit then
 		-- quiz
-			if key == "right" then
-				if numerical_quiz.answer_flag then
+			if key == "8" then
+				--[[if numerical_quiz.answer_flag then
 					question = num_quiz:get_question()
 					if question == nil then
 						output = "You answered " .. num_quiz.correct_answers .. " questions correctly"
@@ -65,7 +67,9 @@ function numerical_quiz.render(surface)
 					else
 						output = num_quiz.current_question .. ")   " .. question .. " =  ?"
 					end
-				end
+				end]]
+				numerical_quiz.num_input_comp:render(numerical_quiz.num_comp_surf)
+				screen:copyfrom(numerical_quiz.num_comp_surf)
 			elseif key == "exit" then
 				--TODO
 				--	menu.render(screen)
@@ -75,9 +79,11 @@ function numerical_quiz.render(surface)
 				--	output = num_quiz.current_question .. ")   " .. question .. " = " .. numerical_quiz.input
 			end
 		end)
+		gfx.update()
 end
 
 function numerical_quiz.show_answer()
+	print("Show answer triggered")
 	--TODO -- Not yet implemented
 	-- Reference code from old module
 	--[[
