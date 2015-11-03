@@ -17,6 +17,8 @@ function menu.load_view(button)
 	elseif button == "3" then
 		print("Shut down program")
 		sys.stop()
+	elseif button == "down" then
+
 	end
 end
 
