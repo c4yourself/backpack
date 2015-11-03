@@ -20,10 +20,10 @@ end
 -- view and renders the new view
 function ViewManager:set_view(view)
 	if self.view ~= nil then
-		self.view.destroy()
+		self.view:destroy()
 	end
 	self.view = view
-	self.view.render()
+	self.view:render(screen)
 end
 
 --- Returns the currently active view
@@ -38,7 +38,7 @@ function ViewManager:render()
 	if self.view == nil then
 		error("Error: No active view coupled with the ViewManager")
 	end
-	self.view.render(self.surface)
+	self.view:render(self.surface)
 end
 
 return ViewManager
