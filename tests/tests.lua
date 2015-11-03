@@ -12,6 +12,7 @@ TestEvent = require("test_event")
 TestLogger = require("test_logger")
 TestUtils = require("test_utils")
 TestView = require("test_view_View")
+TestConnectFour = require("test_connectfour")
 
 lu = LuaUnit.LuaUnit.new()
 lu:setOutputType("tap")
