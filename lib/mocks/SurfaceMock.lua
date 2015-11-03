@@ -67,3 +67,25 @@ function SurfaceMock:clear(color, rectangle)
     end
   end
 end
+
+--Get this surface's width
+function SurfaceMock:get_width()
+  return self.width
+end
+
+--Get this surface's height
+function SurfaceMock:get_height()
+  return self.height
+end
+
+--Get color of the pixel at location x and y
+function SurfaceMock:get_pixel(x, y)
+  return self.pixels[x][y]
+end
+
+--Set color of the pixel at location x and y
+function SurfaceMock:set_pixel(x, y, color)
+ self.pixels[x][y] = color
+end
+
+return SurfaceMock
