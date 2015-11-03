@@ -17,6 +17,7 @@ function Quiz:__init()
 	self.current_question = 0
 	self.correct_answers = 0
 	self.wrong_answers = 0
+	self.score=0
 end
 
 --- Returns the next question in the quiz
@@ -51,8 +52,26 @@ function Quiz:generate_numerical_quiz(level, quiz_size, image_path)
 		self.questions[i] = question
 	end
 end
-
+-- Calculate score of the quiz
+function Quiz:calculate_score(correct_question_number)
+  --maybe some other scoring algorithm
+	 self.score=correct_question_number*2
+end
+--return thr score of the quiz
+function Quiz:get_score()
+	return self.score
+end
+-- Generates a multiple_choice quiz of a given size
 function Quiz:generate_multiplechoice_quiz(image_path,quiz_size)
+	local tsvreader=TSVReader(image_path)
+	tsvreader:get_question("multiple_choice")
+	for i=1, quiz_size,1 do
+		local multiplechoicequestion=tsvreader:generate_question(i)
+		self.questions[i]=multiplechoicequestion
+	end
+end
+-- Generates a single quiz of a given size
+function Quiz:generate_singlechoice_quiz(image_path,quiz_size)
 	local tsvreader=TSVReader(image_path)
 	tsvreader:get_question("single_choice")
 	for i=1, quiz_size,1 do

@@ -11,19 +11,22 @@ end
 
 -- Test that default values are set to expected values
 function TestView:test_defaults()
-	luaunit.assertEquals(self.view.dirty_flag, true)
+	luaunit.assertEquals(self.view:is_dirty(), true)
 end
 
 -- Tests if the is_dirty function returns false when the view and
 -- all childviews are not dirty
 function TestView:test_is_dirty_when_clean()
 	-- Set up a clean view hiearchy
-	self.view.dirty_flag = false
 	local view1 = View()
 	local view2 = View()
-	view1.dirty_flag = false
-	view2.dirty_flag = false
+
+	self.view:dirty(false)
+	view1:dirty(false)
+	view2:dirty(false)
+
 	self.view.views = {view1, view2}
+
 	-- Run test
 	luaunit.assertEquals(self.view:is_dirty(), false)
 end
@@ -32,14 +35,42 @@ end
 -- dirty
 function TestView:test_is_dirty_when_dirty()
 	-- Set up a dirty view hiearchy
-	self.view.dirty_flag = false
 	local view1 = View()
 	local view2 = View()
-	view1.dirty_flag = false
-	view2.dirty_flag = true
+
+	self.view:dirty(false)
+	view1:dirty(false)
+	view2:dirty(true)
+
 	self.view.views = {view1, view2}
+
 	-- Run test
 	luaunit.assertEquals(self.view:is_dirty(), true)
+end
+
+-- Make sure that dirty marks view dirty and fires event
+function TestView:test_dirty()
+	self.view:dirty(false)
+
+	luaunit.assertFalse(self.view:is_dirty())
+
+	local call_count = 0
+	function incr()
+		call_count = call_count + 1
+	end
+
+	self.view:on("dirty", incr)
+	self.view:dirty()
+
+	luaunit.assertTrue(self.view:is_dirty())
+	luaunit.assertEquals(call_count, 1)
+
+	self.view:dirty()
+	luaunit.assertEquals(call_count, 1)
+
+	self.view:dirty(false)
+	self.view:dirty()
+	luaunit.assertEquals(call_count, 2)
 end
 
 -- Makes sure View:render() function throws an error when called

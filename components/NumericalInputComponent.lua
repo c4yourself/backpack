@@ -42,7 +42,7 @@ end
 
 --- Renders the NumericalInputField
 function NumericalInputComponent:render()
-	-- TODO
+	self:dirty(false)
 end
 
 --- De-focuses the NumericalInputComponent, i.e. stops listening to events
@@ -76,7 +76,7 @@ end
 function NumericalInputComponent:set_text(text)
 	if tonumber(text) ~= nil then
 		self.input = text
-		self.dirty_flag = true
+		self:dirty()
 	else
 		error("Only numerical inputs are accepted")
 	end
