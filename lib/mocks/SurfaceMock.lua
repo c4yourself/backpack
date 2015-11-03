@@ -41,7 +41,7 @@ function SurfaceMock:clear(color, rectangle)
     x = 0,
     y = 0,
     width = self.width,
-    height = self.height)
+    height = self.height
   }
 
   if rectangle ~= nil then
