@@ -9,10 +9,14 @@ local class = require("lib.classy")
 local ViewManager = class("ViewManager")
 
 --- Constructor for ViewManager
--- @param surface Surface that views will be rendered on
+-- @param surface Surface that views will be rendered on, defaults to screen
 -- @param view top-level view component
 function ViewManager:__init(surface, view)
-	self.surface = surface
+	if surface == nil then
+		self.surface = screen
+	else
+		self.surface = surface
+	end
 	self.view = view
 end
 
