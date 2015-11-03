@@ -61,11 +61,11 @@ function ConnectFour:__init()
   --self.board[3][3] = "X"
   --self.board[2][4] = "X"
 
-  --self.board[6][1] = "X"
-  --self.board[5][1] = "O"
-  --self.board[4][1] = "X"
-  --self.board[3][1] = "O"
-  --self.board[2][1] = "X"
+  self.board[6][1] = "X"
+  self.board[5][1] = "O"
+  self.board[4][1] = "X"
+  self.board[3][1] = "O"
+  self.board[2][1] = "X"
 
   --self.board[1][1] = "X"
   --self.board[1][2] = "X"
