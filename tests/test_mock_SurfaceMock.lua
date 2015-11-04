@@ -44,7 +44,7 @@ function TestMockSurface:test_clear()
 		b = 50,
 		a = 50
 	}
-	--self.surface_mock.clear(c, rect)
+	self.surface_mock.clear(c, rect)
 end
 
 
