@@ -18,7 +18,7 @@ TestNumericalInputComponent = require("test_components_NumericalInputComponent")
 TestNumerical = require("test_numerical")
 TestMockSurface = require("test_mock_SurfaceMock")
 TestIntegrationNumerical = require("test_integration_numerical")
-
+TestTSV = require("test_tsvreader")
 
 lu = LuaUnit.LuaUnit.new()
 lu:setOutputType("tap")
