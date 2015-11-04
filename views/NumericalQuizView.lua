@@ -53,7 +53,7 @@ function NumericQuizView:press(key)
 	if key == "right" then
 		-- Navigate to the next question if the user already submitted an answer
 		if self.answer_flag then
-			self.dirty_flag = true
+			self:dirty(true)
 			self.answer_flag = false
 			view.view_manager:render()
 		end
@@ -116,14 +116,14 @@ function NumericQuizView:render(surface)
 	gfx.update()
 	--If the user updated dirty flag will remain true to make sure the user can
 	-- navigate to the next question
-	self.dirty_flag = false
+	self:dirty(false)
 end
 
 -- Displays the correct answer and whether the user chose the correct one.
 function NumericQuizView:show_answer()
 	if self.views.num_input_comp:get_text() ~= "" then
 		self.answer_flag = true
-		self.dirty_flag = true
+		self:dirty(true)
 		self.user_answer = tonumber(self.views.num_input_comp:get_text())
 		self.views.num_input_comp:set_text(nil)
 		view.view_manager:render()

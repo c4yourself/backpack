@@ -8,6 +8,7 @@ local View = require("lib.view.View")
 local NumericalInputComponent = class("NumericalInputComponent", View)
 local event = require("lib.event")
 local utils = require("lib.utils")
+local sys = require("emulator.sys")
 
 --- Constructor for NumericalInputComponent
 -- @param event_listener Remote control to listen to
@@ -22,11 +23,6 @@ function NumericalInputComponent:__init(remote_control)
 		self.event_listener = event.remote_control
 	end
 	-- Graphics
-	self.font = sys.new_freetype(
-		{r = 255, g = 255, b = 255, a = 255},
-		32,
-		{x = 25, y = 50},
-		utils.absolute_path("data/fonts/DroidSans.ttf"))
 	self.color1 = {
 			r = 255, g = 0, b = 0, a = 255
 		}
@@ -58,8 +54,14 @@ end
 
 --- Renders the NumericalInputField
 function NumericalInputComponent:render(surface)
+	local font = sys.new_freetype(
+		{r = 255, g = 255, b = 255, a = 255},
+		32,
+		{x = 25, y = 50},
+		utils.absolute_path("data/fonts/DroidSans.ttf"))
+
 	surface:clear(self.color1, self.rectangle)
-	self.font:draw_over_surface(surface, self.input)
+	font:draw_over_surface(surface, self.input)
 	gfx.update()
 end
 
@@ -99,10 +101,10 @@ end
 function NumericalInputComponent:set_text(text)
 	if tonumber(text) ~= nil then
 		self.input = text
-		self.dirty_flag = true
+		self:dirty(true)
  	elseif text == nil or text == "" then
 		self.input = ""
-		self.dirty_flag = true
+		self:dirty(true)
 	else
 		error("Only numerical inputs are accepted")
 	end
