@@ -23,39 +23,10 @@ end
 --Fills desired area odf the surface with a solid color.
 function SurfaceMock:clear(color, rectangle)
   --Set the color to the required color, default is black.
-  local c = {
-		r = 0,
-		g = 0,
-		b = 0,
-		a = 0
-	}
-	if color ~= nil then
-		c.r = color.r or 0
-		c.g = color.g or 0
-		c.b = color.b or 0
-		c.a = color.a or 255
-	end
+  local c = Color.from_table(color)
 
   --locates the desireable rectangle, default is whole surface.
-  local rect = {
-    x = 0,
-    y = 0,
-    width = self.width,
-    height = self.height
-  }
-
-  if rectangle ~= nil then
-    rect.x = (rectangle.x or 0)
-    rect.y = (rectangle.y or 0)
-
-    if rect.x + (rectangle.width or rectangle.w) <= rect.width then
-      rect.width = (rectangle.width or rectangle.w)
-    end
-
-    if rect.y + (rectangle.height or rectangle.h) <= rect.height then
-      rect.height = (rectangle.height or rectangle.h)
-    end
-  end
+  local rect = self:_get_rectangle(rectangle)
 
   --Change color on the specified rectangle, default whole surface gets
   --repainted.
@@ -69,7 +40,19 @@ function SurfaceMock:clear(color, rectangle)
 end
 
 function SurfaceMock:fill(color, rectangle)
-  --TODO iplement function that blend colors in specified rectangle
+  local c = Color.from_table(color)
+  --locates the desireable rectangle, default is whole surface.
+  local rect = self:_get_rectangle(rectangle)
+
+  --Change color on the specified rectangle, default whole surface gets
+  --repainted.
+  local w = rect.x + rect.width - 1
+  local h = rect.y + rect.height - 1
+  for i = rect.x, w do
+    for j = rect.y, h do
+      self.pixels[i][j] = self.pixels[i][j]:blend(c)
+    end
+  end
 end
 
 function SurfaceMock:copyfrom(src_surface, src_rectangle, dest_rectangle, blend_option)
@@ -113,6 +96,29 @@ function SurfaceMock:set_alpha(alpha)
       self.pixels[i][j].a = a
     end
   end
+end
+
+function SurfaceMock:_get_rectangle(rectangle)
+  local rect = {
+    x = 0,
+    y = 0,
+    width = self.width,
+    height = self.height
+  }
+
+  if rectangle ~= nil then
+    rect.x = (rectangle.x or 0)
+    rect.y = (rectangle.y or 0)
+
+    if rect.x + (rectangle.width or rectangle.w) <= rect.width then
+      rect.width = (rectangle.width or rectangle.w)
+    end
+
+    if rect.y + (rectangle.height or rectangle.h) <= rect.height then
+      rect.height = (rectangle.height or rectangle.h)
+    end
+  end
+  return rect
 end
 
 return SurfaceMock

@@ -104,10 +104,11 @@ end
 
 --This function blends two colors
 function Color:blend(color)
-	self.red = (self.red + color.red) / 2
-	self.green = (self.green + color.green) / 2
-	self.blue = (self.blue + color.blue) / 2
-	self.alpha = (self.alpha + color.alpha) / 2
+	return Color(
+		(self.red + color.red) / 2,
+		(self.green + color.green) / 2,
+		(self.blue + color.blue) / 2,
+		(self.alpha + color.alpha) / 2)
 end
 
 return Color
