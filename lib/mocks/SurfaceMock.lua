@@ -3,19 +3,19 @@ local SurfaceMock = class("SurfaceMock")
 
 --Constructor for SurfaceMock.
 function SurfaceMock:__init(width, height)
-  self.width = width
-  self.height = height
+  SurfaceMock.width = width
+  SurfaceMock.height = height
   local c = {
 		r = 0,
 		g = 0,
 		b = 0,
 		a = 0
 	}
-  self.pixels = {}
+  SurfaceMock.pixels = {}
   for i= 0, (width-1) do
-    self.pixels[i] = {}
+    SurfaceMock.pixels[i] = {}
     for j = 0, (height-1) do
-      self.pixels[i][j] = c
+      SurfaceMock.pixels[i][j] = c
     end
   end
 end
@@ -40,8 +40,8 @@ function SurfaceMock:clear(color, rectangle)
   local rect = {
     x = 0,
     y = 0,
-    width = self.width,
-    height = self.height
+    width = SurfaceMock.width,
+    height = SurfaceMock.height
   }
 
   if rectangle ~= nil then
@@ -63,29 +63,49 @@ function SurfaceMock:clear(color, rectangle)
   local h = rect.y + rect.height - 1
   for i = rect.x, w do
     for j = rect.y, h do
-      self.pixels[i][j] = c
+      SurfaceMock.pixels[i][j] = c
     end
   end
 end
 
+function SurfaceMock:fill(color, rectangle)
+  --TODO iplement function that blend colors in specified rectangle
+end
+
+function SurfaceMock:copyfrom(src_surface, src_rectangle, dest_rectangle, blend_option)
+  --TODO implement function that copy pixels from another surface into this one
+end
+
 --Get this surface's width
 function SurfaceMock:get_width()
-  return self.width
+  return SurfaceMock.width
 end
 
 --Get this surface's height
 function SurfaceMock:get_height()
-  return self.height
+  return SurfaceMock.height
 end
 
 --Get color of the pixel at location x and y
 function SurfaceMock:get_pixel(x, y)
-  return self.pixels[x][y]
+  return SurfaceMock.pixels[x][y]
 end
 
 --Set color of the pixel at location x and y
 function SurfaceMock:set_pixel(x, y, color)
- self.pixels[x][y] = color
+ SurfaceMock.pixels[x][y] = color
+end
+
+--Does nothing, but needed for feature parity with the regular surface class.
+function SurfaceMock:premultiply()
+end
+
+--Does nothing, but needed for feature parity with the regular surface class.
+function SurfaceMock:destroy()
+end
+
+function SurfaceMock:set_alpha(alpha)
+  --TODO implemet function that modifies the alpha value for every pixel within this surface
 end
 
 return SurfaceMock
