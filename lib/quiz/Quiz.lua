@@ -49,7 +49,7 @@ function Quiz:generate_numerical_quiz(level, quiz_size, image_path)
 end
 -- Calculate score of the quiz
 function Quiz:calculate_score(correct_question_number)
-  --maybe some other scoring algorithm
+	--maybe some other scoring algorithm
 	self.score = correct_question_number * 2
 end
 --return thr score of the quiz
