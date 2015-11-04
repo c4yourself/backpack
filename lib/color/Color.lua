@@ -102,5 +102,13 @@ function Color.from_html(string)
 	return Color.from_number(tonumber(hex, 16))
 end
 
+--This function blends two colors
+function Color:blend(color)
+	return Color(
+		(self.red + color.red) / 2,
+		(self.green + color.green) / 2,
+		(self.blue + color.blue) / 2,
+		(self.alpha + color.alpha) / 2)
+end
 
 return Color
