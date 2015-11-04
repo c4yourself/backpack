@@ -1,6 +1,5 @@
 local utils = require("lib.utils")
 local event = require("lib.event")
-local numerical_quiz = require("views.numerical_quiz")
 local multiplechoice_quiz = require("views.multiplechoice_quiz")
 local subsurface = require("lib.view.Subsurface")
 local view = require("lib.view")
