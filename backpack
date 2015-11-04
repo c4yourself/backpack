@@ -61,6 +61,25 @@ elif [ "$1" == "export" ]; then
 
 	echo "Removing local file package"
 	rm build.tar
+elif [ "$1" == "lint" ]; then
+	for file in $(find . -name '*.lua' ! -name 'serpent.lua' ! -name 'classy.lua' ! -name 'luaunit.lua'); do
+		correct_count=$(grep -Pn $'^[\t]+[^\t ]' "$file"|wc -l)
+		indented_count=$(grep -Pn $'^[\t ]+[^\t ]' "$file"|wc -l)
+
+		incorrect_count=$(($indented_count - $correct_count))
+
+		dots="................................................................."
+		tput setf 5; echo -n "$file "; tput sgr0
+		tput setf 1; echo -n "${dots:${#file}} "; tput sgr0
+
+
+		if [ "$incorrect_count" -gt 0 ]; then
+			tput setf 4; echo "ERROR"; tput sgr0
+			tput setf 6; echo -e "\tSome lines were not correctly indented with tabs"; tput sgr0
+		else
+			tput setf 2; echo "OK"; tput sgr0
+		fi
+	done
 elif [ "$1" == "run" -o "$1" == "" ]; then
 	echo "Starting emulator"
 	love .
