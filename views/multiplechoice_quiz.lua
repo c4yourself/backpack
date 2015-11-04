@@ -8,7 +8,7 @@ local event = require("lib.event")
 
 -- Generates a global multiplrchoice quiz intance
 mulchoice_quiz = Quiz()
-mulchoice_quiz:generate_multiplechoice_quiz("image_path",10)
+--mulchoice_quiz:generate_multiplechoice_quiz("image_path",10)
 --mulchoice_quiz:get_choices()
 local multiplechoice_quiz={}
 local user_input=""
@@ -18,6 +18,7 @@ local check_question_flag=0
 local last_check=0
 --- Renders a surface for a MultipleChoice quiz
 function multiplechoice_quiz.render(surface)
+	mulchoice_quiz:generate_multiplechoice_quiz("paris",10)
 	surface:clear(color)
 
 	event.remote_control:off("button_release")
@@ -55,11 +56,11 @@ function multiplechoice_quiz.render(surface)
 					if mulchoice_quiz.questions[i]:is_correct(answer)==true then
 						correct_answer_number=correct_answer_number+1
 						surface:clear(color)
-						font:draw_over_surface(screen, "Right and You answered " .. correct_answer_number .. " questions correctly")
+						font:draw_over_surface(screen, "Right and You answered " .. correct_answer_number .. " questions correctly.")
 						last_check=last_check+1
 					else
 						surface:clear(color)
-						font:draw_over_surface(screen, "Wrong and You answered " .. correct_answer_number .. " questions correctly")
+						font:draw_over_surface(screen, "Wrong and You answered " .. correct_answer_number .. " questions correctly.")
 						last_check=last_check+1
 					end
 					answer={}
@@ -85,8 +86,9 @@ function multiplechoice_quiz.render(surface)
 					end
 				-- display final result
 				elseif key=="right" and end_flag==1 then
+						mulchoice_quiz:calculate_score(correct_answer_number)
 						surface:clear(color)
-						font:draw_over_surface(screen, "You answered " .. correct_answer_number .. " questions correctly")
+						font:draw_over_surface(screen, "You answered " .. correct_answer_number .. " questions correctly and your score is " .. mulchoice_quiz:get_score() .. ".")
 				--get user answer
 				else
 					if(#user_input<=3) then

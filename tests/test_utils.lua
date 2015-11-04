@@ -49,4 +49,23 @@ function TestUtils:test_split_multi_char_delimiter()
 	luaunit.assertEquals(utils.split("4, 5, 6", ", "), {"4", "5", "6"})
 end
 
+function TestUtils:test_to_base()
+	luaunit.assertEquals(utils.to_base(100), "100")
+	luaunit.assertEquals(utils.to_base(1337), "1337")
+	luaunit.assertEquals(utils.to_base(10, 2), "1010")
+	luaunit.assertEquals(utils.to_base(10, 8), "12")
+	luaunit.assertEquals(utils.to_base(10, 16), "a")
+	luaunit.assertEquals(utils.to_base(15, 16), "f")
+	luaunit.assertEquals(utils.to_base(16, 16), "10")
+	luaunit.assertEquals(utils.to_base(255, 16), "ff")
+
+
+	luaunit.assertEquals(utils.to_base(-100), "-100")
+	luaunit.assertEquals(utils.to_base(-10, 16), "-a")
+
+	luaunit.assertError(utils.to_base, 100, -1)
+	luaunit.assertError(utils.to_base, 100, 17)
+	luaunit.assertError(utils.to_base, 3.14)
+end
+
 return TestUtils

@@ -32,7 +32,7 @@ elif [ "$1" == "doc" ]; then
 
 	echo "Running LDoc"
 	ldoc .
-	sensible-browser doc/index.html
+	sensible-browser doc/index.html &
 elif [ "$1" == "install" ]; then
 	echo "Installing necessary packages"
 	sudo apt-get install lua5.1 lua-ldoc lua-discount love expect python-tftpy
@@ -61,7 +61,37 @@ elif [ "$1" == "export" ]; then
 
 	echo "Removing local file package"
 	rm build.tar
+elif [ "$1" == "lint" ]; then
+	for file in $(find . -name '*.lua' ! -name 'serpent.lua' ! -name 'classy.lua' ! -name 'luaunit.lua'); do
+		correct_count=$(grep -Pn $'^[\t]+[^\t ]' "$file"|wc -l)
+		indented_count=$(grep -Pn $'^[\t ]+[^\t ]' "$file"|wc -l)
+
+		incorrect_count=$(($indented_count - $correct_count))
+
+		dots="................................................................."
+		tput setf 5; echo -n "$file "; tput sgr0
+		tput setf 1; echo -n "${dots:${#file}} "; tput sgr0
+
+
+		if [ "$incorrect_count" -gt 0 ]; then
+			tput setf 4; echo "ERROR"; tput sgr0
+			tput setf 6; echo -e "\tSome lines were not correctly indented with tabs"; tput sgr0
+		else
+			tput setf 2; echo "OK"; tput sgr0
+		fi
+	done
 elif [ "$1" == "run" -o "$1" == "" ]; then
 	echo "Starting emulator"
 	love .
+else
+	echo "Backpack application task runner"
+	echo ""
+	echo "Usage:"
+	echo "	backpack [run]    Run application in emulator"
+	echo "	backpack doc      Generate code documentation and open in browser"
+	echo "	backpack export   Put code on USB memory on set-top box. Does not start"
+	echo "	                  application"
+	echo "	backpack install  Install required system packages (expert only)"
+	echo "	backpack logger   Start listener for UDPLogger (on port in config.lua)"
+	echo "	backpack test     Run all unit tests"
 fi

@@ -189,4 +189,26 @@ function TestEvent:test_stop_listening_optional_arguments()
 	luaunit.assertNil(self.callback_data)
 end
 
+-- Test for bug when removing and adding listeners to an event type that is
+-- currently triggering
+function TestEvent:test_off_in_callback()
+	local event = event.Event()
+
+	-- Remove event listeners and add a new one
+	local callback = function()
+		event:off("test_event")
+		event:on("test_event", self.callback)
+	end
+
+	event:on("test_event", callback)
+	event:trigger("test_event")
+
+	-- Verify that new listener did not get called
+	luaunit.assertNil(self.callback_data)
+
+	-- Verify that new listener got added
+	event:trigger("test_event", 1)
+	luaunit.assertEquals(self.callback_data, {1})
+end
+
 return TestEvent
