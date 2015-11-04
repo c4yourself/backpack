@@ -3,19 +3,19 @@ local SurfaceMock = class("SurfaceMock")
 
 --Constructor for SurfaceMock.
 function SurfaceMock:__init(width, height)
-  SurfaceMock.width = width
-  SurfaceMock.height = height
+  self.width = width
+  self.height = height
   local c = {
 		r = 0,
 		g = 0,
 		b = 0,
 		a = 0
 	}
-  SurfaceMock.pixels = {}
+  self.pixels = {}
   for i= 0, (width-1) do
-    SurfaceMock.pixels[i] = {}
+    self.pixels[i] = {}
     for j = 0, (height-1) do
-      SurfaceMock.pixels[i][j] = c
+      self.pixels[i][j] = c
     end
   end
 end
@@ -40,8 +40,8 @@ function SurfaceMock:clear(color, rectangle)
   local rect = {
     x = 0,
     y = 0,
-    width = SurfaceMock.width,
-    height = SurfaceMock.height
+    width = self.width,
+    height = self.height
   }
 
   if rectangle ~= nil then
@@ -63,7 +63,7 @@ function SurfaceMock:clear(color, rectangle)
   local h = rect.y + rect.height - 1
   for i = rect.x, w do
     for j = rect.y, h do
-      SurfaceMock.pixels[i][j] = c
+      self.pixels[i][j] = c
     end
   end
 end
@@ -78,22 +78,22 @@ end
 
 --Get this surface's width
 function SurfaceMock:get_width()
-  return SurfaceMock.width
+  return self.width
 end
 
 --Get this surface's height
 function SurfaceMock:get_height()
-  return SurfaceMock.height
+  return self.height
 end
 
 --Get color of the pixel at location x and y
 function SurfaceMock:get_pixel(x, y)
-  return SurfaceMock.pixels[x][y]
+  return self.pixels[x][y]
 end
 
 --Set color of the pixel at location x and y
 function SurfaceMock:set_pixel(x, y, color)
- SurfaceMock.pixels[x][y] = color
+  self.pixels[x][y] = color
 end
 
 --Does nothing, but needed for feature parity with the regular surface class.
@@ -104,14 +104,15 @@ end
 function SurfaceMock:destroy()
 end
 
+--Modifies the alpha value of every pixel within this surface
 function SurfaceMock:set_alpha(alpha)
- local a = alpha
- for i= 0, (width-1) do
-   SurfaceMock.pixels[i] = {}
-   for j = 0, (height-1) do
-     SurfaceMock.pixels[i][j].a = a
-   end
- end
+  local a = alpha
+  for i= 0, (width-1) do
+    self.pixels[i] = {}
+    for j = 0, (height-1) do
+      self.pixels[i][j].a = a
+    end
+  end
 end
 
 return SurfaceMock
