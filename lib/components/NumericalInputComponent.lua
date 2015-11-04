@@ -1,5 +1,6 @@
 --- Base class for NumericalInputComponent
---
+-- A NumericalInputComponent is the input field in a numerical quiz. It responds
+-- to numerical input on the remote.
 -- @classmod NumericalInputComponent
 
 local class = require("lib.classy")
@@ -20,11 +21,22 @@ function NumericalInputComponent:__init(remote_control)
 	else
 		self.event_listener = event.remote_control
 	end
+	-- Graphics
+	self.font = sys.new_freetype(
+		{r = 255, g = 255, b = 255, a = 255},
+		32,
+		{x = 25, y = 50},
+		utils.absolute_path("data/fonts/DroidSans.ttf"))
+	self.color1 = {
+			r = 255, g = 0, b = 0, a = 255
+		}
+	self.rectangle = {
+			x = 0, y = 0, width = 299, height = 149, w = 299, h =149
+		}
 end
 
--- NumericalInputComponent responds to a button press event
+-- Called when NumericalInputComponent responds to a button press event
 function NumericalInputComponent:press(button)
-	print("NumInput noticed a button press")
 	if button == "backspace" then
 		if #self.input > 0 then
 			if #self.input == 1 then
@@ -37,9 +49,6 @@ function NumericalInputComponent:press(button)
 		self:trigger("submit")
 	else
 		if button ~= nil and tonumber(button) ~= nil then
-			print("NumInpComp triggers change")
-			print("button")
-			print(button)
 			self:set_text(self.input .. button)
 			self:trigger("change")
 		end
@@ -49,20 +58,8 @@ end
 
 --- Renders the NumericalInputField
 function NumericalInputComponent:render(surface)
-	-- Draw  Numerical
-	local font = sys.new_freetype(
-		{r = 255, g = 255, b = 255, a = 255},
-		32,
-		{x = 25, y = 50},
-		utils.absolute_path("data/fonts/DroidSans.ttf"))
-	color1 = {
-			r = 255, g = 0, b = 0, a = 255
-		}
-	rectangle = {
-			x = 0, y = 0, width = 299, height = 149, w = 299, h =149
-		}
-	surface:clear(color1, rectangle)
-	font:draw_over_surface(surface, self.input)
+	surface:clear(self.color1, self.rectangle)
+	self.font:draw_over_surface(surface, self.input)
 	gfx.update()
 end
 
@@ -76,7 +73,6 @@ end
 
 --- Focuses the NumericalInputComponent, i.e. starts to listening to events
 function NumericalInputComponent:focus()
-	print("numericalinput focus called")
 	if not self:is_focused() then
 		self:listen_to(
 			self.event_listener,
@@ -90,9 +86,6 @@ function NumericalInputComponent:focus()
 		)
 		self.focused = true
 	end
-	if self.focused then
-		print("numerical input focused: true")
-	end
 end
 
 --- Checks if the component is focused or not
@@ -104,8 +97,6 @@ end
 -- @param text String to be displayed in the input field
 -- @throws Error if text can't be parsed as a number
 function NumericalInputComponent:set_text(text)
-	print("set text called")
-	print(text)
 	if tonumber(text) ~= nil then
 		self.input = text
 		self.dirty_flag = true

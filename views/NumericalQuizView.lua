@@ -14,6 +14,8 @@ local NumericQuestion = require("lib.quiz.NumericQuestion")
 --- Constructor for NumericQuizView
 function NumericQuizView:__init()
 	View.__init(self)
+	event.remote_control:off("button_release") -- TODO remove this once the ViewManager is fully implemented
+
 	-- Flags
 	--Flags to determine whether a quiz or a question is answered
 	self.answer_flag = false
@@ -49,17 +51,14 @@ end
 -- global @{ViewManager} instance)
 function NumericQuizView:press(key)
 	if key == "right" then
-		print("user pressed right kwy")
 		-- Navigate to the next question if the user already submitted an answer
 		if self.answer_flag then
-			print("noticed right key")
-			--self.num_quiz:get_question()
 			self.dirty_flag = true
 			self.answer_flag = false
 			view.view_manager:render()
 		end
 	elseif key == "exit" then
-		--TODO Exit to the menu
+		--TODO Exit to the menu, needs a menu View to be implemented first
 	end
 end
 
@@ -86,8 +85,6 @@ function NumericQuizView:render(surface)
 		surface:clear(color)
 		if self.answer_flag then -- The user has answered a question
 			surface:clear(color)
-			print("User answer:")
-			print(self.user_answer)
 			if self.num_quiz:answer(self.user_answer) then
 				output = "Correct!"
 			else
@@ -97,12 +94,13 @@ function NumericQuizView:render(surface)
 		else
 			--Render the main components of NumericQuizView
 			self.answer_flag = false
-			print("Else clause")
 			surface:clear(color)
 			local question = self.num_quiz:get_question()
 			if question ~= nil then
 				self.font:draw_over_surface(surface, self.num_quiz.current_question .. ")   " .. question .. " =  ?")
 			else
+				-- The user has finished the quiz
+				self.views.num_input_comp:blur()
 				-- TODO show result of the quiz
 				self.quiz_flag = true -- Quiz is complete
 				output = "You answered " .. tostring(self.num_quiz.correct_answers) .. " questions correctly."
