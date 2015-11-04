@@ -57,8 +57,9 @@ function NumericQuizView:press(key)
 			self.answer_flag = false
 			view.view_manager:render()
 		end
-	elseif key == "exit" then
-		--TODO Exit to the menu, needs a menu View to be implemented first
+	elseif key == "back" then
+		--TODO find a way to create the correct city view
+		self:trigger("exit")
 	end
 end
 
