@@ -21,5 +21,10 @@ function TestMockSurface:test_default_color()
 end
 
 
+function TestMockSurface:test_new_color()
+end
+
+
+
 
 return TestMockSurface
