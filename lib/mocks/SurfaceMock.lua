@@ -105,7 +105,13 @@ function SurfaceMock:destroy()
 end
 
 function SurfaceMock:set_alpha(alpha)
-  --TODO implemet function that modifies the alpha value for every pixel within this surface
+ local a = alpha
+ for i= 0, (width-1) do
+   SurfaceMock.pixels[i] = {}
+   for j = 0, (height-1) do
+     SurfaceMock.pixels[i][j].a = a
+   end
+ end
 end
 
 return SurfaceMock
