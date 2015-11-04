@@ -1,39 +1,30 @@
-local utils = require("lib.utils")
+--- Base class for CityView
+-- A CityView is the input field in a numerical quiz. It responds
+-- to numerical input on the remote.
+-- @classmod CityView
+
+local class = require("lib.classy")
+local View = require("lib.view.View")
+local view = require("lib.view")
+local CityView = class("CityView", View)
 local event = require("lib.event")
+local utils = require("lib.utils")
 local multiplechoice_quiz = require("views.multiplechoice_quiz")
 local subsurface = require("lib.view.Subsurface")
-local view = require("lib.view")
 local NumericalQuizView = require("views.NumericalQuizView")
-local CityView = require("views.CityView")
 
-local menu = {}
-
-function menu.load_view(button)
-	if button == "1" then
-		local numerical_quiz_view = NumericalQuizView()
-		view.view_manager:set_view(numerical_quiz_view)
-		gfx.update()
-	elseif button == "2" then
-		multiplechoice_quiz.render(screen)
-		gfx.update()
-	elseif button == "3" then
-		print("Shut down program")
-		sys.stop()
-	elseif button == "4" then
-		-- Only for testing
-		local city_view = CityView()
-		view.view_manager:set_view(city_view)
-		gfx.update()
-	end
+--- Constructor for CityView
+-- @param event_listener Remote control to listen to
+function CityView:__init(remote_control)
+	View.__init(self)
+	self.background_path = ""
 end
 
--- This functions renders the menu view
-function menu.render(surface)
-
+function CityView:render(surface)
 	-- Resets the surface and draws the background
 	local background_color = {r=0, g=0, b=0}
 	surface:clear(background_color)
-	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/paris_old.png")))
+	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/paris.png")))
 
 	--creates some colors
 	local button_color = {r=0, g=128, b=225}
@@ -67,8 +58,28 @@ function menu.render(surface)
 	sub_surface1:clear({r=255, g=255, b=255, a=255})
 
 	-- Instance remote control and mapps it to the buttons
-	event.remote_control:on("button_release", menu.load_view)
-
+	--event.remote_control:on("button_release", self:load_view)
+	local callback = utils.partial(self.load_view, self)
+	self:listen_to(
+		event.remote_control,
+		"button_release",
+		callback
+		--utils.partial(self.load_view, self)
+	)
 end
 
-return menu
+function CityView:load_view(button)
+	if button == "1" then
+		local numerical_quiz_view = NumericalQuizView()
+		view.view_manager:set_view(numerical_quiz_view)
+		gfx.update()
+	elseif button == "2" then
+		multiplechoice_quiz.render(screen)
+		gfx.update()
+	elseif button == "3" then
+		print("Shut down program")
+		sys.stop()
+	end
+end
+
+return CityView
