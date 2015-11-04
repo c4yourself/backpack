@@ -68,6 +68,14 @@ function SurfaceMock:clear(color, rectangle)
   end
 end
 
+function SurfaceMock:fill(color, rectangle)
+  --TODO iplement function that blend colors in specified rectangle
+end
+
+function SurfaceMock:copyfrom(src_surface, src_rectangle, dest_rectangle, blend_option)
+  --TODO implement function that copy pixels from another surface into this one
+end
+
 --Get this surface's width
 function SurfaceMock:get_width()
   return self.width
@@ -85,7 +93,26 @@ end
 
 --Set color of the pixel at location x and y
 function SurfaceMock:set_pixel(x, y, color)
- self.pixels[x][y] = color
+  self.pixels[x][y] = color
+end
+
+--Does nothing, but needed for feature parity with the regular surface class.
+function SurfaceMock:premultiply()
+end
+
+--Does nothing, but needed for feature parity with the regular surface class.
+function SurfaceMock:destroy()
+end
+
+--Modifies the alpha value of every pixel within this surface
+function SurfaceMock:set_alpha(alpha)
+  local a = alpha
+  for i= 0, (width-1) do
+    self.pixels[i] = {}
+    for j = 0, (height-1) do
+      self.pixels[i][j].a = a
+    end
+  end
 end
 
 return SurfaceMock
