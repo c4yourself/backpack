@@ -13,9 +13,6 @@ function menu.load_view(button)
 		local numerical_quiz_view = NumericalQuizView()
 		view.view_manager:set_view(numerical_quiz_view)
 		gfx.update()
-		-- TODO Remove old code below
-		--[[numerical_quiz.render(screen)
-		gfx.update()]]
 	elseif button == "2" then
 		multiplechoice_quiz.render(screen)
 		gfx.update()
