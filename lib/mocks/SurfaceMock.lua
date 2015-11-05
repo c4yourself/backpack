@@ -8,17 +8,13 @@ local SurfaceMock = class("SurfaceMock")
 function SurfaceMock:__init(width, height)
 	self.width = width
 	self.height = height
-	local c = {
-		r = 0,
-		g = 0,
-		b = 0,
-		a = 0
-	}
+
+	local default_color = Color(0, 0, 0, 0)
 	self.pixels = {}
 	for i= 0, (width-1) do
 		self.pixels[i] = {}
 		for j = 0, (height-1) do
-			self.pixels[i][j] = c
+			self.pixels[i][j] = default_color
 		end
 	end
 end
@@ -89,7 +85,7 @@ end
 
 --- Get color of the pixel at location x and y
 function SurfaceMock:get_pixel(x, y)
-	return self.pixels[x][y]
+	return self.pixels[x][y]:to_values()
 end
 
 --- Set color of the pixel at location x and y
