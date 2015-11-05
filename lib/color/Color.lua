@@ -46,12 +46,6 @@ function Color:to_number()
 		bit32.arshift(self.alpha, -24))
 end
 
---- Convert Color to a table that can be used with Zenterio's API functions.
--- If alpha channel is not the same as default it will be omitted.
-function Color:to_table()
-	return {self.red, self.green, self.blue, self.alpha}
-end
-
 --- Convert Color to a HTML style color string.
 -- Format is `#RRGGBBAA`, `AA` is omitted if alpha channel is the same as default.
 -- @return HTML style color string
@@ -70,6 +64,18 @@ function Color:to_html()
 	-- Since 0 padding is only supported for numbers we use spaces and replace
 	-- them with zeroes here
 	return output:gsub(" ", "0")
+end
+
+--- Convert Color to a table that can be used with Zenterio's API functions.
+-- If alpha channel is not the same as default it will be omitted.
+function Color:to_table()
+	return {self.red, self.green, self.blue, self.alpha}
+end
+
+--- Return red, green blue and alpha as separate values.
+-- @return red, gree, blue, alpha
+function Color:to_values()
+	return self.red, self.green, self.blue, self.alpha
 end
 
 --- Create color object from a 32-bit integer.
