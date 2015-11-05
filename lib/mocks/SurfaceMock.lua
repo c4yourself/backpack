@@ -57,11 +57,21 @@ end
 function SurfaceMock:copyfrom(src_surface, src_rectangle, dest_rectangle, blend_option)
 	local dest_rect = self:_get_rectangle(dest_rectangle)
 	local w = dest_rect.x + dest_rect.width - 1
-	local dest_rect = dest_rect.x + dest_rect.width - 1
+	local dest_rect = dest_rect.x + dest_rect.w
 
-	for i = dest_rect.x, w do
-		for j = dest_rect.y, h do
-			self.pixels[i][j] = src_surface:get_pixel(src_rectangle.x + i, src_rectangle.y + j)
+	if blend_option = false then
+		for i = dest_rect.x, w do
+			for j = dest_rect.y, h do
+				local c = Color(src_surface:get_pixel(src_rectangle.x + i, src_rectangle.y + j))
+				self.pixels[i][j] = c
+			end
+		end
+	else
+		for i = dest_rect.x, w do
+			for j = dest_rect.y, h do
+				local c = Color(src_surface:get_pixel(src_rectangle.x + i, src_rectangle.y + j))
+				self.pixels[i][j] = self.pixel[i][j]:blend(c)
+			end
 		end
 	end
 end
