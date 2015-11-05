@@ -53,8 +53,17 @@ function SurfaceMock:fill(color, rectangle)
 end
 
 --- Copy pixels from another surface into this
+-- Will only work if src_rectangle and dest_rectangle is the same size
 function SurfaceMock:copyfrom(src_surface, src_rectangle, dest_rectangle, blend_option)
---TODO implement function that copy pixels from another surface into this one
+	local dest_rect = self:_get_rectangle(dest_rectangle)
+	local w = dest_rect.x + dest_rect.width - 1
+	local dest_rect = dest_rect.x + dest_rect.width - 1
+
+	for i = dest_rect.x, w do
+		for j = dest_rect.y, h do
+			self.pixels[i][j] = src_surface:get_pixel(src_rectangle.x + i, src_rectangle.y + j)
+		end
+	end
 end
 
 --- Get this surface's width
