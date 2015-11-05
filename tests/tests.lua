@@ -19,6 +19,7 @@ TestNumerical = require("test_numerical")
 TestMockSurface = require("test_mock_SurfaceMock")
 TestIntegrationNumerical = require("test_integration_numerical")
 TestTSV = require("test_tsvreader")
+TestMemory = require("test_memory")
 
 lu = LuaUnit.LuaUnit.new()
 os.exit(lu:runSuite())
