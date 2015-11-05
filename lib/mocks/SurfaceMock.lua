@@ -1,6 +1,7 @@
 --- Surface mock class
 -- @classmod SurfaceMock
 local class = require("lib.classy")
+local Color = require("lib.color.Color")
 local SurfaceMock = class("SurfaceMock")
 
 --- Constructor for SurfaceMock.
