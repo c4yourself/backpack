@@ -21,5 +21,4 @@ TestIntegrationNumerical = require("test_integration_numerical")
 TestTSV = require("test_tsvreader")
 
 lu = LuaUnit.LuaUnit.new()
-lu:setOutputType("tap")
 os.exit(lu:runSuite())
