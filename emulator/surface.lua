@@ -7,7 +7,8 @@
 -- @alias surface
 
 local class = require("lib.classy")
-local Color = require("lib.color.Color")
+local Color = require("lib.draw.Color")
+local Rectangle = require("lib.draw.Rectangle")
 local logger = require("lib.logger")
 
 local surface = class("surface")
@@ -255,36 +256,24 @@ end
 -- @return Table with rectangle x, y, width and height values
 -- @local
 function surface:_get_rectangle(rectangle)
-	local rect = {
-		x = 0,
-		y = 0,
+	local rect = Rectangle.from_table(rectangle, {
 		width = self:get_width(),
 		height = self:get_height()
-	}
+	})
 
-	if rectangle == nil then
-		return rect
-	end
-
-	rect.x = rectangle.x or rect.x
-	rect.y = rectangle.y or rect.y
-	rect.width = (rectangle.width or rectangle.w or rect.width)
-	rect.height = (rectangle.height or rectangle.h or rect.height)
-
-	local end_x = rect.x + rect.width - 1
-	local end_y = rect.y + rect.height - 1
+	local surface_rect = Rectangle.from_surface(self)
 
 	-- Throw error when trying to draw outside of screen
-	if end_x >= self:get_width() or end_y >= self:get_height() then
+	if not surface_rect:contains(rect) then
 		logger.error(string.format(
 			"Rectange start is %dx%d, end is %dx%d. Max is %dx%d",
-			rect.x, rect.y,
-			end_x, end_y,
-			self:get_width() - 1, self:get_height() - 1))
+			rect:get_start(),
+			rect:get_end(),
+			surface_rect:get_end()))
 		error("Rectangle is out of bounds")
 	end
 
-	return rect
+	return rect:to_table()
 end
 
 return surface

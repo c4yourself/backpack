@@ -1,5 +1,5 @@
 local class = require("lib.classy")
-local Color = require("lib.color")
+local Color = require("lib.draw")
 local Subsurface = class("Subsurface")
 
 --- Constructor for Subsurface.
