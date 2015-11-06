@@ -106,18 +106,18 @@ end
 -- @param color A color table
 function Color.from_table(color)
 	-- Check that it is actually possible provided color is a table
-	if type(color) ~= "table" and color == nil then
+	if type(color) ~= "table" and color ~= nil then
 		error("Expected table or nil, got " .. type(color))
 	end
 
-	if color[1] ~= nil then
+	if color == nil or next(color) == nil then
+		return Color()
+	elseif color[1] ~= nil then
 		return Color(color[1], color[2], color[3], color[4])
 	elseif color.r ~= nil then
 		return Color(color.r, color.g, color.b, color.a)
 	elseif color.red ~= nil then
 		return Color(color.red, color.green, color.blue, color.alpha)
-	elseif color == nil or next(color) == nil then
-		return Color()
 	else
 		error("Invalid color table format")
 	end

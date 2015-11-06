@@ -38,8 +38,6 @@ end
 --
 -- Uses hardware acceleration on set-top box.
 --
--- Not properly implemented in emulator.
---
 -- @param color Blend color.
 -- @param rectangle Area to blend with color. Defaults to whole surface. Parts
 --                  outside the rectangle are not affected.
@@ -283,15 +281,9 @@ function surface:draw()
 	end
 end
 
---- Get Löve image data from this surface.
--- Not part of Zenterio's Lua API!
--- @return Löve image data of this surface
+--- Convert a given rectangle to canonical form.
+-- @return Table with rectangle x, y, width and height values
 -- @local
-function surface:get()
-	return self.image_data
-end
-
---- Convert a given rectangle to canonical form
 function surface:_get_rectangle(rectangle)
 	local rect = {
 		x = 0,
@@ -309,8 +301,16 @@ function surface:_get_rectangle(rectangle)
 	rect.width = (rectangle.width or rectangle.w or rect.width)
 	rect.height = (rectangle.height or rectangle.h or rect.height)
 
+	local end_x = rect.x + rect.width - 1
+	local end_y = rect.y + rect.height - 1
+
 	-- Throw error when trying to draw outside of screen
-	if rect.x + rect.width > self:get_width() or rect.y + rect.height > self:get_height() then
+	if end_x >= self:get_width() or end_y >= self:get_height() then
+		logger.error(string.format(
+			"Rectange start is %dx%d, end is %dx%d. Max is %dx%d",
+			rect.x, rect.y,
+			end_x, end_y,
+			self:get_width() - 1, self:get_height() - 1))
 		error("Rectangle is out of bounds")
 	end
 
