@@ -74,41 +74,11 @@ end
 -- @param blend_option true if alpha blending should occur, otherwise false.
 -- @zenterio
 function surface:copyfrom(src_surface, src_rectangle, dest_rectangle, blend_option)
+	local source_rectangle = self:_get_rectangle(src_rectangle)
+	local destination_rectangle = self:_get_rectangle(dest_rectangle)
 
-	--Defaults to entire surface
-	local source_rectangle = {}
-
-	--if src_rectangle is nil, defaul to entire source surface
-	if src_rectangle == nil then
-		source_rectangle.x = 0
-		source_rectangle.y = 0
-		source_rectangle.w = src_surface.image_data:getWidth()
-		source_rectangle.h = src_surface.image_data:getHeight()
-	else
-		source_rectangle.x = src_rectangle.x or 0
-		source_rectangle.y = src_rectangle.y or 0
-		source_rectangle.w = src_rectangle.w or src_surface.image_data:getWidth()
-		source_rectangle.h = src_rectangle.h or src_surface.image_data:getHeight()
-	end
-
-	local destination_rectangle = {}
-
-	--if src_rectangle is nil, defaul to enture source surface
-	if dest_rectangle == nil then
-		destination_rectangle.x = 0
-		destination_rectangle.y = 0
-		destination_rectangle.w = src_surface.image_data:getWidth()
-		destination_rectangle.h = src_surface.image_data:getHeight()
-	else
-		destination_rectangle.x = dest_rectangle.x or 0
-		destination_rectangle.y = dest_rectangle.y or 0
-		destination_rectangle.w = dest_rectangle.w or src_surface.image_data:getWidth()
-		destination_rectangle.h = dest_rectangle.h or src_surface.image_data:getHeight()
-	end
-
-
-	local scale_x = destination_rectangle.w / source_rectangle.w
-	local scale_y = destination_rectangle.h / source_rectangle.h
+	local scale_x = destination_rectangle.width / source_rectangle.width
+	local scale_y = destination_rectangle.height / source_rectangle.height
 
 	local canvas = love.graphics.newCanvas(
 		self.image_data:getWidth(), self.image_data:getHeight())
