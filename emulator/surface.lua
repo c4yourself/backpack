@@ -7,6 +7,7 @@
 -- @alias surface
 
 local class = require("lib.classy")
+local Color = require("lib.color.Color")
 local logger = require("lib.logger")
 
 local surface = class("surface")
@@ -22,49 +23,13 @@ local surface = class("surface")
 --                  outside the rectangle are not affected.
 -- @zenterio
 function surface:clear(color, rectangle)
-	--Defaults to transparent black
-	local c = {
-		r = 0,
-		g = 0,
-		b = 0,
-		a = 0
-	}
+	local color = Color.from_table(color)
+	local rect = self:_get_rectangle(rectangle)
 
-	if color ~= nil then
-		c.r = color.r or 0
-		c.g = color.g or 0
-		c.b = color.b or 0
-		c.a = color.a or 255
-	end
-
-	--Defaults to enture surface
-
-	local rect = {
-		x = 0,
-		y = 0,
-		width = self.image_data:getWidth(),
-		height = self.image_data:getHeight()
-	}
-
-	if rectangle ~= nil then
-		rect.x = rectangle.x or 0
-		rect.y = rectangle.y or 0
-
-		--Make sure that we do not fill outside of the bounds of the rectangle
-		if rect.x + (rectangle.width or rectangle.w) <= rect.width then
-			rect.width = (rectangle.width or rectangle.w)
-		end
-
-		if rect.y + (rectangle.height or rectangle.h) <= rect.height then
-			rect.height = (rectangle.height or rectangle.h)
-		end
-	end
-
-	local w = rect.x + rect.width - 1
-	local h = rect.y + rect.height - 1
-	for i = rect.x, w do
-		for j = rect.y, h do
-			self.image_data:setPixel(i, j, c.r, c.g, c.b, c.a)
+	-- Loop through every pixel and blend its color
+	for x = rect.x, rect.x + rect.width - 1 do
+		for y = rect.y, rect.y + rect.height - 1 do
+			self.image_data:setPixel(x, y, color:to_values())
 		end
 	end
 end
@@ -81,8 +46,18 @@ end
 -- @see emulator.surface:clear
 -- @zenterio
 function surface:fill(color, rectangle)
-	--Not currently implemented - same as surface:clear
-	self:clear(color, rectangle)
+	local color = Color.from_table(color)
+	local rect = self:_get_rectangle(rectangle)
+
+	-- Loop through every pixel and blend its color
+	for x = rect.x, rect.x + rect.width - 1 do
+		for y = rect.y, rect.y + rect.height - 1 do
+			local current_color = Color(self.image_data:getPixel(x, y))
+			--print(current_color:to_html() .. current_color:blend(color):to_html())
+			--sys.exit()
+			self.image_data:setPixel(x, y, current_color:blend(color):to_values())
+		end
+	end
 end
 
 --- Copy pixels from one surface to another.
@@ -314,6 +289,32 @@ end
 -- @local
 function surface:get()
 	return self.image_data
+end
+
+--- Convert a given rectangle to canonical form
+function surface:_get_rectangle(rectangle)
+	local rect = {
+		x = 0,
+		y = 0,
+		width = self:get_width(),
+		height = self:get_height()
+	}
+
+	if rectangle == nil then
+		return rect
+	end
+
+	rect.x = rectangle.x or rect.x
+	rect.y = rectangle.y or rect.y
+	rect.width = (rectangle.width or rectangle.w or rect.width)
+	rect.height = (rectangle.height or rectangle.h or rect.height)
+
+	-- Throw error when trying to draw outside of screen
+	if rect.x + rect.width > self:get_width() or rect.y + rect.height > self:get_height() then
+		error("Rectangle is out of bounds")
+	end
+
+	return rect
 end
 
 return surface

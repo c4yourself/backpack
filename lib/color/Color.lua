@@ -25,14 +25,25 @@ end
 
 --- Blend this color with a given color.
 -- Returns a new instance of the blended color.
--- @param color A color to blend with
+-- @param other A color to blend with
 -- @return A new Color instance
-function Color:blend(color)
+function Color:blend(other)
+	-- Convert colors to ratios between 0 and 1
+	local sr, sg, sb, sa =
+		self.red / 255, self.green / 255, self.blue / 255, self.alpha / 255
+	local or_, og, ob, oa =
+		other.red / 255, other.green / 255, other.blue / 255, other.alpha / 255
+
+	local output_alpha = oa + sa * (1 - oa)
+	local output_red = (or_ * oa + sr * sa * (1 - oa)) / output_alpha
+	local output_green = (og * oa + sg * sa * (1 - oa)) / output_alpha
+	local output_blue = (ob * oa + sb * sa * (1 - oa)) / output_alpha
+
 	return Color(
-		(self.red + color.red) / 2,
-		(self.green + color.green) / 2,
-		(self.blue + color.blue) / 2,
-		(self.alpha + color.alpha) / 2)
+		255 * output_red,
+		255 * output_green,
+		255 * output_blue,
+		255 * output_alpha)
 end
 
 --- Convert color object to a 32-bit integer.
