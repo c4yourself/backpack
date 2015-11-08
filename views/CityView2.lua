@@ -13,8 +13,8 @@ local multiplechoice_quiz = require("views.multiplechoice_quiz")
 local subsurface = require("lib.view.Subsurface")
 local NumericalQuizView = require("views.NumericalQuizView")
 local button= require("lib.components.Button")
-local button_grid=require("lib.components.ButtonGrid")
-local color = require("lib.color.Color")
+local button_grid	=	require("lib.components.ButtonGrid")
+local color = require("lib.draw.Color")
 
 --- Constructor for CityView
 -- @param event_listener Remote control to listen to
@@ -36,7 +36,7 @@ function CityView2:render(surface)
 	local color_selected = color(33, 99, 111, 255)
 	local color_disabled = color(111, 222, 111, 255) --have not been used yet
 
-	-- Instance of  all Buttons
+	-- Instance of	all Buttons
 	local button_1 = button(button_color, color_selected, color_disabled,true,true)
 	local button_2 = button(button_color, color_selected, color_disabled,true,false)
 	local button_3 = button(button_color, color_selected, color_disabled,true,false)
@@ -51,7 +51,7 @@ function CityView2:render(surface)
 	local position_3={x=100,y=450}
 	local button_size_3 = {width=500,height=100}
 
-  -- create a button grid for the current view,
+	-- create a button grid for the current view,
 	-- for managing all buttons' layout and states
 	self.buttonGrid = button_grid()
 
@@ -60,8 +60,8 @@ function CityView2:render(surface)
 	self.buttonGrid:add_button(position_2,button_size_2,button_2)
 	self.buttonGrid:add_button(position_3,button_size_3,button_3)
 
-  -- Insert text and its color, position, size, path for each button
-  -- Button always has the screen as its background, not its subsurface
+	-- Insert text and its color, position, size, path for each button
+	-- Button always has the screen as its background, not its subsurface
 	button_1:set_textdata("Numerical quiz",text_color,{x=100,y=50},30,utils.absolute_path("data/fonts/DroidSans.ttf"))
 	button_2:set_textdata("Multiple choice question",text_color,{x=100,y=250},30,utils.absolute_path("data/fonts/DroidSans.ttf"))
 	button_3:set_textdata("Exit",text_color,{x=100,y=450},30,utils.absolute_path("data/fonts/DroidSans.ttf"))
@@ -70,10 +70,10 @@ function CityView2:render(surface)
 	local score = sys.new_freetype(score_text_color:to_table(), 40, {x=1010,y=170}, utils.absolute_path("data/fonts/DroidSans.ttf"))
 	score:draw_over_surface(surface, "Score: " .. "125")
 
-  -- using the button grid to render all buttons and texts
+	-- using the button grid to render all buttons and texts
 	self.buttonGrid:render(surface)
 
-  -- testing the subsurface
+	-- testing the subsurface
 	local sub_surface1 = subsurface(surface,{width=100, height=100, x=0, y=0})
 	sub_surface1:clear({r=255, g=255, b=255, a=255})
 
@@ -118,34 +118,34 @@ function CityView2:load_view(button)
 		sys.stop()
 
 	elseif button == "down" then
-    -- the indicator refers to the selecting button
+		-- the indicator refers to the selecting button
 		local indicator = self.buttonGrid.button_indicator
 		local button_list = self.buttonGrid.button_list
 
 		indicator = indicator % #button_list
 		indicator = indicator + 1
-    button_list[indicator].button:select(true)
+		button_list[indicator].button:select(true)
 
 		 if indicator == 1 then
 		 button_list[#button_list].button:select(false)
 	 else
-		  button_list[indicator-1].button:select(false)
+			button_list[indicator-1].button:select(false)
 	 end
 
-    self.buttonGrid.button_indicator = indicator
+		self.buttonGrid.button_indicator = indicator
 
 		self.buttonGrid:render(screen)
 		gfx.update()
 
 	elseif button == "up" then
 		local indicator = self.buttonGrid.button_indicator
-	  local button_list = self.buttonGrid.button_list
+		local button_list = self.buttonGrid.button_list
 
 		indicator = indicator - 1
 
 		if indicator == 0 then
 		indicator = #button_list
-	  end
+		end
 
 		button_list[indicator].button:select(true)
 
@@ -155,13 +155,13 @@ function CityView2:load_view(button)
 		button_list[indicator+1].button:select(false)
 		end
 
-    self.buttonGrid.button_indicator = indicator
+		self.buttonGrid.button_indicator = indicator
 		self.buttonGrid:render(screen) --use the view's button grid for rendering
 
-    gfx.update()
+		gfx.update()
 
 	elseif button == "ok" then
-  --TODO able to enter the current pointing button
+	--TODO able to enter the current pointing button
 
 	end
 end

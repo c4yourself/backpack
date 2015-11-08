@@ -92,31 +92,6 @@ function Color.from_number(color)
 		bit32.extract(color, 3, 8))
 end
 
--- <<<<<<< HEAD:lib/color/Color.lua
--- ||||||| merged common ancestors
---- Convert a table as expected by most Zenterio API functions to a Color
--- instance.
--- @param color A color table
---function Color.from_table(color)
-	-- Check that it is actually possible provided color is a table
--- 	if type(color) ~= "table" and color == nil then
--- 		error("Expected table or nil, got " .. type(color))
--- 	end
---
--- 	if color[1] ~= nil then
--- 		return Color(color[1], color[2], color[3], color[4])
--- 	elseif color.r ~= nil then
--- 		return Color(color.r, color.g, color.b, color.a)
--- 	elseif color.red ~= nil then
--- 		return Color(color.red, color.green, color.blue, color.alpha)
--- 	elseif color == nil or next(color) == nil then
--- 		return Color()
--- 	else
--- 		error("Invalid color table format")
--- 	end
--- end
-
--- =======
 --- Convert a table as expected by most Zenterio API functions to a Color
 -- instance.
 -- @param color A color table
@@ -139,7 +114,6 @@ function Color.from_table(color)
 	end
 end
 
--- >>>>>>> c0b54fd037f045a964ab415aea28770ea891c265:lib/draw/Color.lua
 --- Create Color object from a HTML style string.
 -- The string may be prefixed with # followed by color format:
 --

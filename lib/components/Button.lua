@@ -5,6 +5,12 @@ local class = require("lib.classy")
 local View = require("lib.view.View")
 local Button = class("Button", View)
 
+--- Constructor for Button
+--@param color The color of button which is neither disabled nor selected
+--@param color_selected The color for a selected button
+--@param color_disabled The color for a disabled button
+--@param enaled The button is enabled or not when instantiating
+--@param selected The button is selected or not when instantiating
 function Button:__init(color, color_selected, color_disabled, enabled, selected)
 	View.__init(self)
 	self.color = color
@@ -16,11 +22,11 @@ function Button:__init(color, color_selected, color_disabled, enabled, selected)
 end
 
 function Button:set_textdata(text, font_color, text_position, font_size,font_path)
-  self.text_available = true
+	self.text_available = true
 	self.text = text
 	self.font_size = font_size
 	self.font_color = font_color
-  self.font_path = font_path
+	self.font_path = font_path
 	self.text_position = text_position
 end
 
@@ -34,7 +40,6 @@ function Button:enable(status)
 	self._enabled = status
 
 	self:mark_dirty()
-
 end
 
 function Button:is_enabled()
@@ -56,14 +61,11 @@ function Button:is_selected()
 	return self._selected
 end
 
-
-
 function Button:render(surface)
 
-	self:dirty(false)
+		self:dirty(false)
 
---	if self.disabled then
-    if not self:is_enabled() then
+	if not self:is_enabled() then
 		surface:clear(self.color_disabled:to_table())
 	elseif self:is_selected() then
 		surface:clear(self.color_selected:to_table())
