@@ -17,7 +17,7 @@ Color.default_alpha = 255
 -- @param blue Amount of blue (0-255)
 -- @param alpha Amount of alpha (0-255)
 function Color:__init(red, green, blue, alpha)
-	self.red  = red or self.default_red
+	self.red = red or self.default_red
 	self.green = green or self.default_green
 	self.blue = blue or self.default_blue
 	self.alpha = alpha or self.default_alpha
@@ -57,27 +57,36 @@ function Color:to_number()
 		bit32.arshift(self.alpha, -24))
 end
 
---- Convert Color to a table that can be used with Zenterio's API functions.
--- If alpha channel is not the same as default it will be omitted.
-function Color:to_table()
-	return {r=self.red, g=self.green, b=self.blue, a=self.alpha}
-end
-
 --- Convert Color to a HTML style color string.
 -- Format is `#RRGGBBAA`, `AA` is omitted if alpha channel is the same as default.
 -- @return HTML style color string
 function Color:to_html()
 	local output = string.format(
-		"%02s%02s%02s",
-		tostring(self.red, 16) ..
-		tostring(self.green, 16) ..
-		tostring(self.blue, 16))
+		"#%2s%2s%2s",
+		utils.to_base(self.red, 16),
+		utils.to_base(self.green, 16),
+		utils.to_base(self.blue, 16))
 
+	-- Don't add alpha if it is opaque
 	if self.alpha ~= self.default_alpha then
-		output = output .. string.format("%02s", tostring(self.alpha, 16))
+		output = output .. string.format("%2s", utils.to_base(self.alpha, 16))
 	end
 
-	return output
+	-- Since 0 padding is only supported for numbers we use spaces and replace
+	-- them with zeroes here
+	return output:gsub(" ", "0")
+end
+
+--- Convert Color to a table that can be used with Zenterio's API functions.
+-- If alpha channel is not the same as default it will be omitted.
+function Color:to_table()
+	return {self.red, self.green, self.blue, self.alpha}
+end
+
+--- Return red, green blue and alpha as separate values.
+-- @return red, gree, blue, alpha
+function Color:to_values()
+	return self.red, self.green, self.blue, self.alpha
 end
 
 --- Create color object from a 32-bit integer.
@@ -146,6 +155,5 @@ function Color.from_html(string)
 
 	return Color.from_number(tonumber(hex, 16))
 end
-
 
 return Color
