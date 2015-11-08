@@ -62,8 +62,7 @@ function Button:is_selected()
 end
 
 function Button:render(surface)
-
-		self:dirty(false)
+	self:dirty(false)
 
 	if not self:is_enabled() then
 		surface:clear(self.color_disabled:to_table())

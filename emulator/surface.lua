@@ -52,8 +52,6 @@ function surface:fill(color, rectangle)
 	for x = rect.x, rect.x + rect.width - 1 do
 		for y = rect.y, rect.y + rect.height - 1 do
 			local current_color = Color(self.image_data:getPixel(x, y))
-			--print(current_color:to_html() .. current_color:blend(color):to_html())
-			--sys.exit()
 			self.image_data:setPixel(x, y, current_color:blend(color):to_values())
 		end
 	end
