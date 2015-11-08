@@ -17,7 +17,7 @@ Color.default_alpha = 255
 -- @param blue Amount of blue (0-255)
 -- @param alpha Amount of alpha (0-255)
 function Color:__init(red, green, blue, alpha)
-	self.red = red or self.default_red
+	self.red  = red or self.default_red
 	self.green = green or self.default_green
 	self.blue = blue or self.default_blue
 	self.alpha = alpha or self.default_alpha
@@ -37,7 +37,7 @@ end
 --- Convert Color to a table that can be used with Zenterio's API functions.
 -- If alpha channel is not the same as default it will be omitted.
 function Color:to_table()
-	return {self.red, self.green, self.blue, self.alpha}
+	return {r=self.red, g=self.green, b=self.blue, a=self.alpha}
 end
 
 --- Convert Color to a HTML style color string.

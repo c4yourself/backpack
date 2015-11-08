@@ -26,7 +26,6 @@ function TestView:test_is_dirty_when_clean()
 	view2:dirty(false)
 
 	self.view.views = {view1, view2}
-
 	-- Run test
 	luaunit.assertEquals(self.view:is_dirty(), false)
 end
@@ -35,6 +34,7 @@ end
 -- dirty
 function TestView:test_is_dirty_when_dirty()
 	-- Set up a dirty view hiearchy
+	self.view.dirty_flag = false
 	local view1 = View()
 	local view2 = View()
 
@@ -43,7 +43,6 @@ function TestView:test_is_dirty_when_dirty()
 	view2:dirty(true)
 
 	self.view.views = {view1, view2}
-
 	-- Run test
 	luaunit.assertEquals(self.view:is_dirty(), true)
 end
@@ -51,7 +50,6 @@ end
 -- Make sure that dirty marks view dirty and fires event
 function TestView:test_dirty()
 	self.view:dirty(false)
-
 	luaunit.assertFalse(self.view:is_dirty())
 
 	local call_count = 0
