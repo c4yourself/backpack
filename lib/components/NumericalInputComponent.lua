@@ -26,9 +26,6 @@ function NumericalInputComponent:__init(remote_control)
 	self.color1 = {
 			r = 255, g = 0, b = 0, a = 255
 		}
-	self.rectangle = {
-			x = 0, y = 0, width = 299, height = 149, w = 299, h =149
-		}
 end
 
 -- Called when NumericalInputComponent responds to a button press event
@@ -59,6 +56,7 @@ function NumericalInputComponent:render(surface)
 		32,
 		{x = 25, y = 50},
 		utils.absolute_path("data/fonts/DroidSans.ttf"))
+
 
 	surface:clear(self.color1, self.rectangle)
 	font:draw_over_surface(surface, self.input)

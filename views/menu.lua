@@ -19,16 +19,12 @@ function menu.load_view(button)
 	elseif button == "3" then
 		print("Shut down program")
 		sys.stop()
-<<<<<<< HEAD
-	elseif button == "down" then
 
-=======
 	elseif button == "4" then
 		-- Only for testing
 		local city_view = CityView()
 		view.view_manager:set_view(city_view)
 		gfx.update()
->>>>>>> f45424f3430b7acde2984d51f3ac074d2f12006d
 	end
 end
 

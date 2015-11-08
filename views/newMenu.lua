@@ -1,6 +1,6 @@
 local utils = require("lib.utils")
 local event = require("lib.event")
-local numerical_quiz = require("views.numerical_quiz")
+local numerical_quiz_view = require("views.NumericalQuizView")
 local multiplechoice_quiz = require("views.multiplechoice_quiz")
 local subsurface = require("lib.view.Subsurface")
 local button= require("lib.components.Button")
@@ -11,7 +11,7 @@ local newMenu = {}
 
 function newMenu.load_view(button)
 	if button == "1" then
-		numerical_quiz.render(screen)
+		numerical_quiz_view.render(screen)
 		gfx.update()
 	elseif button == "2" then
 		multiplechoice_quiz.render(screen)

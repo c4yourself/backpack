@@ -1,5 +1,5 @@
 local class = require("lib.classy")
---local Color = require("lib.color")
+local Color = require("lib.draw")
 local Subsurface = class("Subsurface")
 
 --- Constructor for Subsurface.
@@ -69,27 +69,8 @@ function Subsurface:fill(color, rectangle)
 		rect.height = rectangle.height
 	end
 
-	local w = rect.x + rect.width - 1
-	local h = rect.y + rect.height - 1
-	for i = rect.x, w do
-		for j = rect.y, h do
+	self.surface:fill(color, rect)
 
-			r, g, b, a = self.surface.image_data:getPixel( i, j )
-			r = r + color.r / 2
-			g = g + color.g / 2
-			b = b + color.b / 2
-			a = a + color.a / 2
-
-			local c = {
-				r = r,
-				g = g,
-				b = b,
-				a = a
-			}
-
-			self.surface.image_data:setPixel(i,j, c.r, c.g, c.b, c.a)
-		end
-	end
 end
 
 --- Copy pixels from another surface into this

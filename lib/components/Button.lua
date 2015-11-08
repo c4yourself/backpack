@@ -3,7 +3,6 @@
 
 local class = require("lib.classy")
 local View = require("lib.view.View")
-
 local Button = class("Button", View)
 
 function Button:__init(color, color_selected, color_disabled, enabled, selected)
@@ -24,12 +23,6 @@ function Button:set_textdata(text, font_color, text_position, font_size,font_pat
   self.font_path = font_path
 	self.text_position = text_position
 end
-
--- function Button:has_text()
--- 	self.has_text = true
---   return self.has_text
--- end
-
 
 function Button:enable(status)
 
@@ -77,8 +70,6 @@ function Button:render(surface)
 	else
 		surface:clear(self.color:to_table())
 	end
-
-	--self:display_text(surface) --subsurface is NOT a surface
 
 end
 
