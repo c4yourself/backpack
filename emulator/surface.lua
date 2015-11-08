@@ -137,7 +137,8 @@ end
 -- @param color Color of pixel
 -- @zenterio
 function surface:set_pixel(x, y, color)
-	self.image_data:setPixel(x, y, color.r, color.g, color.b, color.a)
+	local color = Color.from_table(color)
+	self.image_data:setPixel(x, y, color:to_values())
 end
 
 --- Premultiply surface.
@@ -224,15 +225,18 @@ end
 --
 -- @local
 function surface:writeOver(text, fontColor, drawingStartPoint)
+	local color = Color.from_table(fontColor)
+
 	local canvas = love.graphics.newCanvas(
 		self.image_data:getWidth(), self.image_data:getHeight())
 	love.graphics.setCanvas(canvas)
 
 	love.graphics.draw(love.graphics.newImage(self.image_data))
 
+	-- Save old color to restore it later
 	local r, g, b, a = love.graphics.getColor()
 
-	love.graphics.setColor(fontColor.r, fontColor.g, fontColor.b, fontColor.a)
+	love.graphics.setColor(color:to_values())
 	love.graphics.print(text, drawingStartPoint.x, drawingStartPoint.y)
 	love.graphics.setColor(r, g, b, a)
 
