@@ -15,6 +15,8 @@ local NumericalQuizView = require("views.NumericalQuizView")
 local button= require("lib.components.Button")
 local button_grid	=	require("lib.components.ButtonGrid")
 local color = require("lib.draw.Color")
+local profile_selection = require("views.profile_selection")
+
 
 --- Constructor for CityView
 -- @param event_listener Remote control to listen to
@@ -116,6 +118,13 @@ function CityView2:load_view(button)
 	elseif button == "3" then
 		print("Shut down program")
 		sys.stop()
+	elseif button == "4" then
+		-- Only for testing
+		print("Swapping to profile selection")
+		profile_selection.render(screen)
+		--local prof_sel = profile_selection()
+		--view.view_manager:set_view(prof_sel)
+		gfx.update()
 
 	elseif button == "down" then
 		-- the indicator refers to the selecting button
