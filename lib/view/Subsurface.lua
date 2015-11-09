@@ -1,5 +1,5 @@
 local class = require("lib.classy")
-local Color = require("lib.color")
+local Color = require("lib.draw")
 local Subsurface = class("Subsurface")
 
 --- Constructor for Subsurface.
@@ -7,25 +7,17 @@ function Subsurface:__init(surface, area)
 
 	self.surface = surface
 
-  self.rectangle = area
-  self.x = area.x
-  self.y = area.y
-  self.width = area.width
-  self.height = area.height
+	self.rectangle = area
+	self.x = area.x
+	self.y = area.y
+	self.width = area.width
+	self.height = area.height
 	self.xend = self.x + self.width
 	self.yend = self.y + self.height
 end
 
 --- Fills desired area of the surface with a solid color.
 function Subsurface:clear(color, rectangle)
-
-  local c = {
-		r = color.r,
-		g = color.g,
-		b = color.b,
-		a = color.a
-	}
-
 	local rect = {
 		x = self.x,
 		y = self.y,
@@ -40,15 +32,7 @@ function Subsurface:clear(color, rectangle)
 		rect.height = rectangle.height
 	end
 
-	local w = rect.x + rect.width - 1
-	local h = rect.y + rect.height - 1
-	for i = rect.x, w do
-		for j = rect.y, h do
-			--print(c.r)
-			self.surface.image_data:setPixel(i, j, c.r, c.g, c.b, c.a)
-		end
-	end
-
+	self.surface:clear(color, rect)
 end
 
 --- Blends current color with a desireable color in a speciefied rectangle

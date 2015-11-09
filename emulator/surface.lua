@@ -7,7 +7,8 @@
 -- @alias surface
 
 local class = require("lib.classy")
-local Color = require("lib.color.Color")
+local Color = require("lib.draw.Color")
+local Rectangle = require("lib.draw.Rectangle")
 local logger = require("lib.logger")
 
 local surface = class("surface")
@@ -51,8 +52,6 @@ function surface:fill(color, rectangle)
 	for x = rect.x, rect.x + rect.width - 1 do
 		for y = rect.y, rect.y + rect.height - 1 do
 			local current_color = Color(self.image_data:getPixel(x, y))
-			--print(current_color:to_html() .. current_color:blend(color):to_html())
-			--sys.exit()
 			self.image_data:setPixel(x, y, current_color:blend(color):to_values())
 		end
 	end
@@ -74,41 +73,11 @@ end
 -- @param blend_option true if alpha blending should occur, otherwise false.
 -- @zenterio
 function surface:copyfrom(src_surface, src_rectangle, dest_rectangle, blend_option)
+	local source_rectangle = self:_get_rectangle(src_rectangle)
+	local destination_rectangle = self:_get_rectangle(dest_rectangle)
 
-	--Defaults to entire surface
-	local source_rectangle = {}
-
-	--if src_rectangle is nil, defaul to entire source surface
-	if src_rectangle == nil then
-		source_rectangle.x = 0
-		source_rectangle.y = 0
-		source_rectangle.w = src_surface.image_data:getWidth()
-		source_rectangle.h = src_surface.image_data:getHeight()
-	else
-		source_rectangle.x = src_rectangle.x or 0
-		source_rectangle.y = src_rectangle.y or 0
-		source_rectangle.w = src_rectangle.w or src_surface.image_data:getWidth()
-		source_rectangle.h = src_rectangle.h or src_surface.image_data:getHeight()
-	end
-
-	local destination_rectangle = {}
-
-	--if src_rectangle is nil, defaul to enture source surface
-	if dest_rectangle == nil then
-		destination_rectangle.x = 0
-		destination_rectangle.y = 0
-		destination_rectangle.w = src_surface.image_data:getWidth()
-		destination_rectangle.h = src_surface.image_data:getHeight()
-	else
-		destination_rectangle.x = dest_rectangle.x or 0
-		destination_rectangle.y = dest_rectangle.y or 0
-		destination_rectangle.w = dest_rectangle.w or src_surface.image_data:getWidth()
-		destination_rectangle.h = dest_rectangle.h or src_surface.image_data:getHeight()
-	end
-
-
-	local scale_x = destination_rectangle.w / source_rectangle.w
-	local scale_y = destination_rectangle.h / source_rectangle.h
+	local scale_x = destination_rectangle.width / source_rectangle.width
+	local scale_y = destination_rectangle.height / source_rectangle.height
 
 	local canvas = love.graphics.newCanvas(
 		self.image_data:getWidth(), self.image_data:getHeight())
@@ -166,7 +135,8 @@ end
 -- @param color Color of pixel
 -- @zenterio
 function surface:set_pixel(x, y, color)
-	self.image_data:setPixel(x, y, color.r, color.g, color.b, color.a)
+	local color = Color.from_table(color)
+	self.image_data:setPixel(x, y, color:to_values())
 end
 
 --- Premultiply surface.
@@ -253,15 +223,18 @@ end
 --
 -- @local
 function surface:writeOver(text, fontColor, drawingStartPoint)
+	local color = Color.from_table(fontColor)
+
 	local canvas = love.graphics.newCanvas(
 		self.image_data:getWidth(), self.image_data:getHeight())
 	love.graphics.setCanvas(canvas)
 
 	love.graphics.draw(love.graphics.newImage(self.image_data))
 
+	-- Save old color to restore it later
 	local r, g, b, a = love.graphics.getColor()
 
-	love.graphics.setColor(fontColor.r, fontColor.g, fontColor.b, fontColor.a)
+	love.graphics.setColor(color:to_values())
 	love.graphics.print(text, drawingStartPoint.x, drawingStartPoint.y)
 	love.graphics.setColor(r, g, b, a)
 
@@ -285,36 +258,24 @@ end
 -- @return Table with rectangle x, y, width and height values
 -- @local
 function surface:_get_rectangle(rectangle)
-	local rect = {
-		x = 0,
-		y = 0,
+	local rect = Rectangle.from_table(rectangle, {
 		width = self:get_width(),
 		height = self:get_height()
-	}
+	})
 
-	if rectangle == nil then
-		return rect
-	end
-
-	rect.x = rectangle.x or rect.x
-	rect.y = rectangle.y or rect.y
-	rect.width = (rectangle.width or rectangle.w or rect.width)
-	rect.height = (rectangle.height or rectangle.h or rect.height)
-
-	local end_x = rect.x + rect.width - 1
-	local end_y = rect.y + rect.height - 1
+	local surface_rect = Rectangle.from_surface(self)
 
 	-- Throw error when trying to draw outside of screen
-	if end_x >= self:get_width() or end_y >= self:get_height() then
+	if not surface_rect:contains(rect) then
 		logger.error(string.format(
 			"Rectange start is %dx%d, end is %dx%d. Max is %dx%d",
-			rect.x, rect.y,
-			end_x, end_y,
-			self:get_width() - 1, self:get_height() - 1))
+			rect:get_start(),
+			rect:get_end(),
+			surface_rect:get_end()))
 		error("Rectangle is out of bounds")
 	end
 
-	return rect
+	return rect:to_table()
 end
 
 return surface

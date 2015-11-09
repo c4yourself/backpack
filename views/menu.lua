@@ -19,6 +19,7 @@ function menu.load_view(button)
 	elseif button == "3" then
 		print("Shut down program")
 		sys.stop()
+
 	elseif button == "4" then
 		-- Only for testing
 		local city_view = CityView()
@@ -37,6 +38,7 @@ function menu.render(surface)
 
 	--creates some colors
 	local button_color = {r=0, g=128, b=225}
+	local button_color_select = {r=255,g=182,b=193}
 	local text_color = {r=0, g=0, b=0}
 	local score_text_color = {r=255, g=255, b=255}
 
@@ -51,7 +53,7 @@ function menu.render(surface)
 
 	-- Implements Button 1. Numerical
 
-	surface:fill(button_color, {width=500, height=100, x=100, y=50})
+	surface:fill(button_color_select, {width=500, height=100, x=100, y=50})
 	text_button1:draw_over_surface(surface, "1. Numerical quiz")
 
 	-- Implements Button 2. Multiple choice question
