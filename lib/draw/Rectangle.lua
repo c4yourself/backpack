@@ -98,8 +98,8 @@ function Rectangle.from_table(rectangle, default_rectangle)
 
 	output.x = rectangle.x or output.x
 	output.y = rectangle.y or output.y
-	output.width = rectangle.width or output.width
-	output.height = rectangle.height or output.height
+	output.width = rectangle.width or rectangle.w or output.width
+	output.height = rectangle.height or rectangle.h or output.height
 
 	return Rectangle(output.x, output.y, output.width, output.height)
 end
