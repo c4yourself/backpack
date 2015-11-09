@@ -10,7 +10,6 @@ local CityView = class("CityView", View)
 local event = require("lib.event")
 local utils = require("lib.utils")
 local multiplechoice_quiz = require("views.multiplechoice_quiz")
-local subsurface = require("lib.view.Subsurface")
 local NumericalQuizView = require("views.NumericalQuizView")
 
 --- Constructor for CityView
@@ -53,9 +52,7 @@ function CityView:render(surface)
 	surface:fill(button_color, {width=500, height=100, x=100, y=450})
 	text_button3:draw_over_surface(surface, "3. Exit")
 
-	-- Testing Subsurface
-	local sub_surface1 = subsurface(surface,{width=100, height=100, x=0, y=0})
-	sub_surface1:clear({r=255, g=255, b=255, a=255})
+
 
 	-- Instance remote control and mapps it to the buttons
 	--event.remote_control:on("button_release", self:load_view)
