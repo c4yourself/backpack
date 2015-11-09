@@ -1,5 +1,6 @@
 
 local class = require("lib.classy")
+local serpent = require("lib.serpent")
 local Memory = class("Memory")
 
 --- Constructor for Memory
@@ -12,13 +13,14 @@ function Memory:__init(pairs, scrambled)
 		self.scrambled = true
 	end
 	self.pairs = pairs
-	self.cards = _create_pairs()
+	print(self.pairs)
+	self.cards = self:_create_pairs()
 	self.moves = 0
 	self.open_counter = 0
 	self.state = {}
 
 
-	for i = 1, pairs do
+	for i = 1, 8 do
 		table.insert(self.state, false)
 		table.insert(self.state, false)
 	end
@@ -37,16 +39,18 @@ end
 function Memory:_create_pairs()
 --Provide a better name for a?
 	local	temp_table = {}
+	print(self.scrambled)
 		for i = 1, self.pairs do
 			table.insert(temp_table,i)
 			table.insert(temp_table,i)
 		end
+		print(serpent.line(temp_table))
 if self.scrambled == true then
 		for i = 1, self.pairs*2 do
 			local switch_index_1 = math.random(table.getn(temp_table))
 			local switch_index_2 = math.random(table.getn(temp_table))
-			local switch_val_1 = temp_table(switch_index_1)
-			local switch_val_2 = temp_table(switch_index_2)
+			local switch_val_1 = temp_table[switch_index_1]
+			local switch_val_2 = temp_table[switch_index_2]
 			temp_table[switch_index_1] = switch_val_2
 			temp_table[switch_index_2] = switch_val_1
 		end
@@ -56,7 +60,7 @@ end
 
 
 function Memory:look(index)
-	if index > table.getn(state) then
+	if index > #self.state then
 		error("Index is greater than number of cards")
 	else
 		local card = self.cards[index]
@@ -91,7 +95,9 @@ end
 
 function Memory:serialize(columns)
 	local string_serialize = ""
-	for i = 1, table.getn(state) do
+	local length = string.len(state)
+
+	for i = 1, length do
 		if self.state[i] == true then
 		 	local state_val = "+"
 	 	else
