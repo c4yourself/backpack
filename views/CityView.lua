@@ -10,6 +10,7 @@ local CityView = class("CityView", View)
 local event = require("lib.event")
 local utils = require("lib.utils")
 local multiplechoice_quiz = require("views.multiplechoice_quiz")
+local SubSurface = require("lib.view.SubSurface")
 local NumericalQuizView = require("views.NumericalQuizView")
 
 --- Constructor for CityView
@@ -17,6 +18,7 @@ local NumericalQuizView = require("views.NumericalQuizView")
 function CityView:__init(remote_control)
 	View.__init(self)
 	self.background_path = ""
+	self.profile={name="Mohammed", level="5", experience="300", cash="500"}
 end
 
 function CityView:render(surface)
@@ -29,12 +31,30 @@ function CityView:render(surface)
 	local button_color = {r=0, g=128, b=225}
 	local text_color = {r=0, g=0, b=0}
 	local score_text_color = {r=255, g=255, b=255}
+	local menu_bar_color = {r=0, g=0, b=0, a=225}
+	local status_bar_color = {r=0, g=0, b=0}
+	local status_text_color = {r=255, g=255, b=255}
 
 	-- This makes a freetype to write with
 	local text_button1 = sys.new_freetype(text_color, 30, {x=200,y=80}, utils.absolute_path("data/fonts/DroidSans.ttf"))
 	local text_button2 = sys.new_freetype(text_color, 30, {x=200,y=280}, utils.absolute_path("data/fonts/DroidSans.ttf"))
 	local text_button3 = sys.new_freetype(text_color, 30, {x=200,y=480}, utils.absolute_path("data/fonts/DroidSans.ttf"))
 	local score = sys.new_freetype(score_text_color, 40, {x=1010,y=170}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	local profile_name = sys.new_freetype(status_text_color, 20 {x=10, y=10}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	local profile_level = sys.new_freetype(status_text_color, 20 {x=300, y=10}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	local profile_experience = sys.new_freetype(status_text_color, 20 {x=600, y=10}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	local profile_cash = sys.new_freetype(status_text_color, 20 {x=surface:get_width-300, y=10}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+
+
+	-- Implement status bar
+	surface:fill(status_bar_color, {width=surface:get_width(), height=40, x=0, y=0})
+	profile_name:draw_over_surface(surface, self.profile.name)
+	profile_level:draw_over_surface(surface, "Level: " .. self.profile.level)
+	profile_experience:draw_over_surface(surface, self.profile.experience .. "/500")
+	profile_cash:draw_over_surface(surface, self.profile.cash)
+
+	-- Shows menu bar
+	surface:fill(menu_bar_color, {width=surface:get_width()/3, height=surface:get_height(), x=0, y=0})
 
 	-- Shows the score
 	score:draw_over_surface(surface, "Score: " .. "125")
