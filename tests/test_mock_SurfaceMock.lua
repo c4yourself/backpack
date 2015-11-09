@@ -23,11 +23,11 @@ end
 
 --Tests that the default color of the surface is black
 function TestMockSurface:test_default_color()
-	luaunit.assertEquals(self.surface_mock:get_pixel(0, 0).r, 0)
-	luaunit.assertEquals(self.surface_mock:get_pixel(self.surface_mock:get_width() - 1
-	, self.surface_mock:get_height() - 1).g, 0)
-	luaunit.assertEquals(self.surface_mock:get_pixel(self.surface_mock:get_width() - 1, 0).b, 0)
-	luaunit.assertEquals(self.surface_mock:get_pixel(0, self.surface_mock:get_height() - 1).a, 0)
+	luaunit.assertEquals({self.surface_mock:get_pixel(0, 0)}, {0, 0, 0, 0})
+	luaunit.assertEquals({self.surface_mock:get_pixel(self.surface_mock:get_width() - 1
+	, self.surface_mock:get_height() - 1)}, {0, 0, 0, 0})
+	luaunit.assertEquals({self.surface_mock:get_pixel(self.surface_mock:get_width() - 1, 0)}, {0, 0, 0, 0})
+	luaunit.assertEquals({self.surface_mock:get_pixel(0, self.surface_mock:get_height() - 1)}, {0, 0, 0, 0})
 end
 
 
