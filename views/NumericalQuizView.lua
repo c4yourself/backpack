@@ -53,12 +53,11 @@ function NumericQuizView:press(key)
 	if key == "right" then
 		-- Navigate to the next question if the user already submitted an answer
 		if self.answer_flag then
-			self:dirty(true)
 			self.answer_flag = false
-			view.view_manager:render()
+			self:dirty(false)
+			self:dirty(true) -- To make sure dirty event is triggered
 		end
 	elseif key == "back" then
-		--TODO find a way to create the correct city view
 		self:trigger("exit")
 	end
 end
@@ -85,7 +84,6 @@ function NumericQuizView:render(surface)
 	if self:is_dirty() then
 		surface:clear(color)
 		if self.answer_flag then -- The user has answered a question
-			surface:clear(color)
 			if self.num_quiz:answer(self.user_answer) then
 				output = "Correct!"
 			else
@@ -95,7 +93,6 @@ function NumericQuizView:render(surface)
 		else
 			--Render the main components of NumericQuizView
 			self.answer_flag = false
-			surface:clear(color)
 			local question = self.num_quiz:get_question()
 			if question ~= nil then
 				self.font:draw_over_surface(surface, self.num_quiz.current_question .. ")   " .. question .. " =  ?")
@@ -115,19 +112,18 @@ function NumericQuizView:render(surface)
 	surface:copyfrom(self.input_surface)
 
 	gfx.update()
-	--If the user updated dirty flag will remain true to make sure the user can
-	-- navigate to the next question
 	self:dirty(false)
 end
 
 -- Displays the correct answer and whether the user chose the correct one.
 function NumericQuizView:show_answer()
 	if self.views.num_input_comp:get_text() ~= "" then
+		print("Showing answer")
 		self.answer_flag = true
-		self:dirty(true)
 		self.user_answer = tonumber(self.views.num_input_comp:get_text())
 		self.views.num_input_comp:set_text(nil)
-		view.view_manager:render()
+		self:dirty(false)
+		self:dirty(true)
 	end
 end
 

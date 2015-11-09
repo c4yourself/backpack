@@ -93,7 +93,7 @@ function CityView2:load_view(button)
 		--Instanciate a numerical quiz
 		local numerical_quiz_view = NumericalQuizView()
 		--Stop listening to everything
-		-- TODO
+		self:stop_listening(event.remote_control)
 		-- Start listening to the exit event, which is called when the user
 		-- exits a quiz
 		local callback = function()
@@ -103,12 +103,21 @@ function CityView2:load_view(button)
 		self:listen_to(
 			numerical_quiz_view,
 			"exit",
-			--view.view_manager:set_view(self)
 			callback
+		)
+
+		-- Make the city view listen for the "dirty" event
+		local numerical_callback = function()
+			numerical_quiz_view:render(screen)
+		end
+		self:listen_to(
+			numerical_quiz_view,
+			"dirty",
+			numerical_callback
 		)
 		--Update the view
 		numerical_quiz_view:render(screen)
-		-- TODO This should be done by a subsurface in the final version
+		-- TODO ^This should be done by a subsurface in the final version
 		gfx.update()
 	elseif button == "2" then
 		multiplechoice_quiz.render(screen)
