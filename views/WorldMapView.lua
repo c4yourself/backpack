@@ -1,5 +1,5 @@
 local utils = require("lib.utils")
-local subsurface = require("lib.view.Subsurface")
+local subsurface = require("lib.view.SubSurface")
 local area = require("lib.draw.Rectangle")
 local world_map = {}
 local cities = {new_york, paris, london, kairo, bombay, sidney, rio, tokyo}
@@ -7,6 +7,7 @@ local cities = {new_york, paris, london, kairo, bombay, sidney, rio, tokyo}
 function world_map.render(surface)
 	local background_color = {r = 255, g = 255, b = 255}
 	local city_color = {r = 255, g = 0, b = 0}
+	local path_color = {r = 0, g = 255, b = 0}
 	surface:clear(background_color)
 	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/worldmap.png")))
 
@@ -41,10 +42,28 @@ function world_map.render(surface)
 	local tokyo_area = _create_area(1115, 190)
 	local tokyo = subsurface(surface, tokyo_area)
 	tokyo:clear(city_color)
+
+	local path = {}
+	for i = 0, sidney_area.x - new_york_area.x - 1 do
+		path[i] = {}
+		for j = 0, sidney_area.y - new_york_area.y - 1 do
+			path[i][j] = subsurface(surface, _create_path(new_york_area.x + i, new_york_area.y + j))
+		end
+	end
+
+	local path_width = sidney_area.x - new_york_area.x
+	local path_length = sidney_area.y - new_york_area.y
+	for i = 0, path_width - 1 do
+		path[i][math.floor((path_length/path_width)*i)]:clear(path_color)
+	end
 end
 
 function _create_area(x, y)
-	return area(x,y,10,10)
+	return area(x, y, 10, 10)
+end
+
+function _create_path(x, y)
+	return area(x, y, 3, 3)
 end
 
 return world_map
