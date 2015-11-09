@@ -24,24 +24,8 @@ end
 -- @param color the color to paint subsurface with
 -- @param rectangle area to paint, defaults to entire subsurface
 function SubSurface:clear(color, rectangle)
-
-	local c = {
-		r = color.r,
-		g = color.g,
-		b = color.b,
-		a = color.a
-	}
-
 	local rect = self:_get_rectangle(rectangle)
-
-	local w = rect.x + rect.width - 1
-	local h = rect.y + rect.height - 1
-	for i = rect.x, w do
-		for j = rect.y, h do
-			self.surface:set_pixel(i, j, c)
-		end
-	end
-
+	self.surface:clear(color, rect)
 end
 
 --- Blends current color with a desireable color in a speciefied rectangle
