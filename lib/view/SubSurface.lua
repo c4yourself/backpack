@@ -1,22 +1,28 @@
 local class = require("lib.classy")
-local Color = require("lib.color")
+local copysurface = require("emulator.surface")
 local SubSurface = class("SubSurface")
 
---- Constructor for Subsurface.
+
+
+
+--- Constructor for SubSurface class
+-- @param surface the surface this subsurface shall be written on
+-- @param area the size and starting poin(x,y) of this subsurface
 function SubSurface:__init(surface, area)
 
 	self.surface = surface
-
 	self.rectangle = area
 	self.x = area.x
 	self.y = area.y
 	self.width = area.width
 	self.height = area.height
-	self.xend = self.x + self.width
-	self.yend = self.y + self.height
+	self.xend = self.x + self.width -- End of Subsurface x
+	self.yend = self.y + self.height -- End of Subsurface y
 end
 
 --- Fills desired area of the surface with a solid color.
+-- @param color the color to paint subsurface with
+-- @param rectangle area to paint, defaults to entire subsurface
 function SubSurface:clear(color, rectangle)
 
 	local c = {
@@ -26,26 +32,12 @@ function SubSurface:clear(color, rectangle)
 		a = color.a
 	}
 
-	local rect = {
-		x = self.x,
-		y = self.y,
-		width = self.width,
-		height = self.height
-	}
-
-	if rectangle ~= nil then
-		rect.x = rectangle.x + self.x
-		rect.y = rectangle.y + self.y
-		rect.width = rectangle.width
-		rect.height = rectangle.height
-	end
+	local rect = self:_get_rectangle(rectangle)
 
 	local w = rect.x + rect.width - 1
 	local h = rect.y + rect.height - 1
 	for i = rect.x, w do
 		for j = rect.y, h do
-			--print(c.r)
-
 			self.surface:set_pixel(i, j, c)
 		end
 	end
@@ -53,100 +45,56 @@ function SubSurface:clear(color, rectangle)
 end
 
 --- Blends current color with a desireable color in a speciefied rectangle
+-- @param color the blending color
+-- @param rectangle the area to blend, defaults to entire subsurface
 function SubSurface:fill(color, rectangle)
-
-	local rect = {
-		x = self.x,
-		y = self.y,
-		width = self.width,
-		height = self.height
-	}
-
-	if rectangle ~= nil then
-		rect.x = rectangle.x + self.x
-		rect.y = rectangle.y + self.y
-		rect.width = rectangle.width
-		rect.height = rectangle.height
-	end
+	local rect = self:_get_rectangle(rectangle)
 	self.surface:fill(color, rect)
 end
 
---- Copy pixels from another surface into this
-function SubSurface:copyfrom(src_surface, src_rectangle, dest_rectangle, blend_option)
+--- Copy pixels from another surface into this SubSurface
+-- @param src_surface the surface to copy from
+-- @param src_rectangle the area on src_surface to copy from
+-- @param dest_rectangle the are on subsurface to copy to
+-- @param blend_option
+function SubSurface:copy_from(src_surface, src_rectangle, dest_rectangle, blend_option)
+	local surfaceCopy = copysurface(self.width, self.height)
+	surfaceCopy:copyfrom(src_surface, src_rectangle, blend_option)
 
-	local source_rectangle = {}
+	for i = 0, (dest_rectangle.width - 1) do
+		for j = 0, (dest_rectangle.height - 1) do
 
+			r, g, b, a = surfaceCopy:get_pixel(i, j)
+			color = {
+				r = r,
+				g = g,
+				b = b,
+				a = a
+			}
 
-	--if src_rectangle is nil, defaul to entire source surface
-	if src_rectangle == nil then
-		source_rectangle.x = 0
-		source_rectangle.y = 0
-		source_rectangle.w = src_surface.image_data:getWidth()
-		source_rectangle.h = src_surface.image_data:getHeight()
-	else
-		source_rectangle.x = src_rectangle.x or 0
-		source_rectangle.y = src_rectangle.y or 0
-		source_rectangle.w = src_rectangle.w or src_surface.image_data:getWidth()
-		source_rectangle.h = src_rectangle.h or src_surface.image_data:getHeight()
-	end
-		print(src_rectangle.h)
-	local destination_rectangle = {}
-
-	--if src_rectangle is nil, defaul to enture source surface
-	if dest_rectangle == nil then
-		destination_rectangle.x = 0
-		destination_rectangle.y = 0
-		destination_rectangle.w = src_surface.image_data:getWidth()
-		destination_rectangle.h = src_surface.image_data:getHeight()
-	else
-		destination_rectangle.x = dest_rectangle.x or 0
-		destination_rectangle.y = dest_rectangle.y or 0
-		destination_rectangle.w = dest_rectangle.w or src_surface.image_data:getWidth()
-		destination_rectangle.h = dest_rectangle.h or src_surface.image_data:getHeight()
-	end
-
-
-	local scale_x = destination_rectangle.w / source_rectangle.w
-	local scale_y = destination_rectangle.h / source_rectangle.h
-
-	local dest_w = destination_rectangle.x + destination_rectangle.w
-	local dest_h = destination_rectangle.y + destination_rectangle.h
-
-	local src_w = source_rectangle.x + source_rectangle.w
-	local src_h = source_rectangle.y + source_rectangle.h
-
-
-	if scale_x >= 1 then
- 		if scale_y >= 1 then
-			for i = source_rectangle.x, src_w do
-				for j = source_rectangle.y, src_h do
-					r,g,b,a = src_surface.image_data:getPixel(i, j)
-
-					local c = {
-						r = r,
-						g = g,
-						b = b,
-						a = a
-					}
-					print(i .. ":" .. j .. "--" .. c.r .."-" .. c.g .. "-" ..c.b .. "-" .. c.a)
-					self.surface.image_data:setPixel(i, j, c.r, c.g, c.b, c.a)
-				end
-			end
+			local setx = i + dest_rectangle.x + self.x
+			local sety = j + dest_rectangle.y + self.y
+			self.surface:set_pixel(setx, sety, color)
 		end
 	end
 end
 
 --- Get this Subsurface's width
+-- @return int width for this pixel
 function SubSurface:get_width()
 	return self.width
 end
 
 --- Get this Subsurface's height
+-- @return int height for this subsurface
 function SubSurface:get_height()
 	return self.height
 end
 
 --- Get color of the pixel at location x and y
+-- @param x the x cordinate to return color for
+-- @param y the y cordinate to return color for
+-- @return int color values for this pixel
 function SubSurface:get_pixel(x,y)
 	x = x + self.x
 	y = y + self.y
@@ -155,6 +103,9 @@ function SubSurface:get_pixel(x,y)
 end
 
 --- Set color of the pixel at location x and y
+-- @param x the x cordinate to set color for
+-- @param y the y cordinate to set color for
+-- @param color the color to set at this pixel
 function SubSurface:set_pixel(x,y,color)
 	x = x + self.x
 	y = y + self.y
@@ -172,6 +123,7 @@ function SubSurface:destroy()
 end
 
 --- Modifies the alpha value of every pixel within this surface
+-- @param alpha the alphavalue to modify pixelcolor with
 function SubSurface:set_alpha(alpha)
 	for i = self.x, self.xend do
 		for j = self.y, self.yend do
@@ -186,5 +138,42 @@ function SubSurface:set_alpha(alpha)
 		end
 	end
 end
+
+--- Creates an rectangle(table) which is easier to work with
+-- @param rectangle an rectangle to convert
+-- @return Table with rectangle x, y, width and height values
+function SubSurface:_get_rectangle(rectangle)
+	local rect = {
+		x = self.x,
+		y = self.y,
+		width = self.width,
+		height = self.height
+	}
+
+	if rectangle == nil then
+		return rect
+	end
+
+	rect.x = self.x + rectangle.x or rect.x
+	rect.y = self.y + rectangle.y or rect.y
+	rect.width = (rectangle.width or rectangle.w or rect.width)
+	rect.height = (rectangle.height or rectangle.h or rect.height)
+
+	local end_x = self.x + rect.x + rect.width - 1
+	local end_y = self.y + rect.y + rect.height - 1
+
+	-- Throw error when trying to draw outside of screen
+	if end_x >= self.width or end_y >= self.height then
+		logger.error(string.format(
+			"Rectange start is %dx%d, end is %dx%d. Max is %dx%d",
+			rect.x, rect.y,
+			end_x, end_y,
+			self.width - 1, self.height - 1))
+		error("Rectangle is out of bounds")
+	end
+
+	return rect
+end
+
 
 return SubSurface
