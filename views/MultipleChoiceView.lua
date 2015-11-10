@@ -112,15 +112,22 @@ function MultipleChoiceView:render(surface)
 		surface:clear(color)
 		if self.quiz_state == "IDLE" then
 			surface:clear(color)
-			self.font:draw_over_surface(screen,i .. "." .. self.mult_choice_quiz.questions[i].question)
+			local buttonColor = {r=0, g=128, b=225}
+			local textColor = {r=0, g=0, b=0}
+			local choiceButton1 = sys.new_freetype(textColor, 30, {x=100,y=400}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+			local choiceButton2 = sys.new_freetype(textColor, 30, {x=350,y=400}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+			local choiceButton3 = sys.new_freetype(textColor, 30, {x=600,y=400}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+			local choiceButton4 = sys.new_freetype(textColor, 30, {x=850,y=400}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+
+			self.font:draw_over_surface(surface, self.current_question .. "." .. self.mult_choice_quiz.questions[self.current_question].question)
 			surface:fill(buttonColor, {width=200, height=60, x=100, y=400})
-			choiceButton1:draw_over_surface(surface,"(1)." .. self.mult_choice_quiz.questions[i].Choices[1])
+			choiceButton1:draw_over_surface(surface,"(1)." .. self.mult_choice_quiz.questions[self.current_question].Choices[1])
 			surface:fill(buttonColor, {width=200, height=60, x=350, y=400})
-			choiceButton2:draw_over_surface(surface,"(2)." .. self.mult_choice_quiz.questions[i].Choices[2])
+			choiceButton2:draw_over_surface(surface,"(2)." .. self.mult_choice_quiz.questions[self.current_question].Choices[2])
 			surface:fill(buttonColor, {width=200, height=60, x=600, y=400})
-			choiceButton3:draw_over_surface(surface,"(3)." .. self.mult_choice_quiz.questions[i].Choices[3])
+			choiceButton3:draw_over_surface(surface,"(3)." .. self.mult_choice_quiz.questions[self.current_question].Choices[3])
 			surface:fill(buttonColor, {width=200, height=60, x=850, y=400})
-			choiceButton4:draw_over_surface(surface,"(4)." .. self.mult_choice_quiz.questions[i].Choices[4])
+			choiceButton4:draw_over_surface(surface,"(4)." .. self.mult_choice_quiz.questions[self.current_question].Choices[4])
 
 		elseif self.quiz_state == "DISPLAY_RESULT" then
 			-- Display the result from one question
