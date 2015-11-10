@@ -14,17 +14,17 @@ end
 
 function TestColor:test_from_html()
 	luaunit.assertEquals(
-		color.Color.from_html("#fff"):to_table(), {255, 255, 255, 255})
+		draw.Color.from_html("#fff"):to_table(), {255, 255, 255, 255})
 	luaunit.assertEquals(
-		color.Color.from_html("#ffff"):to_table(), {255, 255, 255, 255})
+		draw.Color.from_html("#ffff"):to_table(), {255, 255, 255, 255})
 	luaunit.assertEquals(
-		color.Color.from_html("#ffffff"):to_table(), {255, 255, 255, 255})
+		draw.Color.from_html("#ffffff"):to_table(), {255, 255, 255, 255})
 	luaunit.assertEquals(
-		color.Color.from_html("#ffffffff"):to_table(), {255, 255, 255, 255})
+		draw.Color.from_html("#ffffffff"):to_table(), {255, 255, 255, 255})
 	luaunit.assertEquals(
-		color.Color.from_html("ffffffff"):to_table(), {255, 255, 255, 255})
+		draw.Color.from_html("ffffffff"):to_table(), {255, 255, 255, 255})
 
-	luaunit.assertError(color.Color.from_html, "#ffg")
+	luaunit.assertError(draw.Color.from_html, "#ffg")
 end
 
 function TestColor:test_from_table()
