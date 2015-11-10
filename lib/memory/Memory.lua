@@ -13,7 +13,6 @@ function Memory:__init(pairs, scrambled)
 		self.scrambled = true
 	end
 	self.pairs = pairs
---	print(self.pairs)
 	self.cards = self:_create_pairs()
 	self.moves = 0
 	self.open_counter = 0
@@ -32,7 +31,6 @@ end
 function Memory:_create_pairs()
 --Provide a better name for a?
 	local	temp_table = {}
-	--print(self.scrambled)
 	for i = 1, self.pairs do
 		table.insert(temp_table,i)
 		table.insert(temp_table,i)
@@ -69,14 +67,14 @@ function Memory:open(index)
 -- of if card is already open
 
 	if index > #self.state or index <= 0 then
-		print("Index error")
+--		print("Index error")
 		error("Index is greater than number of cards")
 	elseif self.state[index] == true then
 		error("Card is already open")
 	else
 		self.open_counter = self.open_counter + 1
 		self.moves = math.floor(self.open_counter / 2)
-		print("moves: "..self.moves)
+--		print("moves: "..self.moves)
 		if self.open_counter % 2 ~= 0 then
 					self.state[index] = true
 		else
@@ -105,17 +103,23 @@ end
 
 function Memory:serialize(columns)
 	local string_serialize = ""
-	local length = string.len(state)
+	local length = #self.state
+	local state_val = "."
 
 	for i = 1, length do
 		if self.state[i] == true then
-		 	local state_val = "+"
-	 	else
-		 	local state_val = "."
+		 	 state_val = "+"
+--	 	else
+--		 	local state_val = "."
 	 	end
 	 	local string_serialize = string_serialize .. state_val .. self.cards[i]
+		print("String seri: " .. string_serialize)
 	end
+	print("String seri2: " .. string_serialize)
+
 	string_serialize = string_serialize .. self.moves
+	print("String seri3: " .. string_serialize)
+
 	return string_serialize
 end
 
