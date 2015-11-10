@@ -25,7 +25,15 @@ elif [ "$1" == "test" ]; then
 
 	# Tests must be run within the context of the test folder
 	cd tests
-	lua tests.lua
+	#lua tests.lua -v
+	lua tests.lua -o TAP
+elif [ "$1" == "jenkins" ]; then
+	echo "Running unit tests"
+
+	# Tests must be run within the context of the test folder
+	rm -f test_report.xml
+	cd tests
+	lua tests.lua -o JUNIT -n ../test_report.xml
 elif [ "$1" == "doc" ]; then
 	echo "Removing old documentation"
 	rm -rf doc
@@ -92,6 +100,9 @@ else
 	echo "	backpack export   Put code on USB memory on set-top box. Does not start"
 	echo "	                  application"
 	echo "	backpack install  Install required system packages (expert only)"
+	echo "	backpack lint     Check files for poor indentation"
 	echo "	backpack logger   Start listener for UDPLogger (on port in config.lua)"
+	echo "	backpack jenkins  Run all unit tests to produce a XML file in JUnit"
+	echo "	                  format"
 	echo "	backpack test     Run all unit tests"
 fi
