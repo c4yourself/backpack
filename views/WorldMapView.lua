@@ -16,7 +16,7 @@ local tokyo_pos = {x = 1115/1280, y = 190/720}
 function world_map.render(surface, start, dest)
 	--some colors
 	local background_color = {r = 255, g = 255, b = 255}
-	local city_color = {r = 255, g = 0, b = 0}
+	local city_color = {r = 0, g = 128, b = 255}
 	local path_color = {r = 0, g = 255, b = 0}
 
 	--This section locates and puts the cities on the map
@@ -99,6 +99,8 @@ function world_map.render(surface, start, dest)
 			dest_node = tokyo_area
 		end
 
+		local start_node_area = _create_start_rect(start_node.x, start_node.y)
+		surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/target.png")), nil, _create_dest_rect(dest_node.x, dest_node.y) )
 		--force the trip to be drawn from right
 		if start_node.x > dest_node.x then
 			local prel = start_node
@@ -125,7 +127,7 @@ function world_map.render(surface, start, dest)
 		for i = 0, path_width - 1 do
 			path[i][math.floor((path_height/path_width)*i)]:clear(path_color)
 		end
-
+		surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/aeroplane.png")), nil, start_node_area )
 	end
 end
 
@@ -135,6 +137,14 @@ end
 
 function _create_path(x, y)
 	return area(x, y, 1, 3)
+end
+
+function _create_start_rect(x, y)
+	return area(x-25, y-15, 50,30)
+end
+
+function _create_dest_rect(x, y)
+	return area(x-10, y-10, 30,30)
 end
 
 return world_map
