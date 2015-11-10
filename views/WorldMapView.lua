@@ -13,7 +13,7 @@ local bombay_pos = {x = 900/1280, y = 200/720}
 local sidney_pos = {x = 1168/1280, y = 428/720}
 local tokyo_pos = {x = 1115/1280, y = 190/720}
 
-function world_map.render(surface, start, dest)
+function world_map.render(surface, start, dest, transp)
 	--some colors
 	local background_color = {r = 255, g = 255, b = 255}
 	local city_color = {r = 0, g = 128, b = 255}
@@ -127,7 +127,10 @@ function world_map.render(surface, start, dest)
 		for i = 0, path_width - 1 do
 			path[i][math.floor((path_height/path_width)*i)]:clear(path_color)
 		end
-		surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/aeroplane.png")), nil, start_node_area )
+
+		 if transp ~= nil then
+			 surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/" .. transp .. ".png")), nil, start_node_area )
+		 end
 	end
 end
 
