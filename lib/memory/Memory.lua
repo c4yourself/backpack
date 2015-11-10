@@ -47,8 +47,8 @@ function Memory:_create_pairs()
 		print(serpent.line(temp_table))
 if self.scrambled == true then
 		for i = 1, self.pairs*2 do
-			local switch_index_1 = math.random(table.getn(temp_table))
-			local switch_index_2 = math.random(table.getn(temp_table))
+			local switch_index_1 = math.random(#temp_table)
+			local switch_index_2 = math.random(#temp_table)
 			local switch_val_1 = temp_table[switch_index_1]
 			local switch_val_2 = temp_table[switch_index_2]
 			temp_table[switch_index_1] = switch_val_2
@@ -70,21 +70,31 @@ function Memory:look(index)
 end
 
 function Memory:open(index)
-	if index > table.getn(state) then
+	if index > #self.state then
 		error("Index is greater than number of cards")
-	elseif state(index) == true then
+	elseif state[index] == true then
 		error("Card is already open")
 	else
-		state[index] = true
-		self.open_counter = self.open + 1
+		self.open_counter = self.open_counter + 1
 		self.moves = math.floor(self.open_counter / 2)
+		if self.open_counter % 2 ~= 0 then
+					state[index] = true
+		else
+			for i = 1, #self.cards do
+				if (cards[i] == cards[index]) and (i ~= index) then
+					if state[i] == true then
+						state[index] = true
+					end
+				end
+			end
+		end
 		return cards[index]
 	end
 end
 
 function Memory:is_finished()
 	local is_finished = false
-	for i = 1, table.getn(self.state) do
+	for i = 1, #self.state do
 		if self.state[i] == false then break
 		else
 			is_finished = true
@@ -103,7 +113,7 @@ function Memory:serialize(columns)
 	 	else
 		 	local state_val = "."
 	 	end
-	 	local string_serialize = string_serialize .. state .. self.cards[i]
+	 	local string_serialize = string_serialize .. state_val .. self.cards[i]
 	end
 	string_serialize = string_serialize .. self.moves
 	return string_serialize
@@ -130,6 +140,7 @@ function Memory.unserialize(new_state)
 		memory.state = state
 		memory.cards = cards
 		memory.moves = moves
+		memory.open_counter = moves * 2
 	end
 	return memory
 end

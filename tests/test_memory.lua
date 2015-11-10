@@ -7,23 +7,26 @@ local TestMemory = {}
 
 -- Sets up test by creating a test object
 function TestMemory:setUp()
-  table = {1,1,2,2,3,3,4,4}
-  local	memory = Memory(table, false)
+  local pairs = 8
+  --local table = {1,1,2,2,3,3,4,4}
+  local	memory = Memory(pairs, false)
 end
 
 function TestMemory:test_is_finished()
-  state = "+1+1+2+2+3+3+4+45"
+  local state = "+1+1+2+2+3+3+4+45"
 	local memory = Memory.unserialize(state)
   luaunit.assertEquals(memory:is_finished(), true)
 
-  state = "+1+1+2+2+3+3+4.45"
+  local state = "+1+1+2+2+3+3+4.45"
+  local memory = Memory.unserialize(state)
   luaunit.assertEquals(memory:is_finished(), false)
 
 end
 
 function TestMemory:test_look()
+  local pairs = 8
 	local index = 1
-  local	memory = Memory(table, false)
+  local	memory = Memory(pairs, false)
 	local card, is_open = memory:look(index)
 	luaunit.assertEquals(card, index)
 	luaunit.assertEquals(is_open, false)
@@ -45,8 +48,9 @@ function TestMemory:test_look()
 end
 
 function TestMemory:test_open()
+  local pairs = 8
 	local index = 1
-  local	memory = Memory(table, false)
+  local	memory = Memory(pairs, false)
 	local no_of_moves = memory.moves
 	luaunit.assertEquals(memory:open(index), index)
 
@@ -71,9 +75,10 @@ end
 -- obs det enda attributet som är globalt är moves, resten måste nås med funktionsanrop
 
 function TestMemory:test_serialize()
+  local pairs = 8
 --	index = 4;
 --  local table = {1,1,2,2,3,3,4,4}
-  local memory = Memory(table, false)
+  local memory = Memory(pairs, false)
 	memory_string = memory:serialize();
 -- Checks if the serialization is correct
   luaunit.assertEquals(memory_string, ".1.1.2.2.3.3.4.40")
