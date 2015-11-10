@@ -9,10 +9,14 @@ local class = require("lib.classy")
 local ViewManager = class("ViewManager")
 
 --- Constructor for ViewManager
--- @param surface Surface that views will be rendered on
+-- @param surface Surface that views will be rendered on, defaults to screen
 -- @param view top-level view component
 function ViewManager:__init(surface, view)
-	self.surface = surface
+	if surface == nil then
+		self.surface = screen
+	else
+		self.surface = surface
+	end
 	self.view = view
 end
 
@@ -20,10 +24,10 @@ end
 -- view and renders the new view
 function ViewManager:set_view(view)
 	if self.view ~= nil then
-		self.view.destroy()
+		self.view:destroy()
 	end
 	self.view = view
-	self.view.render()
+	self.view:render(screen)
 end
 
 --- Returns the currently active view
@@ -38,7 +42,7 @@ function ViewManager:render()
 	if self.view == nil then
 		error("Error: No active view coupled with the ViewManager")
 	end
-	self.view.render(self.surface)
+	self.view:render(self.surface)
 end
 
 return ViewManager

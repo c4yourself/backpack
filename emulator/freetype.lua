@@ -6,6 +6,7 @@
 -- @alias freetype
 
 local class = require("lib.classy")
+local Color = require("lib.draw.Color")
 
 local freetype = class("freetype")
 
@@ -13,16 +14,16 @@ local freetype = class("freetype")
 --
 -- Used by @{emulator.sys.new_freetype|sys.new_freetype}
 --
--- @param fontColor Color of font
--- @param fontSize Size of font in pixels(?)
--- @param drawingStartPoint Left upper corner a start point to a drawing text
--- @param fontPath Path to .ttf font
+-- @param color Color of font
+-- @param size Size of font in pixels(?)
+-- @param position Left upper corner a start point to a drawing text
+-- @param path Path to .ttf font
 -- @local
-function freetype:__init(fontColor, fontSize, drawingStartPoint, fontPath)
-	self.fontColor = fontColor
-	self.fontSize = fontSize
-	self.drawingStartPoint = drawingStartPoint
-	self.fontPath = fontPath
+function freetype:__init(color, size, position, path)
+	self.color = Color.from_table(color)
+	self.size = size
+	self.position = position
+	self.path = path
 end
 
 --- Draw text over surface
@@ -31,8 +32,7 @@ end
 -- @param text Text to draw
 -- @zenterio
 function freetype:draw_over_surface(surface, text)
-	love.graphics.setNewFont(self.fontPath, self.fontSize)
-	surface:writeOver(text, self.fontColor, self.drawingStartPoint)
+	surface:_write_text(self, text)
 end
 
 return freetype

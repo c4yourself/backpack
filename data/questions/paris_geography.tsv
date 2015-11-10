@@ -19,8 +19,8 @@ multiple_choice	Which of the following countries in Oceania?	Australia;Russia;Ko
 multiple_choice	Which of the following cities in Europe?	Stockholm;Paris;Washington;Hong Kong	1 2
 multiple_choice	Which of the following cities in Asia?	Beijing;Paris;Washington;Hong Kong	1 4
 multiple_choice	Which of the following cities in Africa?	Cario;Cape Town;Washington;Hong Kong	1 2
-multiple_choice	Which of the following cities in North America?	New York;Seattle;Toronto;Port-au-Prince	1 2 3 4
-multiple_choice	Which of the following cities in South America?	Rio de Janeiro;Santiago;Washington	1 2
+multiple_choice	Which of the following cities in North America?	New York;Seattle;Toronto;Port-au-Prince;Beijing	1 2 3 4
+multiple_choice	Which of the following cities in South America?	Rio de Janeiro;Santiago;Washington;Beijing	1 2
 multiple_choice	Which of the following cities in Oceania?	Sydney;Auckland;Melbourne;Brisbane	1 2 3 4
 numeric	How long is Nile river which is the longest in the world?(km)	6670
 numeric	How high is Qomolangma whcih is the highest in the world?(m)	8844

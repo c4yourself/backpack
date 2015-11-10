@@ -19,8 +19,6 @@ end
 -- @param user_answer Number representing the user answer
 -- @return Boolean value
 function NumericQuestion:is_correct (user_answer)
-	print("user answer: " .. user_answer)
-	print("correct_answer: " .. self.correct_answer)
 	return user_answer == self.correct_answer
 end
 

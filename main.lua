@@ -6,5 +6,4 @@ player = require("emulator.player")
 freetype = require("emulator.freetype")
 sys = require("emulator.sys")
 
--- Actual start script
-require("start")
+require(os.getenv("MODULE") or "start")

@@ -57,6 +57,7 @@ function TSVReader:get_question(question_type)
 		table.insert(self.choices,utils.split(self.questions_table[i][2],";"))
 		table.insert(self.correct_answers,self:get_correct_answers(self.questions_table[i][3]))
 	end
+	return self.questions_table
 end
 ---Generate random table
 function TSVReader:generate_random(tabNum,indexNum)
