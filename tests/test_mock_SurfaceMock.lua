@@ -3,26 +3,26 @@ local luaunit = require("luaunit")
 local event = require("lib.event")
 local SurfaceMock = require("lib.mocks.SurfaceMock")
 
-local TestMockSurface = {}
+local TestSurfaceMock = {}
 
-function TestMockSurface:test_negative_setUp()
+function TestSurfaceMock:test_negative_setUp()
 	self.surface_mock = SurfaceMock(-1, -1)
 end
 
 
 --Setup width = 1080, height = 720
-function TestMockSurface:setUp()
+function TestSurfaceMock:setUp()
 	self.surface_mock = SurfaceMock(1080, 720)
 end
 
 --Tests the default dimension of the surface
-function TestMockSurface:test_default_dimensions()
+function TestSurfaceMock:test_default_dimensions()
 	luaunit.assertEquals(self.surface_mock:get_width(), 1080)
 	luaunit.assertEquals(self.surface_mock:get_height(), 720)
 end
 
 --Tests that the default color of the surface is black
-function TestMockSurface:test_default_color()
+function TestSurfaceMock:test_default_color()
 	luaunit.assertEquals({self.surface_mock:get_pixel(0, 0)}, {0, 0, 0, 0})
 	luaunit.assertEquals({self.surface_mock:get_pixel(self.surface_mock:get_width() - 1
 	, self.surface_mock:get_height() - 1)}, {0, 0, 0, 0})
@@ -31,7 +31,7 @@ function TestMockSurface:test_default_color()
 end
 
 --Tests that the new colors are correct
-function TestMockSurface:test_clear()
+function TestSurfaceMock:test_clear()
 	rect = {
 		x = 0,
 		y = 0,
@@ -53,7 +53,7 @@ end
 
 --inits a too big size and then tries to clear a smaller area within
 --Should it return an error?
-function TestMockSurface:test_init_too_big()
+function TestSurfaceMock:test_init_too_big()
 	rect = {
 		x = 0,
 		y = 0,
@@ -75,4 +75,4 @@ end
 
 
 
-return TestMockSurface
+return TestSurfaceMock
