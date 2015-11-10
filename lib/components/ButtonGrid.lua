@@ -10,14 +10,28 @@ local View = require("lib.view.View")
 local button = require("lib.components.Button")
 local ButtonGrid = class("ButtonGrid",View)
 local SubSurface = require("lib.view.SubSurface")
+local utils = require("lib.utils")
 
 --- Constructor for ButtonGrid
-function ButtonGrid:__init()
+function ButtonGrid:__init(remote_control)
 	View.__init(self)
 	self.button_list = {} -- a list contains all buttons for the view.
 	self.start_indicator = true -- will function just once, help to map the indicator with
 															-- the selected button when the button grid is created.
 	self.button_indicator = nil-- the indicator will point to the selected button when rendering occurs.
+
+  if remote_control ~= nil then
+    self.event_listener = remote_control
+  else
+    self.event_listener = event.remote_control
+  end
+
+  local callback = utils.partial(self.press, self)
+  self:listen_to(
+  self.event_listener,
+  "button_press",
+  callback
+  )
 end
 
 --- Used when buttons need to be added to the view
@@ -60,6 +74,25 @@ function ButtonGrid:display_text(surface, button_index)
 
 end
 
+function ButtonGrid:press(button)
+
+    if button == "down" then
+			self:indicate_downward(self.button_indicator)
+
+		elseif button == "up" then
+			self:indicate_upward(self.button_indicator)
+
+	end
+
+	collectgarbage()  --ensure that memory-leak does not occur
+	-- print out the memory usage in KB
+	print("the memory usage is "..collectgarbage("count")*1024)
+
+	self:render(screen)
+ 	gfx.update()
+
+end
+
 --- Providing a subsurface to each button,
 -- so the button can be rendered with its own render function.
 -- If the button has text, then display the text as well
@@ -80,7 +113,8 @@ function ButtonGrid:render(surface)
 		end
 
 		self.start_indicator = false
-	end
+  end
+
 
 -- Go through the button_list to render all buttons
     for i=1 , #self.button_list do
@@ -94,10 +128,53 @@ function ButtonGrid:render(surface)
 
 		local sub_surface = SubSurface(surface,area)
 			button_data.button:render(sub_surface)
-		if button_data.button.text_available then
+      if button_data.button.text_available then
 			self:display_text(surface, i)
-		end
-	end
-
+	   end
+   end
 end
+
+--- When "down" is pressed, the indicator shall follow the down-direction
+-- @param button_indicator The current indicator that points to the selected button
+function ButtonGrid:indicate_downward(button_indicator)
+  local indicator = button_indicator
+    local button_list = self.button_list
+
+    indicator = indicator % #button_list
+    indicator = indicator + 1
+    button_list[indicator].button:select(true)
+
+     if indicator == 1 then
+     button_list[#button_list].button:select(false)
+   else
+    button_list[indicator-1].button:select(false)
+   end
+
+   self.button_indicator = indicator
+end
+
+--- When "up" is pressed, the indicator shall follow the up-direction
+-- @param button_indicator The current indicator that points to the selected button
+function ButtonGrid:indicate_upward(button_indicator)
+  local indicator = button_indicator
+  local button_list = self.button_list
+
+  indicator = indicator - 1
+
+  if indicator == 0 then
+  indicator = #button_list
+  end
+
+  button_list[indicator].button:select(true)
+
+  if indicator == #button_list then
+  button_list[1].button:select(false)
+  else
+  button_list[indicator+1].button:select(false)
+  end
+
+  self.button_indicator = indicator
+end
+
+
 return ButtonGrid
