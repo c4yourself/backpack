@@ -10,7 +10,7 @@ local CityView2 = class("CityView2", View)
 local event = require("lib.event")
 local utils = require("lib.utils")
 local multiplechoice_quiz = require("views.multiplechoice_quiz")
-local subsurface = require("lib.view.Subsurface")
+local SubSurface = require("lib.view.SubSurface")
 local NumericalQuizView = require("views.NumericalQuizView")
 local button= require("lib.components.Button")
 local button_grid	=	require("lib.components.ButtonGrid")
@@ -76,8 +76,8 @@ function CityView2:render(surface)
 	self.buttonGrid:render(surface)
 
 	-- testing the subsurface
-	local sub_surface1 = subsurface(surface,{width=100, height=100, x=0, y=0})
-	sub_surface1:clear({r=255, g=255, b=255, a=255})
+	local subsurface1 = SubSurface(surface,{width=100, height=100, x=0, y=0})
+	subsurface1:clear({r=255, g=255, b=255, a=255})
 
 	-- Instance remote control and mapps it to the buttons
 	--event.remote_control:on("button_release", self:load_view)

@@ -95,7 +95,12 @@ end
 -- @see emulator.gfx.set_auto_update
 -- @zenterio
 function gfx.update()
-	screen:draw()
+	-- Replace existing draw function with a new one that renders the current
+	-- snapshot of the screen
+	local image = love.graphics.newImage(screen.image_data)
+	function love.draw()
+		love.graphics.draw(image)
+	end
 end
 
 --- Set auto update.
@@ -124,6 +129,5 @@ end
 --
 -- @zenterio
 screen = gfx.new_surface(1280, 720)
-
 
 return gfx

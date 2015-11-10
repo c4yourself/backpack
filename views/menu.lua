@@ -1,7 +1,6 @@
 local utils = require("lib.utils")
 local event = require("lib.event")
 local multiplechoice_quiz = require("views.multiplechoice_quiz")
-local subsurface = require("lib.view.Subsurface")
 local view = require("lib.view")
 local NumericalQuizView = require("views.NumericalQuizView")
 local profile_selection = require("views.profile_selection")
@@ -66,9 +65,7 @@ function menu.render(surface)
 	surface:fill(button_color, {width=500, height=100, x=100, y=450})
 	text_button3:draw_over_surface(surface, "3. Exit")
 
-	-- Testing Subsurface
-	local sub_surface1 = subsurface(surface,{width=100, height=100, x=0, y=0})
-	sub_surface1:clear({r=255, g=255, b=255, a=255})
+
 
 	-- Instance remote control and mapps it to the buttons
 	event.remote_control:on("button_release", menu.load_view)

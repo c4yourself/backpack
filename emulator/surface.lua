@@ -73,29 +73,30 @@ end
 -- @param blend_option true if alpha blending should occur, otherwise false.
 -- @zenterio
 function surface:copyfrom(src_surface, src_rectangle, dest_rectangle, blend_option)
-	local source_rectangle = self:_get_rectangle(src_rectangle)
-	local destination_rectangle = self:_get_rectangle(dest_rectangle)
+	-- TODO: Support blend option
+	local source_rectangle = src_surface:_get_rectangle(src_rectangle)
+	local destination_rectangle = self:_get_rectangle(dest_rectangle, {
+		width = source_rectangle.width, height = source_rectangle.height
+	})
 
 	local scale_x = destination_rectangle.width / source_rectangle.width
 	local scale_y = destination_rectangle.height / source_rectangle.height
 
 	local canvas = love.graphics.newCanvas(
 		self.image_data:getWidth(), self.image_data:getHeight())
-	love.graphics.setCanvas(canvas)
 
-	love.graphics.draw(love.graphics.newImage(self.image_data))
-	love.graphics.draw(
-		love.graphics.newImage(src_surface.image_data),
-		destination_rectangle.x,
-		destination_rectangle.y,
-		0,
-		scale_x,
-		scale_y)
-
-	love.graphics.setCanvas()
+	canvas:renderTo(function()
+		love.graphics.draw(love.graphics.newImage(self.image_data))
+		love.graphics.draw(
+			love.graphics.newImage(src_surface.image_data),
+			destination_rectangle.x,
+			destination_rectangle.y,
+			0,
+			scale_x,
+			scale_y)
+	end)
 
 	self.image_data = canvas:getImageData()
-	canvas = {}
 end
 
 
@@ -122,8 +123,7 @@ end
 -- @return red, green, blue, alpha
 -- @zenterio
 function surface:get_pixel(x, y)
-	r, g, b, a = self.image_data:getPixel( x, y )
-	return r, g, b, a
+	return self.image_data:getPixel(x, y)
 end
 
 --- Set color of pixel.
@@ -165,10 +165,10 @@ end
 --- Set alpha channel for entire surface.
 -- @param alpha Alpha value between 0-255 (0 is transparent, 255 is opaque)
 function surface:set_alpha(alpha)
-	for i = 0, self.image_data:getWidth()-1 do
-		for j = 0, self.image_data:getHeight()-1 do
-			r, g, b, a = self.image_data:getPixel(i, j)
-			self.image_data:setPixel(i, j, r, g, b, alpha)
+	for x = 0, self.image_data:getWidth() - 1 do
+		for y = 0, self.image_data:getHeight() - 1 do
+			local r, g, b, a = self.image_data:getPixel(x, y)
+			self.image_data:setPixel(x, y, r, g, b, alpha)
 		end
 	end
 end
@@ -217,50 +217,46 @@ end
 --
 -- Used by @{emulator.freetype:draw_over_surface}
 --
--- @param text Text to draw
--- @param fontColor Color of text
--- @param drawingStartPoint Left upper corner a start point to a drawing text
+-- @param freetype Freetype instance to use
+-- @param text Text to write
 --
 -- @local
-function surface:writeOver(text, fontColor, drawingStartPoint)
-	local color = Color.from_table(fontColor)
-
+function surface:_write_text(freetype, text)
 	local canvas = love.graphics.newCanvas(
 		self.image_data:getWidth(), self.image_data:getHeight())
-	love.graphics.setCanvas(canvas)
 
-	love.graphics.draw(love.graphics.newImage(self.image_data))
+	canvas:renderTo(function()
+		love.graphics.draw(love.graphics.newImage(self.image_data))
 
-	-- Save old color to restore it later
-	local r, g, b, a = love.graphics.getColor()
+		-- Save old color to restore it later
+		local r, g, b, a = love.graphics.getColor()
 
-	love.graphics.setColor(color:to_values())
-	love.graphics.print(text, drawingStartPoint.x, drawingStartPoint.y)
-	love.graphics.setColor(r, g, b, a)
+		love.graphics.setColor(freetype.color:to_values())
 
-	love.graphics.setCanvas()
+		love.graphics.setNewFont(freetype.path, freetype.size)
+		love.graphics.print(text, freetype.position.x, freetype.position.y)
+
+		-- Restore previous color
+		love.graphics.setColor(r, g, b, a)
+	end)
 
 	self.image_data = canvas:getImageData()
-	canvas = {}
-end
-
---- Emulator function to draw this surface on screen.
--- Not part of Zenterio's Lua API!
--- @local
-function surface:draw()
-	image = love.graphics.newImage(self.image_data)
-	function love.draw()
-		love.graphics.draw(image)
-	end
 end
 
 --- Convert a given rectangle to canonical form.
 -- @return Table with rectangle x, y, width and height values
 -- @local
-function surface:_get_rectangle(rectangle)
+function surface:_get_rectangle(rectangle, defaults)
+	if defaults == nil then
+		defaults = {
+			width = self:get_width(),
+			height = self:get_height()
+		}
+	end
+
 	local rect = Rectangle.from_table(rectangle, {
-		width = self:get_width(),
-		height = self:get_height()
+		width = defaults.width or defaults.w,
+		height = defaults.height or defaults.h
 	})
 
 	local surface_rect = Rectangle.from_surface(self)
