@@ -13,7 +13,7 @@ function Memory:__init(pairs, scrambled)
 		self.scrambled = true
 	end
 	self.pairs = pairs
-	print(self.pairs)
+--	print(self.pairs)
 	self.cards = self:_create_pairs()
 	self.moves = 0
 	self.open_counter = 0
@@ -24,13 +24,6 @@ function Memory:__init(pairs, scrambled)
 		table.insert(self.state, false)
 		table.insert(self.state, false)
 	end
-
-	-- if (scrambled ~= nil) {
-	-- 	self.scrambled = scrambled
-	-- } else {
-	-- 	self.scrambled = true
-	-- }
-	-- self.pairs = pairs
 end
 
 --- Generates pairs for the board
@@ -39,13 +32,14 @@ end
 function Memory:_create_pairs()
 --Provide a better name for a?
 	local	temp_table = {}
-	print(self.scrambled)
-		for i = 1, self.pairs do
-			table.insert(temp_table,i)
-			table.insert(temp_table,i)
-		end
-		print(serpent.line(temp_table))
-if self.scrambled == true then
+	--print(self.scrambled)
+	for i = 1, self.pairs do
+		table.insert(temp_table,i)
+		table.insert(temp_table,i)
+	end
+	--print(serpent.line(temp_table))
+
+	if self.scrambled == true then
 		for i = 1, self.pairs*2 do
 			local switch_index_1 = math.random(#temp_table)
 			local switch_index_2 = math.random(#temp_table)
@@ -54,7 +48,7 @@ if self.scrambled == true then
 			temp_table[switch_index_1] = switch_val_2
 			temp_table[switch_index_2] = switch_val_1
 		end
-end
+	end
 	return temp_table
 end
 
@@ -66,29 +60,35 @@ function Memory:look(index)
 		local card = self.cards[index]
 		local state = self.state[index]
 	end
+	print(state)
 	return card, state
 end
 
 function Memory:open(index)
-	if index > #self.state then
+-- Raise an error if index is out of bounds
+-- of if card is already open
+
+	if index > #self.state or index <= 0 then
+		print("Index error")
 		error("Index is greater than number of cards")
-	elseif state[index] == true then
+	elseif self.state[index] == true then
 		error("Card is already open")
 	else
 		self.open_counter = self.open_counter + 1
 		self.moves = math.floor(self.open_counter / 2)
+		print("moves: "..self.moves)
 		if self.open_counter % 2 ~= 0 then
-					state[index] = true
+					self.state[index] = true
 		else
 			for i = 1, #self.cards do
-				if (cards[i] == cards[index]) and (i ~= index) then
-					if state[i] == true then
-						state[index] = true
+				if (self.cards[i] == self.cards[index]) and (i ~= index) then
+					if self.state[i] == true then
+						self.state[index] = true
 					end
 				end
 			end
 		end
-		return cards[index]
+		return self.cards[index]
 	end
 end
 
