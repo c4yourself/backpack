@@ -15,6 +15,7 @@ local NumericalQuizView = require("views.NumericalQuizView")
 local button= require("lib.components.Button")
 local button_grid	=	require("lib.components.ButtonGrid")
 local color = require("lib.draw.Color")
+local MultipleChoiceView = require("views.MultipleChoiceView")
 
 --- Constructor for CityView
 -- @param event_listener Remote control to listen to
@@ -120,7 +121,36 @@ function CityView2:load_view(button)
 		-- TODO ^This should be done by a subsurface in the final version
 		gfx.update()
 	elseif button == "2" then
-		multiplechoice_quiz.render(screen)
+		--multiplechoice_quiz.render(screen)
+		--gfx.update()
+
+		local mult_quiz_view = MultipleChoiceView()
+		--Stop listening to everything
+		self:stop_listening(event.remote_control)
+		-- Start listening to the exit event, which is called when the user
+		-- exits a quiz
+		local callback = function()
+			utils.partial(view.view_manager.set_view, view.view_manager)(self)
+			gfx.update()
+		end
+		self:listen_to(
+			mult_quiz_view,
+			"exit",
+			callback
+		)
+
+		-- Make the city view listen for the "dirty" event
+		local mult_choice_callback = function()
+			mult_quiz_view:render(screen)
+		end
+		self:listen_to(
+			mult_quiz_view,
+			"dirty",
+			mult_choice_callback
+		)
+		--Update the view
+		mult_quiz_view:render(screen)
+		-- TODO ^This should be done by a subsurface in the final version
 		gfx.update()
 	elseif button == "3" then
 		print("Shut down program")
