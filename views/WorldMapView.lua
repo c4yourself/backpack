@@ -134,7 +134,7 @@ function _create_area(x, y)
 end
 
 function _create_path(x, y)
-	return area(x, y, 3, 3)
+	return area(x, y, 1, 3)
 end
 
 return world_map
