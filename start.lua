@@ -3,7 +3,8 @@ local logger = require("lib.logger")
 local utils = require("lib.utils")
 
 
-local menu = require("views.menu")
+--local menu = require("views.menu")
+local ConnectFourComponent = require("components.ConnectFourComponent")
 
 --- This function runs every time a key is pressed
 -- The current mapping for the emulator can be found in emulator/zto.lua
@@ -29,6 +30,8 @@ end
 
 -- This function is called at the start of the program
 function onStart()
-	menu.render(screen)
+	--menu.render(screen)
+	local cfc = ConnectFourComponent()
+	cfc:render(screen)
 	gfx.update()
 end
