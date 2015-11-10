@@ -36,6 +36,10 @@ function CityView:render(surface)
 	local status_bar_color = {r=0, g=0, b=0}
 	local status_text_color = {r=255, g=255, b=255}
 
+	-- Creates some images
+	-- local coinsurface = gfx.new_surface(50,50)
+
+
 	-- This makes a freetype to write with
 	local text_button1 = sys.new_freetype(text_color, 30, {x=200,y=80}, utils.absolute_path("data/fonts/DroidSans.ttf"))
 	local text_button2 = sys.new_freetype(text_color, 30, {x=200,y=280}, utils.absolute_path("data/fonts/DroidSans.ttf"))
@@ -62,6 +66,7 @@ function CityView:render(surface)
 	profile_experience:draw_over_surface(surface, self.profile.experience .. "/500")
 	profile_cash:draw_over_surface(surface, self.profile.cash)
 	city_name:draw_over_surface(surface, self.city.name)
+	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/coinIcon.png")),nil, {x=surface:get_width()-145,y=10,width=30,height=30} )
 
 	-- Shows the score
 	score:draw_over_surface(surface, "Score: " .. "125")
