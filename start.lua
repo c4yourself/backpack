@@ -38,6 +38,7 @@ end
 function onStart()
 	--menu.render(screen)
 	local cfc = ConnectFourComponent()
+	cfc:on("dirty", function() print("render"); cfc:render(screen); gfx.update() end)
 	cfc:render(screen)
   --local city_view = CityView(event.remote_control)
 	--view.view_manager:set_view(city_view)

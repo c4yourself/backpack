@@ -5,12 +5,12 @@ local View = require("lib.view.View")
 local utils = require("lib.utils")
 
 local ConnectFourComponent = class("ConnectFourComponent", View)
- current_column = 4
 
 function ConnectFourComponent:__init(remote_control)
 	View.__init(self)
 
 	self.connectfour = ConnectFour()
+	self.current_column = 3
 
 	self:listen_to(
 	event.remote_control,
@@ -21,19 +21,35 @@ end
 
 function ConnectFourComponent:press(key)
 	if key == "right" then
-		current_column = current_column + 1
-		self.dirty(false)
-		self.dirty(true)
-	else if key == "left" then
-		current_column = current_column - 1
-		self.dirty(false)
-		self.dirty(true)
+		if self.current_column == 7 then
+			self.current_column = 1
+		else
+			self.current_column = self.current_column + 1
+		end
+		self:dirty(true)
+		print(self.current_column)
+		--self:dirty(false)
+
+	elseif key == "left" then
+		if self.current_column == 1 then
+			self.current_column = 7
+		else
+			self.current_column = self.current_column - 1
+		end
+		--self:dirty(false)
+		self:dirty(true)
+		print(self.current_column)
+
+
+
 	end
 end
 
-function ConnectFourComponent:top_row(column)
+function ConnectFourComponent:top_row(surface, column)
 	local posx = 0.35*surface:get_width()
 	local color = {r = 0, g = 0, b = 0}
+
+	print("test:" .. column)
 	for j = 1, 7 do
 		if j == column then
 			color = {r=255, g=255, b=51}
@@ -45,6 +61,8 @@ function ConnectFourComponent:top_row(column)
 end
 
 function ConnectFourComponent:render(surface)
+print("crender")
+	self:dirty(false)
 	local coin_color_player = {r=255, g=255, b=51}
 	local coin_color_computer = {r=255, g=0, b=0}
 
@@ -57,7 +75,7 @@ function ConnectFourComponent:render(surface)
 	local posy = 0.1*surface:get_height()
 	local tempcolor = 255
 
-	ConnectFourComponent:top_row(current_column)
+	self:top_row(surface, self.current_column)
 
 	for i = 1, 6 do
 		local posx = 0.35*surface:get_width()
