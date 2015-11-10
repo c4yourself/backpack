@@ -121,8 +121,9 @@ function CityView2:load_view(button)
 	elseif button == "4" then
 		-- Only for testing
 		print("Swapping to profile selection")
+
 		profile_selection.render(screen)
-		--local prof_sel = profile_selection()
+		--local prof_sel = profile_selection(event.remote_control)
 		--view.view_manager:set_view(prof_sel)
 		gfx.update()
 

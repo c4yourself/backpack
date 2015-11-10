@@ -5,6 +5,8 @@ local view = require("lib.view")
 
 local profile_selection = {}
 
+local profile_list = {"MaxiStormarknad","Bingoberra","Eivar","Skumtomte_90", "D4ngerBoi390KickflippingRainbow"}
+
 function profile_selection.load_view(button)
 	if button == "1" then
 	--	local numerical_quiz_view = NumericalQuizView()
@@ -16,13 +18,17 @@ function profile_selection.load_view(button)
 	elseif button == "3" then
 		print("Shut down program")
 		sys.stop()
+  end
 end
+
+local list =  {"MaxiStormarknad","Bingoberra","Eivar","Skumtomte_90", "D4ngerBoi390KickflippingRainbow"} -- put contents of the scroll frame here, for example item names
+local buttons = {}
 
 -- This functions renders the menu view
 function profile_selection.render(surface)
 
 	-- Resets the surface and draws the background
-	local background_color = {r=0, g=0, b=0}
+	local background_color = {r=124, g=130, b=255}
 	surface:clear(background_color)
 	--surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/paris_old.png")))
 
@@ -32,8 +38,25 @@ function profile_selection.render(surface)
 	local text_color = {r=0, g=0, b=0}
 	local score_text_color = {r=255, g=255, b=255}
 
-  for key,value in pairs(myTable) do --foreach Profile
+  for key,value in pairs(profile_list) do --foreach Profile
     myTable[key] = "foobar"
+  end
+
+  local scrollFrame = CreateFrame("ScrollFrame", "MyFirstNotReallyScrollFrame", UIParent, "FauxScrollFrameTemplate")
+  scrollFrame:SetScript("OnVerticalScroll", function(self, offset)
+  	FauxScrollFrame_OnVerticalScroll(self, offset, BUTTON_HEIGHT, update)
+  end)
+
+  for i = 1, NUM_BUTTONS do
+  	--local button = CreateFrame("Button", nil, scrollFrame:GetParent())
+    local text_button = sys.new_freetype(text_color, 30, {x=200,y=80}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+  	if i == 1 then
+  		button:SetPoint("TOP", scrollFrame)
+  	else
+  		button:SetPoint("TOP", buttons[i - 1], "BOTTOM")
+  	end
+  	button:SetSize(96, BUTTON_HEIGHT)
+  	buttons[i] = button
   end
 
 	-- This makes a freetype to write with
@@ -63,9 +86,7 @@ function profile_selection.render(surface)
 	sub_surface1:clear({r=255, g=255, b=255, a=255})
 
 	-- Instance remote control and mapps it to the buttons
-	event.remote_control:on("button_release", menu.load_view)
-
+	--event.remote_control:on("button_release", profile_selection.load_view)
 end
 
-return menu
-end
+return profile_selection
