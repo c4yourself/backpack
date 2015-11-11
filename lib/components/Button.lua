@@ -39,7 +39,8 @@ function Button:enable(status)
 	local old_status = self._enabled
 	self._enabled = status
 
-	self:mark_dirty()
+	self:dirty(false)
+	self:dirty(true)
 end
 
 function Button:is_enabled()

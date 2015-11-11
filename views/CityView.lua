@@ -38,9 +38,11 @@ function CityView:render(surface)
 
 
 	--creates some colors
-	local button_color = color(255, 99, 0, 100)
+	local button_color = color(255, 99, 0, 255)
 	local color_selected = color(255, 153, 0, 255)
 	local color_disabled = color(111, 222, 111, 255) --have not been used yet
+	local city_view_selected_color = color(0, 0, 0, 50)
+	local city_view_color = color(0, 0, 0, 0)
 	local text_color = color(0, 0, 0,255)
 	local score_text_color = color(255, 255, 255, 255)
 	local menu_bar_color = color(0, 0, 0, 225)
@@ -81,7 +83,7 @@ function CityView:render(surface)
 	profile_experience:draw_over_surface(surface, self.profile.experience .. "/500")
 	profile_cash:draw_over_surface(surface, self.profile.cash)
 	city_name:draw_over_surface(surface, self.city.name)
-  surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/coinIcon.png")),nil, {x=surface:get_width()-145,y=10,width=30,height=30} )
+  surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/coinIcon.png")), nil, {x = surface:get_width()-145, y = 10, width = 30, height = 30} )
 
 	local button_1 = button(button_color, color_selected, color_disabled,true,true)
 	local button_2 = button(button_color, color_selected, color_disabled,true,false)
@@ -91,42 +93,31 @@ function CityView:render(surface)
 	local button_6 = button(button_color, color_selected, color_disabled,true,false)
 	local button_7 = button(button_color, color_selected, color_disabled,true,false)
 	local button_8 = button(button_color, color_selected, color_disabled,true,false)
+	local city_tour_button = button(city_view_color, city_view_selected_color, color_disabled, true, false)
 
 	-- Define each button's posotion and size
-	local position_1={x=3*width/45,y=100}
-	local button_size_1 = {width=4*width/45,height=4*width/45}
-
-	local position_2={x=8*width/45,y=100}
-	local button_size_2 = {width=4*width/45,height=4*width/45}
-
-	local position_3={x=3*width/45,y=100+5*width/45}
-	local button_size_3 = {width=4*width/45,height=4*width/45}
-
-	local position_4={x=8*width/45,y=100+5*width/45}
-	local button_size_4 = {width=4*width/45,height=4*width/45}
-
-	local position_5={x=3*width/45,y=(height-50)/2+100}
-	local button_size_5 = {width=4*width/45,height=4*width/45}
-
-	local position_6={x=8*width/45,y=(height-50)/2+100}
-	local button_size_6 = {width=4*width/45,height=4*width/45}
-
-	local position_7={x=3*width/45,y=5*width/45+(height-50)/2+100}
-	local button_size_7 = {width=4*width/45,height=4*width/45}
-
-	local position_8={x=8*width/45,y=5*width/45+(height-50)/2+100}
-	local button_size_8 = {width=4*width/45,height=4*width/45}
+	local button_size = {width = 4*width/45, height = 4*width/45}
+	local position_1 = {x = 3*width/45, y = 100}
+	local position_2 = {x = 8*width/45, y = 100}
+	local position_3 = {x = 3*width/45, y = 100+5*width/45}
+	local position_4 = {x = 8*width/45, y = 100+5*width/45}
+	local position_5 = {x = 3*width/45, y = (height-50)/2+100}
+	local position_6 = {x = 8*width/45, y = (height-50)/2+100}
+	local position_7 = {x = 3*width/45, y = 5*width/45+(height-50)/2+100}
+	local position_8 = {x = 8*width/45, y = 5*width/45+(height-50)/2+100}
+	local city_tour_position = {x = width/3, y = 50}
+	local city_tour_size = {width = 2*width/3-1, height = height-51}
 
 	-- Using the button grid to create buttons
-	self.buttonGrid:add_button(position_1,button_size_1,button_1)
-	self.buttonGrid:add_button(position_2,button_size_2,button_2)
-	self.buttonGrid:add_button(position_3,button_size_3,button_3)
-	self.buttonGrid:add_button(position_4,button_size_4,button_4)
-	self.buttonGrid:add_button(position_5,button_size_5,button_5)
-	self.buttonGrid:add_button(position_6,button_size_6,button_6)
-	self.buttonGrid:add_button(position_7,button_size_7,button_7)
-	self.buttonGrid:add_button(position_8,button_size_8,button_8)
-
+	self.buttonGrid:add_button(position_1, button_size, button_1)
+	self.buttonGrid:add_button(position_2, button_size, button_2)
+	self.buttonGrid:add_button(position_3, button_size, button_3)
+	self.buttonGrid:add_button(position_4, button_size, button_4)
+	self.buttonGrid:add_button(position_5, button_size, button_5)
+	self.buttonGrid:add_button(position_6, button_size, button_6)
+	self.buttonGrid:add_button(position_7, button_size, button_7)
+	self.buttonGrid:add_button(position_8, button_size, button_8)
+	self.buttonGrid:add_button(city_tour_position, city_tour_size, city_tour_button)
 
   -- Insert text and its color, position, size, path for each button
   -- Button always has the screen as its background, not its subsurface
@@ -136,7 +127,7 @@ function CityView:render(surface)
 
   -- using the button grid to render all buttons and texts
 	self.buttonGrid:render(surface)
-	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/GeoIcon.png")),nil, {x=position_1.x,y=position_1.y,width=button_size_1.width,height=button_size_1.height} )
+	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/GeoIcon.png")),nil, {x=position_1.x,y=position_1.y,width=button_size.width,height=button_size.height} )
 
   -- testing the subsurface
 	--local sub_surface1 = SubSurface(surface,{width=100, height=100, x=0, y=0})
@@ -147,6 +138,8 @@ function CityView:render(surface)
 end
 
 function CityView:load_view(button)
+
+
 	if button == "1" then
 		--Instanciate a numerical quiz
 		local numerical_quiz_view = NumericalQuizView()
@@ -175,6 +168,16 @@ function CityView:load_view(button)
 		print("Shut down program")
 		sys.stop()
 	end
+
+	-- Make the city view listen for the "dirty" event
+	local button_callback = function()
+		self:render(screen)
+	end
+	self:listen_to(
+		Button,
+		"dirty",
+		button_callback
+	)
 end
 
 return CityView
