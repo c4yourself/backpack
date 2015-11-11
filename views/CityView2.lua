@@ -122,9 +122,31 @@ function CityView2:load_view(button)
 		-- Only for testing
 		print("Swapping to profile selection")
 
-		profile_selection.render(screen)
-		--local prof_sel = profile_selection(event.remote_control)
-		--view.view_manager:set_view(prof_sel)
+		--profile_selection.render(screen)
+
+		local profile_sel = profile_selection()
+		--Stop listening to everything
+		-- TODO
+		-- Start listening to the exit event, which is called when the user
+		-- exits a quiz
+		local callback = function()
+			utils.partial(view.view_manager.set_view, view.view_manager)(self)
+			gfx.update()
+		end
+		self:listen_to(
+			profile_sel,
+			"exit",
+			--view.view_manager:set_view(self)
+			callback
+		)
+		--Update the view
+		local callback_dirty = function()
+			profile_sel.render(screen)
+			gfx.update()
+		end
+		self:listen_to(profile_sel,"dirty",callback_dirty)
+		
+		profile_sel.render(screen)
 		gfx.update()
 
 	elseif button == "down" then
