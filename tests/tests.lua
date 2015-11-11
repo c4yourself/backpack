@@ -25,6 +25,7 @@ TestPlayerMock = require("test_mock_PlayerMock")
 TestSysMock = require("test_mock_SysMock")
 TestProfile = require("test_profile")
 TestMemory = require("test_memory")
+TestTimerMock = require("test_mock_TimerMock")
 
 
 lu = LuaUnit.LuaUnit.new()

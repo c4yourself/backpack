@@ -1,4 +1,4 @@
---- Gfx mock class
+-- Gfx mock class
 
 local class = require("lib.classy")
 local SurfaceMock = require("lib.mocks.SurfaceMock")
