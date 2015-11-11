@@ -11,6 +11,8 @@ local button = require("lib.components.Button")
 local ButtonGrid = class("ButtonGrid",View)
 local SubSurface = require("lib.view.SubSurface")
 local utils = require("lib.utils")
+local multiplechoice_quiz = require("views.multiplechoice_quiz")
+local NumericalQuizView = require("views.NumericalQuizView")
 
 --- Constructor for ButtonGrid
 function ButtonGrid:__init(remote_control)
@@ -78,18 +80,36 @@ function ButtonGrid:press(button)
 
     if button == "down" then
 			self:indicate_downward(self.button_indicator)
-
+			self:render(screen)
+		 	gfx.update()
 		elseif button == "up" then
 			self:indicate_upward(self.button_indicator)
+			self:render(screen)
+		 	gfx.update()
+		elseif button == "1" then
+				--Instanciate a numerical quiz
+				local numerical_quiz_view = NumericalQuizView()
+				--Stop listening to everything
+				-- TODO
+				-- Start listening to the exit event, which is called when the user
+				-- exits a quiz
+
+				--Update the view
+				numerical_quiz_view:render(screen)
+				-- TODO This should be done by a subsurface in the final version
+				gfx.update()
+		elseif button == "2" then
+				multiplechoice_quiz.render(screen)
+				gfx.update()
+		elseif button == "3" then
+				print("Shut down program")
+				sys.stop()
 
 	end
 	print("the indicator is now "..self.button_indicator)
 	collectgarbage()  --ensure that memory-leak does not occur
 	-- print out the memory usage in KB
 	print("the memory usage is "..collectgarbage("count")*1024)
-
-	self:render(screen)
- 	gfx.update()
 
 end
 
