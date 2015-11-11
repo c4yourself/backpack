@@ -106,10 +106,10 @@ function ButtonGrid:press(button)
 				sys.stop()
 
 	end
-	print("the indicator is now "..self.button_indicator)
+	print("the indicator is now " .. self.button_indicator)
 	collectgarbage()  --ensure that memory-leak does not occur
 	-- print out the memory usage in KB
-	print("the memory usage is "..collectgarbage("count")*1024)
+	print("the memory usage is " .. collectgarbage("count")*1024)
 
 end
 
