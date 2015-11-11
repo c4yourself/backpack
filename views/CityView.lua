@@ -114,35 +114,4 @@ function CityView:render(surface)
 
 end
 
-function CityView:load_view(button)
-	if button == "1" then
-		--Instanciate a numerical quiz
-		local numerical_quiz_view = NumericalQuizView()
-		--Stop listening to everything
-		-- TODO
-		-- Start listening to the exit event, which is called when the user
-		-- exits a quiz
-		local callback = function()
-			utils.partial(view.view_manager.set_view, view.view_manager)(self)
-			gfx.update()
-		end
-		self:listen_to(
-			numerical_quiz_view,
-			"exit",
-			--view.view_manager:set_view(self)
-			callback
-		)
-		--Update the view
-		numerical_quiz_view:render(screen)
-		-- TODO This should be done by a subsurface in the final version
-		gfx.update()
-	elseif button == "2" then
-		multiplechoice_quiz.render(screen)
-		gfx.update()
-	elseif button == "3" then
-		print("Shut down program")
-		sys.stop()
-	end
-end
-
 return CityView
