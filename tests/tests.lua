@@ -21,6 +21,8 @@ TestIntegrationNumerical = require("test_integration_numerical")
 TestTSV = require("test_tsvreader")
 TestGfxMock = require("test_mock_GfxMock")
 TestFreetypeMock = require("test_mock_FreetypeMock")
+TestPlayerMock = require("test_mock_PlayerMock")
+TestSysMock = require("test_mock_SysMock")
 
 lu = LuaUnit.LuaUnit.new()
 os.exit(lu:runSuite())
