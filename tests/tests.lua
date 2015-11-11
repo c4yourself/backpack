@@ -23,6 +23,8 @@ TestGfxMock = require("test_mock_GfxMock")
 TestFreetypeMock = require("test_mock_FreetypeMock")
 TestPlayerMock = require("test_mock_PlayerMock")
 TestSysMock = require("test_mock_SysMock")
+TestProfile = require("test_profile")
+
 
 lu = LuaUnit.LuaUnit.new()
 os.exit(lu:runSuite())
