@@ -32,11 +32,13 @@ function CityView:render(surface)
 	local width = surface:get_width()
 	-- Resets the surface and draws the background
 	local background_color = {r=0, g=0, b=0}
+
 	surface:clear(background_color)
-	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/paris.png")))
+	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/Paris.png")))
+
 
 	--creates some colors
-	local button_color = color(255, 99, 0, 255)
+	local button_color = color(255, 99, 0, 100)
 	local color_selected = color(255, 153, 0, 255)
 	local color_disabled = color(111, 222, 111, 255) --have not been used yet
 	local text_color = color(0, 0, 0,255)
@@ -131,10 +133,6 @@ function CityView:render(surface)
 	--button_1:set_textdata("Numerical quiz",text_color,{x=100,y=50},30,utils.absolute_path("data/fonts/DroidSans.ttf"))
 	--button_2:set_textdata("Multiple choice question",text_color,{x=100,y=250},30,utils.absolute_path("data/fonts/DroidSans.ttf"))
 	--button_3:set_textdata("Exit",text_color,{x=100,y=450},30,utils.absolute_path("data/fonts/DroidSans.ttf"))
-
- -- Adding the score to surface
-	local score = sys.new_freetype(score_text_color:to_table(), 40, {x=1010,y=170}, utils.absolute_path("data/fonts/DroidSans.ttf"))
-	score:draw_over_surface(surface, "Score: " .. "125")
 
   -- using the button grid to render all buttons and texts
 	self.buttonGrid:render(surface)
