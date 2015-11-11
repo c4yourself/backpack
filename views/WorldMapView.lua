@@ -15,16 +15,16 @@ local tokyo_pos = {x = 1115/1280, y = 190/720}
 
 function world_map.render(surface, start, dest, transp)
 	--some colors
-	local background_color = {r = 255, g = 255, b = 255}
-	local city_color = {r = 0, g = 128, b = 255}
-	local path_color = {r = 0, g = 255, b = 0}
+	local background_color = {r = 119, g = 151, b = 255}
+	local city_color = {r = 0, g = 0, b = 0}
+	local path_color = {r = 0, g = 0, b = 0}
 
 	--This section locates and puts the cities on the map
 	local screen_width = surface:get_width()
 	local screen_height = surface:get_height()
-
+	local transport = transp
 	surface:clear(background_color)
-	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/worldmap.png")))
+	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/worldmap2.png")))
 
 	local new_york_area = _create_area(new_york_pos.x * screen_width, new_york_pos.y * screen_height)
 	local new_york = subsurface(surface, new_york_area)
@@ -106,6 +106,7 @@ function world_map.render(surface, start, dest, transp)
 			local prel = start_node
 			start_node = dest_node
 			dest_node = prel
+			transport = transport .. "2"
 		end
 
 		-- This section will show the travel path
@@ -128,8 +129,8 @@ function world_map.render(surface, start, dest, transp)
 			path[i][math.floor((path_height/path_width)*i)]:clear(path_color)
 		end
 
-		 if transp ~= nil then
-			 surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/" .. transp .. ".png")), nil, start_node_area )
+		 if transport ~= nil then
+			 surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/" .. transport .. ".png")), nil, start_node_area )
 		 end
 	end
 end
