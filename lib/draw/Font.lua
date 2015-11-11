@@ -78,7 +78,12 @@ function Font:_get_bounding_box(surface)
 
 	-- Only return bounding box if we actually found something
 	if min_x <= max_x and min_y <= max_y then
-		return {min_x, min_y, max_x, max_y}
+		return {
+			min_x = min_x,
+			min_y = min_y,
+			max_x = max_x,
+			max_y = max_y
+		}
 	end
 end
 
@@ -92,11 +97,20 @@ end
 
 function Font:draw(surface, location, text)
 	local text_surface = self:_get_text_surface(text)
+	local bbox = self:_get_bounding_box(text_surface)
+
+	-- If we drew no text, don't render it
+	if bbox == nil then
+		return
+	end
+
+	local text_rectangle = Rectangle(
+		0, 0, bbox.max_x + 1, bbox.max_y + 1)
 
 	surface:copyfrom(
 		text_surface,
-		Rectangle.from_surface(text_surface),
-		location,
+		text_rectangle,
+		text_rectangle:translate(location.x or 0, location.y or 0),
 		true)
 
 	text_surface:destroy()
