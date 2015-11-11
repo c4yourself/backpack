@@ -30,18 +30,21 @@ end
 -- @param balance representing balance of the user
 function Profile:set_balance(balance)
 	self.balance = balance
+	return self.balance
 end
 
 -- Set experience of the user
 -- @param experience representing experience of the user
 function Profile:set_experience(experience)
 	self.experience = experience
+	return self.experience
 end
 
 -- Set password of the user
 -- @param password representing password of the user
 function Profile:set_password(password)
 	self.password = password
+	return self.password
 end
 
 -- Modify balance of the user

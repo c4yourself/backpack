@@ -20,6 +20,7 @@ TestSurfaceMock = require("test_mock_SurfaceMock")
 TestIntegrationNumerical = require("test_integration_numerical")
 TestTSV = require("test_tsvreader")
 TestGfxMock = require("test_mock_GfxMock")
+TestProfile = require("test_profile")
 
 lu = LuaUnit.LuaUnit.new()
 os.exit(lu:runSuite())
