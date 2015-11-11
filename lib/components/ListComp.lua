@@ -16,23 +16,8 @@ function ListComp:__init()
 
 end
 
-function ListComp:add_ListItem(position, listItem) --ListItem_size behövs den? och button=ListItem? Här vill vi kontrollera att ListComp inte går utanför TravelViews surface
--- check if the button across the screen boundaries
-	if position.x >= 0 and button_size.width >= 0
-		 and position.x + button_size.width < 1280
-		 and position.y >= 0 and button_size.height >= 0
-		 and position.y + button_size.height < 720	then
--- if ok, insert each button to the button_list
-	 table.insert(self.item_list,
-	 {listItem = listItem,
-	 x = position.x,
-	 y = position.y,
-	 width = button_size.width, --ändra
-	 height = button_size.height --ändra
-	 })
-
-else
-	error("screen boundary error")
+function ListComp:add_list_item(list_item) --ListItem_size behövs den? och button=ListItem? Här vill vi kontrollera att ListComp inte går utanför TravelViews surface
+	 table.insert(self.item_list, list_item)
 end
 
 
@@ -54,19 +39,19 @@ function ListComp:render(surface)
 		self.start_indicator = false
 	end
 
--- Go through the button_list to render all buttons
+-- Go through the item_list to render all buttons
     for i=1 , #self.item_list do
-		local button_data = self.button_list[i]
+		local list_data = self.button_list[i]
 		local area = {
-			width = button_data.width,
-			height	=button_data.height,
-			x = button_data.x,
-			y = button_data.y
+			width = list_data.width,
+			height	=list_data.height,
+			x = list_data.x,
+			y = list_data.y
 		}
 
 		local sub_surface = SubSurface(surface,area)
-			button_data.button:render(sub_surface)
-		if button_data.button.text_available then
+			list_data.listItem:render(sub_surface)
+		if list_data.listItem.text_available then
 			self:display_text(surface, i)
 		end
 	end

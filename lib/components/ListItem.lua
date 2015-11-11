@@ -18,6 +18,7 @@ function ListItem:__init(text_left, text_position_left, text_color, text_color_s
 	self.text_color_selected = text_color_selected or text_color
  	self._enabled = enabled or true
   self._selected = selected or false
+	self.text_available = false
 --	self.font_size = font_size
 --	self.font_path = font_path
 --  self.icon = icon

@@ -2,7 +2,7 @@
 
 local class = require("lib.classy")
 local Color = require("lib.draw.Color")
-local Font = require("lib.font.Font")
+local Font = require("lib.draw.Font")
 local View = require("lib.view.View")
 local utils = require("lib.utils")
 local event = require("lib.event")
