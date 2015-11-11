@@ -75,7 +75,7 @@ function CityView2:render(surface)
 
   -- testing the subsurface
 	local sub_surface1 = SubSurface(surface,{width=100, height=100, x=0, y=0})
-	sub_surface1:clear({r=255, g=255, b=255, a=255})
+	sub_surface1:clear({r=111, g=222, b=255, a=255})
 
 end
 

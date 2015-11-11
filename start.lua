@@ -30,8 +30,8 @@ end
 
 -- This function is called at the start of the program
 function onStart()
-  local city_view2 = CityView2(event.remote_control)
-	view.view_manager:set_view(city_view2)
+  local city_view = CityView(event.remote_control)
+	view.view_manager:set_view(city_view)
 
 	-- the "up" and "down" buttons are enabled for
 	-- choosing alternatives in city_view_2

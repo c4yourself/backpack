@@ -83,7 +83,7 @@ function ButtonGrid:press(button)
 			self:indicate_upward(self.button_indicator)
 
 	end
-
+	print("the indicator is now "..self.button_indicator)
 	collectgarbage()  --ensure that memory-leak does not occur
 	-- print out the memory usage in KB
 	print("the memory usage is "..collectgarbage("count")*1024)

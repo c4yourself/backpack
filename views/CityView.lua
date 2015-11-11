@@ -33,7 +33,7 @@ function CityView:render(surface)
 	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/paris.png")))
 
 	--creates some colors
-	local button_color = color(0, 128, 225, 255)
+	local button_color = color(111, 244, 225, 255)
 	local text_color = color(0, 0, 0,255)
 	local score_text_color = color(255, 255, 255, 255)
 	local menu_bar_color = color(0, 0, 0, 225)
@@ -72,7 +72,7 @@ function CityView:render(surface)
 	profile_experience:draw_over_surface(surface, self.profile.experience .. "/500")
 	profile_cash:draw_over_surface(surface, self.profile.cash)
 	city_name:draw_over_surface(surface, self.city.name)
-	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/coinIcon.png")),nil, {x=surface:get_width()-145,y=10,width=30,height=30} )
+  surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/coinIcon.png")),nil, {x=surface:get_width()-145,y=10,width=30,height=30} )
 
 	local button_1 = button(button_color, color_selected, color_disabled,true,true)
 	local button_2 = button(button_color, color_selected, color_disabled,true,false)
