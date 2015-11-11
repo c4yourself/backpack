@@ -19,19 +19,20 @@ function MultipleChoiceView:__init()
 	self.listening_initiated = false
 	self.end_flag=0
 	self.check_question_flag=0
-	self.last_check=0
+	self.last_check=1
 	self.quiz_state = "IDLE"
 	--Components
 
 	-- Logic
 	-- Associate a quiz instance with the MultipleChoiceView
 	self.mult_choice_quiz = Quiz()
-	self.mult_choice_quiz:generate_multiplechoice_quiz("paris",10)
+	self.mult_choice_quiz:generate_multiplechoice_quiz("paris",2)
 	self.current_question = 1
+	self.correct_answer_number = 0
 
 	-- User input
-	self.user_input=""
-	self.answer={}
+	self.user_input = ""
+	self.answer = {}
 
 	-- Graphics
 	self.font = sys.new_freetype(
@@ -53,23 +54,24 @@ end
 -- what should be diplayed next to the user
 function MultipleChoiceView:press(key)
 	-- Determine what should happen next
-	if key=="right" and self.last_check==i  then
+	if key == "right" and self.last_check == self.current_question  then
 		for j=1,#self.user_input,1 do
 			self.answer[j]=tonumber(string.sub(self.user_input,j,j))
 		end
-		--print(self.mult_choice_quiz.questions[i]:is_correct(answer))
-		if self.mult_choice_quiz.questions[i]:is_correct(answer)==true then
+		if self.mult_choice_quiz.questions[self.current_question]:is_correct(self.answer)==true then
 			self.correct_answer_number = self.correct_answer_number + 1
-			self.result_string = "Right and You answered " .. correct_answer_number .. " questions correctly."
+			self.result_string = "Right and You answered " .. self.correct_answer_number .. " questions correctly."
 			self.last_check = self.last_check + 1
 		else
-			self.result_string = "Wrong and You answered " .. correct_answer_number .. " questions correctly."
+			self.result_string = "Wrong and You answered " .. self.correct_answer_number .. " questions correctly."
 			self.last_check=self.last_check + 1
 		end
+		self.quiz_state = "DISPLAY_RESULT"
+		self:dirty(true)
 		self.answer={}
 		self.user_input=""
 	--display the next question
-	elseif key=="right" and self.last_check==i+1 and end_flag~=1 then
+	elseif key=="right" and self.last_check==self.current_question+1 and end_flag~=1 then
 		-- Next question is displayed
 		-- Make sure there are questions left to display
 		self.current_question = self.current_question + 1
@@ -77,14 +79,16 @@ function MultipleChoiceView:press(key)
 			end_flag = 1
 		end
 
-		self.state = "IDLE"
+		self.quiz_state = "IDLE"
+		self:dirty(true)
 	-- display final result
 	elseif key=="right" and self.end_flag==1 then
-			self.mult_choice_quiz.questions:calculate_score(correct_answer_number)
-			self.state = "DONE"
+		self.mult_choice_quiz.questions:calculate_score(correct_answer_number)
+		self.quiz_state = "DONE"
+		self:dirty(true)
 	--get user answer
 	else
-		if(#user_input<=3) then
+		if self.user_input ~= nil and #self.user_input<=3 then
 			if(key=="1" or key=="2" or key=="3" or key=="4") then
 				self.user_input = self.user_input .. key
 			end
@@ -131,14 +135,13 @@ function MultipleChoiceView:render(surface)
 
 		elseif self.quiz_state == "DISPLAY_RESULT" then
 			-- Display the result from one question
-			-- TODO (Evaluate) and display result from one question
 			surface:clear(color)
-			font:draw_over_surface(screen, self.result_string)
+			self.font:draw_over_surface(screen, self.result_string)
 
 		elseif self.quiz_state == "DONE" then
 			-- Display the result from the whole quiz
 			surface:clear(color)
-			font:draw_over_surface(screen, "You answered " .. self.correct_answer_number .. " questions correctly and your score is " .. mulchoice_quiz:get_score() .. ".")
+			self.font:draw_over_surface(screen, "You answered " .. self.correct_answer_number .. " questions correctly and your score is " .. mulchoice_quiz:get_score() .. ".")
 		end
 	end
 	-- TODO Render all child views and copy changes to this view
