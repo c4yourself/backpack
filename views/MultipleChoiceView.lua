@@ -26,7 +26,8 @@ function MultipleChoiceView:__init()
 	-- Logic
 	-- Associate a quiz instance with the MultipleChoiceView
 	self.mult_choice_quiz = Quiz()
-	self.mult_choice_quiz:generate_multiplechoice_quiz("paris",2)
+	self.quiz_size = 4
+	self.mult_choice_quiz:generate_multiplechoice_quiz("paris",self.quiz_size)
 	self.current_question = 1
 	self.correct_answer_number = 0
 
@@ -75,19 +76,23 @@ function MultipleChoiceView:press(key)
 		-- Next question is displayed
 		-- Make sure there are questions left to display
 		self.current_question = self.current_question + 1
-		if self.current_question > 10 then
+		if self.current_question >= self.quiz_size then
 			end_flag = 1
+			self.quiz_state = "DONE"
+		else
+			self.quiz_state = "IDLE"
 		end
 
-		self.quiz_state = "IDLE"
 		self:dirty(true)
 	-- display final result
 	elseif key=="right" and self.end_flag==1 then
 		self.mult_choice_quiz.questions:calculate_score(correct_answer_number)
 		self.quiz_state = "DONE"
 		self:dirty(true)
-	--get user answer
+	elseif key == "back" then
+		self:trigger("exit")
 	else
+		--get user answer
 		if self.user_input ~= nil and #self.user_input<=3 then
 			if(key=="1" or key=="2" or key=="3" or key=="4") then
 				self.user_input = self.user_input .. key
@@ -99,6 +104,7 @@ end
 --Renders this instance of MultipleChoiceView and all its child views, given
 -- that it's flagged as dirty
 function MultipleChoiceView:render(surface)
+	print(self.quiz_state)
 	if not self.listening_initiated then
 		-- This view are not listening to all the components it should
 		-- listen to yet
@@ -141,7 +147,7 @@ function MultipleChoiceView:render(surface)
 		elseif self.quiz_state == "DONE" then
 			-- Display the result from the whole quiz
 			surface:clear(color)
-			self.font:draw_over_surface(screen, "You answered " .. self.correct_answer_number .. " questions correctly and your score is " .. mulchoice_quiz:get_score() .. ".")
+			self.font:draw_over_surface(screen, "You answered " .. self.correct_answer_number .. " questions correctly and your score is " .. self.mult_choice_quiz:get_score() .. ".")
 		end
 	end
 	-- TODO Render all child views and copy changes to this view
