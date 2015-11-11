@@ -5,7 +5,7 @@ local TestProfile = {}
 
 --Sets up test by creating a test object
 function TestProfile:setUp()
-  profile = TestProfile("HuanyuLi","lihuanyuasas@163.com","1992-06-29","male")
+  profile = Profile("HuanyuLi","lihuanyuasas@163.com","1992-06-29","male")
 end
 
 function TestProfile:test_set_balance()
@@ -13,9 +13,6 @@ function TestProfile:test_set_balance()
 end
 function TestProfile:test_set_experience()
   luaunit.assertEquals(profile:set_experience(1000), profile.experience)
-end
-function TestProfile:test_get_password()
-  luaunit.assertEquals(profile:set_password("1q2w3e4r"), profile.password)
 end
 function TestProfile:test_modify_balance()
   luaunit.assertEquals(profile:modify_balance(10), profile.balance)
