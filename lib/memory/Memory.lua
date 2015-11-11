@@ -17,6 +17,8 @@ function Memory:__init(pairs, scrambled)
 	self.moves = 0
 	self.open_counter = 0
 	self.state = {}
+	self.first_card = nil
+	self.second_card = nil
 
 
 	for i = 1, 8 do
@@ -35,7 +37,6 @@ function Memory:_create_pairs()
 		table.insert(temp_table,i)
 		table.insert(temp_table,i)
 	end
-	--print(serpent.line(temp_table))
 
 	if self.scrambled == true then
 		for i = 1, self.pairs*2 do
@@ -52,11 +53,13 @@ end
 
 
 function Memory:look(index)
-	if index > #self.state then
-		error("Index is greater than number of cards")
+	local card
+	local state
+	if index > #self.state or index <= 0 then
+		error("Index is out of bounds")
 	else
-		local card = self.cards[index]
-		local state = self.state[index]
+		card = self.cards[index]
+		state = self.state[index]
 	end
 	return card, state
 end
@@ -65,35 +68,42 @@ function Memory:open(index)
 -- Raise an error if index is out of bounds
 -- of if card is already open
 	local length = #self.state
-
-	if index > length or index <= 0 then
-		error("Index is greater than number of cards")
-	elseif self.state[index] == true then
+	local card, is_open = self:look(index)
+	if is_open == true then
 		error("Card is already open")
 	else
+		if self.first_card == nil then
+			self.first_card = index
+			self.state[index] = true
+		elseif self.second_card == nil then
+			self.second_card = index
+			self.state[index] = true
+		else
+			error("Cannot open three cards")
+		end
 		self.open_counter = self.open_counter + 1
 		self.moves = math.floor(self.open_counter / 2)
-		if self.open_counter % 2 ~= 0 then
-					self.state[index] = true
-		else
-			for i = 1, #self.cards do
-				if (self.cards[i] == self.cards[index]) and (i ~= index) then
-					if self.state[i] == true then
-						self.state[index] = true
-					end
-				end
-			end
-		end
 		return self.cards[index]
 	end
 end
 
+
+function Memory:match()
+	if self.cards[self.first_card] ~= self.cards[self.second_card] then
+		self.state[self.first_card] = false
+		self.state[self.second_card] = false
+	end
+	self.first_card = nil
+	self.second_card = nil
+end
+
 function Memory:is_finished()
 	local is_finished = false
-	local length = #self.state
 
-	for i = 1, length do
-		if self.state[i] == false then break
+	for i = 1, #self.state do
+		if self.state[i] == false then
+			is_finished = false
+			break
 		else
 			is_finished = true
 		end
@@ -112,15 +122,9 @@ function Memory:serialize(columns)
 		if self.state[i] == true then
 		 	 state_val = "+"
 	 	end
-	--	print("state_val: " .. state_val)
-	--	print("Card: " .. self.cards[i])
 	 	string_serialize = string_serialize .. state_val .. self.cards[i]
-	--	print("String seri: " .. string_serialize)
 	end
-	--	print("String seri2: " .. string_serialize)
-
 	string_serialize = string_serialize .. self.moves
-	--	print("String seri3: " .. string_serialize)
 
 	return string_serialize
 end
@@ -131,17 +135,18 @@ function Memory.unserialize(new_state)
 	local memory = Memory(no_of_pairs)
 	local state = {}
 	local cards = {}
-	local moves = {}
+	local moves = 0
 
 	for i = 1,string.len(new_state) do
-		if new_state[i] == "." then
+		local char = new_state:sub(i,i)
+		if char == "." then
 			table.insert(state,false)
-		elseif new_state[i] == "+" then
+		elseif char == "+" then
 			table.insert(state,true)
 		elseif i == string.len(new_state) then
-			moves = new_state[i]
+			moves = tonumber(tonumber(char))
 		else
-			table.insert(cards, new_state[i])
+			table.insert(cards, tonumber(char))
 		end
 		memory.state = state
 		memory.cards = cards
