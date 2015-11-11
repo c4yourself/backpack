@@ -38,15 +38,23 @@ end
 -- @param question_type multiple_choice, single_choice or numeric
 function TSVReader:get_question(question_type)
 
+	--print(profile:load("HuanyuLi"))
 
-	Profile=profile("HuanyuLi","lihuanyuasas@163.com","1992-06-29","male")
-  print(Profile:load())
-	Profile:set_balance(1000)
-	Profile:set_experience(500)
-	Profile:set_password("12345")
-	Profile:modify_balance(500)
-	Profile:modify_experience(100)
+	Profile=profile(profile:load("HuanyuLi"))
+	Profile:set_id(1)
+	print(Profile.name)
+	print(Profile.email_address)
+	print(Profile.sex)
+	print(Profile.balance)
+	print(Profile.experience)
+	print(Profile.id)
 	Profile:save()
+  --print(Profile:load("HuanyuLi"))
+	--Profile:set_balance(1000)
+	--Profile:set_experience(500)
+	--Profile:modify_balance(500)
+	--Profile:modify_experience(100)
+	--Profile:save()
 
 
 

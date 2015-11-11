@@ -55,10 +55,12 @@ function Profile:get_badges(badges)
 	self.badges = badges
 	return self.badges
 end
+function Profile:set_id(id)
+	self.id = id
+end
 -- get profile id from server
 -- @param id representing id of the profile from server database
-function Profile:get_id(id)
-	self.id = id
+function Profile:get_id()
 	return self.id
 end
 -- Modify balance of the user
@@ -82,12 +84,12 @@ function Profile:save()
 	local path = utils.absolute_path(string.format("data/profile/%s.profile",self.name))
 	local file = io.open(path,"w");
 	file:write("{\n")
-	file:write("\t\t\"badges\": ,\n")
+	file:write("\t\t\"badges\": {},\n")
 	file:write("\t\t\"balance\": " .. self.balance .. ",\n")
 	file:write("\t\t\"date_of_birth\": \"" .. self.date_of_birth .. "\",\n")
-	file:write("\t\t\"email_address\": " .. self.email_address .. "\",\n")
+	file:write("\t\t\"email_address\": \"" .. self.email_address .. "\",\n")
 	file:write("\t\t\"experience\": " .. self.experience .. ",\n")
-	file:write("\t\t\"id\": ,\n")
+	file:write("\t\t\"id\": " .. self:get_id() .. ",\n")
 	file:write("\t\t\"inventory\": {}\n")
 	file:write("\t\t\"login_token\": \"token\",\n")
 	file:write("\t\t\"name\": \"" .. self.name .. "\",\n")
@@ -96,22 +98,38 @@ function Profile:save()
 	file:write("}\n")
 end
 -- load profile
+
 function Profile:load(name)
 	local path = utils.absolute_path(string.format("data/profile/%s.profile",name))
 	for line in io.lines(path) do
+		if string.match(line,"\"name\"") ~= nil then
+			local tmp = {}
+			tmp = utils.split(line," ")
+			_,_,_,self.name = string.find(tmp[2],"([\"'])(.-)%1")
+		end
+		if string.match(line,"\"email_address\"") ~= nil then
+			local tmp = {}
+			tmp = utils.split(line," ")
+			_,_,_,self.email_address = string.find(tmp[2],"([\"'])(.-)%1")
+		end
+		if string.match(line,"\"date_of_birth\"") ~= nil then
+			local tmp = {}
+			tmp = utils.split(line," ")
+			_,_,_,self.date_of_birth = string.find(tmp[2],"([\"'])(.-)%1")
+		end
+		if string.match(line,"\"sex\"") ~= nil then
+			local tmp = {}
+			tmp = utils.split(line," ")
+			_,_,_,self.sex = string.find(tmp[2],"([\"'])(.-)%1")
+		end
 		if string.match(line,"\"balance\"") ~= nil then
 			self.balance = tonumber(string.sub(line,string.find(line," ")+1,string.find(line,",")-1))
 		end
 		if string.match(line,"\"experience\"") ~= nil then
 			self.experience = tonumber(string.sub(line,string.find(line," ")+1,string.find(line,",")-1))
 		end
-		if string.match(line,"\"name\"") ~= nil then
-			local tmp = {}
-			tmp = utils.split(line," ")
-			_,_,_,self.name = string.find(tmp[2],"([\"'])(.-)%1")
-		end
 	end
-	return self.name, self.balance, self.experience
+	return self.name, self.email_address,self.date_of_birth,self.sex,self.balance, self.experience
 end
 
 return Profile
