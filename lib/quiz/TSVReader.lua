@@ -11,6 +11,7 @@ local utils = require("lib.utils")
 local TSVReader = class("TSVReader")
 local MultipleChoiceQuestion = require("lib.quiz.MultipleChoiceQuestion")
 local profile = require("lib.profile.Profile")
+local profiledisplay = require("lib.profile.profiledisplay")
 
 TSVReader.filename = ""
 TSVReader.questions_table = {}
@@ -39,9 +40,15 @@ end
 function TSVReader:get_question(question_type)
 
 	--print(profile:load("HuanyuLi"))
-
+	local profiles = {}
+	profiles = profiledisplay:get_profileslist()
+	for i = 1, #profiles, 1 do
+		print(profiles[i])
+	end
 	Profile=profile(profile:load("HuanyuLi"))
-	Profile:set_id(1)
+	Profile:set_id(10)
+	Profile:modify_balance(500)
+	Profile:modify_experience(100)
 	print(Profile.name)
 	print(Profile.email_address)
 	print(Profile.sex)
@@ -52,8 +59,6 @@ function TSVReader:get_question(question_type)
   --print(Profile:load("HuanyuLi"))
 	--Profile:set_balance(1000)
 	--Profile:set_experience(500)
-	--Profile:modify_balance(500)
-	--Profile:modify_experience(100)
 	--Profile:save()
 
 
