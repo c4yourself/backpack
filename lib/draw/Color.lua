@@ -4,6 +4,20 @@
 local class = require("lib.classy")
 local utils = require("lib.utils")
 
+local bitlib = require("lib.bit")
+
+function bit_extract(value, field, width)
+	if bit32 == nil then
+		return tonumber(
+			utils.to_base(value, 2):reverse():sub(
+				field * width, (field + 1) * width):reverse(),
+			2)
+	else
+		return bit32.extract(value, field, width)
+	end
+end
+
+
 local Color = class("Color")
 
 Color.default_red = 0
@@ -21,6 +35,18 @@ function Color:__init(red, green, blue, alpha)
 	self.green = green or self.default_green
 	self.blue = blue or self.default_blue
 	self.alpha = alpha or self.default_alpha
+end
+
+function Color:__eq(other)
+	if not class.is_a(other, Color) then
+		error("Color must be compared to another Color instance")
+	end
+
+	return
+		self.red == other.red and
+		self.green == other.green and
+		self.blue == other.blue and
+		self.alpha == other.alpha
 end
 
 --- Blend this color with a given color.
@@ -50,11 +76,11 @@ end
 -- The bytes (8 bits) represent from low to high: red, green, blue and alpha.
 -- @return 32-bit color
 function Color:to_number()
-	return bit32.bor(
+	return bitlib.bor(
 		self.red,
-		bit32.arshift(self.green, -8),
-		bit32.arshift(self.blue, -16),
-		bit32.arshift(self.alpha, -24))
+		bitlib.lshift(self.green, 8),
+		bitlib.lshift(self.blue, 16),
+		bitlib.lshift(self.alpha, 24))
 end
 
 --- Convert Color to a HTML style color string.
@@ -95,10 +121,10 @@ end
 -- @return New Color instance
 function Color.from_number(color)
 	return Color(
-		bit32.extract(color, 0, 8),
-		bit32.extract(color, 1, 8),
-		bit32.extract(color, 2, 8),
-		bit32.extract(color, 3, 8))
+		bitlib.extract(color, 0, 8),
+		bitlib.extract(color, 1, 8),
+		bitlib.extract(color, 2, 8),
+		bitlib.extract(color, 3, 8))
 end
 
 --- Convert a table as expected by most Zenterio API functions to a Color

@@ -9,7 +9,7 @@ local class = require("lib.classy")
 local View = require("lib.view.View")
 local button = require("lib.components.Button")
 local ButtonGrid = class("ButtonGrid",View)
-local subsurface = require("lib.view.Subsurface")
+local SubSurface = require("lib.view.SubSurface")
 
 --- Constructor for ButtonGrid
 function ButtonGrid:__init()
@@ -92,7 +92,7 @@ function ButtonGrid:render(surface)
 			y = button_data.y
 		}
 
-		local sub_surface = subsurface(surface,area)
+		local sub_surface = SubSurface(surface,area)
 			button_data.button:render(sub_surface)
 		if button_data.button.text_available then
 			self:display_text(surface, i)
