@@ -67,7 +67,7 @@ function CityView2:render(surface)
 	button_2:set_textdata("Multiple choice question",text_color,{x=100,y=250},30,utils.absolute_path("data/fonts/DroidSans.ttf"))
 	button_3:set_textdata("Exit",text_color,{x=100,y=450},30,utils.absolute_path("data/fonts/DroidSans.ttf"))
 
- -- Adding the score to surface
+ 	-- Adding the score to surface
 	local score = sys.new_freetype(score_text_color:to_table(), 40, {x=1010,y=170}, utils.absolute_path("data/fonts/DroidSans.ttf"))
 	score:draw_over_surface(surface, "Score: " .. "125")
 
@@ -121,9 +121,6 @@ function CityView2:load_view(button)
 		-- TODO ^This should be done by a subsurface in the final version
 		gfx.update()
 	elseif button == "2" then
-		--multiplechoice_quiz.render(screen)
-		--gfx.update()
-
 		local mult_quiz_view = MultipleChoiceView()
 		--Stop listening to everything
 		self:stop_listening(event.remote_control)
