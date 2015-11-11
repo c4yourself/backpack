@@ -1,4 +1,4 @@
---- Base class for NumericalInputComponent
+--[[- Base class for NumericalInputComponent
 -- A NumericalInputComponent is the input field in a numerical quiz. It responds
 -- to numerical input on the remote.
 -- @classmod NumericalInputComponent
@@ -113,4 +113,4 @@ function NumericalInputComponent:get_text()
 	return self.input
 end
 
-return NumericalInputComponent
+return NumericalInputComponent]]

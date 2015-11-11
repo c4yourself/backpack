@@ -1,6 +1,6 @@
 --- Base class for NumericQuizView
 -- @classmod NumericQuizView
-local NumericalInputComponent = require("lib.components.NumericalInputComponent")
+local NumericalInputComponent = require("components.NumericalInputComponent")
 local class = require("lib.classy")
 local View = require("lib.view.View")
 local NumericQuizView = class("NumericQuizView", View)
@@ -118,7 +118,6 @@ end
 -- Displays the correct answer and whether the user chose the correct one.
 function NumericQuizView:show_answer()
 	if self.views.num_input_comp:get_text() ~= "" then
-		print("Showing answer")
 		self.answer_flag = true
 		self.user_answer = tonumber(self.views.num_input_comp:get_text())
 		self.views.num_input_comp:set_text(nil)
