@@ -7,7 +7,7 @@
 		"id": ,
 		"inventory": {}
 		"login_token": "token",
-		"name": "Huanyu Li",
+		"name": "HuanyuLi",
 		"password": "12345",
 		"sex": "male",
 }

@@ -76,10 +76,21 @@ function Profile:save()
 	file:write("\t\t\"name\": \"" .. self.name .. "\",\n")
 	file:write("\t\t\"password\": \"" .. self.password .. "\",\n")
 	file:write("\t\t\"sex\": \"" .. self.sex .. "\",\n")
-	file:write("}")
+	file:write("}\n")
 end
 -- load profile
-function Profile:load(filename)
+function Profile:load()
+	local path = utils.absolute_path(string.format("data/profile/%s.profile",self.name))
+	for line in io.lines(path) do
+		if string.match(line,"\"balance\"") ~= nil then
+			self.balance = tonumber(string.sub(line,string.find(line," ")+1,string.find(line,",")-1))
+		end
+		if string.match(line,"\"experience\"") ~= nil then
+			self.experience = tonumber(string.sub(line,string.find(line," ")+1,string.find(line,",")-1))
+		end
+	end
+	print(self.balance)
+	print(self.experience)
 end
 
 return Profile
