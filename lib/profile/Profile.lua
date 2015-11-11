@@ -13,6 +13,9 @@ Profile.sex = ""
 Profile.balance = 0
 Profile.experience = 0
 Profile.password = ""
+Profile.badges = {}
+Profile.id = 0
+Profile.inventory = {}
 
 --- Constructor for Profile
 -- @param name string representing name of user
@@ -40,13 +43,24 @@ function Profile:set_experience(experience)
 	return self.experience
 end
 
--- Set password of the user
--- @param password representing password of the user
-function Profile:set_password(password)
+-- get password of the user from server
+-- @param password representing password of the user from server database
+function Profile:get_password(password)
 	self.password = password
 	return self.password
 end
-
+-- get badges from server
+-- @param badges representing badges of the profile from server database
+function Profile:get_badges(badges)
+	self.badges = badges
+	return self.badges
+end
+-- get profile id from server
+-- @param id representing id of the profile from server database
+function Profile:get_id(id)
+	self.id = id
+	return self.id
+end
 -- Modify balance of the user
 -- @param number representing the change of balance
 function Profile:modify_balance(number)
@@ -82,8 +96,8 @@ function Profile:save()
 	file:write("}\n")
 end
 -- load profile
-function Profile:load()
-	local path = utils.absolute_path(string.format("data/profile/%s.profile",self.name))
+function Profile:load(name)
+	local path = utils.absolute_path(string.format("data/profile/%s.profile",name))
 	for line in io.lines(path) do
 		if string.match(line,"\"balance\"") ~= nil then
 			self.balance = tonumber(string.sub(line,string.find(line," ")+1,string.find(line,",")-1))

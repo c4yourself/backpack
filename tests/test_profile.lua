@@ -14,7 +14,7 @@ end
 function TestProfile:test_set_experience()
   luaunit.assertEquals(profile:set_experience(1000), profile.experience)
 end
-function TestProfile:test_set_password()
+function TestProfile:test_get_password()
   luaunit.assertEquals(profile:set_password("1q2w3e4r"), profile.password)
 end
 function TestProfile:test_modify_balance()
