@@ -2,7 +2,6 @@ local luaunit = require("luaunit")
 local class = require("lib.classy")
 local Question = require("lib.quiz.Question")
 local TSVReader = require("lib.quiz.TSVReader")
-
 local TestTSVReader = {}
 
 --Sets up test by creating a test object
