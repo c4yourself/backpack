@@ -1,6 +1,5 @@
 local luaunit = require("luaunit")
 local class = require("lib.classy")
-
 local Memory = require("lib.memory.Memory")
 
 local TestMemory = {}
@@ -8,7 +7,6 @@ local TestMemory = {}
 -- Sets up test by creating a test object
 function TestMemory:setUp()
   local pairs = 8
-  --local table = {1,1,2,2,3,3,4,4}
   local	memory = Memory(pairs, false)
 end
 
@@ -23,12 +21,12 @@ end
 --
 -- end
 
---function TestMemory:test_look()
-  -- local pairs = 8
-	-- local index = 1
-  -- local	memory = Memory(pairs, false)
-	-- local card, is_open = memory:look(index)
---  print(is_open)
+function TestMemory:test_look()
+   local pairs = 8
+	 local index = 1
+   local memory = Memory(pairs, false)
+	 local card, is_open = memory:look(index)
+   print(is_open)
   --luaunit.assertEquals(card, index)
 -- 	luaunit.assertEquals(is_open, false)
 --
@@ -45,8 +43,8 @@ end
 --
 --   -- One more open is made and both cards will now be facing downwards
 -- 	luaunit.assertEquals(is_open, false)
---
---end
+
+end
 
 function TestMemory:test_open()
   local pairs = 8
@@ -78,25 +76,23 @@ end
 --
  function TestMemory:test_serialize()
   local pairs = 8
- --	index = 4;
--- --  local table = {1,1,2,2,3,3,4,4}
   local memory = Memory(pairs, false)
- 	memory_string = memory:serialize();
- -- Checks if the serialization is correct
- print("Memory_string: " .. memory_string)
-  luaunit.assertEquals(memory_string, ".1.1.2.2.3.3.4.40")
 
--- 	memory.open(4)
--- 	memory_string = memory:serialize()
---   -- Checks for a plus sign at 4
--- 	luaunit.assertEquals(memory_string, ".1.1.2+2.3.3.4.40")
--- 	memory.open(5)
--- 	memory_string = memory:serialize()
--- 	luaunit.assertEquals(memory_string, ".1.1.2.2.3.3.4.41")
---   memory.open(1)
---   memory.open(2)
---   memory_string = memory:serialize()
---   luaunit.assertEquals(memory_string, "+1+1.2.2.3.3.4.42")
+ 	memory_string = memory:serialize();
+  luaunit.assertEquals(memory_string, ".1.1.2.2.3.3.4.4.5.5.6.6.7.7.8.80")
+
+ 	memory:open(4)
+ 	memory_string = memory:serialize()
+ 	luaunit.assertEquals(memory_string, ".1.1.2+2.3.3.4.4.5.5.6.6.7.7.8.80")
+
+ 	memory:open(5)
+ 	memory_string = memory:serialize()
+ 	luaunit.assertEquals(memory_string, ".1.1.2.2.3.3.4.4.5.5.6.6.7.7.8.81")
+
+  memory:open(1)
+  memory:open(2)
+  memory_string = memory:serialize()
+--  luaunit.assertEquals(memory_string, "+1+1.2.2.3.3.4.4.5.5.6.6.7.7.8.82")
 end
 
 -- function TestMemory:test_unserialize()
@@ -115,4 +111,5 @@ end
 --   luaunit.assertEquals(card, 3)
 --   luaunit.assertEquals(is_open, true)
 -- end
+
 return TestMemory

@@ -58,23 +58,21 @@ function Memory:look(index)
 		local card = self.cards[index]
 		local state = self.state[index]
 	end
-	print(state)
 	return card, state
 end
 
 function Memory:open(index)
 -- Raise an error if index is out of bounds
 -- of if card is already open
+	local length = #self.state
 
-	if index > #self.state or index <= 0 then
---		print("Index error")
+	if index > length or index <= 0 then
 		error("Index is greater than number of cards")
 	elseif self.state[index] == true then
 		error("Card is already open")
 	else
 		self.open_counter = self.open_counter + 1
 		self.moves = math.floor(self.open_counter / 2)
---		print("moves: "..self.moves)
 		if self.open_counter % 2 ~= 0 then
 					self.state[index] = true
 		else
@@ -92,7 +90,9 @@ end
 
 function Memory:is_finished()
 	local is_finished = false
-	for i = 1, #self.state do
+	local length = #self.state
+
+	for i = 1, length do
 		if self.state[i] == false then break
 		else
 			is_finished = true
@@ -104,21 +104,23 @@ end
 function Memory:serialize(columns)
 	local string_serialize = ""
 	local length = #self.state
-	local state_val = "."
+--	local state_val = "."
 
 	for i = 1, length do
+		local state_val = "."
+
 		if self.state[i] == true then
 		 	 state_val = "+"
---	 	else
---		 	local state_val = "."
 	 	end
-	 	local string_serialize = string_serialize .. state_val .. self.cards[i]
-		print("String seri: " .. string_serialize)
+	--	print("state_val: " .. state_val)
+	--	print("Card: " .. self.cards[i])
+	 	string_serialize = string_serialize .. state_val .. self.cards[i]
+	--	print("String seri: " .. string_serialize)
 	end
-	print("String seri2: " .. string_serialize)
+	--	print("String seri2: " .. string_serialize)
 
 	string_serialize = string_serialize .. self.moves
-	print("String seri3: " .. string_serialize)
+	--	print("String seri3: " .. string_serialize)
 
 	return string_serialize
 end
