@@ -95,13 +95,14 @@ function NumericQuizView:render(surface)
 			self.answer_flag = false
 			local question = self.num_quiz:get_question()
 			if question ~= nil then
-				self.font:draw_over_surface(surface, self.num_quiz.current_question .. ")   " .. question .. " =  ?")
+				self.font:draw_over_surface(surface, self.num_quiz.current_question
+				.. ")   " .. question .. " =  ?")
 			else
 				-- The user has finished the quiz
 				self.views.num_input_comp:blur()
-				-- TODO show result of the quiz
 				self.quiz_flag = true -- Quiz is complete
-				output = "You answered " .. tostring(self.num_quiz.correct_answers) .. " questions correctly."
+				output = "You answered " .. tostring(self.num_quiz.correct_answers)
+				.. " questions correctly."
 				self.font:draw_over_surface(surface, output)
 			end
 		end
