@@ -91,9 +91,13 @@ function Profile:load()
 		if string.match(line,"\"experience\"") ~= nil then
 			self.experience = tonumber(string.sub(line,string.find(line," ")+1,string.find(line,",")-1))
 		end
+		if string.match(line,"\"name\"") ~= nil then
+			local tmp = {}
+			tmp = utils.split(line," ")
+			_,_,_,self.name = string.find(tmp[2],"([\"'])(.-)%1")
+		end
 	end
-	print(self.balance)
-	print(self.experience)
+	return self.name, self.balance, self.experience
 end
 
 return Profile

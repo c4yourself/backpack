@@ -40,7 +40,7 @@ function TSVReader:get_question(question_type)
 
 
 	Profile=profile("HuanyuLi","lihuanyuasas@163.com","1992-06-29","male")
-  Profile:load()
+  print(Profile:load())
 	Profile:set_balance(1000)
 	Profile:set_experience(500)
 	Profile:set_password("12345")
