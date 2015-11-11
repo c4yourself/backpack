@@ -24,6 +24,7 @@ TestFreetypeMock = require("test_mock_FreetypeMock")
 TestPlayerMock = require("test_mock_PlayerMock")
 TestSysMock = require("test_mock_SysMock")
 TestProfile = require("test_profile")
+TestMemory = require("test_memory")
 
 
 lu = LuaUnit.LuaUnit.new()
