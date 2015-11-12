@@ -12,6 +12,7 @@ local utils = require("lib.utils")
 local multiplechoice_quiz = require("views.multiplechoice_quiz")
 local SubSurface = require("lib.view.SubSurface")
 local NumericalQuizView = require("views.NumericalQuizView")
+local MemoryView = require("views.MemoryView")
 local button= require("lib.components.Button")
 local button_grid	=	require("lib.components.ButtonGrid")
 local color = require("lib.draw.Color")
@@ -116,6 +117,23 @@ function CityView2:load_view(button)
 	elseif button == "3" then
 		print("Shut down program")
 		sys.stop()
+
+	elseif button == "6" then
+		local memory_view = MemoryView()
+		local callback = function()
+			utils.partial(view.view_manager.set_view, view.view_manager)(self)
+			gfx.update()
+		end
+		self:listen_to(
+			memory_view,
+			"exit",
+			--view.view_manager:set_view(self)
+			callback
+		)
+		--Update the view
+		memory_view:render(screen)
+		-- TODO This should be done by a subsurface in the final version
+		gfx.update()
 
 	elseif button == "down" then
 		-- the indicator refers to the selecting button
