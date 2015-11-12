@@ -1,6 +1,6 @@
 {
 		"badges": {},
-		"balance": 6000,
+		"balance": 10,
 		"date_of_birth": "1992-06-29",
 		"email_address": "lihuanyuasas@163.com",
 		"experience": 1000,
