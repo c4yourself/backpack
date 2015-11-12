@@ -38,33 +38,19 @@ end
 ---Read questions from TSV file
 -- @param question_type multiple_choice, single_choice or numeric
 function TSVReader:get_question(question_type)
-
-	--print(profile:load("HuanyuLi"))
-
+	--local Profile
+	--Profile = profiledisplay.create_profile("John","John@gmail.com","1982-01-02","male")
+	--print(Profile.name .. " " .. Profile.email_address)
 	local profiles = {}
-	profiles = profiledisplay.get_profileslist()
-	for i = 1, #profiles, 1 do
-		print(profiles[i])
+	profiles = profiledisplay.get_localprofilescontent(profiledisplay.get_localprofileslist())
+	for i =1, #profiles, 1 do
+		print(profiles[i].name .. " " .. profiles[i].email_address .. " " .. profiles[i].sex .. " " .. profiles[i].balance)
+		if profiles[i].name == "Anna" then
+			profiles[i]:modify_balance(500)
+			profiles[i]:save()
+		end
+		--print(profiles[i].name .. " " .. profiles[i].email_address .. " " .. profiles[i].sex .. " " .. profiles[i].balance)
 	end
-
-	--Profile=profile(profile:load("HuanyuLi"))
-	--Profile:set_id(10)
-	--Profile:modify_balance(500)
-	--Profile:modify_experience(100)
-	--print(Profile.name)
-	--print(Profile.email_address)
-	--print(Profile.sex)
-	--print(Profile.balance)
-	--print(Profile.experience)
-	--print(Profile.id)
-	--Profile:save()
-
-	--print(Profile:load("HuanyuLi"))
-	--Profile:set_balance(1000)
-	--Profile:set_experience(500)
-	--Profile:save()
-
-
 
 	local tmp_table = {}
 	self.filename = utils.absolute_path(string.format("data/questions/%s_geography.tsv",self.filename))

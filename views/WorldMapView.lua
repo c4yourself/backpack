@@ -12,6 +12,7 @@ local cairo_pos = {x = 725/1280, y = 220/720}
 local bombay_pos = {x = 900/1280, y = 200/720}
 local sidney_pos = {x = 1168/1280, y = 428/720}
 local tokyo_pos = {x = 1115/1280, y = 190/720}
+local count = 0
 
 function world_map.render(surface, start, dest, transp)
 	--some colors
@@ -22,7 +23,8 @@ function world_map.render(surface, start, dest, transp)
 	--This section locates and puts the cities on the map
 	local screen_width = surface:get_width()
 	local screen_height = surface:get_height()
-	local transport = transp
+	transport = transp
+	trans_direction = "1"
 	surface:clear(background_color)
 	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/worldmap2.png")))
 
@@ -60,7 +62,7 @@ function world_map.render(surface, start, dest, transp)
 
 	if start ~= nil and dest ~= nil then
 		--set start_node
-		local start_node = {}
+		start_node = {}
 		if start == "new_york" then
 			start_node = new_york_area
 		elseif start == "rio" then
@@ -80,7 +82,7 @@ function world_map.render(surface, start, dest, transp)
 		end
 
 		--set dest_node
-		local dest_node = {}
+		dest_node = {}
 		if dest == "new_york" then
 			dest_node = new_york_area
 		elseif dest == "rio" then
@@ -99,19 +101,18 @@ function world_map.render(surface, start, dest, transp)
 			dest_node = tokyo_area
 		end
 
-		local start_node_area = _create_start_rect(start_node.x, start_node.y)
 		surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/target.png")), nil, _create_dest_rect(dest_node.x, dest_node.y) )
 		--force the trip to be drawn from right
 		if start_node.x > dest_node.x then
 			local prel = start_node
 			start_node = dest_node
 			dest_node = prel
-			transport = transport .. "2"
+			trans_direction = "2"
 		end
 
 		-- This section will show the travel path
-		local path_width = dest_node.x - start_node.x
-		local path_height = dest_node.y - start_node.y
+		path_width = dest_node.x - start_node.x
+		path_height = dest_node.y - start_node.y
 		local mul = 1
 		if path_height < 0 then
 			mul = -1
@@ -130,9 +131,26 @@ function world_map.render(surface, start, dest, transp)
 		end
 
 		 if transport ~= nil then
-			 surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/" .. transport .. ".png")), nil, start_node_area )
-		 end
+			 callback = utils.partial(_move_vehicle, self, surface)
+			 stop_timer = sys.new_timer(40, callback)
+			 stop_timer:start()
+
+		end
 	end
+end
+
+function _move_vehicle(surface)
+	if trans_direction == "1" then
+		surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/" .. transport .. trans_direction .. ".png")),
+		 nil,
+		 _create_start_rect(start_node.x + count, start_node.y + math.floor((path_height/path_width)*count)) )
+		 count = count + 15
+	end
+	if count >= path_width - 1 then
+		
+		stop_timer:stop()
+	end
+	gfx.update()
 end
 
 function _create_area(x, y)

@@ -3,6 +3,7 @@ local logger = require("lib.logger")
 local utils = require("lib.utils")
 local menu = require("views.menu")
 local view = require("lib.view")
+local SplashView = require("views.SplashView")
 local CityView = require("views.CityView")
 local CityView2 = require("views.CityView2")
 

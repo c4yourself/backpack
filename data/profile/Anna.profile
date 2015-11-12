@@ -1,13 +1,13 @@
 {
 		"badges": {},
-		"balance": 6000,
+		"balance": 4000,
 		"date_of_birth": "1992-06-29",
-		"email_address": "lihuanyuasas@163.com",
-		"experience": 1000,
+		"email_address": "Anna@gmail.com",
+		"experience": 0,
 		"id": 0,
 		"inventory": {}
 		"login_token": "token",
-		"name": "HuanyuLi",
+		"name": "Anna",
 		"password": "",
-		"sex": "male",
+		"sex": "female",
 }
