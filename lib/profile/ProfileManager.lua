@@ -5,21 +5,21 @@ local lfs = require("lfs")
 local class = require("lib.classy")
 --local profile = require("lib.profile.Profile")
 local ProfileManager = class("ProfileManager")
---local localprofilemangager = require("lib.profile.localprofilemangager")
+local localprofilemanager = require("lib.profile.localprofilemanager")
 
 function ProfileManager:__init()
 end
 
 function ProfileManager:list()
-  --profile_list_local = localprofilemangager.list()
+  profile_list_local = localprofilemanager.get_profileslist()
   --profile_list_server = serverprofilemangager.list()
-  profile_list_local = "hej"
+  --profile_list_local = "hej"
   return profile_list_local
 end
 
 function ProfileManager:save(profile)
   --serverprofilemangager.save(profile)
-  --localprofilemangager.save(profile)
+  localprofilemanager:save(profile)
 end
 
 
