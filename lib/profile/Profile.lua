@@ -35,25 +35,31 @@ function Profile:set_balance(balance)
 	self.balance = balance
 	return self.balance
 end
-
+-- Get balance of the user
+function Profile:get_balance()
+	return self.balance
+end
 -- Set experience of the user
 -- @param experience representing experience of the user
 function Profile:set_experience(experience)
 	self.experience = experience
 	return self.experience
 end
-
--- get password of the user from server
+-- Get balance of the user
+function Profile:get_experience()
+	return self.experience
+end
+-- Set password of the user from server
 -- @param password representing password of the user from server database
-function Profile:get_password(password)
+function Profile:set_password(password)
 	self.password = password
-	return self.password
+	--return self.password
 end
 -- get badges from server
 -- @param badges representing badges of the profile from server database
-function Profile:get_badges(badges)
+function Profile:set_badges(badges)
 	self.badges = badges
-	return self.badges
+	--return self.badges
 end
 function Profile:set_id(id)
 	self.id = id
@@ -98,7 +104,7 @@ function Profile:save()
 	file:write("}\n")
 end
 -- load profile
-
+-- @param name representing the name of the profile
 function Profile:load(name)
 	local path = utils.absolute_path(string.format("data/profile/%s.profile",name))
 	for line in io.lines(path) do
