@@ -35,8 +35,14 @@ function onStart()
 
 	-- the "up" and "down" buttons are enabled for
 	-- choosing alternatives in city_view_2
+
+	-- Start with Splash Screen
+	-- local splash_view = SplashView(event.remote_control)
+	-- view.view_manager:set_view(splash_view)
+
 	local city_view_2 = CityView2(event.remote_control)
 	view.view_manager:set_view(city_view_2)
+
 
 	gfx.update()
 end
