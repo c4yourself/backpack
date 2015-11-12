@@ -42,7 +42,7 @@ function TSVReader:get_question(question_type)
 	--Profile = profiledisplay.create_profile("John","John@gmail.com","1982-01-02","male")
 	--print(Profile.name .. " " .. Profile.email_address)
 	local profiles = {}
-	profiles = profiledisplay.get_profilescontent(profiledisplay.get_profileslist())
+	profiles = profiledisplay.get_localprofilescontent(profiledisplay.get_localprofileslist())
 	for i =1, #profiles, 1 do
 		print(profiles[i].name .. " " .. profiles[i].email_address .. " " .. profiles[i].sex .. " " .. profiles[i].balance)
 		if profiles[i].name == "Anna" then

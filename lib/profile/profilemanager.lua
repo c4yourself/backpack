@@ -12,14 +12,14 @@ local Profiles_Manager = {}
 ---local Profile
 ---Profile = profiledisplay.create_profile("John","John@gmail.com","1982-01-02","male")
 ---print(Profile.name .. " " .. Profile.email_address)
-function Profiles_Manager.create_profile(name,email_address,date_of_birth,sex)
+function Profiles_Manager.create_localprofile(name,email_address,date_of_birth,sex)
   Profile=profile(name,email_address,date_of_birth,sex)
   Profile:save()
   return Profile
 end
 
 ---Get the profiles name from profiles folder
-function Profiles_Manager.get_profileslist()
+function Profiles_Manager.get_localprofileslist()
   print(lfs._VERSION)
   local profiles = {}
   local path = utils.absolute_path("data/profile/")
@@ -47,7 +47,7 @@ end
 ---  end
 ---end
 ---------------------------------------------------------------------------------------
-function Profiles_Manager.get_profilescontent(profiles_name)
+function Profiles_Manager.get_localprofilescontent(profiles_name)
   local profiles = {}
   local name, email_address, date_of_birth, sex
   local balance, experience
