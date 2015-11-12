@@ -13,6 +13,7 @@ local SubSurface = require("lib.view.SubSurface")
 local utils = require("lib.utils")
 local multiplechoice_quiz = require("views.multiplechoice_quiz")
 local NumericalQuizView = require("views.NumericalQuizView")
+local event = require("lib.event")
 --local CityView = require("views.CityView")
 
 --- Constructor for ButtonGrid
@@ -35,6 +36,17 @@ function ButtonGrid:__init(remote_control)
   "button_press",
   callback
   )
+	--
+	-- local dirtycallback = function()
+	-- 	print("I button grid")
+	-- 	self:dirty(false)
+	-- 	self:dirty(true)
+	-- end
+  -- self:listen_to(
+	--
+  -- "dirty",
+  -- dirtycallback
+  -- )
 end
 
 --- Used when buttons need to be added to the view
@@ -81,12 +93,10 @@ function ButtonGrid:press(button)
 
     if button == "down" then
 			self:indicate_downward(self.button_indicator)
-			self:render(screen)
-		 	gfx.update()
+			self:trigger("dirty")
 		elseif button == "up" then
 			self:indicate_upward(self.button_indicator)
-			self:render(screen)
-		 	gfx.update()
+			self:trigger("dirty")
 		elseif button == "1" then
 				--Instanciate a numerical quiz
 				local numerical_quiz_view = NumericalQuizView()

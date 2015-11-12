@@ -32,7 +32,7 @@ end
 function onStart()
   local city_view = CityView(event.remote_control)
 	view.view_manager:set_view(city_view)
-	city_view:on("dirty", function() city_view:render(screen); gfx.update() end)
+--	city_view:on("dirty", function() city_view:render(screen); gfx.update() end)
 	-- the "up" and "down" buttons are enabled for
 	-- choosing alternatives in city_view_2
 	--local city_view_2 = CityView2(event.remote_control)
