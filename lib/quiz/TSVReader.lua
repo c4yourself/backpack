@@ -11,7 +11,6 @@ local utils = require("lib.utils")
 local TSVReader = class("TSVReader")
 local MultipleChoiceQuestion = require("lib.quiz.MultipleChoiceQuestion")
 local profile = require("lib.profile.Profile")
-local localprofilemanager = require("lib.profile.localprofilemanager")
 
 
 TSVReader.filename = ""
