@@ -3,6 +3,7 @@ local logger = require("lib.logger")
 local utils = require("lib.utils")
 local menu = require("views.menu")
 local view = require("lib.view")
+local SplashView = require("views.SplashView")
 local CityView = require("views.CityView")
 local CityView2 = require("views.CityView2")
 
@@ -35,8 +36,14 @@ function onStart()
 
 	-- the "up" and "down" buttons are enabled for
 	-- choosing alternatives in city_view_2
+
+	-- Start with Splash Screen
+	-- local splash_view = SplashView(event.remote_control)
+	-- view.view_manager:set_view(splash_view)
+
 	local city_view_2 = CityView2(event.remote_control)
 	view.view_manager:set_view(city_view_2)
+
 
 	gfx.update()
 end

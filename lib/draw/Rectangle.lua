@@ -23,7 +23,6 @@ function Rectangle:__init(x, y, width, height)
 		error("Invalid rectangle, position and size must be positve")
 	end
 
-
 	self.x = x
 	self.y = y
 	self.width = width
@@ -64,6 +63,14 @@ function Rectangle:to_table()
 		height = self.height
 	}
 end
+
+function Rectangle:translate(x, y)
+	x = x or 0
+	y = y or 0
+
+	return Rectangle(self.x + x, self.y + y, self.width, self.height)
+end
+
 
 --- Return a new Rectangle instance based on a surface.
 -- Position is (0, 0)
