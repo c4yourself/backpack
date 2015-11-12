@@ -7,7 +7,7 @@ local View = require("lib.view.View")
 local profile_selection = class("profile_selection", View)
 --local profile_selection = {}
 
-local profile_list = {"MaxiStormarknad","Bingoberra","Eivar","Skumtomte_90", "D4ngerBoi390KickflippingRainbow"}
+local profile_list =  {"MaxiStormarknad","Bingoberra","Eivar","Skumtomte_90", "D4ngerBoi390KickflippingRainbow", "Wedge", "Biggles"} -- put contents of the scroll frame here, for example item names
 local choice_index = 0 --Zero indexing over profile_list
 
 function profile_selection:__init()
@@ -80,7 +80,6 @@ function profile_selection.load_view(button)
   end
 end
 
-local list =  {"MaxiStormarknad","Bingoberra","Eivar","Skumtomte_90", "D4ngerBoi390KickflippingRainbow"} -- put contents of the scroll frame here, for example item names
 local buttons = {}
 
 -- This functions renders the menu view
@@ -99,10 +98,13 @@ function profile_selection.render(surface)
 	local counter = 1
 	local diff_y = 80--200
 
+	local roulette_background = SubSurface(surface,{width=600, height=surface:get_height(), x=0, y=0})
+	roulette_background:clear({r=146, g=48, b=38, a=255})
+
   for key,value in pairs(profile_list) do --foreach Profile
     print(profile_list[key])
 
-		local text_button = sys.new_freetype(text_color, 30, {x=200,y=(200-choice_index*diff_y+diff_y*counter)}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+		local text_button = sys.new_freetype(text_color, 30, {x=120,y=(200-choice_index*diff_y+diff_y*counter)}, utils.absolute_path("data/fonts/DroidSans.ttf"))
 
 		if counter == 1 then
 			surface:fill(button_color_select, {width=500, height=100, x=100, y=(250)})
@@ -113,20 +115,24 @@ function profile_selection.render(surface)
 		counter=counter+1
   end
 
-	-- Testing Subsurface
-	local sub_surface1 = SubSurface(surface,{width=600, height=100, x=0, y=0})
-	sub_surface1:clear({r=27, g=146, b=38, a=50})
+	--TitleBar
+	local title_bar = SubSurface(surface,{width=600, height=100, x=0, y=0})
+	title_bar:clear({r=27, g=146, b=38, a=255})
 
 	local select_profile_label = sys.new_freetype(score_text_color, 40, {x=50,y=20}, utils.absolute_path("data/fonts/DroidSans.ttf"))
 	select_profile_label:draw_over_surface(surface, "Select Profile:")
 
+
+	local spoc = sys.new_freetype(score_text_color, 40, {x=700,y=100}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	spoc:draw_over_surface(surface, tostring(profile_selection:get_profile()))
 	-- Implements Button 1. Numerical
 
 
 
-	-- Implements Button 2. Multiple choice question
-	--surface:fill(button_color, {width=500, height=100, x=100, y=250})
-	--text_button2:draw_over_surface(surface, "2. ????")
+	--Implements Button 2. Multiple choice question
+	local text_button2 = sys.new_freetype(text_color, 30, {x=700,y=200}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	surface:fill(button_color, {width=500, height=100, x=700, y=200})
+	text_button2:draw_over_surface(surface, "2. ????")
 
 	-- Implements the exit button
 	--surface:fill(button_color, {width=500, height=100, x=100, y=450})

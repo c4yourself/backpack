@@ -11,7 +11,7 @@ function TestFreetypeMock:test_draw_over_surface()
     a = 40
   }
   --local freetype = FreetypeMock(c, 5, {x=40, y=50}, utils.absolute_path("data/fonts/DroidSans.ttf"))
-    local freetype = FreetypeMock(c, 5, {x=40, y=50}, "hej")
+    local freetype = FreetypeMock(c, 5, {x=40, y=50}, "text")
     FreetypeMock.draw_over_surface(freetype, "Text")
 end
 

@@ -1,14 +1,14 @@
 --- List of Profiles
 -- @module Profiles_Display
 
-
-local Profiles_Display = {}
-local lfs = require("lfs")
 local utils = require("lib.utils")
+local lfs = require("lfs")
+local Profiles_Manager = {}
+
 
 --- Get the profiles from profiles folder
 
-function Profiles_Display.get_profileslist()
+function Profiles_Manager.get_profileslist()
   print(lfs._VERSION)
   local profiles = {}
   local path = utils.absolute_path("data/profile/")
@@ -20,6 +20,4 @@ function Profiles_Display.get_profileslist()
   end
   return profiles
 end
-
-
-return Profiles_Display
+return Profiles_Manager
