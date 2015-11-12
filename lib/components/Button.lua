@@ -39,7 +39,8 @@ function Button:enable(status)
 	local old_status = self._enabled
 	self._enabled = status
 
-	self:mark_dirty()
+	self:dirty(false)
+	self:dirty(true)
 end
 
 function Button:is_enabled()
@@ -65,11 +66,11 @@ function Button:render(surface)
 	self:dirty(false)
 
 	if not self:is_enabled() then
-		surface:clear(self.color_disabled:to_table())
+		surface:fill(self.color_disabled:to_table())
 	elseif self:is_selected() then
-		surface:clear(self.color_selected:to_table())
+		surface:fill(self.color_selected:to_table())
 	else
-		surface:clear(self.color:to_table())
+		surface:fill(self.color:to_table())
 	end
 
 end
