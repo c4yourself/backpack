@@ -40,11 +40,13 @@ end
 function TSVReader:get_question(question_type)
 
 	--print(profile:load("HuanyuLi"))
-	--local profiles = {}
-	--profiles = profiledisplay:get_profileslist()
-	--for i = 1, #profiles, 1 do
-		--print(profiles[i])
-	--end
+
+	local profiles = {}
+	profiles = profiledisplay.get_profileslist()
+	for i = 1, #profiles, 1 do
+		print(profiles[i])
+	end
+
 	--Profile=profile(profile:load("HuanyuLi"))
 	--Profile:set_id(10)
 	--Profile:modify_balance(500)
