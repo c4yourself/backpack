@@ -52,7 +52,7 @@ elif [ "$1" == "export" ]; then
 	box_ip=$(get_config 'box_ip')
 
 	echo "Packing local files"
-	tar -cf build.tar start.lua config.lua lib/
+	tar -cf build.tar start.lua config.lua lib/ data/ views/ components/
 
 	echo "Starting TFTP server on $ip:9000"
 	python -c 'import tftpy; s = tftpy.TftpServer("."); s.listen("0.0.0.0", 9000)' &
