@@ -72,7 +72,6 @@ end
 --- Returns the current player’s color. If the game is over or there are no free tiles nil is returned
 -- @return a string containting the player
 function ConnectFour:get_player()
-
 	local count_X = 0
 	local count_O = 0
 
@@ -119,7 +118,6 @@ end
 -- @param column the column where the player wants to drop the disc
 -- @return boolean
 function ConnectFour:is_valid_move(player, column)
-
 	row = self:get_current_row(column)
 
 	if row > 0 and column >= 1 and column <= 7 and self:get_player() == player then
@@ -141,7 +139,10 @@ function ConnectFour:move(player, column)
 
 	local row_1 = self:get_current_row(column)
 	self.board[row_1][column] = player
-	local winner = self:get_winner(player, row_1, column)
+	--local winner = self:find_winner(player, row_1, column)
+	--if winner ~= nil then
+	--	print(winner .. " vann spelet!")
+	--end
 end
 
 ---Checks if there is a winner
@@ -149,7 +150,7 @@ end
 -- @param row the row where the last move was made
 -- @param column the column where the last move was made
 -- @return player string containing the player if there is a winner else nil
-function ConnectFour:get_winner(player, row, column)
+function ConnectFour:find_winner(player, row, column)
 
 	local count = 0
 	local current_row = row
@@ -249,6 +250,34 @@ function ConnectFour:get_winner(player, row, column)
 	until current_row > 6 or current_column > 7
 
 	return nil
+end
+
+function ConnectFour:get_winner()
+	for i = 1, 7 do
+		local row = self:get_current_row(i)
+		if row ~= 6 then
+			local player = self:get(row+1, i)
+			if player ~= nil then
+				local winner = self:find_winner(player, row+1, i)
+				if winner ~= nil then
+					print("get winner: " .. winner)
+					return winner
+				end
+			end
+		end
+
+	end
+return nil
+end
+
+
+function ConnectFour:computer_AI()
+	local random_column
+	repeat
+		random_column = math.random(1,7)
+	until self:is_valid_move("O", random_column)
+
+	return random_column
 end
 
 return ConnectFour
