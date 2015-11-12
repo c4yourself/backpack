@@ -11,7 +11,8 @@ local utils = require("lib.utils")
 local TSVReader = class("TSVReader")
 local MultipleChoiceQuestion = require("lib.quiz.MultipleChoiceQuestion")
 local profile = require("lib.profile.Profile")
-local profiledisplay = require("lib.profile.profilemanager")
+local localprofilemanager = require("lib.profile.localprofilemanager")
+
 
 TSVReader.filename = ""
 TSVReader.questions_table = {}
@@ -41,16 +42,31 @@ function TSVReader:get_question(question_type)
 	--local Profile
 	--Profile = profiledisplay.create_profile("John","John@gmail.com","1982-01-02","male")
 	--print(Profile.name .. " " .. Profile.email_address)
-	local profiles = {}
-	profiles = profiledisplay.get_localprofilescontent(profiledisplay.get_localprofileslist())
-	for i =1, #profiles, 1 do
-		print(profiles[i].name .. " " .. profiles[i].email_address .. " " .. profiles[i].sex .. " " .. profiles[i].balance)
-		if profiles[i].name == "Anna" then
-			profiles[i]:modify_balance(500)
-			profiles[i]:save()
-		end
+	--local profiles = {}
+	--profiles = profiledisplay.get_localprofilescontent(profiledisplay.get_localprofileslist())
+	--for i =1, #profiles, 1 do
+	--	print(profiles[i].name .. " " .. profiles[i].email_address .. " " .. profiles[i].sex .. " " .. profiles[i].balance)
+	--	if profiles[i].name == "Anna" then
+	--		profiles[i]:modify_balance(500)
+	--		profiles[i]:save()
+	--	end
 		--print(profiles[i].name .. " " .. profiles[i].email_address .. " " .. profiles[i].sex .. " " .. profiles[i].balance)
+	--end
+
+	local Profile
+	--Profile = profile("Mike","Mike@gmail.com","1972-01-02","male")
+	--localprofilemanager:save(Profile)
+	--print(Profile:get_name() .. " " .. Profile:get_sex())
+	Profile = localprofilemanager:load(Profile,"HuanyuLi")
+	print(Profile.name .. " " .. Profile.sex .. " " .. Profile.email_address .. " " .. Profile.balance)
+	local Profiles = {}
+	Profiles = localprofilemanager:get_profileslist(Profiles)
+	for i =1, #Profiles, 1 do
+		print(Profiles[i]:get_name() .. " " .. Profiles[i]:get_email_address() .. " " .. Profiles[i]:get_sex() .. " " .. Profiles[i]:get_balance())
 	end
+
+
+
 
 	local tmp_table = {}
 	self.filename = utils.absolute_path(string.format("data/questions/%s_geography.tsv",self.filename))
