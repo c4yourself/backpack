@@ -80,16 +80,15 @@ function MultipleChoiceView:press(key)
 		-- Next question is displayed
 		-- Make sure there are questions left to display
 		self.current_question = self.current_question + 1
-		if self.current_question >= self.quiz_size then
+		if self.current_question > self.quiz_size then
 			end_flag = 1
 			self.quiz_state = "DONE"
 		else
 			self.quiz_state = "IDLE"
 		end
 		self:dirty(true)
-	elseif key=="right" and self.end_flag==1 then
+	elseif key == "right" and self.end_flag == 1 then
 		-- Quiz is finished. Set up for a final result screen
-		self.mult_choice_quiz.questions:calculate_score(correct_answer_number)
 		self.quiz_state = "DONE"
 		self:dirty(true)
 	elseif key == "back" then
@@ -163,6 +162,7 @@ function MultipleChoiceView:render(surface)
 		elseif self.quiz_state == "DONE" then
 			-- Display the result from the whole quiz
 			surface:clear(color)
+			self.mult_choice_quiz:calculate_score(self.correct_answer_number)
 			self.font:draw_over_surface(screen, "You answered "
 			.. self.correct_answer_number .. " questions correctly and your score is "
 			.. self.mult_choice_quiz:get_score() .. ".")

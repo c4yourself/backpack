@@ -90,12 +90,10 @@ end
 ---end
 ---------------------------------------------------------------------------------------
 function localprofilemanager:get_profileslist()
-  print(lfs._VERSION)
   local profiles_name = {}
   local path = utils.absolute_path("data/profile/")
   for file in lfs.dir(path) do
     if string.match(file,".profile") ~= nil then
-      print("Found file:" .. file)
       table.insert(profiles_name, string.sub(file,1,string.find(file,".profile")-1))
     end
   end
@@ -105,5 +103,20 @@ function localprofilemanager:get_profileslist()
   end
   return profiles
 end
+function localprofilemanager:remove(filename)
+  local path = utils.absolute_path("data/profile/")
+  for file in lfs.dir(path) do
+    if string.match(file,filename) ~= nil then
+      local thefile = utils.absolute_path(string.format("data/profile/%s.profile", filename))
+      if(lfs.attributes(thefile, "mode") ~= "directory") then
+        resultOK, errorMsg = os.remove(thefile)
+        if resultOK then
 
+        else
+          
+        end
+      end
+    end
+  end
+end
 return localprofilemanager
