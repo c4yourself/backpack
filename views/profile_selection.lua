@@ -76,6 +76,7 @@ local function okBtnPress()
 		elseif menu_index == 4 then
 			print("Shut down program")
 			sys.stop()
+		end
 	end
 end
 
