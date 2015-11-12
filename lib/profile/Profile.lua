@@ -33,7 +33,7 @@ end
 -- @param balance representing balance of the user
 function Profile:set_balance(balance)
 	self.balance = balance
-	--return self.balance
+	return self.balance
 end
 -- Get balance of the user
 function Profile:get_balance()
@@ -43,7 +43,7 @@ end
 -- @param experience representing experience of the user
 function Profile:set_experience(experience)
 	self.experience = experience
-	--return self.experience
+	return self.experience
 end
 -- Get balance of the user
 function Profile:get_experience()
@@ -104,7 +104,7 @@ function Profile:save()
 	file:write("}\n")
 end
 -- load profile
-
+-- @param name representing the name of the profile
 function Profile:load(name)
 	local path = utils.absolute_path(string.format("data/profile/%s.profile",name))
 	for line in io.lines(path) do
