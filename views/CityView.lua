@@ -15,76 +15,28 @@ local NumericalQuizView = require("views.NumericalQuizView")
 local button= require("lib.components.Button")
 local button_grid=require("lib.components.ButtonGrid")
 local color = require("lib.draw.Color")
+
 --- Constructor for CityView
 -- @param event_listener Remote control to listen to
 function CityView:__init(remote_control)
 	View.__init(self)
 	self.background_path = ""
-	self.profile={name="Mohammed", level=5, experience=300, cash=500}
-	self.city={name="Paris"}
+	self.profile = {name = "Mohammed", level = 5, experience = 300, cash = 500}
+	self.city = {name = "Paris"}
 	self.buttonGrid = button_grid(remote_control)
 
-end
-
-function CityView:render(surface)
-	-- Creates local variables for height and width
-	local height = surface:get_height()
-	local width = surface:get_width()
-	-- Resets the surface and draws the background
-	local background_color = {r=0, g=0, b=0}
-
-	surface:clear(background_color)
-	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/Paris.png")))
-
-
-	--creates some colors
+	-- Create som button colors
 	local button_color = color(255, 99, 0, 255)
 	local color_selected = color(255, 153, 0, 255)
 	local color_disabled = color(111, 222, 111, 255) --have not been used yet
 	local city_view_selected_color = color(0, 0, 0, 50)
 	local city_view_color = color(0, 0, 0, 0)
-	local text_color = color(0, 0, 0,255)
-	local score_text_color = color(255, 255, 255, 255)
-	local menu_bar_color = color(0, 0, 0, 225)
-	local status_bar_color = color(0, 0, 0, 255)
-	local status_text_color = color(255, 255, 255, 255)
-	local experience_bar_color = color(100, 100, 100, 255)
 
-	-- Creates some images
-	-- local coinsurface = gfx.new_surface(50,50)
+	-- Creates local variables for height and width
+	local height = screen:get_height()
+	local width = screen:get_width()
 
-
-	-- This makes a freetype to write with
-	local text_button1 = sys.new_freetype(text_color, 30, {x=200,y=80}, utils.absolute_path("data/fonts/DroidSans.ttf"))
-	local text_button2 = sys.new_freetype(text_color, 30, {x=200,y=280}, utils.absolute_path("data/fonts/DroidSans.ttf"))
-	local text_button3 = sys.new_freetype(text_color, 30, {x=200,y=480}, utils.absolute_path("data/fonts/DroidSans.ttf"))
-	local profile_name = sys.new_freetype(status_text_color, 25, {x=10, y=10}, utils.absolute_path("data/fonts/DroidSans.ttf"))
-	local profile_level = sys.new_freetype(status_text_color, 20, {x=200, y=15}, utils.absolute_path("data/fonts/DroidSans.ttf"))
-	local profile_experience = sys.new_freetype(status_text_color, 20, {x=440, y=15}, utils.absolute_path("data/fonts/DroidSans.ttf"))
-	local profile_cash = sys.new_freetype(status_text_color, 20, {x=width-100, y=15}, utils.absolute_path("data/fonts/DroidSans.ttf"))
-	local city_name = sys.new_freetype(status_text_color, 25, {x=width/2, y=10}, utils.absolute_path("data/fonts/DroidSans.ttf"))
-	local mini_games = sys.new_freetype(status_text_color, 25, {x=width/6-65, y=60}, utils.absolute_path("data/fonts/DroidSans.ttf"))
-	local options = sys.new_freetype(status_text_color, 25, {x=width/6-45, y=(height-50)/2+60}, utils.absolute_path("data/fonts/DroidSans.ttf"))
-
-	-- Shows menu bar
-	surface:fill(menu_bar_color, {width=width/3, height=height-50, x=0, y=50})
-	mini_games:draw_over_surface(surface, "Mini Games")
-	options:draw_over_surface(surface, "Options")
-
-	-- Implement status bar
-	surface:fill(status_bar_color, {width=width, height=50, x=0, y=0})
-	surface:fill(score_text_color, {width=150, height=30, x=285,y=10})
-		if(self.profile.experience/500~=1) then
-		surface:fill(experience_bar_color, {width=math.ceil(148*(1-self.profile.experience/500)), height=28, x=434-148*(1-self.profile.experience/500), y=11})
-	end
-
-	profile_name:draw_over_surface(surface, self.profile.name)
-	profile_level:draw_over_surface(surface, "Level: " .. self.profile.level)
-	profile_experience:draw_over_surface(surface, self.profile.experience .. "/500")
-	profile_cash:draw_over_surface(surface, self.profile.cash)
-	city_name:draw_over_surface(surface, self.city.name)
-  surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/coinIcon.png")), nil, {x = surface:get_width()-145, y = 10, width = 30, height = 30} )
-
+	-- Add buttons
 	local button_1 = button(button_color, color_selected, color_disabled,true,true)
 	local button_2 = button(button_color, color_selected, color_disabled,true,false)
 	local button_3 = button(button_color, color_selected, color_disabled,true,false)
@@ -119,26 +71,73 @@ function CityView:render(surface)
 	self.buttonGrid:add_button(position_8, button_size, button_8)
 	self.buttonGrid:add_button(city_tour_position, city_tour_size, city_tour_button)
 
-  -- Insert text and its color, position, size, path for each button
-  -- Button always has the screen as its background, not its subsurface
-	--button_1:set_textdata("Numerical quiz",text_color,{x=100,y=50},30,utils.absolute_path("data/fonts/DroidSans.ttf"))
-	--button_2:set_textdata("Multiple choice question",text_color,{x=100,y=250},30,utils.absolute_path("data/fonts/DroidSans.ttf"))
-	--button_3:set_textdata("Exit",text_color,{x=100,y=450},30,utils.absolute_path("data/fonts/DroidSans.ttf"))
-
-  -- using the button grid to render all buttons and texts
-	self.buttonGrid:render(surface)
-	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/GeoIcon.png")),nil, {x=position_1.x,y=position_1.y,width=button_size.width,height=button_size.height} )
-
-  -- testing the subsurface
-	--local sub_surface1 = SubSurface(surface,{width=100, height=100, x=0, y=0})
-	--sub_surface1:clear({r=255, g=255, b=255, a=255})
-
-
+	local button_callback = function()
+		self:render(screen)
+		gfx.update()
+	end
+	self:listen_to(
+		self.buttonGrid,
+		"dirty",
+		button_callback
+	)
 
 end
 
-function CityView:load_view(button)
+function CityView:render(surface)
+-- Creates local variables for height and width
+local height = surface:get_height()
+local width = surface:get_width()
+	-- Resets the surface and draws the background
+	local background_color = {r = 0, g = 0, b = 0}
 
+	surface:clear(background_color)
+	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/Paris.png")))
+
+
+	--creates some colors
+	local text_color = color(0, 0, 0,255)
+	local score_text_color = color(255, 255, 255, 255)
+	local menu_bar_color = color(0, 0, 0, 225)
+	local status_bar_color = color(0, 0, 0, 255)
+	local status_text_color = color(255, 255, 255, 255)
+	local experience_bar_color = color(100, 100, 100, 255)
+
+	-- This makes a freetype to write with
+	local text_button1 = sys.new_freetype(text_color, 30, {x=200,y=80}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	local text_button2 = sys.new_freetype(text_color, 30, {x=200,y=280}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	local text_button3 = sys.new_freetype(text_color, 30, {x=200,y=480}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	local profile_name = sys.new_freetype(status_text_color, 25, {x=10, y=10}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	local profile_level = sys.new_freetype(status_text_color, 20, {x=200, y=15}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	local profile_experience = sys.new_freetype(status_text_color, 20, {x=440, y=15}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	local profile_cash = sys.new_freetype(status_text_color, 20, {x=width-100, y=15}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	local city_name = sys.new_freetype(status_text_color, 25, {x=width/2, y=10}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	local mini_games = sys.new_freetype(status_text_color, 25, {x=width/6-65, y=60}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	local options = sys.new_freetype(status_text_color, 25, {x=width/6-45, y=(height-50)/2+60}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+
+	-- Shows menu bar
+	surface:fill(menu_bar_color, {width=width/3, height=height-50, x=0, y=50})
+	mini_games:draw_over_surface(surface, "Mini Games")
+	options:draw_over_surface(surface, "Options")
+
+	-- Implement status bar
+	surface:fill(status_bar_color, {width=width, height=50, x=0, y=0})
+	surface:fill(score_text_color, {width=150, height=30, x=285,y=10})
+		if(self.profile.experience/500~=1) then
+		surface:fill(experience_bar_color, {width=math.ceil(148*(1-self.profile.experience/500)), height=28, x=434-148*(1-self.profile.experience/500), y=11})
+	end
+
+	profile_name:draw_over_surface(surface, self.profile.name)
+	profile_level:draw_over_surface(surface, "Level: " .. self.profile.level)
+	profile_experience:draw_over_surface(surface, self.profile.experience .. "/500")
+	profile_cash:draw_over_surface(surface, self.profile.cash)
+	city_name:draw_over_surface(surface, self.city.name)
+  surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/coinIcon.png")), nil, {x = surface:get_width()-145, y = 10, width = 30, height = 30} )
+
+  -- using the button grid to render all buttons and texts
+	self.buttonGrid:render(surface)
+end
+
+function CityView:load_view(button)
 
 	if button == "1" then
 		--Instanciate a numerical quiz
@@ -169,15 +168,7 @@ function CityView:load_view(button)
 		sys.stop()
 	end
 
-	-- Make the city view listen for the "dirty" event
-	local button_callback = function()
-		self:render(screen)
-	end
-	self:listen_to(
-		Button,
-		"dirty",
-		button_callback
-	)
+
 end
 
 return CityView
