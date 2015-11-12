@@ -10,6 +10,10 @@ local MemoryGame = require("lib.memory.Memory")
 local Surface = require("emulator.surface")
 local utils = require("lib.utils")
 local MemoryView = class("MemoryView", View)
+local button= require("lib.components.Button")
+local button_grid	=	require("lib.components.ButtonGrid")
+local color = require("lib.draw.Color")
+
 
 function MemoryView:__init()
   View.__init(self)
@@ -52,6 +56,10 @@ function MemoryView:press(key)
       print("key is: " .. key)
 			--view.view_manager:render()
 	--	end
+  elseif key == "7" then
+    self.back_to_city_pressed = true
+    print("pressed")
+    self:dirty(true)
 	elseif key == "back" then
 		--TODO find a way to create the correct city view
 		self:trigger("exit")
@@ -60,25 +68,78 @@ end
 
 --Renders MemoryView and all of its child views
 function MemoryView:render(surface)
-surface:clear({255, 0, 0, 255})
+-- Make screen red when clicking a button
+--  surface:clear({255, 0, 0, 255})
+
+-- Colors for buttons
+  local button_color = color(0, 128, 225, 255)
+  local color_selected = color(33, 99, 111, 255)
+  local color_disabled = color(111,222,111,255)
+  local text_color = color(255, 255, 255, 255)
+
+-- Button instance
+  local button_1 = button(button_color, color_selected, color_disabled, true, false)
+--  local button_2 = button(button_color, color_selected, color_disabled, false, false)
+
+-- Button size and position
+  local position_1 = {x = 100, y = 450}
+--  local position_2 = {x = 100, y = 150}
+  local button_size = {width = 300, height = 100}
+
+-- Create button grid
+  self.buttonGrid = button_grid()
+  self.buttonGrid:add_button(position_1, button_size, button_1)
+--  self.buttonGrid:add_button(position_2, button_size, button_2)
+
+
+-- Insert text and color to each buttonGrid
+  button_1:set_textdata("Back to City", text_color, {x = 100, y = 450}, 30, utils.absolute_path("data/fonts/DroidSans.ttf"))
+  --button_2:set_textdata("Turns", text_color, {x = 100, y = 150}, 30, utils.absolute_path("data/fonts/DroidSans.ttf"))
+
+-- Add the number of turns
+  local turns_text =sys.new_freetype(text_color:to_table(), 30, {x = 100, y = 110}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+  local turns = sys.new_freetype(text_color:to_table(), 30, {x = 100, y = 150}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+  turns_text:draw_over_surface(surface, "Turns")
+  if self.memory.moves == nil then
+    turns:draw_over_surface(surface, "No turns...")
+  else
+    turns:draw_over_surface(surface, self.memory.moves)
+  end
+  self.buttonGrid:render(surface)
+
+
 if not self.listening_initiated then
   local change_callback = utils.partial(self.render, self, surface)
   self.listening_initiated = true
 end
 
-if self:is_dirty() then
-  print("in dirty")
-  surface:clear(color)
-if self.player_moved then -- The user has moved to another card
-    color = {0, 0, 255, 255}
-    surface:clear(color)
-    self.font:draw_over_surface(surface, "hej")
+  if self:is_dirty() then
+--  print("in dirty")
+--  surface:clear(color)
+  if self.player_moved then -- The user has moved to another card
+--    color = {0, 0, 255, 255}
+--    surface:clear(color)
+--    self.font:draw_over_surface(surface, "hej")
+  if self.back_to_city_pressed then
+    print("Open pop_")
+    self:back_to_city()
+  end
 end
 end
 
 --If the user updated dirty flag will remain true to make sure the user can
 -- navigate to the next question
 self:dirty(false)
+end
+
+function MemoryView:back_to_city()
+-- TODO Implement/connect pop-up for quit game
+-- Appendix 2 in UX design document
+  print("hello")
+end
+
+function MemoryView:get_turns()
+
 end
 
 -- Displays the correct answer and whether the user chose the correct one.
