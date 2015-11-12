@@ -1,6 +1,6 @@
 {
 		"badges": {},
-		"balance": 3000,
+		"balance": 4000,
 		"date_of_birth": "1992-06-29",
 		"email_address": "Anna@gmail.com",
 		"experience": 0,
