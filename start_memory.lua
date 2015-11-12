@@ -5,7 +5,7 @@ local menu = require("views.menu")
 
 local view = require("lib.view")
 local CityView = require("views.CityView")
-local memory_view = require("views.MemoryView")
+local MemoryView = require("views.MemoryView")
 
 --- This function runs every time a key is pressed
 -- The current mapping for the emulator can be found in emulator/zto.lua
@@ -33,5 +33,7 @@ end
 function onStart()
 	local memory_view = MemoryView()
 	view.view_manager:set_view(memory_view)
+	memory_view:on("dirty", function() memory_view:render(screen); gfx.update() end)
+	memory_view:render(screen)
 	gfx.update()
 end

@@ -4,10 +4,12 @@
 
 local class = require("lib.classy")
 local View = require("lib.view.View")
+local view = require("lib.view")
 local event = require("lib.event")
-local memory = require("lib.memory.Memory")
+local MemoryGame = require("lib.memory.Memory")
 local Surface = require("emulator.surface")
 local utils = require("lib.utils")
+local MemoryView = class("MemoryView", View)
 
 function MemoryView:__init()
   View.__init(self)
@@ -23,7 +25,7 @@ function MemoryView:__init()
 	--Instanciate a numerical input component and make the quiz listen for changes
 	self.input_surface = Surface(300,100)
   local pairs = 8
-  self.memory = Memory(pairs, false)
+  self.memory = MemoryGame(pairs, false)
 
   -- Graphics
   self.font = sys.new_freetype(
@@ -44,11 +46,12 @@ end
 function MemoryView:press(key)
   if key == "right" or key == "up" or key == "down" or key == "left" then
 		-- change color on card to visualize a move
-		if self.player_moved then
+		--if self.player_moved then
+      self.player_moved = true
 			self:dirty(true)
-			self.answer_flag = false
-			view.view_manager:render()
-		end
+      print("key is: " .. key)
+			--view.view_manager:render()
+	--	end
 	elseif key == "back" then
 		--TODO find a way to create the correct city view
 		self:trigger("exit")
@@ -57,54 +60,36 @@ end
 
 --Renders MemoryView and all of its child views
 function MemoryView:render(surface)
+surface:clear({255, 0, 0, 255})
 if not self.listening_initiated then
   local change_callback = utils.partial(self.render, self, surface)
   self.listening_initiated = true
 end
 
 if self:is_dirty() then
+  print("in dirty")
   surface:clear(color)
-  if self.player_moved then -- The user has moved to another card
-    color = {0, 0, 255, 0}
+if self.player_moved then -- The user has moved to another card
+    color = {0, 0, 255, 255}
     surface:clear(color)
-    self.font:draw_over_surface(surface, output)
-  else
-    --Render the main components of NumericQuizView
-    self.answer_flag = false
-    surface:clear(color)
-    local question = self.num_quiz:get_question()
-    if question ~= nil then
-      self.font:draw_over_surface(surface, self.num_quiz.current_question .. ")   " .. question .. " =  ?")
-    else
-      -- The user has finished the quiz
-      self.views.num_input_comp:blur()
-      -- TODO show result of the quiz
-      self.quiz_flag = true -- Quiz is complete
-      output = "You answered " .. tostring(self.num_quiz.correct_answers) .. " questions correctly."
-      self.font:draw_over_surface(surface, output)
-    end
-  end
+    self.font:draw_over_surface(surface, "hej")
 end
--- Render all child views and copy changes to this view
--- Render input component
-self.views.num_input_comp:render(self.input_surface)
-surface:copyfrom(self.input_surface)
+end
 
-gfx.update()
 --If the user updated dirty flag will remain true to make sure the user can
 -- navigate to the next question
 self:dirty(false)
 end
 
 -- Displays the correct answer and whether the user chose the correct one.
-function NumericQuizView:show_answer()
-if self.views.num_input_comp:get_text() ~= "" then
-  self.answer_flag = true
-  self:dirty(true)
-  self.user_answer = tonumber(self.views.num_input_comp:get_text())
-  self.views.num_input_comp:set_text(nil)
-  view.view_manager:render()
-end
-end
+-- function NumericQuizView:show_answer()
+-- if self.views.num_input_comp:get_text() ~= "" then
+--   self.answer_flag = true
+--   self:dirty(true)
+--   self.user_answer = tonumber(self.views.num_input_comp:get_text())
+--   self.views.num_input_comp:set_text(nil)
+--   view.view_manager:render()
+-- end
+-- end
 
 return MemoryView
