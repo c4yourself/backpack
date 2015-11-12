@@ -1,6 +1,5 @@
---- List of Profiles
--- @module Profiles_Display
-
+---List of Profiles
+---@module Profiles_Display
 local utils = require("lib.utils")
 local lfs = require("lfs")
 local profile = require("lib.profile.Profile")
@@ -8,11 +7,11 @@ local Profiles_Manager = {}
 
 ---Create a profile
 ---usage
----   local profile = require("lib.profile.Profile")
----   local profiledisplay = require("lib.profile.profilemanager")
----   local Profile
----   Profile = profiledisplay.create_profile("John","John@gmail.com","1982-01-02","male")
----   print(Profile.name .. " " .. Profile.email_address)
+---local profile = require("lib.profile.Profile")
+---local profiledisplay = require("lib.profile.profilemanager")
+---local Profile
+---Profile = profiledisplay.create_profile("John","John@gmail.com","1982-01-02","male")
+---print(Profile.name .. " " .. Profile.email_address)
 function Profiles_Manager.create_profile(name,email_address,date_of_birth,sex)
   Profile=profile(name,email_address,date_of_birth,sex)
   Profile:save()
@@ -32,20 +31,21 @@ function Profiles_Manager.get_profileslist()
   end
   return profiles
 end
+
 ---Get the profiles instances
 ---@param profiles_name representing the name of profiles in the data/profile folder
 ---usage
 ---------------------------------------------------------------------------------------
----   local profiledisplay = require("lib.profile.profilemanager")
----   local profiles = {}
----   profiles = profiledisplay.get_profilescontent(profiledisplay.get_profileslist())
----   for i =1, #profiles, 1 do
----      --modify balance
----     if profiles[i].name == "Anna" then
----       profiles[i]:modify_balance(500)
----       profiles[i]:save()
----     end
----   end
+---local profiledisplay = require("lib.profile.profilemanager")
+---local profiles = {}
+---profiles = profiledisplay.get_profilescontent(profiledisplay.get_profileslist())
+---for i =1, #profiles, 1 do
+-----modify balance
+---if profiles[i].name == "Anna" then
+---    profiles[i]:modify_balance(500)
+---    profiles[i]:save()
+---  end
+---end
 ---------------------------------------------------------------------------------------
 function Profiles_Manager.get_profilescontent(profiles_name)
   local profiles = {}
@@ -59,4 +59,5 @@ function Profiles_Manager.get_profilescontent(profiles_name)
   end
   return profiles
 end
+
 return Profiles_Manager
