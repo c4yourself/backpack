@@ -32,14 +32,14 @@ function SplashView:render(surface)
 	-- print logo in center
 
 	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/logo.png")),nil,{x=525,y=329})
-	subsurface2 = SubSurface(surface,{width=280, height=62, x=525, y=329})
-	subsurface2:fill({r=255, g=255, b=255, a=255})
+	logo_fade_surface = SubSurface(surface,{width=280, height=62, x=525, y=329})
+	logo_fade_surface:fill({r=255, g=255, b=255, a=255})
 	gfx.update()
 	fader = 0
 	-- end_splash in 2 seconds.
 
 	local callback = utils.partial(self.end_splash, self, surface)
-	stop_timer = sys.new_timer(40,callback)
+	self.stop_timer = sys.new_timer(40,callback)
 end
 
 function SplashView:end_splash(surface)
@@ -50,13 +50,13 @@ function SplashView:end_splash(surface)
 	--gfx.update()
 	if (fader < 10 ) then
 		surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/logo.png")),nil,{x=525,y=329})
-		subsurface2:fill({r=255, g=255, b=255, a=(255-((fader*255)/10))})
+		logo_fade_surface:fill({r=255, g=255, b=255, a=(255-((fader*255)/10))})
 		logger.trace("a = " .. fader)
 		gfx.update()
 	end
 	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/logo.png")),nil,{x=525,y=329})
 	if(fader == 15) then
-		stop_timer:stop()
+		self.stop_timer:stop()
 		logger.trace("Ending Splash View")
 		local city_view_2 = CityView2(event.remote_control)
 		view.view_manager:set_view(city_view_2)
