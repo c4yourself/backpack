@@ -31,6 +31,7 @@ function localprofilemanager:save(profile)
   file:write("\t\t\"password\": \"" .. profile:get_password() .. "\",\n")
   file:write("\t\t\"sex\": \"" .. profile:get_sex() .. "\",\n")
   file:write("}\n")
+  file:close()
   return profile
 end
 function localprofilemanager:load(profile,filename)
@@ -68,6 +69,7 @@ function localprofilemanager:load(profile,filename)
   profile = Profile(name,email_address,date_of_birth,sex)
   profile:set_balance(balance)
   profile:set_experience(experience)
+  io.close()
   return profile
 end
 
@@ -93,7 +95,7 @@ function localprofilemanager:get_profileslist()
   local path = utils.absolute_path("data/profile/")
   for file in lfs.dir(path) do
     if string.match(file,".profile") ~= nil then
-      --print("Found file:" .. file)
+      print("Found file:" .. file)
       table.insert(profiles_name, string.sub(file,1,string.find(file,".profile")-1))
     end
   end

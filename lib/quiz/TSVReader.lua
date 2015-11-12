@@ -11,6 +11,7 @@ local utils = require("lib.utils")
 local TSVReader = class("TSVReader")
 local MultipleChoiceQuestion = require("lib.quiz.MultipleChoiceQuestion")
 local profile = require("lib.profile.Profile")
+local localprofilemanager = require("lib.profile.localprofilemanager")
 
 
 TSVReader.filename = ""
@@ -57,11 +58,14 @@ function TSVReader:get_question(question_type)
 	--localprofilemanager:save(Profile)
 	--print(Profile:get_name() .. " " .. Profile:get_sex())
 	Profile = localprofilemanager:load(Profile,"HuanyuLi")
-	print(Profile.name .. " " .. Profile.sex .. " " .. Profile.email_address .. " " .. Profile.balance)
+	--print(Profile.name .. " " .. Profile.sex .. " " .. Profile.email_address .. " " .. Profile.balance)
+	Profile:set_balance(10)
+	--print("Local profiles " .. Profile.name .. " " .. Profile.sex .. " " .. Profile.email_address .. " " .. Profile.balance)
+	localprofilemanager:save(Profile)
 	local Profiles = {}
 	Profiles = localprofilemanager:get_profileslist(Profiles)
 	for i =1, #Profiles, 1 do
-		print(Profiles[i]:get_name() .. " " .. Profiles[i]:get_email_address() .. " " .. Profiles[i]:get_sex() .. " " .. Profiles[i]:get_balance())
+		print("Profiles" .. Profiles[i]:get_name() .. " " .. Profiles[i]:get_email_address() .. " " .. Profiles[i]:get_sex() .. " " .. Profiles[i]:get_balance())
 	end
 
 
