@@ -87,7 +87,7 @@ end
 ---  end
 ---end
 ---------------------------------------------------------------------------------------
-function localprofilemanager:get_profileslist(profiles)
+function localprofilemanager:get_profileslist()
   print(lfs._VERSION)
   local profiles_name = {}
   local path = utils.absolute_path("data/profile/")
@@ -97,6 +97,7 @@ function localprofilemanager:get_profileslist(profiles)
       table.insert(profiles_name, string.sub(file,1,string.find(file,".profile")-1))
     end
   end
+  local profiles = {}
   for i = 1, #profiles_name, 1 do
     profiles[i] = localprofilemanager:load(profiles[i],profiles_name[i])
   end
