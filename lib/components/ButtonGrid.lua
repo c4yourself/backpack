@@ -109,7 +109,7 @@ function ButtonGrid:press(button)
 			self:indicate_rightward(self.button_indicator)
 			self:trigger("dirty")
 		elseif button == "left" then
-			self:indicate_leftward(self.button_indicator)
+			self:indicate_leftward(self.button_indicator, "left")
 			self:trigger("dirty")
 		elseif button == "1" then
 				--Instanciate a numerical quiz
@@ -201,7 +201,12 @@ function ButtonGrid:indicate_downward(button_indicator)
 	local sel_central_x = button_list[indicator].x + math.floor(button_list[indicator].width/2)
 	local sel_central_y = button_list[indicator].y + math.floor(button_list[indicator].height/2)
 	local nearest_button_index = nil
-	local corner_position = {x = button_list[indicator].x, y = 0}
+	local corner_position = {x = math.min(button_list[indicator].x), y = 0}
+
+	local that_distance = self:distance_to_corner(corner_position, 2)
+
+	--print("the fucking distance to 2 issss " .. that_distance)
+	--print("the fucking  distance to 9 issss ".. self:distance_to_corner(corner_position, 9))
 
 	for i=1, #button_list do
 		if button_list[i].y >= button_list[indicator].y + button_list[indicator].height then
@@ -215,7 +220,6 @@ if shortest_distance_buttons ~= 720 then
 		if  button_list[j].y >= button_list[indicator].y + button_list[indicator].height then
 			local distance = self:button_distance(indicator, j)
 			if shortest_distance_buttons == distance then
-				-- print("the distance is "..distance)
 				nearest_button_index = j
 				break
 			end
@@ -227,17 +231,15 @@ end
 		for k=1, #button_list do
 				local distance = self:distance_to_corner(corner_position, k)
 				shortest_distance_corner = math.min(shortest_distance_corner, distance)
+				--print("the minium distance at the moment is "..shortest_distance_corner)
 		end
 	end
 
 	if shortest_distance_corner ~= 720 then
 	for p=1, #button_list do
-			local distance = self:distance_to_corner(corner_position, p)
-			if shortest_distance_corner == distance then
+			local distances = self:distance_to_corner(corner_position, p)
+			if shortest_distance_corner == distances then
 				nearest_button_index = p
-				print("the distance is "..distance)
-				print("the nearast button is ".. nearest_button_index)
-
 				break
 			end
 		end
@@ -296,8 +298,6 @@ end
 			local distance = self:distance_to_corner(corner_position, p)
 			if shortest_distance_corner == distance then
 				nearest_button_index = p
-				print("the distance is "..distance)
-				print("the nearast button is ".. nearest_button_index)
 
 				break
 			end
@@ -368,7 +368,7 @@ end
 	self.button_indicator = indicator
 end
 
-function ButtonGrid:indicate_leftward(button_indicator)
+function ButtonGrid:indicate_leftward(button_indicator, direction)
 	local indicator = button_indicator
 	local button_list = self.button_list
 	local shortest_distance_buttons = 1280
@@ -438,11 +438,12 @@ function ButtonGrid:button_distance(sel_button_index, button_index)
 end
 
 function ButtonGrid:distance_to_corner(corner_position, button_index)
+
 	local central_x = self.button_list[button_index].x + math.floor(self.button_list[button_index].width/2)
 	local central_y = self.button_list[button_index].y + math.floor(self.button_list[button_index].height/2)
 	local corner_x = corner_position.x
 	local corner_y = corner_position.y
-	local distances = math.floor(math.sqrt(math.pow(self.button_list[button_index].x - corner_x, 2) + math.pow(self.button_list[button_index].y - corner_y, 2)))
+	local distances = math.floor(math.sqrt(math.pow(central_x - corner_x, 2) + math.pow(central_y - corner_y, 2)))
 	return distances
 end
 
