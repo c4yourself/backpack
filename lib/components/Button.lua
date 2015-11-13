@@ -11,7 +11,8 @@ local Button = class("Button", View)
 --@param color_disabled The color for a disabled button
 --@param enaled The button is enabled or not when instantiating
 --@param selected The button is selected or not when instantiating
-function Button:__init(color, color_selected, color_disabled, enabled, selected)
+--@param transfer_path The path for the view after the button is clicked
+function Button:__init(color, color_selected, color_disabled, enabled, selected, transfer_path)
 	View.__init(self)
 	self.color = color
 	self.color_selected = color_selected or color
@@ -19,6 +20,14 @@ function Button:__init(color, color_selected, color_disabled, enabled, selected)
 	self._enabled = enabled or true
 	self._selected = selected or false
 	self.text_available = false
+	if transfer_path ~= nil then
+		self.transfer_path = transfer_path
+	end
+end
+
+function Button:set_view_path(transfer_path)
+	self.transfer_path = transfer_path
+
 end
 
 function Button:set_textdata(text, font_color, text_position, font_size,font_path)
@@ -28,6 +37,7 @@ function Button:set_textdata(text, font_color, text_position, font_size,font_pat
 	self.font_color = font_color
 	self.font_path = font_path
 	self.text_position = text_position
+
 end
 
 function Button:enable(status)

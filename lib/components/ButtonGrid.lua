@@ -6,13 +6,12 @@
 -- @classmod ButtonGrid
 
 local class = require("lib.classy")
+local view = require("lib.view")
 local View = require("lib.view.View")
 local button = require("lib.components.Button")
 local ButtonGrid = class("ButtonGrid",View)
 local SubSurface = require("lib.view.SubSurface")
 local utils = require("lib.utils")
-local multiplechoice_quiz = require("views.multiplechoice_quiz")
-local NumericalQuizView = require("views.NumericalQuizView")
 local event = require("lib.event")
 --local CityView = require("views.CityView")
 
@@ -89,6 +88,15 @@ function ButtonGrid:display_text(surface, button_index)
 
 end
 
+function ButtonGrid:display_next_view(transfer_path)
+--	print("this path is   asdfasdfasdfasfd " .. self.button_list[1].position_1.x)
+
+ 	local view_import = require(transfer_path)
+ 	local view_instance = view_import()
+
+ 	view.view_manager:set_view(view_instance)
+end
+
 function ButtonGrid:press(button)
 
     if button == "down" then
@@ -96,6 +104,12 @@ function ButtonGrid:press(button)
 			self:trigger("dirty")
 		elseif button == "up" then
 			self:indicate_upward(self.button_indicator)
+			self:trigger("dirty")
+		elseif button == "right" then
+			self:indicate_rightward(self.button_indicator)
+			self:trigger("dirty")
+		elseif button == "left" then
+			self:indicate_leftward(self.button_indicator)
 			self:trigger("dirty")
 		elseif button == "1" then
 				--Instanciate a numerical quiz
@@ -116,8 +130,19 @@ function ButtonGrid:press(button)
 				print("Shut down program")
 				sys.stop()
 
+		elseif button == "ok" then
+
+			for i=1, #self.button_list do
+				if self.button_list[i].button:is_selected() == true then
+					if self.button_list[i].button.transfer_path ~= nil then
+					self:display_next_view(self.button_list[i].button.transfer_path)
+				--	gfx.update()
+					break
+					end
+				end
 	end
-	print("the indicator is now " .. self.button_indicator)
+end
+
 	collectgarbage()  --ensure that memory-leak does not occur
 	-- print out the memory usage in KB
 	print("the memory usage is " .. collectgarbage("count")*1024)
@@ -168,44 +193,256 @@ end
 --- When "down" is pressed, the indicator shall follow the down-direction
 -- @param button_indicator The current indicator that points to the selected button
 function ButtonGrid:indicate_downward(button_indicator)
-  local indicator = button_indicator
-    local button_list = self.button_list
+	local indicator = button_indicator
+	local button_list = self.button_list
+	local shortest_distance_buttons = 720
+	local shortest_distance_corner = 720
+	local sel_central_x = button_list[indicator].x + math.floor(button_list[indicator].width/2)
+	local sel_central_y = button_list[indicator].y + math.floor(button_list[indicator].height/2)
+	local nearest_button_index = nil
+	local corner_position = {x = button_list[indicator].x, y = 0}
 
-    indicator = indicator % #button_list
-    indicator = indicator + 1
-    button_list[indicator].button:select(true)
+	for i=1, #button_list do
+		if button_list[i].y >= button_list[indicator].y + button_list[indicator].height then
+			local distance = self:button_distance(indicator, i)
+			shortest_distance_buttons = math.min(shortest_distance_buttons, distance)
+		end
+	end
 
-     if indicator == 1 then
-     button_list[#button_list].button:select(false)
-   else
-    button_list[indicator-1].button:select(false)
-   end
+if shortest_distance_buttons ~= 720 then
+	for j=1, #button_list do
+		if  button_list[j].y >= button_list[indicator].y + button_list[indicator].height then
+			local distance = self:button_distance(indicator, j)
+			if shortest_distance_buttons == distance then
+				-- print("the distance is "..distance)
+				nearest_button_index = j
+				break
+			end
+		end
+ end
+end
 
-   self.button_indicator = indicator
+	if shortest_distance_buttons == 720 and #button_list ~= 1 then
+		for k=1, #button_list do
+				local distance = self:distance_to_corner(corner_position, k)
+				shortest_distance_corner = math.min(shortest_distance_corner, distance)
+		end
+	end
+
+	if shortest_distance_corner ~= 720 then
+	for p=1, #button_list do
+			local distance = self:distance_to_corner(corner_position, p)
+			if shortest_distance_corner == distance then
+				nearest_button_index = p
+				print("the distance is "..distance)
+				print("the nearast button is ".. nearest_button_index)
+
+				break
+			end
+		end
+	end
+
+	if nearest_button_index ~= nil then
+		indicator = nearest_button_index
+		button_list[indicator].button:select(true)
+		button_list[button_indicator].button:select(false)
+	end
+
+	self.button_indicator = indicator
 end
 
 --- When "up" is pressed, the indicator shall follow the up-direction
 -- @param button_indicator The current indicator that points to the selected button
 function ButtonGrid:indicate_upward(button_indicator)
-  local indicator = button_indicator
-  local button_list = self.button_list
+	local indicator = button_indicator
+	local button_list = self.button_list
+	local shortest_distance_buttons = 720
+	local shortest_distance_corner = 720
+	local sel_central_x = button_list[indicator].x + math.floor(button_list[indicator].width/2)
+	local sel_central_y = button_list[indicator].y + math.floor(button_list[indicator].height/2)
+	local nearest_button_index = nil
+	local corner_position = {x = button_list[indicator].x, y = 720}
 
-  indicator = indicator - 1
+	for i=1, #button_list do
+		if button_list[i].y + button_list[i].height <= button_list[indicator].y then
+			local distance = self:button_distance(indicator, i)
+			shortest_distance_buttons = math.min(shortest_distance_buttons, distance)
+		end
+	end
 
-  if indicator == 0 then
-  indicator = #button_list
-  end
-
-  button_list[indicator].button:select(true)
-
-  if indicator == #button_list then
-  button_list[1].button:select(false)
-  else
-  button_list[indicator+1].button:select(false)
-  end
-
-  self.button_indicator = indicator
+if shortest_distance_buttons ~= 720 then
+	for j=1, #button_list do
+		if button_list[j].y + button_list[j].height <= button_list[indicator].y then
+			local distance = self:button_distance(indicator, j)
+			if shortest_distance_buttons == distance then
+				-- print("the distance is "..distance)
+				nearest_button_index = j
+				break
+			end
+		end
+ end
 end
 
+	if shortest_distance_buttons == 720 and #button_list ~= 1 then
+		for k=1, #button_list do
+				local distance = self:distance_to_corner(corner_position, k)
+				shortest_distance_corner = math.min(shortest_distance_corner, distance)
+		end
+	end
+
+	if shortest_distance_corner ~= 720 then
+	for p=1, #button_list do
+			local distance = self:distance_to_corner(corner_position, p)
+			if shortest_distance_corner == distance then
+				nearest_button_index = p
+				print("the distance is "..distance)
+				print("the nearast button is ".. nearest_button_index)
+
+				break
+			end
+		end
+	end
+
+	if nearest_button_index ~= nil then
+		indicator = nearest_button_index
+		button_list[indicator].button:select(true)
+		button_list[button_indicator].button:select(false)
+	end
+
+	self.button_indicator = indicator
+end
+
+function ButtonGrid:indicate_rightward(button_indicator)
+	local indicator = button_indicator
+	local button_list = self.button_list
+	local shortest_distance_buttons = 1280
+	local shortest_distance_corner = 1280
+	local sel_central_x = button_list[indicator].x + math.floor(button_list[indicator].width/2)
+	local sel_central_y = button_list[indicator].y + math.floor(button_list[indicator].height/2)
+	local nearest_button_index = nil
+	local corner_position = {x=0,y=0}
+
+	for i=1, #button_list do
+		if button_list[i].x >= button_list[indicator].x + button_list[indicator].width then
+			local distance = self:button_distance(indicator, i)
+			shortest_distance_buttons = math.min(shortest_distance_buttons, distance)
+		end
+	end
+
+if shortest_distance_buttons ~= 1280 then
+	for j=1, #button_list do
+		if button_list[j].x >= button_list[indicator].x + button_list[indicator].width then
+			local distance = self:button_distance(indicator, j)
+			if shortest_distance_buttons == distance then
+				nearest_button_index = j
+				break
+			end
+		end
+ end
+end
+
+	if shortest_distance_buttons == 1280 and #button_list ~= 1 then
+		for k=1, #button_list do
+				local distance = self:distance_to_corner(corner_position, k)
+				shortest_distance_corner = math.min(shortest_distance_corner, distance)
+		end
+	end
+
+	if shortest_distance_corner ~= 1280 then
+	for p=1, #button_list do
+			local distance = self:distance_to_corner(corner_position, p)
+			if shortest_distance_corner == distance then
+				nearest_button_index = p
+				break
+			end
+		end
+	end
+
+	if nearest_button_index ~= nil then
+		indicator = nearest_button_index
+		button_list[indicator].button:select(true)
+		button_list[button_indicator].button:select(false)
+	end
+
+	self.button_indicator = indicator
+end
+
+function ButtonGrid:indicate_leftward(button_indicator)
+	local indicator = button_indicator
+	local button_list = self.button_list
+	local shortest_distance_buttons = 1280
+	local shortest_distance_corner = 1280
+	local sel_central_x = button_list[indicator].x + math.floor(button_list[indicator].width/2)
+	local sel_central_y = button_list[indicator].y + math.floor(button_list[indicator].height/2)
+	local nearest_button_index = nil
+	local corner_position = {x=1280,y=0}
+	local condition = nil
+
+	for i=1, #button_list do
+		if button_list[indicator].x >= button_list[i].x + button_list[i].width then
+			local distance = self:button_distance(indicator, i)
+			shortest_distance_buttons = math.min(shortest_distance_buttons, distance)
+		end
+	end
+
+if shortest_distance_buttons ~= 1280 then
+	for j=1, #button_list do
+		if  button_list[indicator].x >= button_list[j].x + button_list[j].width then
+			local distance = self:button_distance(indicator, j)
+			if shortest_distance_buttons == distance then
+				print("the distance is "..distance)
+				nearest_button_index = j
+				print("the nearast button is ".. nearest_button_index)
+				break
+			end
+		end
+ end
+end
+
+	if shortest_distance_buttons == 1280 and #button_list ~= 1 then
+		for k=1, #button_list do
+				local distance = self:distance_to_corner(corner_position, k)
+				shortest_distance_corner = math.min(shortest_distance_corner, distance)
+		end
+	end
+
+	if shortest_distance_corner ~= 1280 then
+	for p=1, #button_list do
+			local distance = self:distance_to_corner(corner_position, p)
+			if shortest_distance_corner == distance then
+				nearest_button_index = p
+				break
+			end
+		end
+	end
+
+	if nearest_button_index ~= nil then
+		indicator = nearest_button_index
+		button_list[indicator].button:select(true)
+		button_list[button_indicator].button:select(false)
+	end
+
+	self.button_indicator = indicator
+end
+
+
+
+function ButtonGrid:button_distance(sel_button_index, button_index)
+	local sel_central_x = self.button_list[sel_button_index].x + math.floor(self.button_list[sel_button_index].width/2)
+	local sel_central_y = self.button_list[sel_button_index].y + math.floor(self.button_list[sel_button_index].height/2)
+	local central_x = self.button_list[button_index].x + math.floor(self.button_list[button_index].width/2)
+	local central_y = self.button_list[button_index].y + math.floor(self.button_list[button_index].height/2)
+	local distances = math.floor(math.sqrt(math.pow(central_x - sel_central_x, 2) + math.pow(central_y - sel_central_y, 2)))
+	return distances
+end
+
+function ButtonGrid:distance_to_corner(corner_position, button_index)
+	local central_x = self.button_list[button_index].x + math.floor(self.button_list[button_index].width/2)
+	local central_y = self.button_list[button_index].y + math.floor(self.button_list[button_index].height/2)
+	local corner_x = corner_position.x
+	local corner_y = corner_position.y
+	local distances = math.floor(math.sqrt(math.pow(self.button_list[button_index].x - corner_x, 2) + math.pow(self.button_list[button_index].y - corner_y, 2)))
+	return distances
+end
 
 return ButtonGrid
