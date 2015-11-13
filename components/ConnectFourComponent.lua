@@ -30,9 +30,6 @@ function ConnectFourComponent:press(key)
 		else
 			self.current_column = self.current_column + 1
 		end
-		--self:dirty(true)
-		--print(self.current_column)
-		--self:dirty(false)
 
 	elseif key == "left" then
 		if self.current_column == 1 then
@@ -44,7 +41,14 @@ function ConnectFourComponent:press(key)
 	elseif key == "ok" then
 		self.connectfour:move(self.connectfour:get_player(), self.current_column)
 		print(self.connectfour:serialize())
-		--self:dirty(false)
+
+	elseif key == "exit" then
+		local exit_popup = subsurface(surface, area(100, 100, 400, 400))
+		local color_popup = color(255, 255, 255, 255)
+		local font_popup = font("data/fonts/DroidSans.ttf", 16, color_popup)
+		exit_popup:clear({r=255, g=255, b=255}, area(100, 100, 400, 400))
+		font_popup:draw(exit_popup, area(30,30,400,400), "Spelare X vann!")
+
 	end
 	self:dirty(true)
 	print(self.current_column)
@@ -78,13 +82,7 @@ end
 
 function ConnectFourComponent:render(surface)
 	self:dirty(false)
-	if self.connectfour:get_winner() ~= nil then
-		local winner_popup = subsurface(surface, area(100, 100, 400, 400))
-		local color_popup = color(255, 255, 255, 255)
-		local font_popup = font("data/fonts/DroidSans.ttf", 16, color_popup)
-		winner_popup:clear(coin_color_player)
-		font_popup:draw(winner_popup, area(30,30,400,400), "Spelare X vann!")
-	end
+
 
 	local coin_color_player = {r=255, g=255, b=51}
 	local coin_color_computer = {r=255, g=0, b=0}
@@ -148,6 +146,16 @@ function ConnectFourComponent:render(surface)
 		self:dirty(true)
 	end
 
+
+	if self.connectfour:get_winner() ~= nil then
+		local winner_popup = subsurface(surface, area(100, 100, 400, 400))
+		local color_popup = color(243, 137, 15, 255)
+		local font_popup = font("data/fonts/DroidSans.ttf", 16, color_popup)
+		winner_popup:clear(color_popup
+		--, area(100, 100, 400, 400)
+		)
+		font_popup:draw(winner_popup, area(30,30,400,400), "Spelare X vann!")
+	end
 	--[[local callback = function()
 		if self.connectfour:find_winner
 		print("JAG KÖR")
