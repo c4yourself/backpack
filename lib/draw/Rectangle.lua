@@ -101,7 +101,6 @@ function Rectangle.from_table(rectangle, default_rectangle)
 		width = default_rectangle.width or default_rectangle.w,
 		height = default_rectangle.height or default_rectangle.h
 	}
-	--print(rectangle.x, rectangle.y)
 
 	output.x = rectangle.x or output.x
 	output.y = rectangle.y or output.y
