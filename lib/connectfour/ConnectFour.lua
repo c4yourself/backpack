@@ -89,7 +89,6 @@ function ConnectFour:get_player()
 	if count_X + count_O >= 42 then
 		return nil
 	elseif self:get_winner() ~= nil then
-		print("Vunnit i get_player")
 		return nil
 	elseif count_X > count_O then
 		return "O"
@@ -142,10 +141,6 @@ function ConnectFour:move(player, column)
 
 	local row_1 = self:get_current_row(column)
 	self.board[row_1][column] = player
-	--local winner = self:find_winner(player, row_1, column)
-	--if winner ~= nil then
-	--	print(winner .. " vann spelet!")
-	--end
 end
 
 ---Checks if there is a winner
@@ -263,7 +258,6 @@ function ConnectFour:get_winner()
 			if player ~= nil then
 				local winner = self:find_winner(player, row+1, i)
 				if winner ~= nil then
-					print("get winner: " .. winner)
 					return winner
 				end
 			end
