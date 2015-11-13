@@ -112,21 +112,21 @@ function localprofilemanager:get_profileslist()
   end
 end
 
--- Remove a profile
+-- delete a profile
 -- @param filename representing the name of the profile to remove
 -- @return true representing remove successfully
 -- @return false representing remove unsuccessfully
 -- @usage
 -- --if localprofilemanager:remove("Anna") then
--- --  -- remove success
+-- --  -- delete success
 -- --else
--- --  -- remove fail
+-- --  -- delete fail
 -- --end
-function localprofilemanager:remove(filename)
+function localprofilemanager:delete(name, city)
   local path = utils.absolute_path("data/profile/")
   for file in lfs.dir(path) do
-    if string.match(file,filename) ~= nil then
-      local thefile = utils.absolute_path(string.format("data/profile/%s.profile", filename))
+    if string.match(file,string.format("%s_%s",name,city)) ~= nil then
+      local thefile = utils.absolute_path(string.format("data/profile/%s_%s.profile", name,city))
       if(lfs.attributes(thefile, "mode") ~= "directory") then
         resultOK, errorMsg = os.remove(thefile)
         if resultOK then

@@ -59,7 +59,7 @@ function TSVReader:get_question(question_type)
 	else
 		--print("Fail")
 	end
-
+	--localprofilemanager:delete("Anna","lodon")
 	--for i =1, #Profiles, 1 do
 	--	print(Profiles[i].get_name() .. " " .. profiles[i].get_email_address())
 	--end
