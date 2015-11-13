@@ -5,7 +5,7 @@ local View = require("lib.view.View")
 local utils = require("lib.utils")
 local subsurface = require("lib.view.SubSurface")
 local area = require("lib.draw.Rectangle")
-local font = require("lib.font.Font")
+local font = require("lib.draw.Font")
 local color = require("lib.draw.Color")
 
 local ConnectFourComponent = class("ConnectFourComponent", View)
@@ -28,6 +28,7 @@ function ConnectFourComponent:press(key)
 		repeat
 		if self.current_column == 7 then
 			self.current_column = 1
+
 		else
 			self.current_column = self.current_column + 1
 		end
@@ -54,11 +55,13 @@ function ConnectFourComponent:press(key)
 		font_popup:draw(exit_popup, area(30,30,400,400), "Spelare X vann!")
 
 	end
+	self:dirty(false)
 	self:dirty(true)
 end
 
 function ConnectFourComponent:top_row(surface, column, width_coinbox, height_coinbox)
 	local posx = 0.35*surface:get_width()
+	local posy = 0.1*surface:get_height() - 0.5*height_coinbox
 	local current_color = {r = 0, g = 0, b = 0}
 	local color = {r = 0, g = 0, b = 0}
 	local current_player = self.connectfour:get_player()
@@ -96,17 +99,18 @@ end
 function ConnectFourComponent:render(surface)
 	self:dirty(false)
 
-
 	local coin_color_player = {r=255, g=255, b=51}
 	local coin_color_computer = {r=255, g=0, b=0}
 	local temp_color
 
-	local width_coinbox = math.floor((1/7)*(0.45)*surface:get_width())
+	local	width_coinbox = math.floor((1/7)*(0.45)*surface:get_width())
 	local height_coinbox = math.floor((1/7)*(0.8)*surface:get_height())
+	print("bredd: " .. width_coinbox)
+	print("höjd: " .. height_coinbox)
 	--surface:clear({r=255, g=255, b=255}, {x=10, y=10, width = surface:get_width()*0.5, height = surface:get_height()*0.5})
 	--surface:clear({r=255, g=255, b=255}, {x=100, y=100, width = width_coinbox, height = height_coinbox})
 
-	local posy = 0.1*surface:get_height()
+	local posy = 0.1*surface:get_height()+ 0.5*height_coinbox
 
 	self:top_row(surface, self.current_column, width_coinbox, height_coinbox)
 
