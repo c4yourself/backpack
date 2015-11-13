@@ -11,7 +11,9 @@ local localprofilemanager = class("localprofilemanager")
 -- @param profile representing a profile instance
 -- @return profile representing the instance of profile
 function localprofilemanager:save(profile)
-  local path = utils.absolute_path(string.format("data/profile/%s.profile",profile:get_name()))
+  local path = utils.absolute_path(
+  string.format("data/profile/%s_%s.profile",profile:get_name(),profile:get_city())
+  )
   local file = io.open(path,"w");
   file:write("{\n")
   file:write("\t\t\"badges\": {},\n")
@@ -25,6 +27,7 @@ function localprofilemanager:save(profile)
   file:write("\t\t\"name\": \"" .. profile:get_name() .. "\",\n")
   file:write("\t\t\"password\": \"" .. profile:get_password() .. "\",\n")
   file:write("\t\t\"sex\": \"" .. profile:get_sex() .. "\",\n")
+  file:write("\t\t\"city\": \"" .. profile:get_city() .. "\",\n")
   file:write("}\n")
   file:close()
   return profile
@@ -35,10 +38,11 @@ end
 -- @param filename representing the unique identifier of a profile
 -- @return profile representing the instance of profile
 -- @return false representing the file path is illegal
-function localprofilemanager:load(profile,filename)
+function localprofilemanager:load(profile_name,profile_city)
+  local profile
   local name, email_address, date_of_birth
-  local sex, balance, experience
-  local path = utils.absolute_path(string.format("data/profile/%s.profile",filename))
+  local sex, city, balance, experience
+  local path = utils.absolute_path(string.format("data/profile/%s_%s.profile",profile_name,profile_city))
   if(lfs.attributes(path, "mode") == "file") then
     for line in io.lines(path) do
       if string.match(line,"\"name\"") ~= nil then
@@ -61,6 +65,11 @@ function localprofilemanager:load(profile,filename)
         tmp = utils.split(line," ")
         _,_,_,sex = string.find(tmp[2],"([\"'])(.-)%1")
       end
+      if string.match(line,"\"city\"") ~= nil then
+        local tmp = {}
+        tmp = utils.split(line," ")
+        _,_,_,city = string.find(tmp[2],"([\"'])(.-)%1")
+      end
       if string.match(line,"\"balance\"") ~= nil then
         balance = tonumber(string.sub(line,string.find(line," ")+1,string.find(line,",")-1))
       end
@@ -68,7 +77,7 @@ function localprofilemanager:load(profile,filename)
         experience = tonumber(string.sub(line,string.find(line," ")+1,string.find(line,",")-1))
       end
     end
-    profile = Profile(name,email_address,date_of_birth,sex)
+    profile = Profile(name,email_address,date_of_birth,sex,city)
     profile:set_balance(balance)
     profile:set_experience(experience)
     io.close()
@@ -92,7 +101,10 @@ function localprofilemanager:get_profileslist()
     end
     local profiles = {}
     for i = 1, #profiles_name, 1 do
-      profiles[i] = localprofilemanager:load(profiles[i],profiles_name[i])
+      profiles[i] = localprofilemanager:load(
+      string.sub(profiles_name[i],1,string.find(profiles_name[i],"_") - 1),
+      string.sub(profiles_name[i],string.find(profiles_name[i],"_") + 1,string.len(profiles_name[i]))
+      )
     end
     return profiles
   else

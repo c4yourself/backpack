@@ -42,17 +42,22 @@ end
 -- @return false representing don't get question from TSV file
 function TSVReader:get_question(question_type)
 	local Profile
-	--Profile = profile("Mike","Mike@gmail.com","1972-01-02","male")
+	--Profile = profile("Jack","Jack@gmail.com","1981-01-02","male","new_york")
 	--localprofilemanager:save(Profile)
-	--Profile = localprofilemanager:load(Profile,"John")
-	--Profile:set_balance(100)
-	--localprofilemanager:save(Profile)
+	--Profile = localprofilemanager:load("John","rio")
+	--if Profile ~= false then
+	--	Profile:set_balance(100)
+	--	localprofilemanager:save(Profile)
+	--end
 	local Profiles = {}
-	Profiles = localprofilemanager:get_profileslist(Profiles)
+	Profiles = localprofilemanager:get_profileslist()
 	if Profiles ~= false then
-		print("Success")
+		--print("Success")
+		for i = 1, #Profiles, 1 do
+			--print(Profiles[i]:get_name() .. " " .. Profiles[i]:get_email_address() .. " " .. Profiles[i]:get_balance())
+		end
 	else
-		print("Fail")
+		--print("Fail")
 	end
 
 	--for i =1, #Profiles, 1 do
