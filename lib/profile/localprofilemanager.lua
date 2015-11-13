@@ -12,7 +12,7 @@ local localprofilemanager = class("localprofilemanager")
 -- @return profile representing the instance of profile
 function localprofilemanager:save(profile)
   local path = utils.absolute_path(
-  string.format("data/profile/%s_%s.profile",profile:get_name(),profile:get_city())
+  string.format("data/profile/%s__%s.profile",profile:get_city(),profile:get_email_address())
   )
   local file = io.open(path,"w");
   file:write("{\n")
@@ -23,8 +23,8 @@ function localprofilemanager:save(profile)
   file:write("\t\t\"experience\": " .. profile:get_experience() .. ",\n")
   file:write("\t\t\"id\": " .. profile:get_id() .. ",\n")
   file:write("\t\t\"inventory\": {}\n")
-  file:write("\t\t\"login_token\": \"token\",\n")
-  file:write("\t\t\"name\": \"" .. profile:get_name() .. "\",\n")
+  file:write("\t\t\"login_token\": \" \",\n")
+  file:write("\t\t\"name\": \"" .. profile:get_profile_name() .. "\",\n")
   file:write("\t\t\"password\": \"" .. profile:get_password() .. "\",\n")
   file:write("\t\t\"sex\": \"" .. profile:get_sex() .. "\",\n")
   file:write("\t\t\"city\": \"" .. profile:get_city() .. "\",\n")
@@ -38,11 +38,11 @@ end
 -- @param filename representing the unique identifier of a profile
 -- @return profile representing the instance of profile
 -- @return false representing the file path is illegal
-function localprofilemanager:load(profile_name,profile_city)
+function localprofilemanager:load(profile_city, profile_email)
   local profile
   local name, email_address, date_of_birth
   local sex, city, balance, experience
-  local path = utils.absolute_path(string.format("data/profile/%s_%s.profile",profile_name,profile_city))
+  local path = utils.absolute_path(string.format("data/profile/%s__%s.profile",profile_city,profile_email))
   if(lfs.attributes(path, "mode") == "file") then
     for line in io.lines(path) do
       if string.match(line,"\"name\"") ~= nil then
@@ -102,8 +102,8 @@ function localprofilemanager:get_profileslist()
     local profiles = {}
     for i = 1, #profiles_name, 1 do
       profiles[i] = localprofilemanager:load(
-      string.sub(profiles_name[i],1,string.find(profiles_name[i],"_") - 1),
-      string.sub(profiles_name[i],string.find(profiles_name[i],"_") + 1,string.len(profiles_name[i]))
+      string.sub(profiles_name[i],1,string.find(profiles_name[i],"__") - 1),
+      string.sub(profiles_name[i],string.find(profiles_name[i],"__") + 2,string.len(profiles_name[i]))
       )
     end
     return profiles
@@ -112,21 +112,21 @@ function localprofilemanager:get_profileslist()
   end
 end
 
--- delete a profile
+-- Remove a profile
 -- @param filename representing the name of the profile to remove
 -- @return true representing remove successfully
 -- @return false representing remove unsuccessfully
 -- @usage
 -- --if localprofilemanager:remove("Anna") then
--- --  -- delete success
+-- --  -- remove success
 -- --else
--- --  -- delete fail
+-- --  -- remove fail
 -- --end
-function localprofilemanager:delete(name, city)
+function localprofilemanager:delete(profile_city,profile_email)
   local path = utils.absolute_path("data/profile/")
   for file in lfs.dir(path) do
-    if string.match(file,string.format("%s_%s",name,city)) ~= nil then
-      local thefile = utils.absolute_path(string.format("data/profile/%s_%s.profile", name,city))
+    if string.match(file,string.format("%s__%s",profile_city,profile_email)) ~= nil then
+      local thefile = utils.absolute_path(string.format("data/profile/%s__%s.profile", profile_city,profile_email))
       if(lfs.attributes(thefile, "mode") ~= "directory") then
         resultOK, errorMsg = os.remove(thefile)
         if resultOK then
