@@ -16,5 +16,26 @@ send "tftp -g -r $file $remote 9000\n"
 expect " # "
 send "tar -xf build.tar\n"
 
-expect " # "
-send "exit\n"
+# Start application
+expect -re "\n(.*?) # " {
+	set location "$expect_out(1,string)"
+}
+send "ZacCmdClient\n"
+
+expect "exit the application"
+send "killapp LuaEngine\n"
+
+expect "LuaEngine is killed" {
+	sleep 1
+} "Invalid operation" {
+	sleep 1
+}
+send "startapp LuaEngine LuaEngine\n"
+
+expect "LuaEngine is started"
+sleep 2
+send "SetInputPriority LuaEngine 10\n"
+sleep 1
+send "sendcmd LuaEngine run $location/start.lua\n"
+
+expect "Sent command to LuaEngine"
