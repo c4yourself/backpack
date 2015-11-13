@@ -26,6 +26,10 @@ function Font:__init(font_file, size, color)
 	-- that prevents garbage collection of freetype instances.
 	local font_key = string.format("%s:%s:%s", font_path, size, color:to_html())
 
+	self.path = font_path
+	self.size = size
+	self.color = color
+
 	-- If this font comibination was not found in cache, create it and store in
 	-- cache.
 	if font_cache[font_key] == nil then
@@ -36,17 +40,36 @@ function Font:__init(font_file, size, color)
 
 	-- Get freetype instance from cache
 	self.freetype = font_cache[font_key]
+
+	-- Calculate baseline to use for aligning and source surface height
+	self._glyph_offset = self:_get_glyph_offset()
 end
 
 --- Renders the given text on a new surface.
 -- @return A new surface with the given text rendered on it.
 -- @local
-function Font:_get_text_surface(text)
-	--local surface = gfx.new_surface(screen:get_width(), screen:get_height())
-	local surface = gfx.new_surface(200, 200)
-	--surface:clear({0, 255, 0, 255})
+function Font:_get_text_surface(text, width)
+	if width == nil then
+		width = screen:get_width()
+	end
+
+	-- Create a surface to render font to
+	local surface = gfx.new_surface(
+		width, math.min(self.size * 2, screen:get_height()))
+
 	self.freetype:draw_over_surface(surface, text)
 	return surface
+end
+
+function Font:_get_glyph_offset()
+	-- Write a capital I to determine baseline and top offset
+	local surface = self:_get_text_surface("I", self.size)
+
+	-- Calculate bounding box
+	local bbox = self:_get_bounding_box(surface)
+	surface:destroy()
+
+	return {top = bbox.min_y, bottom = bbox.max_y}
 end
 
 function Font:_get_bounding_box(surface)
@@ -95,22 +118,55 @@ function Font:get_bounding_box(text)
 	return bbox
 end
 
-function Font:draw(surface, location, text)
+function Font:draw(surface, rectangle, text, horizontal_align, vertical_align)
 	local text_surface = self:_get_text_surface(text)
 	local bbox = self:_get_bounding_box(text_surface)
 
-	-- If we drew no text, don't render it
+	-- If we drew no text, don't render it and d
 	if bbox == nil then
+		bbox:destroy()
 		return
 	end
 
 	local text_rectangle = Rectangle(
-		0, 0, bbox.max_x + 1, bbox.max_y + 1)
+		0,
+		0,
+		math.min(bbox.max_x + 1, rectangle.width or bbox.max_x + 1),
+		math.min(bbox.max_y + 1, rectangle.height or bbox.max_y + 1))
+
+	local x
+	if horizontal_align == nil or horizontal_align == "left" then
+		x = 0
+	elseif horizontal_align == "center" then
+		x = math.max(0, rectangle.width / 2 - bbox.max_x / 2)
+	elseif horizontal_align == "right" then
+		x = math.max(0, rectangle.width - bbox.max_x)
+	else
+		error(
+			"Invalid horizontal alignment '" .. horizontal_align .. "', " ..
+			"expected left, center or right")
+	end
+
+	local y
+	if vertical_align == nil or vertical_align == "top" then
+		y = 0
+	elseif vertical_align == "middle" then
+		y = math.max(
+			0,
+			rectangle.height / 2 - (self._glyph_offset.bottom - self._glyph_offset.top) / 2 - self._glyph_offset.top)
+	elseif vertical_align == "bottom" then
+		y = math.max(0, rectangle.height - 1 - bbox.max_y)
+	else
+		error(
+			"Invalid vertical alignment '" .. vertical_align .. "', " ..
+			"expected top, middle or bottom")
+	end
+
 
 	surface:copyfrom(
 		text_surface,
 		text_rectangle,
-		text_rectangle:translate(location.x or 0, location.y or 0),
+		text_rectangle:translate(x, y):translate(rectangle.x, rectangle.y),
 		true)
 
 	text_surface:destroy()
