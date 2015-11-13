@@ -14,7 +14,7 @@ function ConnectFourComponent:__init(remote_control)
 	View.__init(self)
 
 	self.connectfour = ConnectFour()
-	self.current_column = 3
+	self.current_column = 4
 
 	self:listen_to(
 	event.remote_control,
@@ -69,6 +69,8 @@ function ConnectFourComponent:top_row(surface, column, width_coinbox, height_coi
 	local coin_color_computer = {r=255, g=0, b=0}
 	for j = 1, 7 do
 
+
+
 		if current_player == "X" then
 			current_color = coin_color_player
 		else
@@ -83,20 +85,14 @@ function ConnectFourComponent:top_row(surface, column, width_coinbox, height_coi
 		color = {r = 0, g = 0, b = 0}
 	end
 
-	repeat
-		if self.connectfour:get_current_row(self.current_column) == 0 then
 
-			if self.current_column == 7 then
-				self.current_column = 1
-			else
-				self.current_column = self.current_column + 1
-			end
-		end
-	until self.connectfour:get_current_row(self.current_column) ~= 0
 
 end
 
 function ConnectFourComponent:render(surface)
+
+print("render")
+
 	self:dirty(false)
 
 	local coin_color_player = {r=255, g=255, b=51}
@@ -105,13 +101,11 @@ function ConnectFourComponent:render(surface)
 
 	local	width_coinbox = math.floor((1/7)*(0.45)*surface:get_width())
 	local height_coinbox = math.floor((1/7)*(0.8)*surface:get_height())
-	print("bredd: " .. width_coinbox)
-	print("höjd: " .. height_coinbox)
-	--surface:clear({r=255, g=255, b=255}, {x=10, y=10, width = surface:get_width()*0.5, height = surface:get_height()*0.5})
-	--surface:clear({r=255, g=255, b=255}, {x=100, y=100, width = width_coinbox, height = height_coinbox})
-
 	local posy = 0.1*surface:get_height()+ 0.5*height_coinbox
-
+	local posy_constant = 0.1*surface:get_height()+ 0.5*height_coinbox
+	local posx_constant = 0.35*surface:get_width()
+	print("poy: " .. posy_constant)
+	print("posx: " .. posx_constant)
 	self:top_row(surface, self.current_column, width_coinbox, height_coinbox)
 
 	for i = 1, 6 do
@@ -157,23 +151,70 @@ function ConnectFourComponent:render(surface)
 	surface:clear(coin_color_player, {x=0.1*surface:get_width(), y=0.5*surface:get_height()-1.5*height_coinbox, width = width_coinbox, height = height_coinbox})
 	surface:clear(coin_color_computer, {x=0.1*surface:get_width(), y=0.5*surface:get_height()+0.5*height_coinbox, width = width_coinbox, height = height_coinbox})
 
+	--surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/logo.png")),nil,{x=posx_constant, y=posy_constant})
+
+
 	if self.connectfour:get_player() == "O" then
 		local AI_column = self.connectfour:computer_AI()
+
+	--[[	print("innan delay")
+		local callback = utils.partial(self.delay, self, surface)
+		self.stop_timer = sys.new_timer(5000, callback)
+		print("efter delay") --]]
+
+
+
+
+
 		self.connectfour:move("O", AI_column)
+
+		repeat
+			if self.connectfour:get_current_row(self.current_column) == 0 then
+
+				if self.current_column == 7 then
+					self.current_column = 1
+				else
+					self.current_column = self.current_column + 1
+				end
+			end
+		until self.connectfour:get_current_row(self.current_column) ~= 0
+
 		self:dirty(true)
 	end
+
 
 
 	if self.connectfour:get_winner() ~= nil then
 		local winner_popup = subsurface(surface, area(100, 100, 400, 400))
 		local color_popup = color(243, 137, 15, 255)
 		local font_popup = font("data/fonts/DroidSans.ttf", 16, color_popup)
+		local winner = self.connectfour:get_winner()
 		winner_popup:clear(color_popup
-		--, area(100, 100, 400, 400)
 		)
-		font_popup:draw(winner_popup, area(30,30,400,400), "Spelare X vann!")
+		if winner == "X" then
+			winner_message = "Congratulations, you won!"
+		elseif winner == "O" then
+			winner_message = "Sorry, you lost!"
+		end
+		font_popup:draw(winner_popup, area(30,30,400,400), winner_message)
 	end
 
+	repeat
+		if self.connectfour:get_current_row(self.current_column) == 0 then
+
+			if self.current_column == 7 then
+				self.current_column = 1
+			else
+				self.current_column = self.current_column + 1
+			end
+		end
+	until self.connectfour:get_current_row(self.current_column) ~= 0
+
+--[[	function ConnectFourComponent:delay(surface)
+		print("delayar")
+		self.stop_timer:stop()
+		print("klar")
+	end --]]
 
 end
 
