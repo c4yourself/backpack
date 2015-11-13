@@ -24,9 +24,18 @@ function ListItem:__init(text_left, font, text_position_left, text_color_selecte
 --  self.icon = icon
 end
 
+function ListItem:select(status)
+	self._selected = status
+end
+
 function ListItem:render(surface)
 
-surface:clear({r=255, g=255, b=255, a=255})
+if self._selected then
+	surface:clear({r=0, g=0, b=255, a=255})
+else
+  surface:clear({r=255, g=255, b=255, a=255})
+end
+
 self.font:draw(surface, self.text_position_left, self.text_left)
 
 self:dirty(false)
