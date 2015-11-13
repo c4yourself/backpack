@@ -89,15 +89,13 @@ elif [ "$1" == "lint" ]; then
 		fi
 	done
 elif [ "$1" == "fprint" ]; then
-	for file in $(find . -name '*.lua' ! -name 'serpent.lua' ! -name 'classy.lua' ! -name 'luaunit.lua'); do
-		dots="................................................................."
+	dots="................................................................."
+	for file in $(find . -name '*.lua' ! -name 'serpent.lua' ! -name 'classy.lua' ! -name 'luaunit.lua'); do		
+	if grep -q 'print(' $file; then
 		tput setf 5; echo -n "$file "; tput sgr0
 		tput setf 1; echo -n "${dots:${#file}} "; tput sgr0
-	if grep -q 'print(' $file; then
 		tput setf 4; echo "ERROR"; tput sgr0
 		tput setf 6; echo -e "\tPrint found in file"
-	else
-		tput setf 2; echo "OK"; tput sgr0
 	fi
 	done
 elif [ "$1" == "run" -o "$1" == "" ]; then
