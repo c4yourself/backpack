@@ -15,6 +15,8 @@ local NumericalQuizView = require("views.NumericalQuizView")
 local button= require("lib.components.Button")
 local button_grid=require("lib.components.ButtonGrid")
 local color = require("lib.draw.Color")
+local CityTourView = require("views.CityTourView")
+local subSurface = require("lib.view.SubSurface")
 
 --- Constructor for CityView
 -- @param event_listener Remote control to listen to
@@ -79,6 +81,12 @@ function CityView:__init(remote_control)
 		self.buttonGrid,
 		"dirty",
 		button_callback
+	)
+	local callback = utils.partial(self.load_view, self)
+	self:listen_to(
+	event.remote_control,
+	"button_release",
+	callback
 	)
 
 end
@@ -168,6 +176,10 @@ function CityView:load_view(button)
 	elseif button == "3" then
 		print("Shut down program")
 		sys.stop()
+	elseif button == "5" then
+		local city_tour_view = SubSurface(screen,{width=screen:get_width()*0.9, height=(screen:get_height()-50)*0.9, x=screen:get_width()*0.05, y=screen:get_height()*0.05+50})
+		CityTourView:render(city_tour_view)
+		gfx.update()
 	end
 
 
