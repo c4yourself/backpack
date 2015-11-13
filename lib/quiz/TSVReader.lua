@@ -60,7 +60,7 @@ function TSVReader:get_question(question_type)
 	--end
 
 	local tmp_table = {}
-	self.filename = utils.absolute_path(string.format("data/questions/%s_geography.tsv",self.filename))
+	self.filename = utils.absolute_path(string.format("data/questions/%s.tsv",self.filename))
 	if(lfs.attributes(self.filename, "mode") == "file") then
 		for line in io.lines(self.filename) do
 			if string.sub(line,1,13) == question_type then
