@@ -174,9 +174,8 @@ function CityView:load_view(button)
 	elseif button == "3" then
 		print("Shut down program")
 		sys.stop()
-	elseif button == "9" then
-		local city_tour_view = SubSurface(screen,{width=screen:get_width()*0.86, height=screen:get_height()*0.9-100*0.9, x=screen:get_width()*0.04, y=screen:get_height()*0.05+50})
-
+	elseif button == "5" then
+		local city_tour_view = SubSurface(screen,{width=screen:get_width()*0.9, height=(screen:get_height()-50)*0.9, x=screen:get_width()*0.05, y=screen:get_height()*0.05+50})
 		CityTourView:render(city_tour_view)
 		gfx.update()
 	end
