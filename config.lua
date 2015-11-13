@@ -8,7 +8,7 @@ return {
 		--   May be either TRACE, DEBUG, WARN or ERROR
 		level = "TRACE",
 		-- Logging mode:
-		--   CONSOLE means log messages will be written to STDOUT
+		--   CONSOLE means log messages will be printed to STDOUT
 		--   UDP means log messages will be sent over UDO to listener defined below
 		--   Anything else means the dummy logger (to be used for production)
 		mode = "CONSOLE",

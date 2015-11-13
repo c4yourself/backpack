@@ -93,7 +93,7 @@ elif [ "$1" == "fprint" ]; then
 		dots="................................................................."
 		tput setf 5; echo -n "$file "; tput sgr0
 		tput setf 1; echo -n "${dots:${#file}} "; tput sgr0
-	if grep -q 'print' $file; then
+	if grep -q 'print(' $file; then
 		tput setf 4; echo "ERROR"; tput sgr0
 		tput setf 6; echo -e "\tPrint found in file"
 	else
