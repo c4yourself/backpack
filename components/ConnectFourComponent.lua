@@ -25,22 +25,26 @@ end
 
 function ConnectFourComponent:press(key)
 	if key == "right" then
+		repeat
 		if self.current_column == 7 then
 			self.current_column = 1
 		else
 			self.current_column = self.current_column + 1
 		end
+	until self.connectfour:get_current_row(self.current_column) ~= 0
 
 	elseif key == "left" then
-		if self.current_column == 1 then
-			self.current_column = 7
-		else
-			self.current_column = self.current_column - 1
-		end
+		repeat
+			if self.current_column == 1 then
+				self.current_column = 7
+			else
+				self.current_column = self.current_column - 1
+			end
+		until self.connectfour:get_current_row(self.current_column) ~= 0
+
 
 	elseif key == "ok" then
 		self.connectfour:move(self.connectfour:get_player(), self.current_column)
-		print(self.connectfour:serialize())
 
 	elseif key == "exit" then
 		local exit_popup = subsurface(surface, area(100, 100, 400, 400))
@@ -51,18 +55,15 @@ function ConnectFourComponent:press(key)
 
 	end
 	self:dirty(true)
-	print(self.current_column)
 end
 
-function ConnectFourComponent:top_row(surface, column)
+function ConnectFourComponent:top_row(surface, column, width_coinbox, height_coinbox)
 	local posx = 0.35*surface:get_width()
 	local current_color = {r = 0, g = 0, b = 0}
 	local color = {r = 0, g = 0, b = 0}
 	local current_player = self.connectfour:get_player()
 	local coin_color_player = {r=255, g=255, b=51}
 	local coin_color_computer = {r=255, g=0, b=0}
-	print(current_player)
-	print("test:" .. column)
 	for j = 1, 7 do
 
 		if current_player == "X" then
@@ -78,6 +79,18 @@ function ConnectFourComponent:top_row(surface, column)
 		posx = posx + width_coinbox
 		color = {r = 0, g = 0, b = 0}
 	end
+
+	repeat
+		if self.connectfour:get_current_row(self.current_column) == 0 then
+
+			if self.current_column == 7 then
+				self.current_column = 1
+			else
+				self.current_column = self.current_column + 1
+			end
+		end
+	until self.connectfour:get_current_row(self.current_column) ~= 0
+
 end
 
 function ConnectFourComponent:render(surface)
@@ -88,14 +101,14 @@ function ConnectFourComponent:render(surface)
 	local coin_color_computer = {r=255, g=0, b=0}
 	local temp_color
 
-	width_coinbox = (1/7)*(0.45)*surface:get_width()
-	height_coinbox = (1/7)*(0.8)*surface:get_height()
+	local width_coinbox = math.floor((1/7)*(0.45)*surface:get_width())
+	local height_coinbox = math.floor((1/7)*(0.8)*surface:get_height())
 	--surface:clear({r=255, g=255, b=255}, {x=10, y=10, width = surface:get_width()*0.5, height = surface:get_height()*0.5})
 	--surface:clear({r=255, g=255, b=255}, {x=100, y=100, width = width_coinbox, height = height_coinbox})
 
 	local posy = 0.1*surface:get_height()
 
-	self:top_row(surface, self.current_column)
+	self:top_row(surface, self.current_column, width_coinbox, height_coinbox)
 
 	for i = 1, 6 do
 		local posx = 0.35*surface:get_width()
@@ -156,20 +169,7 @@ function ConnectFourComponent:render(surface)
 		)
 		font_popup:draw(winner_popup, area(30,30,400,400), "Spelare X vann!")
 	end
-	--[[local callback = function()
-		if self.connectfour:find_winner
-		print("JAG KÖR")
-		local winner_popup = subsurface(surface, area(100, 100, 400, 400))
-		local color_popup = color(255, 255, 255, 255)
-		local font_popup = font("data/fonts/DroidSans.ttf", 16, color_popup)
-		winner_popup:clear(coin_color_player)
-		font_popup:draw(winner_popup, area(30,30,400,400), "Spelare X vann!")
-	end
-	self:listen_to(self.connectfour, "Winner_trigger_popup", callback)]]--
 
---	local popup_text = sys.new_freetype({r = 255, g = 128, b = 0, a = 255}, 22,
---	{x=100,y=100}, utils.absolute_path("data/fonts/DroidSans.ttf")) ""
---	popup_text:draw_over_surface(confirmation_popup, "Vill du verkligen avsluta?")
 
 end
 
