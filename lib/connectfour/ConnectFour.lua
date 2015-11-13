@@ -88,6 +88,9 @@ function ConnectFour:get_player()
 	--the board is full
 	if count_X + count_O >= 42 then
 		return nil
+	elseif self:get_winner() ~= nil then
+		print("Vunnit i get_player")
+		return nil
 	elseif count_X > count_O then
 		return "O"
 	elseif count_X <= count_O then
