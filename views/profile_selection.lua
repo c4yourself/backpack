@@ -74,7 +74,6 @@ local function okBtnPress()
 		elseif menu_index == 3 then
 			callCreateProfile()
 		elseif menu_index == 4 then
-			print("Shut down program")
 			sys.stop()
 		end
 	end
@@ -139,7 +138,6 @@ function profile_selection.load_view(button)
 	--	multiplechoice_quiz.render(screen)
 		gfx.update()
 	elseif button == "3" then
-		print("Shut down program")
 		sys.stop()
   end
 end
@@ -170,7 +168,6 @@ function profile_selection.render(surface)
 	roulette_background:clear({r=65, g=70, b=72})
 
   for key,value in pairs(profile_list) do --foreach Profile
-    print(profile_list[key])
 
 		local text_button = sys.new_freetype(text_color, 30, {x=120,y=(200-profile_index*diff_y+diff_y*counter)}, utils.absolute_path("data/fonts/DroidSans.ttf"))
 		local leftMenuCurrentValue = -2
