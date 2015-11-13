@@ -29,7 +29,7 @@ function CityView:__init(remote_control)
 	local button_color = color(255, 99, 0, 255)
 	local color_selected = color(255, 153, 0, 255)
 	local color_disabled = color(111, 222, 111, 255) --have not been used yet
-	local city_view_selected_color = color(0, 0, 0, 50)
+	local city_view_selected_color = color(0, 0, 0, 150)
 	local city_view_color = color(0, 0, 0, 0)
 
 	-- Creates local variables for height and width
@@ -131,10 +131,12 @@ local width = surface:get_width()
 	profile_experience:draw_over_surface(surface, self.profile.experience .. "/500")
 	profile_cash:draw_over_surface(surface, self.profile.cash)
 	city_name:draw_over_surface(surface, self.city.name)
-  surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/coinIcon.png")), nil, {x = surface:get_width()-145, y = 10, width = 30, height = 30} )
+  surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/coinIcon.png")), nil, {x = height-145, y = 10, width = 30, height = 30} )
 
   -- using the button grid to render all buttons and texts
 	self.buttonGrid:render(surface)
+	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/ParisIconSelected.png")),nil ,{x = width/3, y = 0, width=width*2/3, height=height})
+
 end
 
 function CityView:load_view(button)
