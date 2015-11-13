@@ -1,20 +1,15 @@
 --- localprofilemanager
--- @classmod Profile
+-- @classmod localprofilemanager
+
 local class = require("lib.classy")
 local lfs = require("lfs")
 local utils = require("lib.utils")
 local Profile = require("lib.profile.Profile")
 local localprofilemanager = class("localprofilemanager")
-local profiles = {}
 
----Create a profile
----usage
----local profile = require("lib.profile.Profile")
----local profiledisplay = require("lib.profile.profilemanager")
----local Profile
----Profile = profiledisplay.create_profile("John","John@gmail.com","1982-01-02","male")
----print(Profile.name .. " " .. Profile.email_address)
-
+-- Create a profile
+-- @param profile representing a profile instance
+-- @return profile representing the instance of profile
 function localprofilemanager:save(profile)
   local path = utils.absolute_path(string.format("data/profile/%s.profile",profile:get_name()))
   local file = io.open(path,"w");
@@ -34,75 +29,87 @@ function localprofilemanager:save(profile)
   file:close()
   return profile
 end
+
+-- Load a local profile
+-- @param profile representing a nil table to generate a profile instance
+-- @param filename representing the unique identifier of a profile
+-- @return profile representing the instance of profile
+-- @return false representing the file path is illegal
 function localprofilemanager:load(profile,filename)
   local name, email_address, date_of_birth
   local sex, balance, experience
   local path = utils.absolute_path(string.format("data/profile/%s.profile",filename))
-  for line in io.lines(path) do
-    if string.match(line,"\"name\"") ~= nil then
-      local tmp = {}
-      tmp = utils.split(line," ")
-      _,_,_,name = string.find(tmp[2],"([\"'])(.-)%1")
+  if(lfs.attributes(path, "mode") == "file") then
+    for line in io.lines(path) do
+      if string.match(line,"\"name\"") ~= nil then
+        local tmp = {}
+        tmp = utils.split(line," ")
+        _,_,_,name = string.find(tmp[2],"([\"'])(.-)%1")
+      end
+      if string.match(line,"\"email_address\"") ~= nil then
+        local tmp = {}
+        tmp = utils.split(line," ")
+        _,_,_,email_address = string.find(tmp[2],"([\"'])(.-)%1")
+      end
+      if string.match(line,"\"date_of_birth\"") ~= nil then
+        local tmp = {}
+        tmp = utils.split(line," ")
+        _,_,_,date_of_birth = string.find(tmp[2],"([\"'])(.-)%1")
+      end
+      if string.match(line,"\"sex\"") ~= nil then
+        local tmp = {}
+        tmp = utils.split(line," ")
+        _,_,_,sex = string.find(tmp[2],"([\"'])(.-)%1")
+      end
+      if string.match(line,"\"balance\"") ~= nil then
+        balance = tonumber(string.sub(line,string.find(line," ")+1,string.find(line,",")-1))
+      end
+      if string.match(line,"\"experience\"") ~= nil then
+        experience = tonumber(string.sub(line,string.find(line," ")+1,string.find(line,",")-1))
+      end
     end
-    if string.match(line,"\"email_address\"") ~= nil then
-      local tmp = {}
-      tmp = utils.split(line," ")
-      _,_,_,email_address = string.find(tmp[2],"([\"'])(.-)%1")
-    end
-    if string.match(line,"\"date_of_birth\"") ~= nil then
-      local tmp = {}
-      tmp = utils.split(line," ")
-      _,_,_,date_of_birth = string.find(tmp[2],"([\"'])(.-)%1")
-    end
-    if string.match(line,"\"sex\"") ~= nil then
-      local tmp = {}
-      tmp = utils.split(line," ")
-      _,_,_,sex = string.find(tmp[2],"([\"'])(.-)%1")
-    end
-    if string.match(line,"\"balance\"") ~= nil then
-      balance = tonumber(string.sub(line,string.find(line," ")+1,string.find(line,",")-1))
-    end
-    if string.match(line,"\"experience\"") ~= nil then
-      experience = tonumber(string.sub(line,string.find(line," ")+1,string.find(line,",")-1))
-    end
+    profile = Profile(name,email_address,date_of_birth,sex)
+    profile:set_balance(balance)
+    profile:set_experience(experience)
+    io.close()
+    return profile
+  else
+    return false
   end
-  profile = Profile(name,email_address,date_of_birth,sex)
-  profile:set_balance(balance)
-  profile:set_experience(experience)
-  io.close()
-  return profile
 end
 
-
----Get the profiles instances
----@param profiles_name representing the name of profiles in the data/profile folder
----usage
----------------------------------------------------------------------------------------
----local profiledisplay = require("lib.profile.profilemanager")
----local profiles = {}
----profiles = profiledisplay.get_profilescontent(profiledisplay.get_profileslist())
----for i =1, #profiles, 1 do
------modify balance
----if profiles[i].name == "Anna" then
----    profiles[i]:modify_balance(500)
----    profiles[i]:save()
----  end
----end
----------------------------------------------------------------------------------------
+-- Get the profiles instances
+-- @return profiles representing the list of profile instance
+-- @return false representing the dir is illegal
 function localprofilemanager:get_profileslist()
   local profiles_name = {}
   local path = utils.absolute_path("data/profile/")
-  for file in lfs.dir(path) do
-    if string.match(file,".profile") ~= nil then
-      table.insert(profiles_name, string.sub(file,1,string.find(file,".profile")-1))
+  if(lfs.attributes(path, "mode") == "directory") then
+    for file in lfs.dir(path) do
+      if string.match(file,".profile") ~= nil then
+        table.insert(profiles_name, string.sub(file,1,string.find(file,".profile")-1))
+      end
     end
+    local profiles = {}
+    for i = 1, #profiles_name, 1 do
+      profiles[i] = localprofilemanager:load(profiles[i],profiles_name[i])
+    end
+    return profiles
+  else
+    return false
   end
-  local profiles = {}
-  for i = 1, #profiles_name, 1 do
-    profiles[i] = localprofilemanager:load(profiles[i],profiles_name[i])
-  end
-  return profiles
 end
+
+-- Remove a profile
+-- @param filename representing the name of the profile to remove
+-- @return true representing remove successfully
+-- @return false representing remove unsuccessfully
+-- @usage
+-- --if localprofilemanager:remove("Anna") then
+-- --  -- remove success
+-- --else
+-- --  -- remove fail
+-- --end
 function localprofilemanager:remove(filename)
   local path = utils.absolute_path("data/profile/")
   for file in lfs.dir(path) do
@@ -111,12 +118,13 @@ function localprofilemanager:remove(filename)
       if(lfs.attributes(thefile, "mode") ~= "directory") then
         resultOK, errorMsg = os.remove(thefile)
         if resultOK then
-
+          return true
         else
-          
+          return false
         end
       end
     end
   end
 end
+
 return localprofilemanager

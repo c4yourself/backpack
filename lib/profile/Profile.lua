@@ -1,5 +1,15 @@
 --- Profile
 -- @classmod Profile
+-- @field name
+-- @field email_address
+-- @field date_of_birth
+-- @field sex
+-- @field balance
+-- @field experience
+-- @field password
+-- @field badges
+-- @field id
+-- @field inventory
 
 local class = require("lib.classy")
 local utils = require("lib.utils")
@@ -107,4 +117,5 @@ function Profile:modify_experience(number)
 	end
 	return self.experience
 end
+
 return Profile
