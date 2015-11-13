@@ -101,10 +101,9 @@ function ButtonGrid:press(button)
 
     if button == "down" then
 			self:indicate_downward(self.button_indicator)
-			self:dirty()
+			self:trigger("dirty")
 		elseif button == "up" then
 			self:indicate_upward(self.button_indicator)
-<<<<<<< HEAD
 			self:trigger("dirty")
 		elseif button == "right" then
 			self:indicate_rightward(self.button_indicator)
@@ -112,9 +111,6 @@ function ButtonGrid:press(button)
 		elseif button == "left" then
 			self:indicate_leftward(self.button_indicator)
 			self:trigger("dirty")
-=======
-			self:dirty()
->>>>>>> 20c60bcf8df8666fd596caacb3aa1ed56ee88274
 		elseif button == "1" then
 				--Instanciate a numerical quiz
 				local numerical_quiz_view = NumericalQuizView()
