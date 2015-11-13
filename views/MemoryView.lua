@@ -10,6 +10,10 @@ local MemoryGame = require("lib.memory.Memory")
 local Surface = require("emulator.surface")
 local utils = require("lib.utils")
 local MemoryView = class("MemoryView", View)
+local card= require("lib.components.MemoryCardComponent")
+local button_grid	=	require("lib.components.ButtonGrid")
+local color = require("lib.draw.Color")
+
 
 function MemoryView:__init()
   View.__init(self)
@@ -20,12 +24,15 @@ function MemoryView:__init()
 	self.player_moved = false
 	self.player_ok = false
 	self.listening_initiated = false
+  self.cards = {}
+  self.positions = {}
 
   --Components
 	--Instanciate a numerical input component and make the quiz listen for changes
-	self.input_surface = Surface(300,100)
-  local pairs = 8
-  self.memory = MemoryGame(pairs, false)
+  --self.views.card_comp = CardComponent(remote_control)
+--	self.card_surface = Surface(100,100)
+  self.pairs = 4
+  self.memory = MemoryGame(self.pairs, false)
 
   -- Graphics
   self.font = sys.new_freetype(
@@ -45,11 +52,10 @@ end
 --
 function MemoryView:press(key)
   if key == "right" or key == "up" or key == "down" or key == "left" then
-		-- change color on card to visualize a move
+		-- change coloir on card to visualize a move
 		--if self.player_moved then
       self.player_moved = true
 			self:dirty(true)
-      print("key is: " .. key)
 			--view.view_manager:render()
 	--	end
 	elseif key == "back" then
@@ -60,9 +66,46 @@ end
 
 --Renders MemoryView and all of its child views
 function MemoryView:render(surface)
-surface:clear({255, 0, 0, 255})
+--surface:clear({255, 0, 0, 255})
+
+-- Make screen red when clicking a button
+--  surface:clear({255, 0, 0, 255})
+
+-- Colors for buttons
+  local button_color = color(0, 128, 225, 255)
+  local color_selected = color(33, 99, 111, 255)
+  local color_disabled = color(111,222,111,255)
+  local text_color = color(55, 55, 55, 255)
+
+-- Button instance
+
+ local pos = {x=50, y=450}
+ self.pos_x = 50
+ self.pos_y = 450
+for i = 1, self.pairs*2 do
+  self.cards[i]  = card(button_color, color_selected, color_disabled, true, false, self.memory.cards[i])
+  self.pos_x = self.pos_x + 50
+  pos = {x = self.pos_x, y = self.pos_y}
+  self.positions[i] = pos
+end
+
+  local button_size = {width = 25, height = 50}
+
+-- Create button grid
+  self.buttonGrid = button_grid()
+  for i = 1, self.pairs*2 do
+  self.buttonGrid:add_button(self.positions[i], button_size, self.cards[i])
+  end
+
+-- Insert text and color to each buttonGrid
+--  card_1:set_textdata("Back to City", text_color, {x = 100, y = 450}, 30,utils.absolute_path("data/fonts/DroidSans.ttf"))
+
+  self.buttonGrid:render(surface)
+
+
 if not self.listening_initiated then
   local change_callback = utils.partial(self.render, self, surface)
+
   self.listening_initiated = true
 end
 
