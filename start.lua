@@ -31,6 +31,7 @@ end
 
 -- This function is called at the start of the program
 function onStart()
+	--menu.render(screen)
   --local city_view = CityView(event.remote_control)
 	--view.view_manager:set_view(city_view)
 
@@ -43,7 +44,5 @@ function onStart()
 
 	local city_view_2 = CityView2(event.remote_control)
 	view.view_manager:set_view(city_view_2)
-
-
 	gfx.update()
 end
