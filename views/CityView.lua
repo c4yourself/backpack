@@ -16,7 +16,6 @@ local button= require("lib.components.Button")
 local button_grid=require("lib.components.ButtonGrid")
 local color = require("lib.draw.Color")
 local CityTourView = require("views.CityTourView")
-local TravelView = require("views.TravelView")
 local subSurface = require("lib.view.SubSurface")
 
 --- Constructor for CityView
@@ -24,7 +23,7 @@ local subSurface = require("lib.view.SubSurface")
 function CityView:__init(remote_control)
 	View.__init(self)
 	self.background_path = ""
-	self.profile = {name = "Mohammed", level = 5, experience = 300, cash = 500}
+	self.profile = {name = "Mohamed", level = 5, experience = 300, cash = 500}
 	self.city = {name = "Paris"}
 	self.buttonGrid = button_grid(remote_control)
 
@@ -179,12 +178,8 @@ function CityView:load_view(button)
 		sys.stop()
 	elseif button == "5" then
 		local city_tour_view = SubSurface(screen,{width=screen:get_width()*0.9, height=(screen:get_height()-50)*0.9, x=screen:get_width()*0.05, y=screen:get_height()*0.05+50})
-		CityTourView:render(city_tour_view)
-		gfx.update()
-
-	elseif button == "9" then
-		local travel_view = SubSurface(screen,{width=screen:get_width()*0.9, height=(screen:get_height()-50)*0.9, x=screen:get_width()*0.05, y=screen:get_height()*0.05+50})
-		TravelView:render(travel_view)
+		local CT = CityTourView()
+		CT:render(city_tour_view)
 		gfx.update()
 	end
 
