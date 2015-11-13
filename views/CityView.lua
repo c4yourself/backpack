@@ -16,6 +16,7 @@ local button= require("lib.components.Button")
 local button_grid=require("lib.components.ButtonGrid")
 local color = require("lib.draw.Color")
 local CityTourView = require("views.CityTourView")
+local TravelView = require("views.TravelView")
 local subSurface = require("lib.view.SubSurface")
 
 --- Constructor for CityView
@@ -177,6 +178,11 @@ function CityView:load_view(button)
 	elseif button == "5" then
 		local city_tour_view = SubSurface(screen,{width=screen:get_width()*0.9, height=(screen:get_height()-50)*0.9, x=screen:get_width()*0.05, y=screen:get_height()*0.05+50})
 		CityTourView:render(city_tour_view)
+		gfx.update()
+
+	elseif button == "9" then
+		local travel_view = SubSurface(screen,{width=screen:get_width()*0.9, height=(screen:get_height()-50)*0.9, x=screen:get_width()*0.05, y=screen:get_height()*0.05+50})
+		TravelView:render(travel_view)
 		gfx.update()
 	end
 
