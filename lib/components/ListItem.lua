@@ -15,7 +15,7 @@ function ListItem:__init(text_left, font, text_position_left, text_color_selecte
 	self.text_position_left = text_position_left
 	--self.text_right = text_right
   self.font = font
-	self.text_color_selected = text_color_selected or text_color
+  self.text_color_selected = text_color_selected
  	self._enabled = enabled or true
   self._selected = selected or false
 	self.text_available = false
@@ -31,12 +31,16 @@ end
 function ListItem:render(surface)
 
 if self._selected then
-	surface:clear({r=0, g=0, b=255, a=255})
+--	surface:clear({r=0, g=0, b=255, a=255})
+
+    self.text_color_selected:draw(surface, self.text_position_left, self.text_left)
+
 else
-  surface:clear({r=255, g=255, b=255, a=255})
+--  surface:clear({r=255, g=255, b=255, a=255})
+		self.font:draw(surface, self.text_position_left, self.text_left)
 end
 
-self.font:draw(surface, self.text_position_left, self.text_left)
+--self.font:draw(surface, self.text_position_left, self.text_left)
 
 self:dirty(false)
 
