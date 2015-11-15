@@ -102,7 +102,7 @@ elif [ "$1" == "ffreetype" ]; then
 	dots="................................................................."
 	for file in $(find . -name '*.lua' ! -name 'Font.lua' ! -name 'main.lua' ! -name 'sys.lua' ! -name 'SysMock.lua' ! -name 'freetype.lua' ! -name 'test_mock_FreetypeMock.lua' ! -name 'FreetypeMock.lua'); do
 	if grep -q 'freetype' $file; then
-		tput setf 5; echo -n "$file "; tput sgr0
+		tput setf 4; echo -n "$file "; tput sgr0
 		tput setf 1; echo -n "${dots:${#file}} "; tput sgr0
 		tput setf 4; echo "ERROR"; tput sgr0
 		tput setf 6; echo -e "\tFreetype found in file"
