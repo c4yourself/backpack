@@ -92,6 +92,11 @@ function Font:_get_bounding_box(surface)
 	local min_x, min_y = surface:get_width() - 1, surface:get_height() - 1
 	local max_x, max_y = 0, 0
 
+	-- Use knowledge of glyph dimensions to prevent bounding box search from
+	-- exiting early when processing split letters like i and j
+	local min_y_offset = self._glyph_properties and
+		self._glyph_properties.bottom or 0
+
 	-- Keep track of number of iterations required to find bounding box
 	local iterations = 0
 
@@ -99,7 +104,7 @@ function Font:_get_bounding_box(surface)
 	for y = 0, surface:get_height() - 1 do
 		local found_pixels = false
 
-		-- Find minimum x value
+		-- Find minimum x value from left to right
 		for x = 0, surface:get_width() - 1 do
 			iterations = iterations + 1
 
@@ -107,37 +112,36 @@ function Font:_get_bounding_box(surface)
 			local _, _, _, alpha = surface:get_pixel(x, y)
 			if alpha > 0 then
 				min_x = math.min(min_x, x)
-				min_y = math.min(min_y, y)
-
 				max_x = math.max(max_x, x)
-				max_y = math.max(max_y, y)
 
 				found_pixels = true
 				break
 			end
 		end
 
-		-- Find maximum x value if we found pixels on this line
+		-- Find maximum x value if we found pixels on this line. Search from
+		-- right to left
 		if found_pixels then
-			for x = surface:get_width() - 1, 0, -1 do
+			for x = surface:get_width() - 1, max_x, -1 do
 				iterations = iterations + 1
 
 				-- If alpha value is not 0 we assume we have found text
 				local _, _, _, alpha = surface:get_pixel(x, y)
 				if alpha > 0 then
-					min_x = math.min(min_x, x)
-					min_y = math.min(min_y, y)
-
 					max_x = math.max(max_x, x)
-					max_y = math.max(max_y, y)
-
 					found_pixels = true
 					break
 				end
 			end
 		end
 
-		if not found_pixels and min_x <= max_x and min_y <= max_y then
+		-- Update y-values if we found pixels when searching horizontally
+		if found_pixels then
+			min_y = math.min(min_y, y)
+			max_y = math.max(max_y, y)
+		end
+
+		if not found_pixels and y > min_y_offset and min_x <= max_x and min_y <= max_y then
 			break
 		end
 	end
@@ -151,7 +155,8 @@ function Font:_get_bounding_box(surface)
 			max_y = max_y
 		}
 
-		logger.trace("Found text bounding box in " .. iterations .. " iterations", bbox)
+		logger.trace(
+			"Found text bounding box in " .. iterations .. " iterations", bbox)
 		return bbox
 	end
 end
