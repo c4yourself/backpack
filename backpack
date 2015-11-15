@@ -77,16 +77,37 @@ elif [ "$1" == "lint" ]; then
 		incorrect_count=$(($indented_count - $correct_count))
 
 		dots="................................................................."
-		tput setf 5; echo -n "$file "; tput sgr0
-		tput setf 1; echo -n "${dots:${#file}} "; tput sgr0
 
+
+		print_count=$(grep 'print(' "$file"|wc -l)
+		freetype_count=$(grep 'freetype' "$file"|wc -l)
+
+		if [ "$incorrect_count" -gt 0 -o "$print_count" -gt 0 -o "$freetype_count" -gt 0 ]; then
+			tput setf 5; echo -n "$file "; tput sgr0
+			tput setf 1; echo -n "${dots:${#file}} "; tput sgr0
+
+			tput setf 4; echo "ERROR"; tput sgr0
+		fi
 
 		if [ "$incorrect_count" -gt 0 ]; then
-			tput setf 4; echo "ERROR"; tput sgr0
 			tput setf 6; echo -e "\tSome lines were not correctly indented with tabs"; tput sgr0
-		else
-			tput setf 2; echo "OK"; tput sgr0
 		fi
+
+		if [ "$print_count" -gt 0 ]; then
+			tput setf 6; echo -e "\tPrint statements found"; tput sgr0
+		fi
+
+		if [ "$freetype_count" -gt 0 ]; then
+			tput setf 6; echo -e "\tFreetype used in file"; tput sgr0
+		fi
+
+
+		#if [ "$incorrect_count" -gt 0 ]; then
+		#	tput setf 4; echo "ERROR"; tput sgr0
+		#	tput setf 6; echo -e "\tSome lines were not correctly indented with tabs"; tput sgr0
+		#else
+		#	tput setf 2; echo "OK"; tput sgr0
+
 	done
 elif [ "$1" == "fprint" ]; then
 	dots="................................................................."
@@ -102,7 +123,7 @@ elif [ "$1" == "ffreetype" ]; then
 	dots="................................................................."
 	for file in $(find . -name '*.lua' ! -name 'Font.lua' ! -name 'main.lua' ! -name 'sys.lua' ! -name 'SysMock.lua' ! -name 'freetype.lua' ! -name 'test_mock_FreetypeMock.lua' ! -name 'FreetypeMock.lua'); do
 	if grep -q 'freetype' $file; then
-		tput setf 4; echo -n "$file "; tput sgr0
+		tput setf 5; echo -n "$file "; tput sgr0
 		tput setf 1; echo -n "${dots:${#file}} "; tput sgr0
 		tput setf 4; echo "ERROR"; tput sgr0
 		tput setf 6; echo -e "\tFreetype found in file"
