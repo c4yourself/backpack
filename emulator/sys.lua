@@ -54,7 +54,7 @@ end
 -- @return Path to directory where start.lua is
 -- @zenterio
 function sys.root_path()
-	return love.filesystem.getUserDirectory()
+	return love.filesystem.getWorkingDirectory()
 end
 
 --- Create new player.
