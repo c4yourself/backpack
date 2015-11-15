@@ -38,7 +38,7 @@ function TravelView:render(surface)
 	local list_item_position_left = {x=60, y=35}
 --	local list_item2_position_left = {x=20, y=5}
 --	local list_item1_color_selected = {r=255, g=255, b=255}
-	local font_color = Font("data/fonts/DroidSans.ttf", 20, Color(255, 0, 0, 255))
+	local font_color = Font("data/fonts/DroidSans.ttf", 20, Color(65, 70, 72, 255))
 	local font_color_selected = Font("data/fonts/DroidSans.ttf", 20, Color(255, 255, 255, 255))
 
 --text_left, font, text_position_left, text_color_selected, enabled, selected
@@ -59,12 +59,12 @@ function TravelView:render(surface)
 
 	local list_item4 = ListItem(
 		"Cairo",
-		font,
+		font_color,
 		list_item_position_left, font_color_selected, true, true)
 
 	local list_item5 = ListItem(
 		"Bombay",
-		font,
+		font_color,
 		list_item_position_left, font_color_selected, true, true)
 
 

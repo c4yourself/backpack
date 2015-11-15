@@ -31,12 +31,15 @@ end
 function ListComp:button_press(key)
 	if key == "up" then
 		self.current_index = math.max(self.current_index - 1, 1)
-
-		if self.current_index < self.visible_items then
-			self.start_index = 1
-		else
-			self.start_index = self.current_index - (self.visible_items - 1)
+		if self.current_index < self.start_index then
+			self.start_index = self.current_index
 		end
+
+		--if self.current_index < self.visible_items then
+		--	self.start_index = 1
+		--else
+		--	self.start_index = self.current_index - (self.visible_items - 1)
+		--end
 
 		self:dirty()
 	elseif key == "down" then
@@ -49,9 +52,6 @@ function ListComp:button_press(key)
 		self:dirty()
 	end
 
- print(self.current_index)
- print(self.start_index)
- print(self.visible_items)
 end
 
 function ListComp:add_list_item(list_item)
@@ -59,7 +59,9 @@ function ListComp:add_list_item(list_item)
 end
 
 function ListComp:render(surface)
-	surface:clear({0, 75, 153, 255})
+	--surface:clear({0, 75, 153, 255})
+	surface:clear({65, 70, 72, 255})
+	surface:clear({255, 255, 255, 255}, {x = 5, y = 5, width = surface:get_width() - 10, height = surface:get_height() - 10})
 
 --[[]
 	if self.start_indicator == true then
@@ -80,7 +82,7 @@ function ListComp:render(surface)
 ]]
 
 -- Go through the item_list to render all list_items
-	local height = surface:get_height()/self.visible_items
+	local height = (surface:get_height() - 12 - self.visible_items) /self.visible_items
 
 
 	for i = self.start_index , self.start_index + self.visible_items - 1 do
@@ -105,7 +107,7 @@ function ListComp:render(surface)
 ]]
 
 		local sub_surface = SubSurface(surface, {
-			x = 0, y = (i - 1) * height, width = surface:get_width(), height = height})
+			x = 6, y = 6 + (i - self.start_index) * (height + 1), width = surface:get_width() - 12, height = height})
 		  list_data:render(sub_surface)
 --		if list_data.listItem.text_available then
 --			self:display_text(surface, i)

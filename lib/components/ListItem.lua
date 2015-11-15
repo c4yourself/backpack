@@ -31,12 +31,13 @@ end
 function ListItem:render(surface)
 
 if self._selected then
---	surface:clear({r=0, g=0, b=255, a=255})
+		surface:clear({r=250, g=169, b=0, a=255})
 
     self.text_color_selected:draw(surface, self.text_position_left, self.text_left)
 
 else
 --  surface:clear({r=255, g=255, b=255, a=255})
+		surface:clear({r=255, g=150, b=0, a=255})
 		self.font:draw(surface, self.text_position_left, self.text_left)
 end
 
