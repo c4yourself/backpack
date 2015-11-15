@@ -24,36 +24,77 @@ function KeyboardComponent:render(surface)
 	local score_text_color = color(255, 255, 255, 255)
 	local color_selected = color(33, 99, 111, 255)
 	local color_disabled = color(111, 222, 111, 255) --have not been used yet
+	self.surface = surface
 
 	-- Instance of	all Buttons
-	buttons = {}
 	positions = {}
-	letters={"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","x","y","z","@","-","_","1","2","3","4","5","6","7","8","9","0"}
+  --"www.jochentopf.com/email/chars.html"
+		
+	self.letters={"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","x","y","z","@","-","_","1","2","3","4","5","6","7","8","9","0"}
 	mx = 0
 	my = 0
-	local button_start_location = {left=50, top=100}
-	local button_size= {width=60,height=60}
+
+	local button_size= {width=90,height=70}
 	local button_padding = 10
-	local nbr_of_buttons = {x=6, y=6}
+	self.nbr_of_buttons = {x=5, y=7}
+
+	local button_start_location = {left=((surface:get_width()/2)-(self.nbr_of_buttons["x"]*(button_size["width"]+button_padding)))/2, top=100}
 	self.buttonGrid = button_grid()
-	for i=1, nbr_of_buttons["x"]*nbr_of_buttons["y"] do
-		buttons[i] = button(button_color, color_selected, color_disabled,true,true)
+	for i=1, self.nbr_of_buttons["x"]*self.nbr_of_buttons["y"] do
+		local temp_button = button(button_color, color_selected, color_disabled,true,false)
 		positions[i] = {x=(button_start_location["left"]+((button_size["width"]+button_padding)*mx)), y=(button_start_location["top"]+((button_size["height"]+button_padding)*my))}
-		buttons[i]:set_textdata(letters[i],text_color,{x=(button_start_location["left"]+((button_size["width"]+button_padding)*mx))+button_size["height"]/4, y=(button_start_location["top"]+((button_size["height"]+button_padding)*my))+button_size["height"]/4},button_size["height"]/2,utils.absolute_path("data/fonts/DroidSans.ttf"))
+		temp_button:set_textdata(self.letters[i],text_color,{x=(button_start_location["left"]+((button_size["width"]+button_padding)*mx))+button_size["height"]/2, y=(button_start_location["top"]+((button_size["height"]+button_padding)*my))+button_size["height"]/4},button_size["height"]/2,utils.absolute_path("data/fonts/DroidSans.ttf"))
+
 		mx = mx+1
-		if (i%nbr_of_buttons["x"]==0) then
+		if (i%self.nbr_of_buttons["x"]==0) then
 			mx = 0
 			my = my+1
 		end
-		self.buttonGrid:add_button(positions[i],button_size,buttons[i])
+		self.buttonGrid:add_button(positions[i],button_size,temp_button)
 	end
-
 	self.buttonGrid:render(surface)
 
+	self.keyboard_position = self.buttonGrid.button_indicator
 end
 
 function KeyboardComponent:button_press(button)
-  logger:trace("button: " .. button)
+  --logger:trace("button: " .. button)
+	--logger:trace("position: " .. self.keyboard_position)
+	if button == "down" then
+		if (self.keyboard_position+self.nbr_of_buttons["x"] <= #self.buttonGrid.button_list) then
+			self.buttonGrid.button_list[self.keyboard_position].button:select(false)
+			self.buttonGrid.button_list[self.keyboard_position+self.nbr_of_buttons["x"]].button:select()
+			self.keyboard_position = self.keyboard_position+self.nbr_of_buttons["x"]
+			self.buttonGrid:render(self.surface)
+			gfx.update()
+		end
+	elseif button == "up" then
+		if (self.keyboard_position-self.nbr_of_buttons["x"] >= 1) then
+			self.buttonGrid.button_list[self.keyboard_position].button:select(false)
+			self.buttonGrid.button_list[self.keyboard_position-self.nbr_of_buttons["x"]].button:select()
+			self.keyboard_position = self.keyboard_position-self.nbr_of_buttons["x"]
+			self.buttonGrid:render(self.surface)
+			gfx.update()
+		end
+	elseif button == "right" then
+		if (self.keyboard_position%self.nbr_of_buttons["x"] ~= 0) then
+			self.buttonGrid.button_list[self.keyboard_position].button:select(false)
+			self.buttonGrid.button_list[self.keyboard_position+1].button:select()
+			self.keyboard_position = self.keyboard_position+1
+			self.buttonGrid:render(self.surface)
+			gfx.update()
+		end
+	elseif button == "left" then
+		if (self.keyboard_position%self.nbr_of_buttons["x"] ~= 1) then
+			self.buttonGrid.button_list[self.keyboard_position].button:select(false)
+			self.buttonGrid.button_list[self.keyboard_position-1].button:select()
+			self.keyboard_position = self.keyboard_position-1
+			self.buttonGrid:render(self.surface)
+			gfx.update()
+		end
+	elseif button == "ok" then
+		logger:trace("you have choosen:" .. self.letters[self.keyboard_position])
+	end
 end
 
 function KeyboardComponent:set_active(active)

@@ -1,6 +1,5 @@
 --- Base class for SplashView
--- A SplashView is the input field in a numerical quiz. It responds
--- to numerical input on the remote.
+-- SplashView is the View that shows as the box starts up
 -- @classmod SplashView
 
 local class = require("lib.classy")
