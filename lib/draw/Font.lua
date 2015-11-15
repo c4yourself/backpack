@@ -35,14 +35,14 @@ function Font:__init(font_file, size, color)
 	if font_cache[font_key] == nil then
 		logger.trace("Creating new freetype for font:", font_path)
 		font_cache[font_key] = sys.new_freetype(
-		color:to_table(), size, {x = 0, y = 0}, font_path)
+			color:to_table(), size, {x = 0, y = 0}, font_path)
 	end
 
 	-- Get freetype instance from cache
 	self.freetype = font_cache[font_key]
 
 	-- Calculate baseline to use for aligning and source surface height
-	self._glyph_offset = self:_get_glyph_offset()
+	self._glyph_properties = self:_get_glyph_properties()
 end
 
 --- Renders the given text on a new surface.
@@ -50,40 +50,62 @@ end
 -- @local
 function Font:_get_text_surface(text, width)
 	if width == nil then
-		width = screen:get_width()
+		-- Default to the greatest probable size, based on the width of "M"
+		width = math.min(
+			#text * self._glyph_properties.width + self._glyph_properties.left,
+			screen:get_width())
 	end
 
+	-- Calculate a sane default height
+	local height = math.min(
+		2 * self.size,
+		self.size * 2, screen:get_height())
+
 	-- Create a surface to render font to
-	local surface = gfx.new_surface(
-		width, math.min(self.size * 2, screen:get_height()))
+	local surface = gfx.new_surface(width, height)
+
+	-- Needed since the surface is not necessarily clean. It can be a previously
+	-- destroyed surface, or garbage memory.
+	surface:clear({0, 0, 0, 0})
 
 	self.freetype:draw_over_surface(surface, text)
 	return surface
 end
 
-function Font:_get_glyph_offset()
-	-- Write a capital I to determine baseline and top offset
-	local surface = self:_get_text_surface("I", self.size)
-
-	-- Calculate bounding box
+function Font:_get_glyph_properties()
+	-- Write a capital M to determine baseline, top offset and width
+	local surface = self:_get_text_surface("M", self.size)
 	local bbox = self:_get_bounding_box(surface)
 	surface:destroy()
 
-	return {top = bbox.min_y, bottom = bbox.max_y}
+	return {
+		top = bbox.min_y,
+		bottom = bbox.max_y,
+		left = bbox.min_x,
+		right = bbox.max_x,
+		width = bbox.max_x - bbox.min_x,
+		height = bbox.max_y - bbox.min_y
+	}
 end
 
 function Font:_get_bounding_box(surface)
 	local min_x, min_y = surface:get_width() - 1, surface:get_height() - 1
 	local max_x, max_y = 0, 0
 
+	-- Keep track of number of iterations required to find bounding box
+	local iterations = 0
+
 	-- Search for bounding box
-	local default_color = Color(0, 0, 0, 0)
 	for y = 0, surface:get_height() - 1 do
 		local found_pixels = false
-		for x = 0, surface:get_width() - 1 do
-			local current_color = Color(surface:get_pixel(x, y))
 
-			if current_color ~= default_color then
+		-- Find minimum x value
+		for x = 0, surface:get_width() - 1 do
+			iterations = iterations + 1
+
+			-- If alpha value is not 0 we assume we have found text
+			local _, _, _, alpha = surface:get_pixel(x, y)
+			if alpha > 0 then
 				min_x = math.min(min_x, x)
 				min_y = math.min(min_y, y)
 
@@ -91,6 +113,27 @@ function Font:_get_bounding_box(surface)
 				max_y = math.max(max_y, y)
 
 				found_pixels = true
+				break
+			end
+		end
+
+		-- Find maximum x value if we found pixels on this line
+		if found_pixels then
+			for x = surface:get_width() - 1, 0, -1 do
+				iterations = iterations + 1
+
+				-- If alpha value is not 0 we assume we have found text
+				local _, _, _, alpha = surface:get_pixel(x, y)
+				if alpha > 0 then
+					min_x = math.min(min_x, x)
+					min_y = math.min(min_y, y)
+
+					max_x = math.max(max_x, x)
+					max_y = math.max(max_y, y)
+
+					found_pixels = true
+					break
+				end
 			end
 		end
 
@@ -101,12 +144,15 @@ function Font:_get_bounding_box(surface)
 
 	-- Only return bounding box if we actually found something
 	if min_x <= max_x and min_y <= max_y then
-		return {
+		local bbox = {
 			min_x = min_x,
 			min_y = min_y,
 			max_x = max_x,
 			max_y = max_y
 		}
+
+		logger.trace("Found text bounding box in " .. iterations .. " iterations", bbox)
+		return bbox
 	end
 end
 
@@ -118,6 +164,24 @@ function Font:get_bounding_box(text)
 	return bbox
 end
 
+
+--- Draw this `text` on the given `surface` relative to the given `rectangle`.
+-- `horizontal_align` and `vertical_align` can be used to position the text
+-- withing the rectangle.
+--
+-- @param surface Surface to draw on.
+-- @param rectangle Rectangle to draw relative to. The rectangle's X and Y
+--                  coordinate determines where on the surface the text should
+--                  be drawn. The rectangle width and height determines the
+--                  maximum width and height the text will occupy. This is mostly
+--                  used in conjunction with horizontal and vertical alignment.
+--                  The alignment options work relative to the rectangle.
+-- @param text Text to draw
+-- @param[opt] horizontal_align Horizontal alignment relative to the rectangle.
+--                              May be left, center or right. Default value is
+--                              left.
+-- @param[opt] vertical_align Vertical alignment relative to the rectangle. May
+--                            be top, middle or bottom. Default value is top.
 function Font:draw(surface, rectangle, text, horizontal_align, vertical_align)
 	local text_surface = self:_get_text_surface(text)
 	local bbox = self:_get_bounding_box(text_surface)
@@ -153,7 +217,7 @@ function Font:draw(surface, rectangle, text, horizontal_align, vertical_align)
 	elseif vertical_align == "middle" then
 		y = math.max(
 			0,
-			rectangle.height / 2 - (self._glyph_offset.bottom - self._glyph_offset.top) / 2 - self._glyph_offset.top)
+			rectangle.height / 2 - (self._glyph_properties.bottom - self._glyph_properties.top) / 2 - self._glyph_properties.top)
 	elseif vertical_align == "bottom" then
 		y = math.max(0, rectangle.height - 1 - bbox.max_y)
 	else
@@ -161,7 +225,6 @@ function Font:draw(surface, rectangle, text, horizontal_align, vertical_align)
 			"Invalid vertical alignment '" .. vertical_align .. "', " ..
 			"expected top, middle or bottom")
 	end
-
 
 	surface:copyfrom(
 		text_surface,
