@@ -45,14 +45,12 @@ function multiplechoice_quiz.render(surface)
 		surface:fill(buttonColor, {width=200, height=60, x=850, y=400})
 		choiceButton4:draw_over_surface(surface,"(4)." .. mulchoice_quiz.questions[i].Choices[4])
 		last_check=i
-		--print (mulchoice_quiz.questions[i].question)
 			event.remote_control:on("button_release", function(key)
 				--check last question i answer
 				if key=="right" and last_check==i  then
 					for j=1,#user_input,1 do
 						answer[j]=tonumber(string.sub(user_input,j,j))
 					end
-					print(mulchoice_quiz.questions[i]:is_correct(answer))
 					if mulchoice_quiz.questions[i]:is_correct(answer)==true then
 						correct_answer_number=correct_answer_number+1
 						surface:clear(color)
@@ -69,7 +67,6 @@ function multiplechoice_quiz.render(surface)
 				elseif key=="right" and last_check==i+1 and end_flag~=1 then
 					if i<10  then
 						i=i+1
-						print (mulchoice_quiz.questions[i].question)
 						surface:clear(color)
 						font:draw_over_surface(screen,i .. "." .. mulchoice_quiz.questions[i].question)
 						surface:fill(buttonColor, {width=200, height=60, x=100, y=400})

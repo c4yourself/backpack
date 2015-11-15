@@ -151,11 +151,9 @@ function CityView2:load_view(button)
 		-- TODO ^This should be done by a subsurface in the final version
 		gfx.update()
 	elseif button == "3" then
-		print("Shut down program")
 		sys.stop()
 	elseif button == "4" then
 		-- Only for testing
-		print("Swapping to profile selection")
 
 		--profile_selection.render(screen)
 

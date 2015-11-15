@@ -91,7 +91,7 @@ function CityView:load_view(button)
 		multiplechoice_quiz.render(screen)
 		gfx.update()
 	elseif button == "3" then
-		print("Shut down program")
+
 		sys.stop()
 	end
 end

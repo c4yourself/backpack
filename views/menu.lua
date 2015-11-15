@@ -16,12 +16,10 @@ function menu.load_view(button)
 		multiplechoice_quiz.render(screen)
 		gfx.update()
 	elseif button == "3" then
-		print("Shut down program")
 		sys.stop()
 
 	elseif button == "4" then
 		-- Only for testing
-		print("Swapping to profile selection")
 		profile_selection.render(screen)
 		--local prof_sel = profile_selection()
 		--view.view_manager:set_view(prof_sel)

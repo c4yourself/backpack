@@ -97,7 +97,6 @@ end
 function TSVReader:generate_question(count)
 	seed = self.generate_random(#self.question_index,#self.question_index)
 	count = self.question_index[seed[count]]
-	--print(string.format("count=%d",count))
 	local question = MultipleChoiceQuestion(self.image_path,self.questions_table[count][1],self.correct_answers[count],self.choices[count])
 	return question
 end
