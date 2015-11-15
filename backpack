@@ -51,8 +51,14 @@ elif [ "$1" == "export" ]; then
 	# Read box IP from config
 	box_ip=$(get_config 'box_ip')
 
-	echo "Packing local files"
-	tar -cf build.tar start.lua config.lua lib/ data/ views/ components/
+	# Get which file to use as start.lua file. Default is start.lua
+	start_file="start.lua"
+	if [ "$2" != "" ]; then
+		start_file="$2"
+	fi
+
+	echo "Packing local files, using $start_file as main file"
+	tar --transform="flags=r;s|$start_file|start.lua|" -cf build.tar "$start_file" config.lua lib/ data/ views/ components/
 
 	echo "Starting TFTP server on $ip:9000"
 	python -c 'import tftpy; s = tftpy.TftpServer("."); s.listen("0.0.0.0", 9000)' &
