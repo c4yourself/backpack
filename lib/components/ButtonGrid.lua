@@ -143,7 +143,7 @@ function ButtonGrid:press(button)
 	end
 end
 
-	collectgarbage()  --ensure that memory-leak does not occur
+	--collectgarbage()  --ensure that memory-leak does not occur
 	-- print out the memory usage in KB
 	print("the memory usage is " .. collectgarbage("count")*1024)
 
