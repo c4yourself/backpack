@@ -188,27 +188,22 @@ end
 -- @param[opt] vertical_align Vertical alignment relative to the rectangle. May
 --                            be top, middle or bottom. Default value is top.
 function Font:draw(surface, rectangle, text, horizontal_align, vertical_align)
-	local text_surface = self:_get_text_surface(text)
-	local bbox = self:_get_bounding_box(text_surface)
-
-	-- If we drew no text, don't render it and d
-	if bbox == nil then
-		bbox:destroy()
+	-- Don't draw empty text strings
+	if text:gsub(" ", "") == "" then
 		return
 	end
 
-	local text_rectangle = Rectangle(
-		0,
-		0,
-		math.min(bbox.max_x + 1, rectangle.width or bbox.max_x + 1),
-		math.min(bbox.max_y + 1, rectangle.height or bbox.max_y + 1))
+	local text_surface = self:_get_text_surface(text)
+	local bbox
 
 	local x
 	if horizontal_align == nil or horizontal_align == "left" then
 		x = 0
 	elseif horizontal_align == "center" then
+		bbox = bbox or self:_get_bounding_box(text_surface)
 		x = math.max(0, rectangle.width / 2 - bbox.max_x / 2)
 	elseif horizontal_align == "right" then
+		bbox = bbox or self:_get_bounding_box(text_surface)
 		x = math.max(0, rectangle.width - bbox.max_x)
 	else
 		error(
@@ -220,16 +215,24 @@ function Font:draw(surface, rectangle, text, horizontal_align, vertical_align)
 	if vertical_align == nil or vertical_align == "top" then
 		y = 0
 	elseif vertical_align == "middle" then
+		local glyph_data = self._glyph_properties
 		y = math.max(
 			0,
-			rectangle.height / 2 - (self._glyph_properties.bottom - self._glyph_properties.top) / 2 - self._glyph_properties.top)
+			rectangle.height / 2 - (glyph_data.bottom - glyph_data.top) / 2 - glyph_data.top)
 	elseif vertical_align == "bottom" then
+		bbox = bbox or self:_get_bounding_box(text_surface)
 		y = math.max(0, rectangle.height - 1 - bbox.max_y)
 	else
 		error(
 			"Invalid vertical alignment '" .. vertical_align .. "', " ..
 			"expected top, middle or bottom")
 	end
+
+	local text_rectangle = Rectangle(
+		0,
+		0,
+		math.min(text_surface:get_width(), rectangle.width or text_surface:get_width()),
+		math.min(text_surface:get_height(), rectangle.height or text_surface:get_height()))
 
 	surface:copyfrom(
 		text_surface,
