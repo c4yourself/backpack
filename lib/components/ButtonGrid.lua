@@ -321,7 +321,7 @@ function ButtonGrid:indicate_rightward(button_indicator)
 	local sel_central_x = button_list[indicator].x + math.floor(button_list[indicator].width/2)
 	local sel_central_y = button_list[indicator].y + math.floor(button_list[indicator].height/2)
 	local nearest_button_index = nil
-	local corner_position = {x=0,y=0}
+	local corner_position = {x = 0, y = button_list[indicator].y}
 
 	for i=1, #button_list do
 		if button_list[i].x >= button_list[indicator].x + button_list[indicator].width then
@@ -376,7 +376,7 @@ function ButtonGrid:indicate_leftward(button_indicator, direction)
 	local sel_central_x = button_list[indicator].x + math.floor(button_list[indicator].width/2)
 	local sel_central_y = button_list[indicator].y + math.floor(button_list[indicator].height/2)
 	local nearest_button_index = nil
-	local corner_position = {x=1280,y=0}
+	local corner_position = {x = 1280, y = button_list[indicator].y}
 	local condition = nil
 
 	for i=1, #button_list do
