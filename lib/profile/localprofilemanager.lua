@@ -17,13 +17,13 @@ function localprofilemanager:save(profile)
   local file = io.open(path,"w");
 
   file:write("{\n")
-  file:write("\t\t\"badges\": {},\n")
+  file:write("\t\t\"badges\": " .. profile:get_badges_string() .. ",\n")
   file:write("\t\t\"balance\": " .. profile:get_balance() .. ",\n")
   file:write("\t\t\"date_of_birth\": \"" .. profile:get_date_of_birth() .. "\",\n")
   file:write("\t\t\"email_address\": \"" .. profile:get_email_address() .. "\",\n")
   file:write("\t\t\"experience\": " .. profile:get_experience() .. ",\n")
   file:write("\t\t\"id\": " .. profile:get_id() .. ",\n")
-  file:write("\t\t\"inventory\": {}\n")
+  file:write("\t\t\"inventory\": " .. profile:get_inventory_string() .. ",\n")
   file:write("\t\t\"login_token\": \" \",\n")
   file:write("\t\t\"name\": \"" .. profile:get_profile_name() .. "\",\n")
   file:write("\t\t\"password\": \"" .. profile:get_password() .. "\",\n")
@@ -152,4 +152,5 @@ function localprofilemanager:delete(profile_city,profile_email)
     end
   end
 end
+
 return localprofilemanager

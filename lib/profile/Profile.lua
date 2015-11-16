@@ -107,15 +107,15 @@ function Profile:get_badges()
 	return self.badges
 end
 -- Get a string of badges
-function Profile:get_badgesstring()
+function Profile:get_badges_string()
 	local tmp = string.format("%s",self.badges[1])
 	for i = 2, #self.badges, 1 do
 		tmp = string.format("%s,%s",tmp,self.badges[i])
 	end
-	return string.format("{%s}",tmp)
+	return string.format("[%s]",tmp)
 end
 -- Get a string of inventory
-function Profile:get_inventorystring()
+function Profile:get_inventory_string()
 	local tmp = string.format("\"1\": %s",self.inventory[1])
 	for i = 2, #self.inventory, 1 do
 		tmp = string.format("%s, \"%s\": %s",tmp,i,self.inventory[i])
@@ -143,13 +143,21 @@ function Profile:set_password(password)
 end
 -- set badges from server
 -- @param badges representing badges of the profile from server database
-function Profile:set_badges(badges)
-	self.badges = badges
+function Profile:set_badges(badges_string)
+	local tmp = {}
+	tmp = utils.split(string.sub(badges_string,2, string.len(badges_string) - 1),",")
+	for i = 1, #tmp, 1 do
+		table.insert(self.badges,tonumber(tmp[i]))
+	end
 end
 -- set inventory from server
 -- @param inventory representing inventory of the profile from server database
-function Profile:set_inventory(inventory)
-	self.inventory = inventory
+function Profile:set_inventory(inventory_string)
+	local tmp = {}
+	tmp = utils.split(string.sub(inventory_string,string.find(inventory_string,"{") + 1,string.find(inventory_string,"}") - 1),",")
+	for i=1, #tmp, 1 do
+		table.insert(self.inventory,tonumber(string.sub(tmp[i],string.find(tmp[i]," ") + 1,string.len(tmp[i]))))
+	end
 end
 -- set id from server
 -- @param id representing id of the profile from server database
