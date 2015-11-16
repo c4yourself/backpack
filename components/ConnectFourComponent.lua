@@ -99,8 +99,6 @@ end
 
 function ConnectFourComponent:render(surface)
 
-print("render")
-
 	self:dirty(false)
 
 	--btn
@@ -129,8 +127,6 @@ print("render")
 	local posy = 0.1*surface:get_height()+ 0.5*height_coinbox
 	local posy_constant = 0.1*surface:get_height()+ 0.5*height_coinbox
 	local posx_constant = 0.35*surface:get_width()
-	print("poy: " .. posy_constant)
-	print("posx: " .. posx_constant)
 	self:top_row(surface, self.current_column, width_coinbox, height_coinbox)
 
 	for i = 1, 6 do
@@ -179,10 +175,10 @@ print("render")
 		local AI_column = self.connectfour:computer_AI()
 
 
-	--[[	print("innan delay")
+	--[[
 		local callback = utils.partial(self.delay, self, surface)
 		self.stop_timer = sys.new_timer(5000, callback)
-		print("efter delay") --]]
+		]]
 
 
 
@@ -234,10 +230,8 @@ print("render")
 	until self.connectfour:get_current_row(self.current_column) ~= 0
 
 --[[	function ConnectFourComponent:delay(surface)
-		print("delayar")
 		self.stop_timer:stop()
-		print("klar")
-	end --]]
+	end ]]
 
 end
 

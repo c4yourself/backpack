@@ -12,18 +12,15 @@ local Profile = require("lib.profile.Profile")
 local profilesynchronizer = ProfileSynchronizer()
 local token = profilesynchronizer:login("Test@gmail.com","password")
 if token["error"] then
-	print(token["message"])
 else
 	local profile_test = profilesynchronizer:get_profile(token)
 	if profile_test["error"] then
-		print(profile_test["message"])
 	else
 		profile_test:set_balance(2000)
 		profile_test:set_id(0)
 		profile_test.email_address = "Test3@gmail.com"
 		profile_test = profilesynchronizer:save_profile(profile_test)
 		if profile_test["error"] then
-			print(profile_test["message"])
 		end
 	end
 end
