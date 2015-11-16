@@ -15,6 +15,7 @@ function localprofilemanager:save(profile)
   string.format("data/profile/%s__%s.profile",profile:get_city(),profile:get_email_address())
   )
   local file = io.open(path,"w");
+
   file:write("{\n")
   file:write("\t\t\"badges\": {},\n")
   file:write("\t\t\"balance\": " .. profile:get_balance() .. ",\n")
@@ -30,6 +31,7 @@ function localprofilemanager:save(profile)
   file:write("\t\t\"city\": \"" .. profile:get_city() .. "\",\n")
   file:write("}\n")
   file:close()
+
   return profile
 end
 
@@ -43,6 +45,7 @@ function localprofilemanager:load(profile_city, profile_email)
   local name, email_address, date_of_birth
   local sex, city, balance, experience
   local path = utils.absolute_path(string.format("data/profile/%s__%s.profile",profile_city,profile_email))
+
   if(lfs.attributes(path, "mode") == "file") then
     for line in io.lines(path) do
       if string.match(line,"\"name\"") ~= nil then
@@ -50,33 +53,40 @@ function localprofilemanager:load(profile_city, profile_email)
         tmp = utils.split(line," ")
         _,_,_,name = string.find(tmp[2],"([\"'])(.-)%1")
       end
+
       if string.match(line,"\"email_address\"") ~= nil then
         local tmp = {}
         tmp = utils.split(line," ")
         _,_,_,email_address = string.find(tmp[2],"([\"'])(.-)%1")
       end
+
       if string.match(line,"\"date_of_birth\"") ~= nil then
         local tmp = {}
         tmp = utils.split(line," ")
         _,_,_,date_of_birth = string.find(tmp[2],"([\"'])(.-)%1")
       end
+
       if string.match(line,"\"sex\"") ~= nil then
         local tmp = {}
         tmp = utils.split(line," ")
         _,_,_,sex = string.find(tmp[2],"([\"'])(.-)%1")
       end
+
       if string.match(line,"\"city\"") ~= nil then
         local tmp = {}
         tmp = utils.split(line," ")
         _,_,_,city = string.find(tmp[2],"([\"'])(.-)%1")
       end
+
       if string.match(line,"\"balance\"") ~= nil then
         balance = tonumber(string.sub(line,string.find(line," ")+1,string.find(line,",")-1))
       end
+
       if string.match(line,"\"experience\"") ~= nil then
         experience = tonumber(string.sub(line,string.find(line," ")+1,string.find(line,",")-1))
       end
     end
+
     profile = Profile(name,email_address,date_of_birth,sex,city)
     profile:set_balance(balance)
     profile:set_experience(experience)
@@ -93,18 +103,20 @@ end
 function localprofilemanager:get_profileslist()
   local profiles_name = {}
   local path = utils.absolute_path("data/profile/")
+
   if(lfs.attributes(path, "mode") == "directory") then
     for file in lfs.dir(path) do
       if string.match(file,".profile") ~= nil then
         table.insert(profiles_name, string.sub(file,1,string.find(file,".profile")-1))
       end
     end
+
     local profiles = {}
+
     for i = 1, #profiles_name, 1 do
       profiles[i] = localprofilemanager:load(
       string.sub(profiles_name[i],1,string.find(profiles_name[i],"__") - 1),
-      string.sub(profiles_name[i],string.find(profiles_name[i],"__") + 2,string.len(profiles_name[i]))
-      )
+      string.sub(profiles_name[i],string.find(profiles_name[i],"__") + 2,string.len(profiles_name[i])))
     end
     return profiles
   else
@@ -124,9 +136,11 @@ end
 -- --end
 function localprofilemanager:delete(profile_city,profile_email)
   local path = utils.absolute_path("data/profile/")
+
   for file in lfs.dir(path) do
     if string.match(file,string.format("%s__%s",profile_city,profile_email)) ~= nil then
       local thefile = utils.absolute_path(string.format("data/profile/%s__%s.profile", profile_city,profile_email))
+
       if(lfs.attributes(thefile, "mode") ~= "directory") then
         resultOK, errorMsg = os.remove(thefile)
         if resultOK then
