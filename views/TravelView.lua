@@ -10,13 +10,20 @@ local SubSurface = require("lib.view.SubSurface")
 local ListItem = require("lib.components.ListItem")
 local ListComp =	require("lib.components.ListComp")
 local TravelView = class("TravelView", View)
+local WorldMap = require("views.WorldMapView")
 
 function TravelView:__init(remote_control)
 	View.__init(self)
 
---	self.route_list = ListComp()
---	self.route_list:add_list_item(listItem("New york"))
---	self.route_list:add_list_item(listItem("Tokyo"))
+	--	self.route_list = ListComp()
+	--	self.route_list:add_list_item(listItem("New york"))
+	--	self.route_list:add_list_item(listItem("Tokyo"))
+	local callback = utils.partial(self._travel, self)
+	self:listen_to(
+	event.remote_control,
+	"button_release",
+	callback
+	)
 
 end
 
@@ -102,7 +109,16 @@ function TravelView:render(surface)
 	local list_comp_surface = SubSurface(surface,{width=450, height=300, x=20, y=50})
 	self.list_comp:render(list_comp_surface)
 	self.list_comp:on("dirty", function() self.list_comp:render(list_comp_surface); gfx.update() end)
+
+
 end
 
+function TravelView:_travel(button)
+	print("jannebanan")
+	if button == "7" then
+		local wm = WorldMap()
+		wm:render(screen, "paris", "new_york", "aeroplane", self )
+	end
+end
 
 return TravelView
