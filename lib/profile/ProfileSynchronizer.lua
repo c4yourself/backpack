@@ -16,61 +16,6 @@ function ProfileSynchronizer:__init()
 
 end
 
---Test function - not used
-function ProfileSynchronizer:test()
-
-		local s = require("lib.serpent")
-		local json_request =  [[{"hash":"]].. hash.hash256("c4y0ur5elf")..[["}]]
-	  local json_response = { }
-
-
-	  local request = http.request
-	  {
-	    url = self.url,
-	    method = "POST",
-	    headers =
-	    {
-	      ["Content-Type"] = "application/json",
-				['content-length'] = string.len(json_request)
-	    },
-	    source = ltn12.source.string(json_request),
-	    sink = ltn12.sink.table(json_response)
-	  }
-	  local result = table.concat(json_response)
-
-end
-
--- Login which receives the token for a given email and password
-function ProfileSynchronizer:login(email, password)
-
-
-	local json_request =  [[{"email":"]]..email..[[","password":"]]..password..[[","zdata_hash":"49aac7d4ad14540a91c14255ea1288e2fdc9a54e53f01d15371e81345f5e3646"}]]
-  local json_response = { }
-
-
-  local request = http.request
-  {
-    url = self.url..self.login_url,
-    method = "POST",
-    headers =
-    {
-      ["Content-Type"] = "application/json",
-			['content-length'] = string.len(json_request)
-    },
-    source = ltn12.source.string(json_request),
-    sink = ltn12.sink.table(json_response)
-  }
-  local result = table.concat(json_response)
-	local return_table,pos,err = json.decode(result, 1, nil)
-
-	if err then
-		return err
-	else
-		return return_table.profile_token
-	end
-
-end
-
 -- Local function to create an instance of the profile given the data
 local function create_existing_profile(data)
 	new_profile = Profile(data.name, data.email_address, data.date_of_birth, data.sex, data.current_city)
@@ -81,29 +26,72 @@ local function create_existing_profile(data)
 	return new_profile
 end
 
--- Returns an instance of the profile given a token
-function ProfileSynchronizer:get_profile(token)
+-- Local function for all server comnmunication given data and url
+local function server_communication(data, url_extension)
+	--Base URL for server location
+	local url_base = "http://localhost:5000"
 
-	local token_data =  [[{"profile_token":"]]..token..[[","zdata_hash":"49aac7d4ad14540a91c14255ea1288e2fdc9a54e53f01d15371e81345f5e3646"}]]
-  local profile_body = { }
+	-- return variable
+	local json_response = { }
 
-  local result, code = http.request
+	-- Do request to server
+  local request = http.request
   {
-    url = self.url..self.get_profile_url,
+    url = url_base..url_extension,
     method = "POST",
     headers =
     {
       ["Content-Type"] = "application/json",
-			['content-length'] = string.len(token_data)
+			['content-length'] = string.len(data)
     },
-    source = ltn12.source.string(token_data),
-    sink = ltn12.sink.table(profile_body)
+    source = ltn12.source.string(data),
+    sink = ltn12.sink.table(json_response)
   }
-  local result = table.concat(profile_body)
-	local return_table,pos,err = json.decode(result, 1, nil)
-	local return_profile = create_existing_profile(return_table)
 
-	return return_profile
+	-- Concatenate the result
+  local result = table.concat(json_response)
+	return result
+end
+
+-- Login which receives the token for a given email and password
+function ProfileSynchronizer:login(email, password)
+
+	-- Json request for login
+	local json_request =  [[{"email":"]]..email..[[","password":"]]..password..[[","zdata_hash":"49aac7d4ad14540a91c14255ea1288e2fdc9a54e53f01d15371e81345f5e3646"}]]
+
+	result = server_communication(json_request, self.login_url)
+
+	local return_table,pos,err = json.decode(result, 1, nil)
+
+	if err then
+		return err
+	else
+		return return_table.profile_token
+	end
+
+end
+
+
+
+-- Returns an instance of the profile given a token
+function ProfileSynchronizer:get_profile(token)
+	-- Json request for token data
+	local token_data =  [[{"profile_token":"]]..token..[[","zdata_hash":"49aac7d4ad14540a91c14255ea1288e2fdc9a54e53f01d15371e81345f5e3646"}]]
+
+	-- Returned result
+  result = server_communication(token_data, self.get_profile_url)
+
+	-- Decode the result
+	local return_table,pos,err = json.decode(result, 1, nil)
+
+	-- Some very basic error handling
+	if err then
+		return err
+	else
+		-- Create the profile to return
+		local return_profile = create_existing_profile(return_table)
+
+		return return_profile
 end
 
 -- Deletes the profile given email, password and token
@@ -113,6 +101,7 @@ end
 -- Saves the profile (if the ID is 0) or updates a given profile
 function ProfileSynchronizer:save_profile(profile)
 
+	-- Extract the data from the profile
 	local badges = "badges"--profile:get_badges()
 	local balance = profile:get_balance()
 	local current_city = profile:get_city()
@@ -126,6 +115,7 @@ function ProfileSynchronizer:save_profile(profile)
 	local profile_token = profile:get_login_token()
 	local sex = profile:get_sex()
 
+	-- Construct the json request from the data
 	local profile_data =  [[{"badges":"]]..badges..
 												[[","balance":"]]..balance..
 												[[","current_city":"]]..current_city..
@@ -140,27 +130,21 @@ function ProfileSynchronizer:save_profile(profile)
 												[[","sex":"]]..sex..
 												[[","zdata_hash":"49aac7d4ad14540a91c14255ea1288e2fdc9a54e53f01d15371e81345f5e3646"}]]
 
-  local profile_body = { }
+	-- Make the server request
+	result = server_communication(profile_data, self.save_profile_url)
 
-  local result, code = http.request
-  {
-    url = self.url..self.save_profile_url,
-    method = "POST",
-    headers =
-    {
-      ["Content-Type"] = "application/json",
-			['content-length'] = string.len(profile_data)
-    },
-    source = ltn12.source.string(profile_data),
-    sink = ltn12.sink.table(profile_body)
-  }
-  local result = table.concat(profile_body)
+	-- Decode the data returned
 	local return_table,pos,err = json.decode(result, 1, nil)
-	local return_profile = create_existing_profile(return_table)
 
-	return return_profile
+	-- Some very basic error handling
+	if err then
+		return err
+	else
 
+		-- Create the profile to be returned
+		local return_profile = create_existing_profile(return_table)
 
+		return return_profile
 end
 
 return ProfileSynchronizer
