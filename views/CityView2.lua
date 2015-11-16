@@ -130,6 +130,17 @@ function CityView2:load_view(button)
 			--view.view_manager:set_view(self)
 			callback
 		)
+
+		-- Make the city view listen for "dirty" events triggered by the
+		-- memory view
+		local dirty_callback = function()
+			memory_view:render(screen)
+		end
+		self:listen_to(
+			memory_view,
+			"dirty",
+			dirty_callback
+		)
 		--Update the view
 		memory_view:render(screen)
 		-- TODO This should be done by a subsurface in the final version
