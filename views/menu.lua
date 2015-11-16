@@ -1,6 +1,6 @@
 local utils = require("lib.utils")
 local event = require("lib.event")
-local multiplechoice_quiz = require("views.multiplechoice_quiz")
+local MultipleChoiceView = require("views.MultipleChoiceView")
 local view = require("lib.view")
 local NumericalQuizView = require("views.NumericalQuizView")
 local profile_selection = require("views.profile_selection")

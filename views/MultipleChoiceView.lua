@@ -9,6 +9,9 @@ local event = require("lib.event")
 local view = require("lib.view")
 local MultipleChoiceQuestion = require("lib.quiz.MultipleChoiceQuestion")
 local Quiz = require("lib.quiz.Quiz")
+local Font = require("lib.draw.Font")
+local Color = require("lib.draw.Color")
+local Rectangle = require("lib.draw.Rectangle")
 
 --- Constructor for MultipleChoiceView
 function MultipleChoiceView:__init()
@@ -36,12 +39,7 @@ function MultipleChoiceView:__init()
 	self.answer = {}
 
 	-- Graphics
-	self.font = sys.new_freetype(
-		{r = 255, g = 255, b = 255, a = 255},
-		32,
-		{x = 100, y = 300},
-		utils.absolute_path("data/fonts/DroidSans.ttf"))
-
+	self.font = Font("data/fonts/DroidSans.ttf",32,Color(255,255,255,255))
 	-- Listeners and callbacks
 	self:listen_to(
 		event.remote_control,
@@ -126,44 +124,40 @@ function MultipleChoiceView:render(surface)
 			surface:clear(color)
 			--Buttons
 			local buttonColor = {r=0, g=128, b=225}
-			local textColor = {r=0, g=0, b=0}
-			local choiceButton1 = sys.new_freetype(textColor, 30, {x=100,y=400},
-				utils.absolute_path("data/fonts/DroidSans.ttf"))
-			local choiceButton2 = sys.new_freetype(textColor, 30, {x=350,y=400},
-				utils.absolute_path("data/fonts/DroidSans.ttf"))
-			local choiceButton3 = sys.new_freetype(textColor, 30, {x=600,y=400},
-				utils.absolute_path("data/fonts/DroidSans.ttf"))
-			local choiceButton4 = sys.new_freetype(textColor, 30, {x=850,y=400},
-				utils.absolute_path("data/fonts/DroidSans.ttf"))
+			--local textColor = {r=0, g=0, b=0}
+			local textColor = Color(0,0,0,255)
+			local choiceButton1 = Font("data/fonts/DroidSans.ttf",30,textColor)
+			local choiceButton2 = Font("data/fonts/DroidSans.ttf",30,textColor)
+			local choiceButton3 = Font("data/fonts/DroidSans.ttf",30,textColor)
+			local choiceButton4 = Font("data/fonts/DroidSans.ttf",30,textColor)
 
 			-- Draw question
-			self.font:draw_over_surface(surface, self.current_question ..
+			self.font:draw(surface,Rectangle(100,300,200,200):to_table(),self.current_question ..
 				"." .. self.mult_choice_quiz.questions[self.current_question].question)
-
 			--Button text
 			surface:fill(buttonColor, {width=200, height=60, x=100, y=400})
-			choiceButton1:draw_over_surface(surface,"(1)." ..
+			choiceButton1:draw(surface,Rectangle(100,400,200,60):to_table(),"(1)." ..
 			 	self.mult_choice_quiz.questions[self.current_question].Choices[1])
 			surface:fill(buttonColor, {width=200, height=60, x=350, y=400})
-			choiceButton2:draw_over_surface(surface,"(2)." ..
+			choiceButton2:draw(surface,Rectangle(350,400,200,60):to_table(),"(2)." ..
 				self.mult_choice_quiz.questions[self.current_question].Choices[2])
 			surface:fill(buttonColor, {width=200, height=60, x=600, y=400})
-			choiceButton3:draw_over_surface(surface,"(3)." ..
+			choiceButton3:draw(surface,Rectangle(600,400,200,60):to_table(),"(3)." ..
 				self.mult_choice_quiz.questions[self.current_question].Choices[3])
 			surface:fill(buttonColor, {width=200, height=60, x=850, y=400})
-			choiceButton4:draw_over_surface(surface,"(4)." ..
+			choiceButton4:draw(surface,Rectangle(850,400,200,60):to_table(),"(4)." ..
 				self.mult_choice_quiz.questions[self.current_question].Choices[4])
 
 		elseif self.quiz_state == "DISPLAY_RESULT" then
 			-- Display the result from one question
 			surface:clear(color)
-			self.font:draw_over_surface(screen, self.result_string)
+			self.font:draw(screen,Rectangle(100,300,200,200):to_table(),self.result_string)
 
 		elseif self.quiz_state == "DONE" then
 			-- Display the result from the whole quiz
 			surface:clear(color)
 			self.mult_choice_quiz:calculate_score(self.correct_answer_number)
-			self.font:draw_over_surface(screen, "You answered "
+			self.font:draw(screen,Rectangle(100,300,200,200):to_table(),"You answered "
 			.. self.correct_answer_number .. " questions correctly and your score is "
 			.. self.mult_choice_quiz:get_score() .. ".")
 		end
