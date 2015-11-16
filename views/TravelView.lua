@@ -115,15 +115,14 @@ function TravelView:render(surface)
 
 end
 
-<<<<<<< HEAD
+
 function TravelView:_travel(button)
-	print("jannebanan")
 	if button == "7" then
 		local wm = WorldMap()
 		wm:render(screen, "paris", "new_york", "aeroplane", self )
 	end
 end
-=======
+
 --[[function TravelView:load_view(button)
 	if button == "backspace" then
 		view.view_manager:set_view(city_view_copy)
@@ -131,6 +130,6 @@ end
 	end
 
 end--]]
->>>>>>> 6dc05e0d0a85b8ce65c8269d04c2417aac12b173
+
 
 return TravelView
