@@ -150,6 +150,17 @@ local width = surface:get_width()
 
 	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/ParisIconSelected.png")),nil ,{x = width/3, y = 0, width=width*2/3, height=height})
 
+
+
+	-- Instance remote control and mapps it to the buttons
+	--event.remote_control:on("button_release", self:load_view)
+	local callback = utils.partial(self.load_view, self)
+	self:listen_to(
+		event.remote_control,
+		"button_release",
+		callback
+		--utils.partial(self.load_view, self)
+	)
 end
 
 function CityView:load_view(button)

@@ -1,6 +1,7 @@
 --- Player mock class
 local class = require("lib.classy")
 local FreetypeMock = require("lib.mocks.FreetypeMock")
+local PlayerMock = require("lib.mocks.PlayerMock")
 local SysMock = class("SysMock")
 
 
@@ -13,24 +14,24 @@ local system_time = 2355
 --local sys = {}
 
 -- returns a mock freetype
-function SysMock.new_freetype(fontColor, fontSize, drawingStartPoint, fontPath)
+function SysMock:new_freetype(fontColor, fontSize, drawingStartPoint, fontPath)
 	local freetype = FreetypeMock(fontColor, fontSize, drawingStartPoint, fontPath)
 	return freetype
 end
 
 -- return a number representing a time
-function SysMock.time()
+function SysMock:time()
 	return system_time
 end
 
 -- returns a mock player
-function SysMock.new_player()
+function SysMock:new_player()
 	local player = PlayerMock()
 	return player
 end
 
 -- returns a mock timer
-function SysMock.new_timer(interval_millisec, callback)
+function SysMock:new_timer(interval_millisec, callback)
 --TODO
 --[[	logger.trace(string.format(
 		"New timer created, calling every %d ms",
@@ -43,17 +44,17 @@ function SysMock.new_timer(interval_millisec, callback)
 end
 
 -- return the absolute path to the directory where start.lua is located
-function SysMock.root_path()
+function SysMock:root_path()
 --TODO
 	--return love.filesystem.getUserDirectory()
 end
 
 -- terminate the lua interpreter
-function SysMock.stop()
+function SysMock:stop()
 	-- TODO
 	--love.event.quit()
 end
 
 --sys.timers = {}
 
-return sys
+return SysMock

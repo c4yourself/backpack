@@ -3,6 +3,7 @@ local logger = require("lib.logger")
 local utils = require("lib.utils")
 local menu = require("views.menu")
 local view = require("lib.view")
+local SplashView = require("views.SplashView")
 local CityView = require("views.CityView")
 local CityView2 = require("views.CityView2")
 
@@ -30,13 +31,20 @@ end
 
 -- This function is called at the start of the program
 function onStart()
-  local city_view = CityView(event.remote_control)
-	view.view_manager:set_view(city_view)
---	city_view:on("dirty", function() city_view:render(screen); gfx.update() end)
+	--menu.render(screen)
+  --local city_view = CityView(event.remote_control)
+	--view.view_manager:set_view(city_view)
+
 	-- the "up" and "down" buttons are enabled for
 	-- choosing alternatives in city_view_2
-	--local city_view_2 = CityView2(event.remote_control)
-	--view.view_manager:set_view(city_view_2)
+	local city_view_2 = CityView2(event.remote_control)
+	view.view_manager:set_view(city_view_2)
 
+	-- Start with Splash Screen
+	-- local splash_view = SplashView(event.remote_control)
+	-- view.view_manager:set_view(splash_view)
+
+	local city_view = CityView(event.remote_control)
+	view.view_manager:set_view(city_view)
 	gfx.update()
 end
