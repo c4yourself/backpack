@@ -20,6 +20,7 @@ Profile.name = ""
 Profile.email_address = ""
 Profile.date_of_birth = ""
 Profile.sex = ""
+Profile.city = ""
 Profile.balance = 0
 Profile.experience = 0
 Profile.password = ""
@@ -32,11 +33,12 @@ Profile.inventory = {}
 -- @param email_address string representing email address of user
 -- @param date_of_birth string date birth of user
 -- @param sex string representing the gender of the user
-function Profile:__init(name,email_address,date_of_birth,sex)
+function Profile:__init(name,email_address,date_of_birth,sex,city)
 	self.name = name
 	self.email_address = email_address
 	self.date_of_birth = date_of_birth
 	self.sex = sex
+	self.city = city
 end
 
 -- Set balance of the user
@@ -49,6 +51,10 @@ end
 -- Get name of the user
 function Profile:get_name()
 	return self.name
+end
+-- Get profile name
+function Profile:get_profile_name()
+	return string.format("%s__%s",self.city,self.email_address)
 end
 -- Get email_address of the user
 function Profile:get_email_address()
@@ -63,6 +69,10 @@ end
 -- Get sex of the user
 function Profile:get_sex()
 	return self.sex
+end
+-- Get city of the user
+function Profile:get_city()
+	return self.city
 end
 -- Get balance of the user
 function Profile:get_balance()
