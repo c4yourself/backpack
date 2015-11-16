@@ -3,7 +3,7 @@
 local class = require("lib.classy")
 local View = require("lib.view.View")
 local ListItem = class("ListItem", View)
-local Font = require("lib.font.Font")
+local Font = require("lib.draw.Font")
 local Color = require("lib.draw.Color")
 local utils = require("lib.utils")
 

@@ -1,7 +1,7 @@
 
 local class = require("lib.classy")
 local Color = require("lib.draw.Color")
-local Font = require("lib.font.Font")
+local Font = require("lib.draw.Font")
 local View = require("lib.view.View")
 local utils = require("lib.utils")
 local event = require("lib.event")
@@ -46,7 +46,7 @@ function TravelView:render(surface)
 
 	local font_color = Font("data/fonts/DroidSans.ttf", 20, Color(65, 70, 72, 255))
 	local font_color_selected = Font("data/fonts/DroidSans.ttf", 20, Color(255, 255, 255, 255))
-	local icon = "data/images/aeroplane.png"
+	local icon = "data/images/aeroplane1.png"
 
 	print(icon)
 --text_left, font, text_position_left, text_color_selected, enabled, selected

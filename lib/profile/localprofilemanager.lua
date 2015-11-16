@@ -152,5 +152,4 @@ function localprofilemanager:delete(profile_city,profile_email)
     end
   end
 end
-
 return localprofilemanager
