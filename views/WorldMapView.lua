@@ -10,8 +10,6 @@ local background_color = {r = 119, g = 151, b = 255}
 local city_color = {r = 0, g = 0, b = 0}
 local cityview
 
--- cities.london eller cities["london"]
-
 local cities = {
 	new_york = {
 		name = "New York",
@@ -55,6 +53,12 @@ local cities = {
 	}
 }
 
+--- Renders a loading screen which shows the traveling path
+-- @param surface is the screen with is drawn on
+-- @param start is the departure city
+-- @param dest is the destination city
+-- @param transp is the type of transportion (aeroplane, boat or train)
+-- @param this will be the cityview that is render after the trip
 function WorldMap:render(surface, start, dest, transp, view)
 	self:_paint_world_map(surface)
 	transport = transp
@@ -104,8 +108,8 @@ end
 
 function WorldMap:_stop_timer(surface)
 	self.stop_timer:stop()
+	-- TODO call an event thats render a CityView in a fancier way
 	cityview:render(surface)
-	-- TODO call an event thats render a CityView
 end
 
 function WorldMap:_create_area(x, y)
