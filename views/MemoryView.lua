@@ -28,7 +28,7 @@ function MemoryView:__init()
     -- Logic
     self.cards = {}
     self.positions = {}
-    self.pairs = 4
+    self.pairs = 10
     self.memory = MemoryGame(self.pairs, false)
     self.button_grid = button_grid()
     self.columns = math.ceil((self.pairs*2)^(1/2))
@@ -47,7 +47,6 @@ function MemoryView:__init()
 
     -- Components
     local button_size_big = {width = 300, height = 100}
-    self.button_size = {width = 25, height = 25}
     self.button_1 = button(self.button_color, self.color_selected,
         self.color_disabled, true, false)
     self.positions["exit"] = {x = 100, y = 450}
@@ -59,6 +58,9 @@ function MemoryView:__init()
     local button_color = color(0, 128, 225, 255)
     local color_disabled = color(111,222,111,255)
     local color_selected = color(33, 99, 111, 255)
+    self.button_size = {width = 100, height = 100}
+    local x_gap = self.button_size.width + 50
+    local y_gap = self.button_size.height + 50
 
     self.button_grid:add_button(self.positions["exit"], button_size_big,
                                 self.button_1)
@@ -71,10 +73,10 @@ function MemoryView:__init()
         if i == 1 then
             self.pos_x = self.pos_x
         elseif ((i-1) % self.columns == 0) then
-            self.pos_y = self.pos_y + 50
-            self.pos_x = self.pos_x - (self.columns - 1) * 50
+            self.pos_y = self.pos_y + y_gap
+            self.pos_x = self.pos_x - (self.columns - 1) * x_gap
         else
-            self.pos_x = self.pos_x + 50
+            self.pos_x = self.pos_x + x_gap
         end
 
         self.positions[i] = {x = self.pos_x, y = self.pos_y}
@@ -93,11 +95,7 @@ end
 
 
 function MemoryView:press(key)
-    if key == "right" then -- Question: what does this do?
-        self.player_moved = true
-		self:dirty(true)
-
-    elseif key == "back" then
+    if key == "back" then
 		self:back_to_city()
     end
 end
