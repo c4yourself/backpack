@@ -7,6 +7,28 @@ local ProfileSynchronizer = class("ProfileSynchronizer")
 local json = require("lib.dkjson")
 local Profile = require("lib.profile.Profile")
 
+-- Some possible test code to use; this really can't be automateed
+--[[
+local profilesynchronizer = ProfileSynchronizer()
+local token = profilesynchronizer:login("Test@gmail.com","password")
+if token["error"] then
+	print(token["message"])
+else
+	local profile_test = profilesynchronizer:get_profile(token)
+	if profile_test["error"] then
+		print(profile_test["message"])
+	else
+		profile_test:set_balance(2000)
+		profile_test:set_id(0)
+		profile_test.email_address = "Test3@gmail.com"
+		profile_test = profilesynchronizer:save_profile(profile_test)
+		if profile_test["error"] then
+			print(profile_test["message"])
+		end
+	end
+end
+--]]
+
 -- Constructor
 function ProfileSynchronizer:__init()
 
@@ -32,6 +54,51 @@ local function create_existing_profile(data)
 	return new_profile
 end
 
+-- Combined error handling for all sources
+local function return_data_check(json_response, code)
+
+	-- Check if HTTP request was OK
+	if code == 200 then
+
+		-- Create the returned table of data
+		local result = table.concat(json_response)
+		local return_table,pos,err = json.decode(result, 1, nil)
+
+		-- If there was an error with creating return data
+		if err then
+			local error = {}
+			error["error"] = true
+			error["Code"] = err
+			error["message"] = "JSON conversion error, see code"
+			return error
+
+		-- If table data was created
+		else
+
+			-- Check if there was some problem on the server side
+			if return_table["error"] == "true" then
+				local error = {}
+				error["error"] = true
+				error["Code"] = "Server side data error"
+				error["message"] = return_table["message"]
+				return error
+
+			-- If not, all is well
+			else
+				return return_table
+			end
+		end
+
+	-- If there was a HTTP request error
+	else
+		local error = {}
+		error["error"] = true
+		error["Code"] = code
+		error["message"] = "HTTP error, see code"
+		return error
+	end
+end
+
 -- Local function for all server comnmunication given data and url
 local function server_communication(data, url_extension)
 	-- Base URL for server location
@@ -54,19 +121,9 @@ local function server_communication(data, url_extension)
     sink = ltn12.sink.table(json_response)
   }
 
-	-- Check if the request was successful
-	if code == 200 then
-		-- Concatenate the result
-  	local result = table.concat(json_response)
-		return result
-
-	-- If not we return an error with the code
-	else
-		local error = {}
-		error["Error"] = true
-		error["Code"] = code
-		return error
-	end
+	-- Get result of error handling
+	local return_var = return_data_check(json_response, code)
+	return return_var
 end
 
 -- Login which receives the token for a given email and password
@@ -78,19 +135,14 @@ function ProfileSynchronizer:login(email, password)
 	result = server_communication(json_request, self.login_url)
 
 	-- Check if we have an error
-	if result["Error"] then
+	if result["error"] then
+
+		-- Return the error table if error
 		return result
-
-	-- Or if we don't have an error
 	else
-		-- Decode the result
-		local return_table,pos,err = json.decode(result, 1, nil)
 
-		if err then
-			return err
-		else
-			return return_table.profile_token
-		end
+		-- If no error, return the correct token
+		return result.profile_token
 	end
 
 end
@@ -99,33 +151,28 @@ end
 function ProfileSynchronizer:get_profile(token)
 	-- Json request for token data
 	local token_data =  [[{"profile_token":"]]..token..[[","zdata_hash":"49aac7d4ad14540a91c14255ea1288e2fdc9a54e53f01d15371e81345f5e3646"}]]
+	--local token_data =  [[{"profile_token":"]]..token..[[","zdata_hash":"49aac7d4ad14540a91c14255aa1288e2fdc9a54e53f01d15371e81345f5e3646"}]]
 
 	-- Returned result
   result = server_communication(token_data, self.get_profile_url)
 
-	-- Check if we have an errror
-	if result["Error"] then
+	-- Check if we have an error
+	if result["error"] then
+
+		-- Return the error table if error
 		return result
-
-	-- Or if we don't have an error
 	else
-		-- Decode the result
-		local return_table,pos,err = json.decode(result, 1, nil)
 
-		-- Some very basic error handling
-		if err then
-			return err
-		else
-			-- Create the profile to return
-			local return_profile = create_existing_profile(return_table)
-
-			return return_profile
-		end
+		-- Otherwise we return the working profile instance
+		return create_existing_profile(result)
 	end
 end
 
 -- Deletes the profile given email, password and token
-function ProfileSynchronizer:delete_profile()
+function ProfileSynchronizer:delete_profile(email, password, token)
+
+	-- To be implemented
+	return false
 end
 
 -- Saves the profile (if the ID is 0) or updates a given profile
@@ -164,24 +211,14 @@ function ProfileSynchronizer:save_profile(profile)
 	result = server_communication(profile_data, self.save_profile_url)
 
 	-- Check if we have an error
-	if result["Error"] then
+	if result["error"] then
+
+		-- If we have one, return the error table
 		return result
-
-	-- Or if we havn't got an error
 	else
-		-- Decode the data returned
-		local return_table,pos,err = json.decode(result, 1, nil)
 
-		-- Some very basic error handling
-		if err then
-			return err
-		else
-
-			-- Create the profile to be returned
-			local return_profile = create_existing_profile(return_table)
-
-			return return_profile
-		end
+		-- If not return the profile instantiation
+		return create_existing_profile(result)
 	end
 end
 
