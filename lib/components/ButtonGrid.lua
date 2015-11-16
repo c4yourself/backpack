@@ -32,7 +32,7 @@ function ButtonGrid:__init(remote_control)
   local callback = utils.partial(self.press, self)
   self:listen_to(
   self.event_listener,
-  "button_press",
+  "button_release",
   callback
   )
 	--
@@ -55,6 +55,7 @@ end
 -- @throws Error If the button cross the boundaries of the surface
 function ButtonGrid:add_button(position, button_size, button)
 -- chenck if the button across the screen boundaries
+
 	if position.x >= 0 and button_size.width >= 0
 		 and position.x + button_size.width < 1280
 		 and position.y >= 0 and button_size.height >= 0
@@ -126,9 +127,9 @@ function ButtonGrid:press(button)
 		elseif button == "2" then
 				multiplechoice_quiz.render(screen)
 				gfx.update()
-		elseif button == "3" then
-				print("Shut down program")
-				sys.stop()
+		--elseif button == "3" then
+				--print("Shut down program")
+				--sys.stop()
 
 		elseif button == "ok" then
 
@@ -189,6 +190,7 @@ self:dirty(false)
 			self:display_text(surface, i)
 	   end
    end
+   gfx.update()
 end
 
 --- When "down" is pressed, the indicator shall follow the down-direction
@@ -391,9 +393,9 @@ if shortest_distance_buttons ~= 1280 then
 		if  button_list[indicator].x >= button_list[j].x + button_list[j].width then
 			local distance = self:button_distance(indicator, j)
 			if shortest_distance_buttons == distance then
-				print("the distance is "..distance)
+				--print("the distance is "..distance)
 				nearest_button_index = j
-				print("the nearast button is ".. nearest_button_index)
+				--print("the nearast button is ".. nearest_button_index)
 				break
 			end
 		end

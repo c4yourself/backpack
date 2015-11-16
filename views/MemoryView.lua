@@ -17,160 +17,104 @@ local button = require("lib.components.Button")
 
 
 function MemoryView:__init()
-  View.__init(self)
+    View.__init(self)
 	event.remote_control:off("button_release") -- TODO remove this once the ViewManager is fully implemented
 
--- Flags to determine whether a player has moved or pressed submit
+    -- Flags to determine whether a player has moved or pressed submit
 	self.player_moved = false
 	self.player_ok = false
 	self.listening_initiated = false
-  self.cards = {}
-  self.positions = {}
 
--- Components
--- Instanciate a numerical input component and make the quiz listen for changes
--- self.views.card_comp = CardComponent(remote_control)
---	self.card_surface = Surface(100,100)
+    -- Logic
+    self.cards = {}
+    self.positions = {}
+    self.pairs = 4
+    self.memory = MemoryGame(self.pairs, false)
+    self.button_grid = button_grid()
+    self.columns = math.ceil((self.pairs*2)^(1/2))
 
-  self.pairs = 4
-  self.memory = MemoryGame(self.pairs, false)
-
-  self.button_grid = button_grid()
-
-  --self:_print_board();
--- Graphics
-  self.font = sys.new_freetype(
-    {r = 255, g = 255, b = 255, a = 255},
-    32,
-    {x = 100, y = 300},
+    -- Graphics
+    self.font = sys.new_freetype(
+        {r = 255, g = 255, b = 255, a = 255},
+        32,
+        {x = 100, y = 300},
     utils.absolute_path("data/fonts/DroidSans.ttf"))
 
     self.button_color = color(0, 128, 225, 255)
     self.color_selected = color(33, 99, 111, 255)
     self.color_disabled = color(111,222,111,255)
     self.text_color = color(255, 255, 255, 255)
-    self.button_size = {width = 25, height = 25}
 
-    self.button_1 = button(button_color, color_selected, color_disabled, true, false)
-    self.position_1 = {x = 100, y = 450}
-
+    -- Components
     local button_size_big = {width = 300, height = 100}
-    self.columns = math.ceil((self.pairs*2)^(1/2))
+    self.button_size = {width = 25, height = 25}
+    self.button_1 = button(button_color, color_selected,
+        color_disabled, true, false)
+    self.position_1 = {x = 100, y = 450}
+    self.button_1:set_textdata("Back to City", self.text_color,
+        {x = 100, y = 450}, 30,
+        utils.absolute_path("data/fonts/DroidSans.ttf"))
 
-    --self.button_grid:add_button(self.position_1, button_size_big, self.button_1)
-    self.button_1:set_textdata("Back to City", self.text_color, {x = 100, y = 450}, 30, utils.absolute_path("data/fonts/DroidSans.ttf"))
+    -- Create the board
+    local button_color = color(0, 128, 225, 255)
+    local color_disabled = color(111,222,111,255)
+    local color_selected = color(33, 99, 111, 255)
 
+    self.pos_x = 450
+    self.pos_y = 50
 
-  -- Listeners and callbacks
-  self:listen_to(
-    event.remote_control,
-    "button_release",
-    utils.partial(self.press, self)
-  )
+    for i = 1, self.pairs*2 do
+        self.cards[i]  = button(button_color, color_selected, color_disabled, true, false)
+        if i == 1 then
+            self.pos_x = self.pos_x
+        elseif ((i-1) % self.columns == 0) then
+            self.pos_y = self.pos_y + 50
+            self.pos_x = self.pos_x - (self.columns - 1) * 50
+        else
+            self.pos_x = self.pos_x + 50
+        end
+
+        self.positions[i] = {x = self.pos_x, y = self.pos_y}
+        self.button_grid:add_button(self.positions[i], self.button_size, self.cards[i])
+    end
+
+    -- Listeners and callbacks
+    self:listen_to(
+        event.remote_control,
+        "button_release",
+        utils.partial(self.press, self)
+    )
 end
 
 
 function MemoryView:press(key)
-  if key == "right" then
-    self.player_moved = true
+    if key == "right" then -- Question: what does this do?
+        self.player_moved = true
 		self:dirty(true)
 
-  elseif key == "7" then
-    self.back_to_city_pressed = true
-    self:dirty(true)
-
-  elseif key == "down" then
-  -- the indicator refers to the selecting button
-  local indicator = self.button_grid.button_indicator
-  local button_list = self.button_grid.button_list
-
-  indicator = indicator % #button_list + 1
-  button_list[indicator].button:select(true)
-
-  if indicator == 1 then
-    button_list[#button_list].button:select(false)
-  else
-    button_list[indicator-1].button:select(false)
-  end
-
-  self.button_grid.button_indicator = indicator
-  print("indicator")
-  print(self.button_grid.button_indicator)
-  self:dirty(true)
-
-  elseif key == "up" then
-
-  local indicator = self.button_grid.button_indicator
-  local button_list = self.button_grid.button_list
-
-  indicator = indicator - 1
-
-  if indicator == 0 then
-    indicator = #self.button_grid.button_list
-  end
-
-  button_list[indicator].button:select(true)
-
-  if indicator == #button_list then
-    button_list[1].button:select(false)
-  else
-    button_list[indicator+1].card:select(false)
-  end
-
-  self.button_grid.button_indicator = indicator
-  print("indicator")
-  print(self.button_grid.button_indicator)
-  self:dirty(true)
-
-  elseif key == "back" then
+    elseif key == "back" then
 		self:back_to_city()
-  end
+    end
 end
 
 function MemoryView:_print_board()
-  -- Colors for buttons
---     local button_color = color(0, 128, 225, 255)
---     local color_selected = color(33, 99, 111, 255)
---     local color_disabled = color(111,222,111,255)
---     local text_color = color(55, 55, 55, 255)
---
---     local button_size = {width = 25, height = 25}
---     self.buttonGrid = button_grid()
---     self.pos_x = 450
---     self.pos_y = 50
---     local columns = math.ceil((self.pairs*2)^(1/2))
---
---     for i = 1, self.pairs*2 do
---       self.cards[i]  = button(button_color, color_selected, color_disabled, true, false)
---
---       if i == 1 then
---         self.pos_x = self.pos_x
---       elseif ((i-1) % columns == 0) then
---         self.pos_y = self.pos_y + 50
---         self.pos_x = self.pos_x - (columns - 1) * 50
---       else
---         self.pos_x = self.pos_x + 50
---       end
---       self.positions[i] = {x = self.pos_x, y = self.pos_y}
---       self.buttonGrid:add_button(self.positions[i], button_size, self.cards[i])
---     end
--- --  self:dirty(true)
---     self.buttonGrid:render(surface)
+
 end
 
 -- Renders MemoryView and all of its child views
 function MemoryView:render(surface)
     if not self.listening_initiated then
-        local change_callback = utils.partial(self.render, self, surface)
+        local grid_callback = utils.partial(self.button_grid.render,
+            self.button_grid, surface)
+        self:listen_to(
+            self.button_grid,
+            "dirty",
+            grid_callback)
         self.listening_initiated = true
     end
 
     if self:is_dirty() then
         surface:clear(color)
-
-        --self.buttonGrid = button_grid()
-        self.pos_x = 450
-        self.pos_y = 50
 
         -- Add the number of turns
         local turns_text =sys.new_freetype(self.text_color:to_table(), 30, {x = 100, y = 110}, utils.absolute_path("data/fonts/DroidSans.ttf"))
@@ -183,35 +127,11 @@ function MemoryView:render(surface)
             turns:draw_over_surface(surface, self.memory.moves)
         end
 
-        local button_color = color(0, 128, 225, 255)
-        local color_disabled = color(111,222,111,255)
-        local color_selected = color(33, 99, 111, 255)
-
-        for i = 1, self.pairs*2 do
-            print("colors")
-            print(self.color_selected)
-            self.cards[i]  = button(button_color, color_selected, color_disabled, true, false)
-            if i == 1 then
-                self.pos_x = self.pos_x
-            elseif ((i-1) % self.columns == 0) then
-                self.pos_y = self.pos_y + 50
-                self.pos_x = self.pos_x - (self.columns - 1) * 50
-            else
-                self.pos_x = self.pos_x + 50
-            end
-
-            self.positions[i] = {x = self.pos_x, y = self.pos_y}
-            self.button_grid:add_button(self.positions[i], self.button_size, self.cards[i])
-        end
-        self.button_grid:render(surface)
-        print("Selected button in render")
-        print(self.button_grid.button_indicator)
-
-    elseif self.back_to_city_pressed then
-        self:back_to_city()
+        --self.button_grid:render(surface)]]
     end
-
-  self:dirty(false)
+    gfx.update()
+    self:dirty(false)
+    self.button_grid:render(surface)
 end
 
 function MemoryView:back_to_city()

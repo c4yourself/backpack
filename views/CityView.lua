@@ -16,6 +16,7 @@ local button_grid=require("lib.components.ButtonGrid")
 local color = require("lib.draw.Color")
 --local CityTourView = require("views.CityTourView")
 local subSurface = require("lib.view.SubSurface")
+local MemoryView = require("views.MemoryView")
 
 --- Constructor for CityView
 -- @param event_listener Remote control to listen to
@@ -42,7 +43,7 @@ function CityView:__init(remote_control)
 	-- Add buttons
 	local button_1 = button(button_color, color_selected, color_disabled,true,true,"views.NumericalQuizView")
 	local button_2 = button(button_color, color_selected, color_disabled,true,false, "views.MultipleChoiceView")
-	local button_3 = button(button_color, color_selected, color_disabled,true,false)
+	local button_3 = button(button_color, color_selected, color_disabled,true,false, "views.MemoryView")
 	local button_4 = button(button_color, color_selected, color_disabled,true,false)
 	local button_5 = button(button_color, color_selected, color_disabled,true,false)
 	local button_6 = button(button_color, color_selected, color_disabled,true,false)
@@ -51,6 +52,7 @@ function CityView:__init(remote_control)
 	local city_tour_button = button(city_view_color, city_view_selected_color, color_disabled, true, false)
 	button_1:set_textdata("Numerical quiz",text_color,{x=100,y=300},16,utils.absolute_path("data/fonts/DroidSans.ttf"))
 	button_2:set_textdata("Multiple choice question",text_color,{x=200,y=300},16,utils.absolute_path("data/fonts/DroidSans.ttf"))
+	button_3:set_textdata("Memory",text_color,{x=100,y=400},16,utils.absolute_path("data/fonts/DroidSans.ttf"))
 
 	-- Define each button's posotion and size
 	local button_size = {width = 4*width/45, height = 4*width/45}
@@ -178,8 +180,29 @@ function CityView:load_view(button)
 		multiplechoice_quiz.render(screen)
 		gfx.update()
 	elseif button == "3" then
-		print("Shut down program")
-		sys.stop()
+		local memory_view = MemoryView()
+		local callback = function()
+			utils.partial(view.view_manager.set_view, view.view_manager)(self)
+			gfx.update()
+		end
+		self:listen_to(
+			memory_view,
+			"exit",
+			callback
+		)
+		local dirty_callback = function()
+			memory_view:render(screen)
+		end
+		self:listen_to(
+			memory_view,
+			"dirty",
+			dirty_callback
+		)
+		--Update the view3
+		memory_view:render(screen)
+		-- TODO This should be done by a subsurface in the final version
+		gfx.update()
+
 	-- elseif button == "5" then
 	-- 	local city_tour_view = SubSurface(screen,{width=screen:get_width()*0.9, height=(screen:get_height()-50)*0.9, x=screen:get_width()*0.05, y=screen:get_height()*0.05+50})
 	-- 	local CT = CityTourView()
