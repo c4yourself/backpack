@@ -24,7 +24,7 @@ function localprofilemanager:save(profile)
   file:write("\t\t\"experience\": " .. profile:get_experience() .. ",\n")
   file:write("\t\t\"id\": " .. profile:get_id() .. ",\n")
   file:write("\t\t\"inventory\": {}\n")
-  file:write("\t\t\"login_token\":" .. profile:get_login_token() .. ",\n")
+  file:write("\t\t\"login_token\": \" \",\n")
   file:write("\t\t\"name\": \"" .. profile:get_profile_name() .. "\",\n")
   file:write("\t\t\"password\": \"" .. profile:get_password() .. "\",\n")
   file:write("\t\t\"sex\": \"" .. profile:get_sex() .. "\",\n")
@@ -155,13 +155,11 @@ end
 
 -- Synchronize json content from server to local profile
 -- @param server_json_profile representing the string get from server
--- @return profile representing the instance of profile based on server json data
 function localprofilemanager:synchronizetolocal(server_json_profile)
   local name, email_address, date_of_birth
   local sex, city, balance, experience
   local id, password, login_token
-  local badges = {}
-  local inventory = {}
+  local badges = {}, inventory = {}
   local server_profile = {}
 
   table.insert(server_profile,utils.split(server_json_profile,"\n"))
@@ -228,7 +226,7 @@ function localprofilemanager:synchronizetolocal(server_json_profile)
       local tmp = {}
       tmp = utils.split(string.sub(server_profile[i],string.find(server_profile[i],"{") + 1, string.find(server_profile[i],"}") - 1),",")
       for i=1, #tmp, 1 do
-        inventory[string.format("%s",sting.sub(tmp[i],1, string.find(tmp[i],":") - 1))] = tonumber(string.sub(tmp[i],string.find(tmp[i], " ") + 1, string.len(tmp[i])))
+        inventory[string.format("%s",sting.sub(tmp[i],1, string.find(tmp[i],":") - 1)),] = tonumber(string.sub(tmp[i],string.find(tmp[i], " ") + 1, string.len(tmp[i])))
       end
     end
 
@@ -241,8 +239,8 @@ function localprofilemanager:synchronizetolocal(server_json_profile)
   profile:set_password(password)
   profile:set_badges(badges)
   profile:set_inventory(inventory)
-  profile:set_login_token(login_token)
 
   return profile
+
 end
 return localprofilemanager

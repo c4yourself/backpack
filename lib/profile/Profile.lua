@@ -98,9 +98,13 @@ function Profile:get_id()
 	return self.id
 end
 
--- Get id of the user
+-- Get inventory of the user
 function Profile:get_inventory()
 	return self.inventory
+end
+-- Get badges of the user
+function Profile:get_badges()
+	return self.badges
 end
 
 -- Set balance of the user
