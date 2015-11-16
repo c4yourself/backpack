@@ -20,88 +20,111 @@ local background_color = {r = 119, g = 151, b = 255}
 local city_color = {r = 0, g = 0, b = 0}
 local cityview
 
+-- cities.london eller cities["london"]
+
+local cities = {
+	new_york = {
+		name = "New York",
+		position = {x = 324/1280, y = 194/720},
+		area = {}
+	},
+	rio = {
+		name = "Rio de Janeiro",
+		position = {x = 461/1280, y = 388/720},
+		area = {}
+	},
+	london = {
+		name = "London",
+		position = {x = 615/1280, y = 125/720},
+		area = {}
+	},
+	paris = {
+		name ="Paris",
+		position = {x = 630/1280, y = 150/720},
+		area = {}
+	},
+	cairo = {
+		name = "Cairo",
+		position = {x = 725/1280, y = 220/720},
+		area = {}
+	},
+	bombay = {
+		name = "Bombay",
+		position = {x = 900/1280, y = 200/720},
+		area = {}
+	},
+	sidney = {
+		name = "Sidney",
+		position = {x = 1168/1280, y = 428/720},
+		area = {}
+	},
+	tokyo = {
+		name = "Tokyo",
+		position = {x = 1115/1280, y = 190/720},
+		area = {}
+	}
+}
+
 function WorldMap:render(surface, start, dest, transp, view)
 	transport = transp
 	trans_direction = "1"
 	cityview = view
-	self:_paint_world_map(surface)
-
-	if start ~= nil and dest ~= nil then
-		--set start_node
-		start_node = {}
-		if start == "new_york" then
-			start_node = new_york_area
-		elseif start == "rio" then
-			start_node = rio_area
-		elseif start == "london" then
-			start_node = london_area
-		elseif start == "paris" then
-			start_node = paris_area
-		elseif start == "cairo" then
-			start_node = cairo_area
-		elseif start == "bombay" then
-			start_node = bombay_area
-		elseif start == "sidney" then
-			start_node = sidney_area
-		elseif start == "tokyo" then
-			start_node = tokyo_area
-		end
-
-		--set dest_node
-		dest_node = {}
-		if dest == "new_york" then
-			dest_node = new_york_area
-		elseif dest == "rio" then
-			dest_node = rio_area
-		elseif dest == "london" then
-			dest_node = london_area
-		elseif dest == "paris" then
-			dest_node = paris_area
-		elseif dest == "cairo" then
-			dest_node = cairo_area
-		elseif dest == "bombay" then
-			dest_node = bombay_area
-		elseif dest == "sidney" then
-			dest_node = sidney_area
-		elseif dest == "tokyo" then
-			dest_node = tokyo_area
-		end
-
-		path_width = dest_node.x - start_node.x
-		path_height = dest_node.y - start_node.y
-		--force the trip to be drawn from left
-		if start_node.x > dest_node.x then
-			-- local prel = start_node
-			-- start_node = dest_node
-			-- dest_node = prel
-			trans_direction = "2"
-		end
-
-		-- This section will show the travel path
-		-- local mul = 1
-		-- if path_height < 0 then
-		-- 	mul = -1
-		-- 	path_height = math.abs(path_height)
-		-- end
-		--
-		-- local path = {}
-		-- for i = 0, path_width - 1 do
-		-- 	path[i] = {}
-		-- 	for j = 0, path_height - 1 do
-		-- 		path[i][j] = subsurface(surface, _create_path(start_node.x + i, start_node.y + mul*j))
-		-- 	end
-		-- end
-		-- for i = 0, path_width - 1 do
-		-- 	path[i][math.floor((path_height/path_width)*i)]:clear(path_color)
-		-- end
-
-		 if transport ~= nil then
-			 callback = utils.partial(self._move_vehicle, self, surface)
-			 self.stop_timer = sys.new_timer(1, callback)
-			 self.stop_timer:start()
-
-		end
-	end
+	-- self:_paint_world_map(surface)
+	--
+	-- if start ~= nil and dest ~= nil then
+	-- 	--set start_node
+	-- 	start_node = {}
+	-- 	if start == "new_york" then
+	-- 		start_node = new_york_area
+	-- 	elseif start == "rio" then
+	-- 		start_node = rio_area
+	-- 	elseif start == "london" then
+	-- 		start_node = london_area
+	-- 	elseif start == "paris" then
+	-- 		start_node = paris_area
+	-- 	elseif start == "cairo" then
+	-- 		start_node = cairo_area
+	-- 	elseif start == "bombay" then
+	-- 		start_node = bombay_area
+	-- 	elseif start == "sidney" then
+	-- 		start_node = sidney_area
+	-- 	elseif start == "tokyo" then
+	-- 		start_node = tokyo_area
+	-- 	end
+	--
+	-- 	--set dest_node
+	-- 	dest_node = {}
+	-- 	if dest == "new_york" then
+	-- 		dest_node = new_york_area
+	-- 	elseif dest == "rio" then
+	-- 		dest_node = rio_area
+	-- 	elseif dest == "london" then
+	-- 		dest_node = london_area
+	-- 	elseif dest == "paris" then
+	-- 		dest_node = paris_area
+	-- 	elseif dest == "cairo" then
+	-- 		dest_node = cairo_area
+	-- 	elseif dest == "bombay" then
+	-- 		dest_node = bombay_area
+	-- 	elseif dest == "sidney" then
+	-- 		dest_node = sidney_area
+	-- 	elseif dest == "tokyo" then
+	-- 		dest_node = tokyo_area
+	-- 	end
+	--
+	-- 	path_width = dest_node.x - start_node.x
+	-- 	path_height = dest_node.y - start_node.y
+	-- 	if start_node.x > dest_node.x then
+	-- 		trans_direction = "2"
+	-- 	end
+		self:_paint_world_map_test_edition_function_awesome(surface)
+	-- 	 if transport ~= nil then
+	-- 		 callback = utils.partial(self._move_vehicle, self, surface)
+	-- 		 self.stop_timer = sys.new_timer(1, callback)
+	-- 		 self.stop_timer:start()
+	--
+	-- 	end
+	-- end
 end
 
 function WorldMap:_move_vehicle(surface)
@@ -184,6 +207,22 @@ function WorldMap:_paint_world_map(surface)
 	tokyo_area = self:_create_area(tokyo_pos.x * screen_width, tokyo_pos.y * screen_height)
 	local tokyo = subsurface(surface, tokyo_area)
 	tokyo:clear(city_color)
+	gfx.update()
+end
+
+function WorldMap:_paint_world_map_test_edition_function_awesome(surface)
+	local screen_width = surface:get_width()
+	local screen_height = surface:get_height()
+	surface:clear(background_color)
+	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/worldmap2.png")))
+
+	for k, v in pairs(cities) do
+		v.area = self:_create_area(v.position.x * screen_width, v.position.y * screen_height)
+		local city = subsurface(surface, v.area)
+		city:clear(city_color)
+	end
+
+	gfx.update()
 end
 
 return WorldMap
