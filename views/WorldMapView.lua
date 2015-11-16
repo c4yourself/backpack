@@ -13,42 +13,42 @@ local cityview
 local cities = {
 	new_york = {
 		name = "New York",
-		position = {x = 324/1280, y = 194/720},
+		position = {x = 349/1280, y = 194/720},
 		area = {}
 	},
 	rio = {
 		name = "Rio de Janeiro",
-		position = {x = 461/1280, y = 388/720},
+		position = {x = 477/1280, y = 403/720},
 		area = {}
 	},
 	london = {
 		name = "London",
-		position = {x = 615/1280, y = 125/720},
+		position = {x = 620/1280, y = 130/720},
 		area = {}
 	},
 	paris = {
 		name ="Paris",
-		position = {x = 630/1280, y = 150/720},
+		position = {x = 635/1280, y = 155/720},
 		area = {}
 	},
 	cairo = {
 		name = "Cairo",
-		position = {x = 725/1280, y = 220/720},
+		position = {x = 730/1280, y = 225/720},
 		area = {}
 	},
 	bombay = {
 		name = "Bombay",
-		position = {x = 900/1280, y = 200/720},
+		position = {x = 892/1280, y = 257/720},
 		area = {}
 	},
 	sidney = {
 		name = "Sidney",
-		position = {x = 1168/1280, y = 428/720},
+		position = {x = 1177/1280, y = 433/720},
 		area = {}
 	},
 	tokyo = {
 		name = "Tokyo",
-		position = {x = 1115/1280, y = 190/720},
+		position = {x = 1120/1280, y = 195/720},
 		area = {}
 	}
 }
@@ -113,7 +113,7 @@ function WorldMap:_stop_timer(surface)
 end
 
 function WorldMap:_create_area(x, y)
-	return Rectangle(x, y, 10, 10)
+	return Rectangle(x-5, y-5, 10, 10)
 end
 
 function WorldMap:_create_path(x, y)
