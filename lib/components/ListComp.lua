@@ -61,7 +61,8 @@ end
 function ListComp:render(surface)
 	--surface:clear({0, 75, 153, 255})
 	surface:clear({65, 70, 72, 255})
-	surface:clear({255, 255, 255, 255}, {x = 5, y = 5, width = surface:get_width() - 10, height = surface:get_height() - 10})
+	surface:clear({255, 255, 255, 255},
+	{x = 5, y = 5, width = surface:get_width() - 10, height = surface:get_height() - 10})
 
 --[[]
 	if self.start_indicator == true then

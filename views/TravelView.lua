@@ -35,38 +35,50 @@ function TravelView:render(surface)
 	return_button:fill(button_color)
 	font:draw(return_button, {x=40, y=37}, "Return to City View")
 
-	local list_item_position_left = {x=60, y=35}
---	local list_item2_position_left = {x=20, y=5}
---	local list_item1_color_selected = {r=255, g=255, b=255}
+	local list_item_position_left = {x=45, y=35}
+--[[
+	Efter merge från Development kan följande skrivas för vertikal centrering:
+
+	local list_item_position_left = {x=45, height = surface:get_height()}
+
+]]
+
+
 	local font_color = Font("data/fonts/DroidSans.ttf", 20, Color(65, 70, 72, 255))
 	local font_color_selected = Font("data/fonts/DroidSans.ttf", 20, Color(255, 255, 255, 255))
+	local icon = "data/images/aeroplane.png"
 
+	print(icon)
 --text_left, font, text_position_left, text_color_selected, enabled, selected
 	local list_item1 = ListItem(
+		icon,
 		"New York",
 		font_color,
 		list_item_position_left, font_color_selected, true, true)
 
 	local list_item2 = ListItem(
+		icon,
 		"London",
 		font_color,
 		list_item_position_left, font_color_selected, true, true)
 
 	local list_item3 = ListItem(
+		icon,
 		"Tokyo",
 		font_color,
 		list_item_position_left, font_color_selected, true, true)
 
 	local list_item4 = ListItem(
+		icon,
 		"Cairo",
 		font_color,
 		list_item_position_left, font_color_selected, true, true)
 
 	local list_item5 = ListItem(
+		icon,
 		"Bombay",
 		font_color,
 		list_item_position_left, font_color_selected, true, true)
-
 
 -- text_left, text_right, text_color, text_color_selected, enabled, selected, font_size, font_path, icon hur vi tänkt oss sen
 
