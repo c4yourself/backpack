@@ -1,5 +1,16 @@
 --- Profile
 -- @classmod Profile
+-- @field name
+-- @field email_address
+-- @field date_of_birth
+-- @field sex
+-- @field balance
+-- @field experience
+-- @field password
+-- @field badges
+-- @field id
+-- @field inventory
+-- @field login_token
 
 local class = require("lib.classy")
 local utils = require("lib.utils")
@@ -10,25 +21,107 @@ Profile.name = ""
 Profile.email_address = ""
 Profile.date_of_birth = ""
 Profile.sex = ""
+Profile.city = ""
 Profile.balance = 0
 Profile.experience = 0
 Profile.password = ""
 Profile.badges = {}
 Profile.id = 0
 Profile.inventory = {}
+Profile.login_token = ""
 
 --- Constructor for Profile
 -- @param name string representing name of user
 -- @param email_address string representing email address of user
 -- @param date_of_birth string date birth of user
 -- @param sex string representing the gender of the user
-function Profile:__init(name,email_address,date_of_birth,sex)
+function Profile:__init(name,email_address,date_of_birth,sex,city)
 	self.name = name
 	self.email_address = email_address
 	self.date_of_birth = date_of_birth
 	self.sex = sex
+	self.city = city
 end
 
+-- Get name of the user
+function Profile:get_name()
+	return self.name
+end
+
+-- Get profile name
+function Profile:get_profile_name()
+	return string.format("%s__%s",self.city,self.email_address)
+end
+
+-- Get email_address of the user
+function Profile:get_email_address()
+	return self.email_address
+end
+
+-- Get email_address of the user
+function Profile:get_date_of_birth()
+	return self.date_of_birth
+end
+
+-- Get sex of the user
+function Profile:get_sex()
+	return self.sex
+end
+
+-- Get city of the user
+function Profile:get_city()
+	return self.city
+end
+
+-- Get balance of the user
+function Profile:get_balance()
+	return self.balance
+end
+
+-- Get balance of the user
+function Profile:get_experience()
+	return self.experience
+end
+
+-- Get balance of the user
+function Profile:get_password()
+	return self.password
+end
+
+-- Get login_token of the user
+function Profile:get_login_token()
+	return self.login_token
+end
+
+-- Get id of the user
+function Profile:get_id()
+	return self.id
+end
+
+-- Get inventory of the user
+function Profile:get_inventory()
+	return self.inventory
+end
+-- Get badges of the user
+function Profile:get_badges()
+	return self.badges
+end
+-- Get a string of badges
+function Profile:get_badgesstring()
+	local tmp = string.format("%s",self.badges[1])
+	for i = 2, #self.badges, 1 do
+		tmp = string.format("%s,%s",tmp,self.badges[i])
+	end
+	return string.format("{%s}",tmp)
+end
+-- Get a string of inventory
+function Profile:get_inventorystring()
+	local tmp = string.format("\"1\": %s",self.inventory[1])
+	for i = 2, #self.inventory, 1 do
+		tmp = string.format("%s, \"%s\": %s",tmp,i,self.inventory[i])
+	end
+	return string.format("{%s}",tmp)
+end
 -- Set balance of the user
 -- @param balance representing balance of the user
 function Profile:set_balance(balance)
@@ -43,25 +136,30 @@ function Profile:set_experience(experience)
 	return self.experience
 end
 
--- get password of the user from server
+-- Set password of the user from server
 -- @param password representing password of the user from server database
-function Profile:get_password(password)
+function Profile:set_password(password)
 	self.password = password
-	return self.password
 end
--- get badges from server
+-- set badges from server
 -- @param badges representing badges of the profile from server database
-function Profile:get_badges(badges)
+function Profile:set_badges(badges)
 	self.badges = badges
-	return self.badges
 end
+-- set inventory from server
+-- @param inventory representing inventory of the profile from server database
+function Profile:set_inventory(inventory)
+	self.inventory = inventory
+end
+-- set id from server
+-- @param id representing id of the profile from server database
 function Profile:set_id(id)
 	self.id = id
 end
--- get profile id from server
--- @param id representing id of the profile from server database
-function Profile:get_id()
-	return self.id
+-- set login_token from server
+-- @param login_token representing login_token of the profile from server database
+function Profile:set_login_token(login_token)
+	self.login_token = login_token
 end
 -- Modify balance of the user
 -- @param number representing the change of balance
@@ -77,59 +175,6 @@ function Profile:modify_experience(number)
 		self.experience = self.experience + number
 	end
 	return self.experience
-end
-
--- Save profile
-function Profile:save()
-	local path = utils.absolute_path(string.format("data/profile/%s.profile",self.name))
-	local file = io.open(path,"w");
-	file:write("{\n")
-	file:write("\t\t\"badges\": {},\n")
-	file:write("\t\t\"balance\": " .. self.balance .. ",\n")
-	file:write("\t\t\"date_of_birth\": \"" .. self.date_of_birth .. "\",\n")
-	file:write("\t\t\"email_address\": \"" .. self.email_address .. "\",\n")
-	file:write("\t\t\"experience\": " .. self.experience .. ",\n")
-	file:write("\t\t\"id\": " .. self:get_id() .. ",\n")
-	file:write("\t\t\"inventory\": {}\n")
-	file:write("\t\t\"login_token\": \"token\",\n")
-	file:write("\t\t\"name\": \"" .. self.name .. "\",\n")
-	file:write("\t\t\"password\": \"" .. self.password .. "\",\n")
-	file:write("\t\t\"sex\": \"" .. self.sex .. "\",\n")
-	file:write("}\n")
-end
--- load profile
-
-function Profile:load(name)
-	local path = utils.absolute_path(string.format("data/profile/%s.profile",name))
-	for line in io.lines(path) do
-		if string.match(line,"\"name\"") ~= nil then
-			local tmp = {}
-			tmp = utils.split(line," ")
-			_,_,_,self.name = string.find(tmp[2],"([\"'])(.-)%1")
-		end
-		if string.match(line,"\"email_address\"") ~= nil then
-			local tmp = {}
-			tmp = utils.split(line," ")
-			_,_,_,self.email_address = string.find(tmp[2],"([\"'])(.-)%1")
-		end
-		if string.match(line,"\"date_of_birth\"") ~= nil then
-			local tmp = {}
-			tmp = utils.split(line," ")
-			_,_,_,self.date_of_birth = string.find(tmp[2],"([\"'])(.-)%1")
-		end
-		if string.match(line,"\"sex\"") ~= nil then
-			local tmp = {}
-			tmp = utils.split(line," ")
-			_,_,_,self.sex = string.find(tmp[2],"([\"'])(.-)%1")
-		end
-		if string.match(line,"\"balance\"") ~= nil then
-			self.balance = tonumber(string.sub(line,string.find(line," ")+1,string.find(line,",")-1))
-		end
-		if string.match(line,"\"experience\"") ~= nil then
-			self.experience = tonumber(string.sub(line,string.find(line," ")+1,string.find(line,",")-1))
-		end
-	end
-	return self.name, self.email_address,self.date_of_birth,self.sex,self.balance, self.experience
 end
 
 return Profile

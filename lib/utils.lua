@@ -1,6 +1,8 @@
 --- Collection of useful functions
 -- @module utils
 
+local config = require("config")
+
 local utils = {}
 
 --- Convert a path to an absolute path relative to the program root
@@ -12,11 +14,11 @@ local utils = {}
 -- @see emulator.sys.root_path
 function utils.absolute_path(path)
 	local absolute_path = path
-	if path:sub(1, 1) ~= "/" then
+	if path:sub(1, 1) ~= "/" and not config.is_emulator then
 		absolute_path = sys.root_path() .. "/" .. absolute_path
 	end
 
-	return utils.canonicalize_path(path)
+	return utils.canonicalize_path(absolute_path)
 end
 
 --- Convert any path to a normalized canonical form
