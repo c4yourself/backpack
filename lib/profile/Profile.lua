@@ -106,7 +106,22 @@ end
 function Profile:get_badges()
 	return self.badges
 end
-
+-- Get a string of badges
+function Profile:get_badgesstring()
+	local tmp = string.format("%s",self.badges[1])
+	for i = 2, #self.badges, 1 do
+		tmp = string.format("%s,%s",tmp,self.badges[i])
+	end
+	return string.format("{%s}",tmp)
+end
+-- Get a string of inventory
+function Profile:get_inventorystring()
+	local tmp = string.format("\"1\": %s",self.inventory[1])
+	for i = 2, #self.inventory, 1 do
+		tmp = string.format("%s, \"%s\": %s",tmp,i,self.inventory[i])
+	end
+	return string.format("{%s}",tmp)
+end
 -- Set balance of the user
 -- @param balance representing balance of the user
 function Profile:set_balance(balance)
