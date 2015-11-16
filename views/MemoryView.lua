@@ -48,23 +48,26 @@ function MemoryView:__init()
     -- Components
     local button_size_big = {width = 300, height = 100}
     self.button_size = {width = 25, height = 25}
-    self.button_1 = button(button_color, color_selected,
-        color_disabled, true, false)
-    self.position_1 = {x = 100, y = 450}
+    self.button_1 = button(self.button_color, self.color_selected,
+        self.color_disabled, true, false)
+    self.positions["exit"] = {x = 100, y = 450}
     self.button_1:set_textdata("Back to City", self.text_color,
         {x = 100, y = 450}, 30,
         utils.absolute_path("data/fonts/DroidSans.ttf"))
 
-    -- Create the board
+    -- Create the button grid
     local button_color = color(0, 128, 225, 255)
     local color_disabled = color(111,222,111,255)
     local color_selected = color(33, 99, 111, 255)
 
+    self.button_grid:add_button(self.positions["exit"], button_size_big,
+                                self.button_1)
     self.pos_x = 450
     self.pos_y = 50
 
     for i = 1, self.pairs*2 do
-        self.cards[i]  = button(button_color, color_selected, color_disabled, true, false)
+        self.cards[i]  = button(button_color, color_selected,
+                                color_disabled, true, false)
         if i == 1 then
             self.pos_x = self.pos_x
         elseif ((i-1) % self.columns == 0) then
@@ -75,7 +78,9 @@ function MemoryView:__init()
         end
 
         self.positions[i] = {x = self.pos_x, y = self.pos_y}
-        self.button_grid:add_button(self.positions[i], self.button_size, self.cards[i])
+        self.button_grid:add_button(self.positions[i],
+                                    self.button_size,
+                                    self.cards[i])
     end
 
     -- Listeners and callbacks
@@ -97,9 +102,6 @@ function MemoryView:press(key)
     end
 end
 
-function MemoryView:_print_board()
-
-end
 
 -- Renders MemoryView and all of its child views
 function MemoryView:render(surface)
@@ -117,8 +119,10 @@ function MemoryView:render(surface)
         surface:clear(color)
 
         -- Add the number of turns
-        local turns_text =sys.new_freetype(self.text_color:to_table(), 30, {x = 100, y = 110}, utils.absolute_path("data/fonts/DroidSans.ttf"))
-        local turns = sys.new_freetype(self.text_color:to_table(), 30, {x = 100, y = 150}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+        local turns_text =sys.new_freetype(self.text_color:to_table(), 30,
+            {x = 100, y = 110}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+        local turns = sys.new_freetype(self.text_color:to_table(), 30,
+            {x = 100, y = 150}, utils.absolute_path("data/fonts/DroidSans.ttf"))
         turns_text:draw_over_surface(surface, "Turns")
 
         if self.memory.moves == nil then
@@ -126,15 +130,17 @@ function MemoryView:render(surface)
         else
             turns:draw_over_surface(surface, self.memory.moves)
         end
-
-        --self.button_grid:render(surface)]]
+        gfx.update()
     end
-    gfx.update()
     self:dirty(false)
+    -- Render child components
     self.button_grid:render(surface)
+    --self.button_1:render(surface)
+
 end
 
 function MemoryView:back_to_city()
+    self:destroy()
     -- TODO Implement/connect pop-up for quit game
     -- Appendix 2 in UX design document
     -- Trigger exit event
