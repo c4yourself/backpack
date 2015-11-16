@@ -6,18 +6,6 @@ local utils = require("lib.utils")
 
 local bitlib = require("lib.bit")
 
-function bit_extract(value, field, width)
-	if bit32 == nil then
-		return tonumber(
-			utils.to_base(value, 2):reverse():sub(
-				field * width, (field + 1) * width):reverse(),
-			2)
-	else
-		return bit32.extract(value, field, width)
-	end
-end
-
-
 local Color = class("Color")
 
 Color.default_red = 0

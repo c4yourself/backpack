@@ -30,7 +30,8 @@ function surface:clear(color, rectangle)
 	-- Loop through every pixel and blend its color
 	for x = rect.x, rect.x + rect.width - 1 do
 		for y = rect.y, rect.y + rect.height - 1 do
-			self.image_data:setPixel(x, y, color:to_values())
+			local r, g, b, a = color:to_values()
+			self.image_data:setPixel(x, y, r, g, b, a)
 		end
 	end
 end
@@ -86,7 +87,19 @@ function surface:copyfrom(src_surface, src_rectangle, dest_rectangle, blend_opti
 		self.image_data:getWidth(), self.image_data:getHeight())
 
 	canvas:renderTo(function()
+		-- Set blend mode to premultiplied to make alpha transparency work
+		-- correctly. If left to alpha transparent pixels will darken for every
+		-- call to :copyfrom.
+		love.graphics.setBlendMode("premultiplied")
 		love.graphics.draw(love.graphics.newImage(self.image_data))
+		love.graphics.setBlendMode("alpha")
+
+		if blend_option ~= false then
+			love.graphics.setBlendMode("alpha")
+		else
+			love.graphics.setBlendMode("replace")
+		end
+
 		love.graphics.draw(
 			love.graphics.newImage(src_surface.image_data),
 			destination_rectangle.x,
@@ -94,6 +107,8 @@ function surface:copyfrom(src_surface, src_rectangle, dest_rectangle, blend_opti
 			0,
 			scale_x,
 			scale_y)
+
+		love.graphics.setBlendMode("alpha")
 	end)
 
 	self.image_data = canvas:getImageData()

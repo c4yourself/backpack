@@ -233,7 +233,7 @@ function mt:close ()
   return finalresult256(self.H)
 end
 ----------------------------------------------------------------------
-print(hash256)
+
 return {
   hash224 = hash224,
   hash256 = hash256,

@@ -9,7 +9,6 @@ local view = require("lib.view")
 local CityView2 = class("CityView2", View)
 local event = require("lib.event")
 local utils = require("lib.utils")
-local multiplechoice_quiz = require("views.multiplechoice_quiz")
 local SubSurface = require("lib.view.SubSurface")
 local NumericalQuizView = require("views.NumericalQuizView")
 local button= require("lib.components.Button")
@@ -151,11 +150,9 @@ function CityView2:load_view(button)
 		-- TODO ^This should be done by a subsurface in the final version
 		gfx.update()
 	elseif button == "3" then
-		print("Shut down program")
 		sys.stop()
 	elseif button == "4" then
 		-- Only for testing
-		print("Swapping to profile selection")
 
 		--profile_selection.render(screen)
 

@@ -16,11 +16,7 @@ end
 
 function ProfileSynchronizer:test()
 
-		print(self.ttlyawesomekey)
-		print(hash)
-		print(hash.sha256)
 		local s = require("lib.serpent")
-		print(s.line(hash))
 
 		local json_request =  [[{"hash":"]].. hash.sha256(self.ttlyawesomekey)..[["}]]
 	  local json_response = { }
@@ -64,7 +60,7 @@ function ProfileSynchronizer:login(email, password)
   }
   local result = table.concat(json_response)
 
-	print(result)
+
 
 
 end
@@ -89,7 +85,7 @@ function ProfileSynchronizer:get_profile()
     sink = ltn12.sink.table(profile_body)
   }
   local result = table.concat(profile_body)
-	print(result)
+
 end
 function ProfileSynchronizer:delete_profile()
 end

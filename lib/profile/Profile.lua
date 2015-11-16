@@ -52,6 +52,10 @@ end
 function Profile:get_name()
 	return self.name
 end
+-- Get profile name
+function Profile:get_profile_name()
+	return string.format("%s__%s",self.city,self.email_address)
+end
 -- Get email_address of the user
 function Profile:get_email_address()
 	return self.email_address
