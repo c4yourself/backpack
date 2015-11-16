@@ -24,7 +24,7 @@ function localprofilemanager:save(profile)
   file:write("\t\t\"experience\": " .. profile:get_experience() .. ",\n")
   file:write("\t\t\"id\": " .. profile:get_id() .. ",\n")
   file:write("\t\t\"inventory\": {}\n")
-  file:write("\t\t\"login_token\": \" \",\n")
+  file:write("\t\t\"login_token\":" .. profile:get_login_token() .. ",\n")
   file:write("\t\t\"name\": \"" .. profile:get_profile_name() .. "\",\n")
   file:write("\t\t\"password\": \"" .. profile:get_password() .. "\",\n")
   file:write("\t\t\"sex\": \"" .. profile:get_sex() .. "\",\n")
@@ -153,4 +153,96 @@ function localprofilemanager:delete(profile_city,profile_email)
   end
 end
 
+-- Synchronize json content from server to local profile
+-- @param server_json_profile representing the string get from server
+-- @return profile representing the instance of profile based on server json data
+function localprofilemanager:synchronizetolocal(server_json_profile)
+  local name, email_address, date_of_birth
+  local sex, city, balance, experience
+  local id, password, login_token
+  local badges = {}
+  local inventory = {}
+  local server_profile = {}
+
+  table.insert(server_profile,utils.split(server_json_profile,"\n"))
+  for i = 1, #server_profile, 1 do
+    if string.match(server_profile[i],"\"name\"") ~= nil then
+      local tmp = {}
+      tmp = utils.split(server_profile[i]," ")
+      _,_,_,name = string.find(tmp[2],"([\"'])(.-)%1")
+    end
+
+    if string.match(server_profile[i],"\"email_address\"") ~= nil then
+      local tmp = {}
+      tmp = utils.split(server_profile[i]," ")
+      _,_,_,email_address = string.find(tmp[2],"([\"'])(.-)%1")
+    end
+
+    if string.match(server_profile[i],"\"date_of_birth\"") ~= nil then
+      local tmp = {}
+      tmp = utils.split(server_profile[i]," ")
+      _,_,_,date_of_birth = string.find(tmp[2],"([\"'])(.-)%1")
+    end
+
+    if string.match(server_profile[i],"\"sex\"") ~= nil then
+      local tmp = {}
+      tmp = utils.split(server_profile[i]," ")
+      _,_,_,sex = string.find(tmp[2],"([\"'])(.-)%1")
+    end
+
+    if string.match(server_profile[i],"\"city\"") ~= nil then
+      local tmp = {}
+      tmp = utils.split(server_profile[i]," ")
+      _,_,_,city = string.find(tmp[2],"([\"'])(.-)%1")
+    end
+
+    if string.match(server_profile[i],"\"balance\"") ~= nil then
+      balance = tonumber(string.sub(server_profile[i],string.find(server_profile[i]," ") + 1,string.find(server_profile[i],",") - 1))
+    end
+
+    if string.match(server_profile[i],"\"experience\"") ~= nil then
+      experience = tonumber(string.sub(server_profile[i],string.find(server_profile[i]," ") + 1,string.find(server_profile[i],",") - 1))
+    end
+
+    if string.match(server_profile[i],"\"badges\"") ~= nil then
+      badges = utils.split(string.sub(server_profile[i],string.find(server_profile[i],"[") + 1, string.find(server_profile[i],"]") - 1),",")
+    end
+
+    if string.match(server_profile[i],"\"password\"") ~= nil then
+      local tmp = {}
+      tmp = utils.split(server_profile[i]," ")
+      _,_,_,password = string.find(tmp[2],"([\"'])(.-)%1")
+    end
+
+    if string.match(server_profile[i],"\"login_token\"") ~= nil then
+      local tmp = {}
+      tmp = utils.split(server_profile[i]," ")
+      _,_,_,login_token = string.find(tmp[2],"([\"'])(.-)%1")
+    end
+
+    if string.match(server_profile[i],"\"id\"") ~= nil then
+      id = tonumber(string.sub(server_profile[i],string.find(server_profile[i]," ") + 1,string.find(server_profile[i],",") - 1))
+    end
+
+    if string.match(server_profile[i],"\"inventory\"") ~= nil then
+      local tmp = {}
+      tmp = utils.split(string.sub(server_profile[i],string.find(server_profile[i],"{") + 1, string.find(server_profile[i],"}") - 1),",")
+      for i=1, #tmp, 1 do
+        inventory[string.format("%s",sting.sub(tmp[i],1, string.find(tmp[i],":") - 1))] = tonumber(string.sub(tmp[i],string.find(tmp[i], " ") + 1, string.len(tmp[i])))
+      end
+    end
+
+  end
+
+  profile = Profile(name,email_address,date_of_birth,sex,city)
+  profile:set_balance(balance)
+  profile:set_experience(experience)
+  profile:set_id(id)
+  profile:set_password(password)
+  profile:set_badges(badges)
+  profile:set_inventory(inventory)
+  profile:set_login_token(login_token)
+
+  return profile
+end
 return localprofilemanager
