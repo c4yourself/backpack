@@ -57,12 +57,12 @@ function onStart()
 	-- view.view_manager:set_view(splash_view)
 
 
-	--local city_view = CityView(event.remote_control)
-	--view.view_manager:set_view(city_view)
-	--gfx.update()
-
-	local city_view_2 = CityView2(event.remote_control)
-	view.view_manager:set_view(city_view_2)
+	local city_view = CityView(event.remote_control)
+	view.view_manager:set_view(city_view)
 	gfx.update()
+
+		-- local city_view_2 = CityView2(event.remote_control)
+		-- view.view_manager:set_view(city_view_2)
+		-- gfx.update()
 
 end
