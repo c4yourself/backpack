@@ -60,12 +60,10 @@ function MultipleChoiceQuestion:is_correct(answer)
 		return false
 	else
 		for i = 1,#self.correct_answers,1 do
-			print(self.correct_answers[i])
-			print(answer[i])
-				if self.correct_answers[i] ~= answer[i] then
-					result_flag =- 1
-					break
-				end
+			if self.correct_answers[i] ~= answer[i] then
+				result_flag =- 1
+				break
+			end
 		end
 	end
 	if result_flag == -1 then
