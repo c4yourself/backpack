@@ -23,9 +23,8 @@ function ProfileManager:save(profile)
 end
 
 
-function ProfileManager:delete()
-
-
+function ProfileManager:delete(profile_city,profile_email)
+  localprofilemanager:delete(profile_city,profile_email)
 end
 
 function ProfileManager:login()

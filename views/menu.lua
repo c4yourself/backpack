@@ -1,6 +1,6 @@
 local utils = require("lib.utils")
 local event = require("lib.event")
-local multiplechoice_quiz = require("views.multiplechoice_quiz")
+local MultipleChoiceView = require("views.MultipleChoiceView")
 local view = require("lib.view")
 local NumericalQuizView = require("views.NumericalQuizView")
 local profile_selection = require("views.profile_selection")
@@ -16,12 +16,10 @@ function menu.load_view(button)
 		multiplechoice_quiz.render(screen)
 		gfx.update()
 	elseif button == "3" then
-		print("Shut down program")
 		sys.stop()
 
 	elseif button == "4" then
 		-- Only for testing
-		print("Swapping to profile selection")
 		profile_selection.render(screen)
 		--local prof_sel = profile_selection()
 		--view.view_manager:set_view(prof_sel)

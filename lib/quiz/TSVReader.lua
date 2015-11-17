@@ -41,24 +41,6 @@ end
 -- @return self.questions_table representing get the question table
 -- @return false representing don't get question from TSV file
 function TSVReader:get_question(question_type)
-	local Profile
-	--Profile = profile("Mike","Mike@gmail.com","1972-01-02","male")
-	--localprofilemanager:save(Profile)
-	--Profile = localprofilemanager:load(Profile,"John")
-	--Profile:set_balance(100)
-	--localprofilemanager:save(Profile)
-	local Profiles = {}
-	Profiles = localprofilemanager:get_profileslist(Profiles)
-	if Profiles ~= false then
-		print("Success")
-	else
-		print("Fail")
-	end
-
-	--for i =1, #Profiles, 1 do
-	--	print(Profiles[i].get_name() .. " " .. profiles[i].get_email_address())
-	--end
-
 	local tmp_table = {}
 	self.filename = utils.absolute_path(string.format("data/questions/%s.tsv",self.filename))
 	if(lfs.attributes(self.filename, "mode") == "file") then
@@ -115,7 +97,6 @@ end
 function TSVReader:generate_question(count)
 	seed = self.generate_random(#self.question_index,#self.question_index)
 	count = self.question_index[seed[count]]
-	--print(string.format("count=%d",count))
 	local question = MultipleChoiceQuestion(self.image_path,self.questions_table[count][1],self.correct_answers[count],self.choices[count])
 	return question
 end
