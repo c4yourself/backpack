@@ -54,10 +54,13 @@ function TSVReader:get_question(question_type)
 			if string.sub(line,1,7) == question_type then
 				table.insert(tmp_table,string.sub(line,9,#line))
 			end
+			if string.sub(line,1,9) == question_type then
+				table.insert(tmp_table,string.sub(line,11,#line))
 		end
 		for i = 1,#tmp_table,1 do
 			table.insert(self.questions_table,utils.split(tmp_table[i],"\t"))
 		end
+	end
 		for i = 1,#self.questions_table,1 do
 			table.insert(self.question_index,i)
 			table.insert(self.choices,utils.split(self.questions_table[i][2],";"))
