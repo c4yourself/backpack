@@ -110,7 +110,7 @@ end
 
 function MemoryView:press(key)
     if key == "back" then
-		self:back_to
+		self:back_to_city()
     end
 end
 
