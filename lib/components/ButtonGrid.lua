@@ -14,10 +14,8 @@ local SubSurface = require("lib.view.SubSurface")
 local utils = require("lib.utils")
 local event = require("lib.event")
 local Font = require("lib.draw.Font")
-<<<<<<< HEAD
 local Color = require("lib.draw.Color")
-=======
->>>>>>> cityview
+
 --local CityView = require("views.CityView")
 
 --- Constructor for ButtonGrid
