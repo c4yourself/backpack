@@ -33,10 +33,11 @@ function MemoryView:__init()
     self.button_grid = MemoryGrid()
     self.profile = Profile("Lisa", "lisa@lisa.se", "04-08-1992", "female", "paris")
     self:_set_pairs()
+    self.pairs = 4 -- TODO For quicker manual testing, remove once done coding
     self.memory = MemoryGame(self.pairs, profile, false)
     self.columns = math.ceil((self.pairs*2)^(1/2))
 
--- Adjust the board so that rows*columns = 2*pairs
+    -- Adjust the board so that rows*columns = 2*pairs
     for i=1, self.pairs * 2 do
       if ((2 * self.pairs) % self.columns) == 0 then
         break
@@ -44,8 +45,6 @@ function MemoryView:__init()
         self.columns = self.columns + 1
       end
     end
-
-
 
     -- Graphics
     self.font = sys.new_freetype(
@@ -84,6 +83,12 @@ function MemoryView:__init()
     for i = 1, self.pairs*2 do
         self.cards[i]  = CardComponent(button_color, color_selected,
                                 color_disabled, true, false)
+        --Temporary code snippet to be able to differentiate cards from eachother
+        local cc = (self.memory.cards[i] * 50) % 255
+        local front_color = color(cc, cc, cc, cc)
+        self.cards[i].front_color = front_color
+
+        -- Temporary code ends
         if i == 1 then
             self.pos_x = self.pos_x
         elseif ((i-1) % self.columns == 0) then
@@ -94,6 +99,11 @@ function MemoryView:__init()
         end
 
         self.positions[i] = {x = self.pos_x, y = self.pos_y}
+        --local card_text = to_string(self.memory.cards[i])
+        --local text_position =
+        --self.cards[i]:set_textdata(card_text, self.text_color, text_position,
+        --                            font_size, font_path)
+
         self.button_grid:add_button(self.positions[i],
                                     self.button_size,
                                     self.cards[i])
@@ -111,6 +121,13 @@ function MemoryView:__init()
         "submit",
         utils.partial(self._determine_new_state, self)
     )
+
+    self:listen_to(
+        self.button_grid,
+        "navigation",
+        utils.partial(self._check_match, self)
+    )
+
 end
 
 
@@ -129,8 +146,6 @@ end
 -- Uses the last_selection variable as an index of the state in memory. checks if
 -- the game is finished when opening the second card.
 function MemoryView:_determine_new_state()
-    -- last_selection is an index (?)
-    --State where no first and second card is nil
     local card_index = self.button_grid.last_selection
     local card, is_open = self.memory:look(card_index)
 
@@ -139,7 +154,7 @@ function MemoryView:_determine_new_state()
         self.memory:open(card_index)
         self.button_grid:set_card_status(card_index, "FACING_UP")
       end
-    elseif self.memory.second_card ==nil then
+    elseif self.memory.second_card == nil then
       if is_open ~= true then
         self.memory:open(card_index)
         self.button_grid:set_card_status(card_index, "FACING_UP")
@@ -151,10 +166,18 @@ end
 
 -- Used to check match between two open cards. Should be used to call match if
 -- two cards are opened and the player has moved to another card.
-function MemoryView:check_match()
-  if self.memory.second_card ~= nil then
-      self.memory:match()
-  end
+function MemoryView:_check_match()
+    if self.memory.second_card ~= nil then
+        --self.memory:match()
+        local is_matching = self.memory:match()
+        if not is_matching then
+            print("didn't match")
+            local state_map = self.memory.state
+            self.button_grid:set_multiple_status(state_map)
+        else
+            print("matching!")
+        end
+    end
 end
 
 

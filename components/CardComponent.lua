@@ -9,6 +9,7 @@ local CardComponent = class("CardComponent", Button)
 local event = require("lib.event")
 local utils = require("lib.utils")
 local Color = require("lib.draw.Color")
+local SubSurface = require("lib.view.SubSurface")
 
 --- Constructor for NumericalInputComponent
 -- @param event_listener Remote control to listen to
@@ -23,14 +24,24 @@ end
 
 function CardComponent:render(surface)
 	self:dirty(false)
-	if self:is_selected() then
-		surface:fill(self.color_selected:to_table())
+	if self.status == "FACING_UP" then
+		surface:fill(self.front_color:to_table())
 	elseif self.status == "FACING_DOWN" then
 		surface:fill(self.backside_color:to_table())
-	elseif self.status == "FACING_UP" then
-		surface:fill(self.front_color:to_table())
 	elseif not self:is_enabled() then
 		surface:fill(self.color_disabled:to_table())
+	end
+
+	if self:is_selected() then
+		local margin = 0.30
+		local area = {
+			width = math.ceil((1-2*margin) * surface.width),
+			height = math.ceil((1-2*margin) * surface.width),
+			x = math.ceil(surface.width * 0.30),
+			y = math.ceil(surface.height * 0.30)
+		}
+		local sub_surface = SubSurface(surface,area)
+		sub_surface:fill(self.color_selected:to_table())
 	end
 end
 
