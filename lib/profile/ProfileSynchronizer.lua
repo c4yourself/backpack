@@ -26,7 +26,7 @@ else
 end
 --]]
 
--- Constructor
+--- Constructor for ProfileSynchronizer
 function ProfileSynchronizer:__init()
 
 	self.url = "http://localhost:5000"
@@ -38,7 +38,9 @@ function ProfileSynchronizer:__init()
 
 end
 
--- Local function to create an instance of the profile given the data
+--- Local function to create an instance of the profile given the data
+-- @param data a table containing all information about a profile
+-- @return new_profile A newly created instance of Profileclass
 local function create_existing_profile(data)
 
 	-- Constructor
@@ -52,7 +54,11 @@ local function create_existing_profile(data)
 	return new_profile
 end
 
--- Combined error handling for all sources
+--- Combined error handling for all sources
+-- @param json_response the response accuired from earlyer server call
+-- @param code the error code returned from server
+-- @return error if error exists it will be returned
+-- @return return_table if no error exists jsondecoded table is returned
 local function return_data_check(json_response, code)
 
 	-- Check if HTTP request was OK
@@ -97,7 +103,10 @@ local function return_data_check(json_response, code)
 	end
 end
 
--- Local function for all server comnmunication given data and url
+--- Local function for all server comnmunication given data and url
+-- @param data the json data sent with the server request
+-- @param url_extension specific server url depending on server call
+-- @return var the JSON-data returned
 local function server_communication(data, url_extension)
 	-- Base URL for server location
 	local url_base = "http://localhost:5000"
@@ -124,7 +133,10 @@ local function server_communication(data, url_extension)
 	return return_var
 end
 
--- Login which receives the token for a given email and password
+--- Login which receives the token for a given email and password
+-- @param email a users email
+-- @param password a users password
+-- @return profile_token a users profiletoken used for other servercalls
 function ProfileSynchronizer:login(email, password)
 
 	-- Json request for login
@@ -145,7 +157,9 @@ function ProfileSynchronizer:login(email, password)
 
 end
 
--- Returns an instance of the profile given a token
+--- Returns an instance of the profile given a token
+-- @param token a users authetication token received by login()
+-- @return result a instance of the Profile class
 function ProfileSynchronizer:get_profile(token)
 	-- Json request for token data
 	local token_data =  [[{"profile_token":"]]..token..[[","zdata_hash":"49aac7d4ad14540a91c14255ea1288e2fdc9a54e53f01d15371e81345f5e3646"}]]
@@ -166,7 +180,11 @@ function ProfileSynchronizer:get_profile(token)
 	end
 end
 
--- Deletes the profile given email, password and token
+--- Deletes the profile given email, password and token
+-- @param email a users email
+-- @param password a users password
+-- @param token a users authetication token received by login()
+-- @return result either error message or message of delete completion
 function ProfileSynchronizer:delete_profile(email, password, token)
 
 	local json_request =  [[{"email":"]]..email..[[","password":"]]..password..[[","profile_token":"]]..token..[[","zdata_hash":"49aac7d4ad14540a91c14255ea1288e2fdc9a54e53f01d15371e81345f5e3646"}]]
@@ -183,7 +201,9 @@ function ProfileSynchronizer:delete_profile(email, password, token)
 	end
 end
 
--- Saves the profile (if the ID is 0) or updates a given profile
+--- Saves the profile (if the ID is 0) or updates a given profile
+-- @param profile A instance of the Profile class
+-- @return result Either error message or the newly created or updated profile
 function ProfileSynchronizer:save_profile(profile)
 
 	-- Extract the data from the profile
