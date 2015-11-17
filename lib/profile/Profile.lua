@@ -10,6 +10,7 @@
 -- @field badges
 -- @field id
 -- @field inventory
+-- @field login_token
 
 local class = require("lib.classy")
 local utils = require("lib.utils")
@@ -27,6 +28,7 @@ Profile.password = ""
 Profile.badges = {}
 Profile.id = 0
 Profile.inventory = {}
+Profile.login_token = ""
 
 --- Constructor for Profile
 -- @param name string representing name of user
@@ -41,21 +43,16 @@ function Profile:__init(name,email_address,date_of_birth,sex,city)
 	self.city = city
 end
 
--- Set balance of the user
--- @param balance representing balance of the user
-function Profile:set_balance(balance)
-	self.balance = balance
-	return self.balance
-end
-
 -- Get name of the user
 function Profile:get_name()
 	return self.name
 end
+
 -- Get profile name
 function Profile:get_profile_name()
 	return string.format("%s__%s",self.city,self.email_address)
 end
+
 -- Get email_address of the user
 function Profile:get_email_address()
 	return self.email_address
@@ -70,47 +67,107 @@ end
 function Profile:get_sex()
 	return self.sex
 end
+
 -- Get city of the user
 function Profile:get_city()
 	return self.city
 end
+
 -- Get balance of the user
 function Profile:get_balance()
 	return self.balance
 end
+
+-- Get balance of the user
+function Profile:get_experience()
+	return self.experience
+end
+
 -- Get balance of the user
 function Profile:get_password()
 	return self.password
 end
+
+-- Get login_token of the user
+function Profile:get_login_token()
+	return self.login_token
+end
+
+-- Get id of the user
+function Profile:get_id()
+	return self.id
+end
+
+-- Get inventory of the user
+function Profile:get_inventory()
+	return self.inventory
+end
+-- Get badges of the user
+function Profile:get_badges()
+	return self.badges
+end
+-- Get a string of badges
+function Profile:get_badges_string()
+	local tmp = string.format("%s",self.badges[1])
+	for i = 2, #self.badges, 1 do
+		tmp = string.format("%s,%s",tmp,self.badges[i])
+	end
+	return string.format("[%s]",tmp)
+end
+-- Get a string of inventory
+function Profile:get_inventory_string()
+	local tmp = string.format("\"1\": %s",self.inventory[1])
+	for i = 2, #self.inventory, 1 do
+		tmp = string.format("%s, \"%s\": %s",tmp,i,self.inventory[i])
+	end
+	return string.format("{%s}",tmp)
+end
+-- Set balance of the user
+-- @param balance representing balance of the user
+function Profile:set_balance(balance)
+	self.balance = balance
+	return self.balance
+end
+
 -- Set experience of the user
 -- @param experience representing experience of the user
 function Profile:set_experience(experience)
 	self.experience = experience
 	return self.experience
 end
--- Get balance of the user
-function Profile:get_experience()
-	return self.experience
-end
+
 -- Set password of the user from server
 -- @param password representing password of the user from server database
 function Profile:set_password(password)
 	self.password = password
-	--return self.password
 end
--- get badges from server
+-- set badges from server
 -- @param badges representing badges of the profile from server database
-function Profile:set_badges(badges)
-	self.badges = badges
-	--return self.badges
+function Profile:set_badges(badges_string)
+	local tmp = {}
+	tmp = utils.split(string.sub(badges_string,2, string.len(badges_string) - 1),",")
+	for i = 1, #tmp, 1 do
+		table.insert(self.badges,tonumber(tmp[i]))
+	end
 end
+-- set inventory from server
+-- @param inventory representing inventory of the profile from server database
+function Profile:set_inventory(inventory_string)
+	local tmp = {}
+	tmp = utils.split(string.sub(inventory_string,string.find(inventory_string,"{") + 1,string.find(inventory_string,"}") - 1),",")
+	for i=1, #tmp, 1 do
+		table.insert(self.inventory,tonumber(string.sub(tmp[i],string.find(tmp[i]," ") + 1,string.len(tmp[i]))))
+	end
+end
+-- set id from server
+-- @param id representing id of the profile from server database
 function Profile:set_id(id)
 	self.id = id
 end
--- get profile id from server
--- @param id representing id of the profile from server database
-function Profile:get_id()
-	return self.id
+-- set login_token from server
+-- @param login_token representing login_token of the profile from server database
+function Profile:set_login_token(login_token)
+	self.login_token = login_token
 end
 -- Modify balance of the user
 -- @param number representing the change of balance
