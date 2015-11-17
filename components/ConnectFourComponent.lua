@@ -91,8 +91,6 @@ end
 
 function ConnectFourComponent:render(surface)
 
-print("render")
-
 	self:dirty(false)
 
 	local coin_color_player = {r=255, g=255, b=51}
@@ -104,8 +102,6 @@ print("render")
 	local posy = 0.1*surface:get_height()+ 0.5*height_coinbox
 	local posy_constant = 0.1*surface:get_height()+ 0.5*height_coinbox
 	local posx_constant = 0.35*surface:get_width()
-	print("poy: " .. posy_constant)
-	print("posx: " .. posx_constant)
 	self:top_row(surface, self.current_column, width_coinbox, height_coinbox)
 
 	for i = 1, 6 do
@@ -153,9 +149,8 @@ print("render")
 
 	--surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/logo.png")),nil,{x=posx_constant, y=posy_constant})
 
-
 	if self.connectfour:get_player() == "O" then
-		local AI_column = self.connectfour:computer_AI()
+		local AI_column = self.connectfour:computer_AI(self.current_column)
 
 	--[[	print("innan delay")
 		local callback = utils.partial(self.delay, self, surface)
