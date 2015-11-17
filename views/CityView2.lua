@@ -10,12 +10,12 @@ local CityView2 = class("CityView2", View)
 local event = require("lib.event")
 local utils = require("lib.utils")
 local SubSurface = require("lib.view.SubSurface")
-local NumericalQuizView = require("views.NumericalQuizView")
+--local NumericalQuizView = require("views.NumericalQuizView")
 local button= require("lib.components.Button")
 local button_grid	=	require("lib.components.ButtonGrid")
 local color = require("lib.draw.Color")
-local profile_selection = require("views.profile_selection")
-local MultipleChoiceView = require("views.MultipleChoiceView")
+--local profile_selection = require("views.profile_selection")
+--local MultipleChoiceView = require("views.MultipleChoiceView")
 
 --- Constructor for CityView
 -- @param event_listener Remote control to listen to
@@ -68,8 +68,8 @@ function CityView2:render(surface)
 	button_3:set_textdata("Exit",text_color,{x=100,y=450},30,utils.absolute_path("data/fonts/DroidSans.ttf"))
 
  	-- Adding the score to surface
-	local score = sys.new_freetype(score_text_color:to_table(), 40, {x=1010,y=170}, utils.absolute_path("data/fonts/DroidSans.ttf"))
-	score:draw_over_surface(surface, "Score: " .. "125")
+	--[[local score = sys.new_freetype(score_text_color:to_table(), 40, {x=1010,y=170}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	score:draw_over_surface(surface, "Score: " .. "125")]]
 
 	-- using the button grid to render all buttons and texts
 	self.buttonGrid:render(surface)
