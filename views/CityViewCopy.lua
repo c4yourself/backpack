@@ -18,6 +18,7 @@ local NumericalQuizView = require("views.NumericalQuizView")
 function CityViewCopy:__init(remote_control)
 	View.__init(self)
 	self.background_path = ""
+	tv = travel_view(remote_control)
 end
 
 function CityViewCopy:render(surface)
@@ -94,8 +95,8 @@ function CityViewCopy:load_view(button)
 	elseif button == "2" then
 
 		local sub_surface_travel_view = SubSurface(screen,{width=screen:get_width()*0.86, height=screen:get_height()*0.9-100*0.9, x=screen:get_width()*0.04, y=screen:get_height()*0.05+50})
-		
-		travel_view:render(sub_surface_travel_view)
+
+		tv:render(sub_surface_travel_view)
 		gfx.update()
 
 	elseif button == "3" then
