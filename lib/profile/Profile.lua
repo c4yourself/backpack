@@ -128,7 +128,36 @@ function Profile:set_balance(balance)
 	self.balance = balance
 	return self.balance
 end
-
+-- Set name of the user
+-- @param name representing name of the user
+function Profile:set_name(name)
+	self.name = name
+	return self.name
+end
+-- Set email_address of the user
+-- @param email_address representing email_address of the user
+function Profile:set_email_address(email_address)
+	self.email_address = email_address
+	return self.email_address
+end
+-- Set date_of_birth of the user
+-- @param date_of_birth representing date_of_birth of the user
+function Profile:set_date_of_birth(date_of_birth)
+	self.date_of_birth = date_of_birth
+	return self.date_of_birth
+end
+-- Set sex of the user
+-- @param sex representing sex of the user
+function Profile:set_sex(sex)
+	self.sex = sex
+	return self.sex
+end
+-- Set city of the user
+-- @param city representing city of the user
+function Profile:set_city(city)
+	self.city = city
+	return self.city
+end
 -- Set experience of the user
 -- @param experience representing experience of the user
 function Profile:set_experience(experience)
