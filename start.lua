@@ -32,25 +32,6 @@ end
 
 -- This function is called at the start of the program
 function onStart()
-	--start connectfour
---[[	local cfc = ConnectFourComponent(event.remote_control)
-	view.view_manager:set_view(cfc)
-	gfx.update()
-
-	local callback_dirty =function()
-		cfc:render(screen)
-		gfx.update()
-	end
-	cfc:on("dirty",callback_dirty) ]]--
-
-	--menu.render(screen)
-  --local city_view = CityView(event.remote_control)
-	--view.view_manager:set_view(city_view)
-
-	-- the "up" and "down" buttons are enabled for
-	-- choosing alternatives in city_view_2
---	local city_view_2 = CityView2(event.remote_control)
---	view.view_manager:set_view(city_view_2)
 
 	-- Start with Splash Screen
 	-- local splash_view = SplashView(event.remote_control)
@@ -64,5 +45,6 @@ function onStart()
 	--local city_view_2 = CityView2(event.remote_control)
 	--view.view_manager:set_view(city_view_2)
 	--gfx.update()
+
 
 end
