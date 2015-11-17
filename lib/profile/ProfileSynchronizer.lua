@@ -33,6 +33,7 @@ function ProfileSynchronizer:__init()
 	self.login_url = "/profile/authenticate/"
 	self.get_profile_url = "/profile/info/"
 	self.save_profile_url ="/profile/"
+	self.delete_profile_url = "/profile/delete/"
 	self.ttlyawesomekey = "c4y0ur5elf"
 
 end
@@ -168,8 +169,18 @@ end
 -- Deletes the profile given email, password and token
 function ProfileSynchronizer:delete_profile(email, password, token)
 
-	-- To be implemented
-	return false
+	local json_request =  [[{"email":"]]..email..[[","password":"]]..password..[[","profile_token":"]]..token..[[","zdata_hash":"49aac7d4ad14540a91c14255ea1288e2fdc9a54e53f01d15371e81345f5e3646"}]]
+
+	result = server_communication(json_request, self.delete_profile_url)
+
+	-- Check if we have an error
+	if result["error"] then
+		--Return error table if error
+		return result
+	else
+		-- Otherwise we return message "Profile Deleted"
+		return result.message
+	end
 end
 
 -- Saves the profile (if the ID is 0) or updates a given profile
