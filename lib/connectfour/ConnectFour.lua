@@ -277,15 +277,35 @@ return nil
 end
 
 
+function ConnectFour:computer_AI(x_column)
+	--local random_column
+	--repeat
+	--	random_column = math.random(1,7)
+	--until self:is_valid_move("O", random_column)
 
+	--return random_column
 
-function ConnectFour:computer_AI()
 	local random_column
-	repeat
+
+	random_probability = math.random(1,10) --probability
+
+	if random_probability < 8 then
+		repeat
+			random_close = math.random(-1, 1)
+			random_column = x_column + random_close
+		until self:is_valid_move("O", random_column)
+	elseif random_probability >= 8 then
 		random_column = math.random(1,7)
-	until self:is_valid_move("O", random_column)
+	end
 
 	return random_column
+
+
+
+
+
+
+
 end
 
 return ConnectFour
