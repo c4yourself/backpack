@@ -16,6 +16,7 @@ local serpent = require("lib.serpent")
 local button = require("lib.components.Button")
 local MemoryGrid = require("lib.components.MemoryGrid")
 local CardComponent = require("components.CardComponent")
+local Profile = require("lib.profile.Profile")
 
 function MemoryView:__init()
     View.__init(self)
@@ -29,10 +30,22 @@ function MemoryView:__init()
     -- Logic
     self.cards = {}
     self.positions = {}
-    self.pairs = 10
-    self.memory = MemoryGame(self.pairs, false)
     self.button_grid = MemoryGrid()
+    self.profile = Profile("Lisa", "lisa@lisa.se", "04-08-1992", "female", "paris")
+    self:_set_pairs()
+    self.memory = MemoryGame(self.pairs, profile, false)
     self.columns = math.ceil((self.pairs*2)^(1/2))
+
+-- Adjust the board so that rows*columns = 2*pairs
+    for i=1, self.pairs * 2 do
+      if ((2 * self.pairs) % self.columns) == 0 then
+        break
+      else
+        self.columns = self.columns + 1
+      end
+    end
+
+
 
     -- Graphics
     self.font = sys.new_freetype(
@@ -113,20 +126,35 @@ end
 -- sure the data modell is changed when the game progresses
 --  local card_index = self.button_grid.last_selection
 --  self.button_grid:set_card_status(card_index, "FACING_UP")
+-- Uses the last_selection variable as an index of the state in memory. checks if
+-- the game is finished when opening the second card.
 function MemoryView:_determine_new_state()
-    --[[ pseudo-code:
-    Assume you have the index of the card the user pressed submit/ok and that
-    it can be found in this variable: self.last_selection
+    -- last_selection is an index (?)
+    --State where no first and second card is nil
+    local card_index = self.button_grid.last_selection
+    local card, is_open = self.memory:look(card_index)
 
     if self.memory.first_card == nil then
-        self.memory:open
-    else if self.memory.second_card == nil then
-        open
-        check for win condition (?)
-    else
-        etc...
+      if is_open ~= true then
+        self.memory:open(card_index)
+        self.button_grid:set_card_status(card_index, "FACING_UP")
+      end
+    elseif self.memory.second_card ==nil then
+      if is_open ~= true then
+        self.memory:open(card_index)
+        self.button_grid:set_card_status(card_index, "FACING_UP")
+        self.memory:is_finished()
+      end
     end
-    ]]
+end
+
+
+-- Used to check match between two open cards. Should be used to call match if
+-- two cards are opened and the player has moved to another card.
+function MemoryView:check_match()
+  if self.memory.second_card ~= nil then
+      self.memory:match()
+  end
 end
 
 
@@ -141,7 +169,7 @@ function MemoryView:render(surface)
             grid_callback)
         self.listening_initiated = true
     end
-
+--At this point, we should check the memory states and keep the card that are true in memory.states open
     if self:is_dirty() then
         surface:clear(color)
 
@@ -171,7 +199,21 @@ function MemoryView:back_to_city()
     -- TODO Implement/connect pop-up for quit game
     -- Appendix 2 in UX design document
     -- Trigger exit event
-    self:trigger("exit")
+    self:trigger("exit_view")
+end
+
+-- Function to set pairs accoriding to profile experience
+function MemoryView:_set_pairs()
+	local exp = self.profile:get_experience() + 350
+	if exp <= 100 then
+		self.pairs = 4
+	elseif exp <=200 then
+		self.pairs = 6
+	elseif exp <= 300 then
+		self.pairs = 8
+	elseif exp >300 then
+		self.pairs = 10
+	end
 end
 
 

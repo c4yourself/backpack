@@ -143,4 +143,5 @@ function TestMemory:test_calculate_reward()
   end
 
 
+
 return TestMemory

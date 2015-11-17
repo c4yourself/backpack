@@ -22,6 +22,7 @@ function Memory:__init(pairs, profile, scrambled)
 	self.second_card = nil
 	self.coins = 0
 	self.experience = 0
+	self.finished = false
 
 --	if profile == nil then
 	--	error("Cannot play without having a profile")
@@ -98,29 +99,29 @@ end
 
 
 function Memory:match()
-	if self.cards[self.first_card] ~= self.cards[self.second_card] then
-		self.state[self.first_card] = false
-		self.state[self.second_card] = false
+	if self.state[self.second_card] ~= nil then
+		if self.cards[self.first_card] ~= self.cards[self.second_card] then
+			self.state[self.first_card] = false
+			self.state[self.second_card] = false
+		end
+		self.first_card = nil
+		self.second_card = nil
 	end
-	self.first_card = nil
-	self.second_card = nil
 end
 
 function Memory:is_finished()
-	local is_finished = false
-
 	for i = 1, #self.state do
 		if self.state[i] == false then
-			is_finished = false
+			self.finished = false
 			break
 		else
-			is_finished = true
+			self.finished = true
 			self.coins, self.experience = self:_calculate_reward()
 			self.profile:modify_balance(self.coins)
 			self.profile:modify_experience(self.experience)
 		end
 	end
-	return is_finished
+	return self.finished
 end
 
 function Memory:serialize(columns)
@@ -185,8 +186,6 @@ function Memory:_calculate_reward()
 	end
 	return reward, reward
 end
-
-
 
 
 return Memory
