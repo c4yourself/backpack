@@ -55,7 +55,7 @@ function ConnectFourComponent:press(key)
 		local font_popup = font("data/fonts/DroidSans.ttf", 16, color_popup)
 	--	exit_popup:clear({r=255, g=255, b=255}, area(100, 100, 400, 400))
 	--	font_popup:draw(exit_popup, area(30,30,400,400), "Spelare X vann!")
-		self.trigger("exit")
+		self.trigger("exit_view")
 
 
 	end
@@ -176,10 +176,11 @@ function ConnectFourComponent:render(surface)
 		local AI_column = self.connectfour:computer_AI(self.current_column)
 
 
-	--[[	print("innan delay")
+		print("innan delay")
 		local callback = utils.partial(self.delay, self, surface)
 		self.stop_timer = sys.new_timer(5000, callback)
-		print("efter delay") --]]
+		self.stop_timer:start()
+		print("efter delay")
 
 
 
@@ -218,7 +219,7 @@ function ConnectFourComponent:render(surface)
 		end
 		font_popup:draw(winner_popup, area(30,30,400,400), winner_message)
 
-		self.trigger("exit")
+		self.trigger("exit_view")
 
 	end
 
@@ -235,11 +236,11 @@ function ConnectFourComponent:render(surface)
 		end
 	until self.connectfour:get_current_row(self.current_column) ~= 0
 
---[[	function ConnectFourComponent:delay(surface)
+function ConnectFourComponent:delay(surface)
 		print("delayar")
 		self.stop_timer:stop()
 		print("klar")
-	end --]]
+end
 
 end
 
