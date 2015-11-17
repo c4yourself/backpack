@@ -115,6 +115,15 @@ function ConnectFour:get_current_row(column)
 	return row
 end
 
+--- Resets the board, making every value nil
+function ConnectFour:reset_board()
+		for row = 1, 6 do
+			for column = 1, 7 do
+				self.board[row][column] =  nil
+			end
+		end
+end
+
 --- Returns true if the given player can add a disc to the given column
 -- @param player the player who tries to make a move
 -- @param column the column where the player wants to drop the disc
@@ -268,13 +277,35 @@ return nil
 end
 
 
-function ConnectFour:computer_AI()
+function ConnectFour:computer_AI(x_column)
+	--local random_column
+	--repeat
+	--	random_column = math.random(1,7)
+	--until self:is_valid_move("O", random_column)
+
+	--return random_column
+
 	local random_column
-	repeat
+
+	random_probability = math.random(1,10) --probability
+
+	if random_probability < 8 then
+		repeat
+			random_close = math.random(-1, 1)
+			random_column = x_column + random_close
+		until self:is_valid_move("O", random_column)
+	elseif random_probability >= 8 then
 		random_column = math.random(1,7)
-	until self:is_valid_move("O", random_column)
+	end
 
 	return random_column
+
+
+
+
+
+
+
 end
 
 return ConnectFour
