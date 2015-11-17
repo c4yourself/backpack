@@ -110,7 +110,7 @@ end
 
 function MemoryView:press(key)
     if key == "back" then
-		self:back_to_city()
+		self:back_to
     end
 end
 
@@ -202,7 +202,7 @@ function MemoryView:back_to_city()
     -- TODO Implement/connect pop-up for quit game
     -- Appendix 2 in UX design document
     -- Trigger exit event
-    self:trigger("exit")
+    self:trigger("exit_view")
 end
 
 -- Function to set pairs accoriding to profile experience
