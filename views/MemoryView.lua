@@ -14,7 +14,8 @@ local button_grid	=	require("lib.components.ButtonGrid")
 local color = require("lib.draw.Color")
 local serpent = require("lib.serpent")
 local button = require("lib.components.Button")
-
+local MemoryGrid = require("lib.components.MemoryGrid")
+local CardComponent = require("components.CardComponent")
 
 function MemoryView:__init()
     View.__init(self)
@@ -30,7 +31,7 @@ function MemoryView:__init()
     self.positions = {}
     self.pairs = 10
     self.memory = MemoryGame(self.pairs, false)
-    self.button_grid = button_grid()
+    self.button_grid = MemoryGrid(nil)
     self.columns = math.ceil((self.pairs*2)^(1/2))
 
     -- Graphics
@@ -68,7 +69,7 @@ function MemoryView:__init()
     self.pos_y = 50
 
     for i = 1, self.pairs*2 do
-        self.cards[i]  = button(button_color, color_selected,
+        self.cards[i]  = CardComponent(button_color, color_selected,
                                 color_disabled, true, false)
         if i == 1 then
             self.pos_x = self.pos_x
@@ -90,6 +91,12 @@ function MemoryView:__init()
         event.remote_control,
         "button_release",
         utils.partial(self.press, self)
+    )
+
+    self:listen_to(
+        self.button_grid,
+        "submit",
+        utils.partial(self._determine_new_state, self)
     )
 end
 
