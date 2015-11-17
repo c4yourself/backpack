@@ -100,6 +100,26 @@ function MemoryView:press(key)
     end
 end
 
+---This function is called everytime the user presses submit/ok. It's
+-- purpose is to connect the GUI with the backend logic (i.e. check win conditions,
+-- increment turn counter, check if two cards are identical or not) and make
+-- sure the data modell is changed when the game progresses
+function MemoryView:_determine_new_state()
+    --[[ pseudo-code:
+    Assume you have the index of the card the user pressed submit/ok and that
+    it can be found in this variable: self.last_selection
+
+    if self.memory.first_card == nil then
+        self.memory:open
+    else if self.memory.second_card == nil then
+        open
+        check for win condition (?)
+    else
+        etc...
+    end
+    ]]
+end
+
 
 -- Renders MemoryView and all of its child views
 function MemoryView:render(surface)
