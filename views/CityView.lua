@@ -187,7 +187,10 @@ function CityView:load_view(button)
 		sys.stop()
 	elseif button == "5" then
 		local city_tour_view = SubSurface(screen,{width=screen:get_width()*0.9, height=(screen:get_height()-50)*0.9, x=screen:get_width()*0.05, y=screen:get_height()*0.05+50})
-		local CT = CityTourView()
+		local CT = CityTourView(remote_control, city_tour_view)
+		self.buttonGrid:stop_listening(self.buttonGrid.event_listener,
+		 													"button_press",
+															callback)
 		CT:render(city_tour_view)
 		gfx.update()
 	end

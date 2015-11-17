@@ -13,6 +13,7 @@ local ButtonGrid = class("ButtonGrid",View)
 local SubSurface = require("lib.view.SubSurface")
 local utils = require("lib.utils")
 local event = require("lib.event")
+local Font = require("lib.draw.Font")
 --local CityView = require("views.CityView")
 
 --- Constructor for ButtonGrid
@@ -78,18 +79,16 @@ end
 -- @param button_index To indicate which button's text shall be displayed
 function ButtonGrid:display_text(surface, button_index)
 	local button_data = self.button_list[button_index].button
-	local text_button = sys.new_freetype(
-									button_data.font_color:to_table(),
+	local text_button = Font(
+									button_data.font_path,
 									button_data.font_size,
-									button_data.text_position,
-									button_data.font_path)
+									button_data.font_color)
 
-	text_button:draw_over_surface(surface, button_data.text)
-
+	text_button:draw(surface, {x = self.button_list[button_index].x, y = self.button_list[button_index].y,
+														width = self.button_list[button_index].width, height = self.button_list[button_index].height}, button_data.text, "center", "middle")
 end
 
 function ButtonGrid:display_next_view(transfer_path)
---	print("this path is   asdfasdfasdfasfd " .. self.button_list[1].position_1.x)
 
  	local view_import = require(transfer_path)
  	local view_instance = view_import()
