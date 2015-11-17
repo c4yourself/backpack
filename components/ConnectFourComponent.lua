@@ -53,8 +53,10 @@ function ConnectFourComponent:press(key)
 		local exit_popup = subsurface(surface, area(100, 100, 400, 400))
 		local color_popup = color(255, 255, 255, 255)
 		local font_popup = font("data/fonts/DroidSans.ttf", 16, color_popup)
-		exit_popup:clear({r=255, g=255, b=255}, area(100, 100, 400, 400))
-		font_popup:draw(exit_popup, area(30,30,400,400), "Spelare X vann!")
+	--	exit_popup:clear({r=255, g=255, b=255}, area(100, 100, 400, 400))
+	--	font_popup:draw(exit_popup, area(30,30,400,400), "Spelare X vann!")
+		self.trigger("exit")
+
 
 	end
 	self:dirty(false)
@@ -172,7 +174,7 @@ print("render")
 	surface:clear(coin_color_player, {x=0.1*surface:get_width(), y=0.5*surface:get_height()-1.5*height_coinbox, width = width_coinbox, height = height_coinbox})
 	surface:clear(coin_color_computer, {x=0.1*surface:get_width(), y=0.5*surface:get_height()+0.5*height_coinbox, width = width_coinbox, height = height_coinbox})
 
-	--surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/logo.png")),nil,{x=posx_constant, y=posy_constant})
+	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect4board.png")),nil,{x=posx_constant, y=posy_constant})
 
 
 	if self.connectfour:get_player() == "O" then
@@ -220,7 +222,12 @@ print("render")
 			winner_message = "Sorry, you lost!"
 		end
 		font_popup:draw(winner_popup, area(30,30,400,400), winner_message)
+
+		self.trigger("exit")
+
 	end
+
+
 
 	repeat
 		if self.connectfour:get_current_row(self.current_column) == 0 then

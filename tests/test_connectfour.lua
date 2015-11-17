@@ -18,6 +18,7 @@ function TestConnectFour:setUp()
 	self.connectfour9 = ConnectFour().unserialize("~~~~~~~\nX~~~~~~\nOX~~~~~\nXO~~~~~\nXO~~~~~\nXO~~~~~") -- column no winner
 	self.connectfour10 = ConnectFour().unserialize("~~~~~~~\n~~~~X~~\n~~~OX~~\n~~XXO~~\n~XOOX~~\nXOOXO~~") -- diagonal 1 no winner
 	self.connectfour11 = ConnectFour().unserialize("~~~~~~~\nX~~~~~~\nOX~~~~~\nOOX~~~~\nXOXO~~~\nOXOXX~~") -- diagonal 2 no winner
+	self.connectfour12 = ConnectFour().unserialize("~~~~~~~\n~~~~~~~\n~~~~~~~\n~~~~~~~\n~~~~~~~\n~~~~~~~")
 end
 
 function TestConnectFour:test_player()
@@ -69,6 +70,10 @@ function TestConnectFour:test_get_winner()
 	luaunit.assertEquals(self.connectfour9:get_winner("X", 2, 2), nil)
 	luaunit.assertEquals(self.connectfour10:get_winner("X", 4, 3), nil)
 	luaunit.assertEquals(self.connectfour11:get_winner("X", 4, 3), nil)
+end
+
+function TestConnectFour:reset_table()
+	luaunit.assertEquals(self.connectfour2:reset_table(), self.connectfour12)
 end
 
 return TestConnectFour
