@@ -13,7 +13,7 @@ local Color = require("lib.draw.Color")
 --- Constructor for NumericalInputComponent
 -- @param event_listener Remote control to listen to
 function CardComponent:__init(color, color_selected, color_disabled, enabled, selected, transfer_path)
-	Button.__init(self)
+	Button.__init(self, color, color_selected, color_disabled, enabled, selected, transfer_path)
 	self.status = "FACING_DOWN"
 
 	-- Colors
@@ -35,7 +35,11 @@ function CardComponent:render(surface)
 end
 
 function CardComponent:set_card_status(status)
-	self.status = status
+	local old_status = self.status
+	if old_status ~= status then
+		self.status = status
+		self:trigger("dirty")
+	end
 end
 
 return CardComponent

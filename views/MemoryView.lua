@@ -31,7 +31,7 @@ function MemoryView:__init()
     self.positions = {}
     self.pairs = 10
     self.memory = MemoryGame(self.pairs, false)
-    self.button_grid = MemoryGrid(nil)
+    self.button_grid = MemoryGrid()
     self.columns = math.ceil((self.pairs*2)^(1/2))
 
     -- Graphics
@@ -63,8 +63,8 @@ function MemoryView:__init()
     local x_gap = self.button_size.width + 50
     local y_gap = self.button_size.height + 50
 
-    self.button_grid:add_button(self.positions["exit"], button_size_big,
-                                self.button_1)
+    --self.button_grid:add_button(self.positions["exit"], button_size_big,
+    --                            self.button_1)
     self.pos_x = 450
     self.pos_y = 50
 
@@ -111,6 +111,8 @@ end
 -- purpose is to connect the GUI with the backend logic (i.e. check win conditions,
 -- increment turn counter, check if two cards are identical or not) and make
 -- sure the data modell is changed when the game progresses
+--  local card_index = self.button_grid.last_selection
+--  self.button_grid:set_card_status(card_index, "FACING_UP")
 function MemoryView:_determine_new_state()
     --[[ pseudo-code:
     Assume you have the index of the card the user pressed submit/ok and that
