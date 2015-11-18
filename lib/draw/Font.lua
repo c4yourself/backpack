@@ -8,8 +8,12 @@ local logger = require("lib.logger")
 local utils = require("lib.utils")
 local Rectangle = require("lib.draw.Rectangle")
 
--- Cache for font objects to make sure they are never garbage collected
-local font_cache = {}
+-- Cache for font objects to make sure they are never garbage collected. This
+-- object should be made in the top level module, but code exists here too as a
+-- backup.
+if not font_cache then
+	font_cache = {}
+end
 
 local Font = class("Font")
 

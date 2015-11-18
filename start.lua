@@ -1,12 +1,12 @@
+-- Global font cache to work around a bug on the set-top box
+font_cache = {}
+
+local CityView = require("views.CityView")
 local event = require("lib.event")
 local logger = require("lib.logger")
+local SplashView = require("views.SplashView")
 local utils = require("lib.utils")
---local menu = require("views.menu")
 local view = require("lib.view")
---local SplashView = require("views.SplashView")
-local CityView = require("views.CityView")
-local CityView2 = require("views.CityView2")
-local ConnectFourComponent = require("components.ConnectFourComponent")
 
 --- This function runs every time a key is pressed
 -- The current mapping for the emulator can be found in emulator/zto.lua
@@ -32,19 +32,13 @@ end
 
 -- This function is called at the start of the program
 function onStart()
-
-	-- Start with Splash Screen
-	-- local splash_view = SplashView(event.remote_control)
-	-- view.view_manager:set_view(splash_view)
-
-
 	local city_view = CityView(event.remote_control)
-	view.view_manager:set_view(city_view)
+	local splash_screen = SplashView(
+		"data/images/logo.png", city_view, view.view_manager)
+
+	view.view_manager:set_view(splash_screen)
+
+	splash_screen:start(50)
+
 	gfx.update()
-
-	--local city_view_2 = CityView2(event.remote_control)
-	--view.view_manager:set_view(city_view_2)
-	--gfx.update()
-
-
 end
