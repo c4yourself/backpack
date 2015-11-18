@@ -13,6 +13,8 @@ local view = require("lib.view")
 -- @param key Key that was pressed
 -- @param state Either up or repeat
 function onKey(key, state)
+	font_cache = font_cache
+
 	logger.trace("Remote control input (" .. key .. ", " .. state .. ")")
 
 	--testing remote control
@@ -32,6 +34,7 @@ end
 
 -- This function is called at the start of the program
 function onStart()
+	logger.trace("Started")
 	local city_view = CityView(event.remote_control)
 	local splash_screen = SplashView(
 		"data/images/logo.png", city_view, view.view_manager)
