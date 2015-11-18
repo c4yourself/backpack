@@ -11,25 +11,23 @@ function ProfileManager:__init()
 end
 
 function ProfileManager:list()
-  profile_list_local = localprofilemanager.get_profileslist()
-  --profile_list_server = serverprofilemangager.list()
-  --profile_list_local = "hej"
-  return profile_list_local
+	profile_list_local = localprofilemanager.get_profileslist()
+	--profile_list_server = serverprofilemangager.list()
+	--profile_list_local = "hej"
+	return profile_list_local
 end
 
 function ProfileManager:save(profile)
-  --serverprofilemangager.save(profile)
-  localprofilemanager:save(profile)
+	--serverprofilemangager.save(profile)
+	localprofilemanager:save(profile)
 end
 
 
 function ProfileManager:delete(profile_city,profile_email)
-  localprofilemanager:delete(profile_city,profile_email)
+	localprofilemanager:delete(profile_city,profile_email)
 end
 
 function ProfileManager:login()
-
-
 end
 
 return ProfileManager

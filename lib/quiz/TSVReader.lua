@@ -55,7 +55,6 @@ function TSVReader:get_question(question_type)
 				table.insert(tmp_table,string.sub(line,string.len(question_type) + 2,#line))
 			end
 			if string.sub(line,1,string.len(question_type)) == question_type then
-				print(string.len(question_type) + 2)
 				table.insert(tmp_table,string.sub(line,string.len(question_type) + 2,#line))
 		end
 		for i = 1,#tmp_table,1 do
