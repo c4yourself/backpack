@@ -1,6 +1,7 @@
 --- MemoryGrid class.
 -- This class builds on the ButtonGrid class and represents a set of memory cards
--- and buttons in the MemoryView
+-- and buttons in the MemoryView. Memory cards are represented by the
+-- CardComponent class
 -- @classmod ButtonGrid
 
 local class = require("lib.classy")
@@ -10,52 +11,45 @@ local MemoryGrid = class("MemoryGrid", ButtonGrid)
 local SubSurface = require("lib.view.SubSurface")
 local utils = require("lib.utils")
 local event = require("lib.event")
---local CityView = require("views.CityView")
 
---- Constructor for ButtonGrid
+--- Constructor for MemoryGrid
 function MemoryGrid:__init(remote_control)
 	ButtonGrid.__init(self, remote_control)
-
 	self.temp_turned = {}
 	self.turned = {}
 	self.last_selection = 0
 end
 
---- Used when buttons need to be added to the view
--- @param position The button's position on the surface
--- @param button_size The size of button
--- @param button The button instance
--- @throws Error If the button cross the boundaries of the surface
+--- Used when buttons/cards need to be added to the view
+-- @param position The button's/cards position on the surface
+-- @param button_size The size of button/card
+-- @param button The button/card instance
+-- @throws Error If the button/card cross the boundaries of the surface
 function MemoryGrid:add_button(position, button_size, button)
--- chenck if the button across the screen boundaries
-
 	if position.x >= 0 and button_size.width >= 0
 		 and position.x + button_size.width < 1280
 		 and position.y >= 0 and button_size.height >= 0
 		 and position.y + button_size.height < 720	then
--- if ok, insert each button to the button_list
-	 table.insert(self.button_list,
-	 {button = button,
-	 x = position.x,
-	 y = position.y,
-	 width = button_size.width,
-	 height = button_size.height
-	 })
-
-	 local callback = utils.partial(self.trigger, self, "dirty")
-	 self:listen_to(
-	 	button,
-		"dirty",
-		callback
-	 )
-
+	-- if ok, insert button to the button_list
+		table.insert(self.button_list,
+			{button = button,
+			x = position.x,
+			y = position.y,
+	 		width = button_size.width,
+	 		height = button_size.height
+	 		})
+		local callback = utils.partial(self.trigger, self, "dirty")
+	 	self:listen_to(
+	 		button,
+			"dirty",
+			callback
+	 	)
 	else
 		error("screen boundary error")
 	end
-
 end
 
---- Display text for each button on the surface
+--- Display text for each button/card on the surface
 -- @param button_index To indicate which button's text shall be displayed
 function MemoryGrid:display_text(surface, button_index)
 	local button_data = self.button_list[button_index].button
@@ -66,15 +60,11 @@ function MemoryGrid:display_text(surface, button_index)
 									button_data.font_path)
 
 	text_button:draw_over_surface(surface, button_data.text)
-
 end
 
 function MemoryGrid:display_next_view(transfer_path)
---	print("this path is   asdfasdfasdfasfd " .. self.button_list[1].position_1.x)
-
  	local view_import = require(transfer_path)
  	local view_instance = view_import()
-
  	view.view_manager:set_view(view_instance)
 end
 
@@ -338,19 +328,19 @@ end
 function MemoryGrid:press(button)
 	if button == "down" then
 		self:indicate_downward(self.button_indicator)
-		self:trigger("dirty")
+		--self:trigger("dirty")
 		self:trigger("navigation")
 	elseif button == "up" then
 		self:indicate_upward(self.button_indicator)
-		self:trigger("dirty")
+		--self:trigger("dirty")
 		self:trigger("navigation")
 	elseif button == "right" then
 		self:indicate_rightward(self.button_indicator)
-		self:trigger("dirty")
+		--self:trigger("dirty")
 		self:trigger("navigation")
 	elseif button == "left" then
 		self:indicate_leftward(self.button_indicator, "left")
-		self:trigger("dirty")
+		--self:trigger("dirty")
 		self:trigger("navigation")
 	end
 
@@ -365,6 +355,7 @@ function MemoryGrid:render(surface)
 -- then the first button in the list will be selected.
 -- The indicator always points to the selected button
 	self:dirty(false)
+	self.render_surface = surface
 	if self.start_indicator == true then
 		for k = 1 , #self.button_list do
 			if self.button_list[k].button:is_selected() then
