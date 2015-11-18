@@ -45,17 +45,18 @@ function TSVReader:get_question(question_type)
 	self.filename = utils.absolute_path(string.format("data/questions/%s.tsv",self.filename))
 	if(lfs.attributes(self.filename, "mode") == "file") then
 		for line in io.lines(self.filename) do
-			if string.sub(line,1,13) == question_type then
-				table.insert(tmp_table,string.sub(line,15,#line))
+			if string.sub(line,1,string.len(question_type)) == question_type then
+				table.insert(tmp_table,string.sub(line,string.len(question_type) + 2,#line))
 			end
-			if string.sub(line,1,15) == question_type then
-				table.insert(tmp_table,string.sub(line,17,#line))
+			if string.sub(line,1,string.len(question_type)) == question_type then
+				table.insert(tmp_table,string.sub(line,string.len(question_type) + 2,#line))
 			end
-			if string.sub(line,1,7) == question_type then
-				table.insert(tmp_table,string.sub(line,9,#line))
+			if string.sub(line,1,string.len(question_type)) == question_type then
+				table.insert(tmp_table,string.sub(line,string.len(question_type) + 2,#line))
 			end
-			if string.sub(line,1,9) == question_type then
-				table.insert(tmp_table,string.sub(line,11,#line))
+			if string.sub(line,1,string.len(question_type)) == question_type then
+				print(string.len(question_type) + 2)
+				table.insert(tmp_table,string.sub(line,string.len(question_type) + 2,#line))
 		end
 		for i = 1,#tmp_table,1 do
 			table.insert(self.questions_table,utils.split(tmp_table[i],"\t"))
