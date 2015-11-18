@@ -60,6 +60,22 @@ function Color:blend(other)
 		255 * output_alpha)
 end
 
+function Color:replace(red, green, blue, alpha)
+	if type(red) == "table" then
+		local color = red
+		red = color.red or color.r
+		green = color.green or color.g
+		blue = color.blue or color.b
+		alpha = color.alpha or color.a
+	end
+
+	return Color(
+		red or self.red,
+		green or self.green,
+		blue or self.blue,
+		alpha or self.alpha)
+end
+
 --- Convert color object to a 32-bit integer.
 -- The bytes (8 bits) represent from low to high: red, green, blue and alpha.
 -- @return 32-bit color
