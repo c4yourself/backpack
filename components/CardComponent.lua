@@ -35,10 +35,15 @@ function CardComponent:render(surface)
 	if self:is_selected() then
 		local margin = 0.30
 		local area = {
+			width = surface.width,
+			height = 10,
+			x = 0,
+			y = surface.height - 10
+			--[[Old indicator, TODO Determine how indicator should look
 			width = math.ceil((1-2*margin) * surface.width),
 			height = math.ceil((1-2*margin) * surface.width),
 			x = math.ceil(surface.width * 0.30),
-			y = math.ceil(surface.height * 0.30)
+			y = math.ceil(surface.height * 0.30)]]
 		}
 		local sub_surface = SubSurface(surface,area)
 		sub_surface:fill(self.color_selected:to_table())

@@ -355,7 +355,6 @@ function MemoryGrid:press(button)
 	end
 
 	if button == "ok" then
-		--TODO make sure it's a card that can be flipped
 		self.last_selection = self.button_indicator
 		self:trigger("submit")
 	end
@@ -394,10 +393,10 @@ function MemoryGrid:render(surface)
 
 		local sub_surface = SubSurface(surface,area)
 			button_data.button:render(sub_surface)
-	  if button_data.button.text_available then
-			self:display_text(surface, i)
-	  end
-   end
+			if button_data.button.text_available then
+				self:display_text(surface, i)
+			end
+   		end
    gfx.update()
 end
 

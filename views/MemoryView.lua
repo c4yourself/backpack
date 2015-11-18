@@ -33,7 +33,7 @@ function MemoryView:__init()
     self.button_grid = MemoryGrid()
     self.profile = Profile("Lisa", "lisa@lisa.se", "04-08-1992", "female", "paris")
     self:_set_pairs()
-    self.pairs = 4 -- TODO For quicker manual testing, remove once done coding
+    self.pairs = 3 -- TODO For quicker manual testing, remove once done coding
     self.memory = MemoryGame(self.pairs, profile, false)
     self.columns = math.ceil((self.pairs*2)^(1/2))
 
@@ -75,8 +75,6 @@ function MemoryView:__init()
     local x_gap = self.button_size.width + 50
     local y_gap = self.button_size.height + 50
 
-    --self.button_grid:add_button(self.positions["exit"], button_size_big,
-    --                            self.button_1)
     self.pos_x = 450
     self.pos_y = 50
 
@@ -84,6 +82,7 @@ function MemoryView:__init()
         self.cards[i]  = CardComponent(button_color, color_selected,
                                 color_disabled, true, false)
         --Temporary code snippet to be able to differentiate cards from eachother
+        -- TODO write text or add pictures instead (?)
         local cc = (self.memory.cards[i] * 50) % 255
         local front_color = color(cc, cc, cc, cc)
         self.cards[i].front_color = front_color
@@ -108,6 +107,11 @@ function MemoryView:__init()
                                     self.button_size,
                                     self.cards[i])
     end
+
+    -- Add other buttons to the grid
+    -- (has to be done after the memory cards has been added)
+    self.button_grid:add_button(self.positions["exit"], button_size_big,
+                                   self.button_1)
 
     -- Listeners and callbacks
     self:listen_to(
@@ -147,19 +151,24 @@ end
 -- the game is finished when opening the second card.
 function MemoryView:_determine_new_state()
     local card_index = self.button_grid.last_selection
-    local card, is_open = self.memory:look(card_index)
+    if self.button_grid.button_list[card_index].button.status == nil
+    or card_index > self.pairs * 2 then
+        self:back_to_city()
+        return
+    end
 
+    local card, is_open = self.memory:look(card_index)
     if self.memory.first_card == nil then
-      if is_open ~= true then
-        self.memory:open(card_index)
-        self.button_grid:set_card_status(card_index, "FACING_UP")
-      end
+        if is_open ~= true then
+            self.memory:open(card_index)
+            self.button_grid:set_card_status(card_index, "FACING_UP")
+        end
     elseif self.memory.second_card == nil then
-      if is_open ~= true then
-        self.memory:open(card_index)
-        self.button_grid:set_card_status(card_index, "FACING_UP")
-        self.memory:is_finished()
-      end
+        if is_open ~= true then
+            self.memory:open(card_index)
+            self.button_grid:set_card_status(card_index, "FACING_UP")
+            self.memory:is_finished()
+        end
     end
 end
 
@@ -223,6 +232,7 @@ function MemoryView:back_to_city()
     -- Appendix 2 in UX design document
     -- Trigger exit event
     self:trigger("exit_view")
+    self:trigger("exit")
 end
 
 -- Function to set pairs accoriding to profile experience
