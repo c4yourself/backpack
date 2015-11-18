@@ -53,19 +53,18 @@ end
 -- what should be diplayed next to the user
 function MultipleChoiceView:press(key)
 	-- Determine what should happen depending on the user input and current state
-	if key == "right" and self.last_check == self.current_question
-		and self.quiz_state ~= "DONE" then
+	if key == "right" and self.last_check == self.current_question and self.quiz_state ~= "DONE" then
 		for j = 1, #self.user_input, 1 do
 			self.answer[j] = tonumber(string.sub(self.user_input,j,j))
 		end
 		if self.mult_choice_quiz.questions[self.current_question]:is_correct(self.answer) == true then
 			self.correct_answer_number = self.correct_answer_number + 1
 			self.result_string = "Right. You've answered "
-				.. self.correct_answer_number .. " questions correctly."
+			.. self.correct_answer_number .. " questions correctly."
 			self.last_check = self.last_check + 1
 		else
 			self.result_string = "Wrong. You've answered "
-				.. self.correct_answer_number .. " questions correctly."
+			.. self.correct_answer_number .. " questions correctly."
 			self.last_check=self.last_check + 1
 		end
 		self.quiz_state = "DISPLAY_RESULT"
@@ -73,8 +72,7 @@ function MultipleChoiceView:press(key)
 		--Reset user input after the answer has been initiated
 		self.answer = {}
 		self.user_input = ""
-	elseif key == "right" and self.last_check == self.current_question + 1
-		and end_flag ~= 1 then
+	elseif key == "right" and self.last_check == self.current_question + 1 and end_flag ~= 1 then
 		-- Next question is displayed
 		-- Make sure there are questions left to display
 		self.current_question = self.current_question + 1
@@ -99,7 +97,6 @@ function MultipleChoiceView:press(key)
 				self.user_input = self.user_input .. key
 			end
 		end
-	end
 end
 
 --Renders this instance of MultipleChoiceView and all its child views, given
@@ -113,7 +110,7 @@ function MultipleChoiceView:render(surface)
 			event.remote_control,
 			"button_release",
 			callback
-		)
+			)
 		-- TODO initiate listening to the button group, when its implemented
 		self.listening_initiated = true
 	end
@@ -133,11 +130,11 @@ function MultipleChoiceView:render(surface)
 
 			-- Draw question
 			self.font:draw(surface,Rectangle(100,300,200,200):to_table(),self.current_question ..
-				"." .. self.mult_choice_quiz.questions[self.current_question].question)
+			"." .. self.mult_choice_quiz.questions[self.current_question].question)
 			--Button text
 			surface:fill(buttonColor, {width=200, height=60, x=100, y=400})
 			choiceButton1:draw(surface,Rectangle(100,400,200,60):to_table(),"(1)." ..
-			 	self.mult_choice_quiz.questions[self.current_question].Choices[1])
+				self.mult_choice_quiz.questions[self.current_question].Choices[1])
 			surface:fill(buttonColor, {width=200, height=60, x=350, y=400})
 			choiceButton2:draw(surface,Rectangle(350,400,200,60):to_table(),"(2)." ..
 				self.mult_choice_quiz.questions[self.current_question].Choices[2])
