@@ -33,7 +33,7 @@ function MemoryView:__init()
     self.button_grid = MemoryGrid()
     self.profile = Profile("Lisa", "lisa@lisa.se", "04-08-1992", "female", "paris")
     self:_set_pairs()
-    self.pairs = 3 -- TODO For quicker manual testing, remove once done coding
+    --self.pairs = 3 -- TODO For quicker manual testing, remove once done coding
     self.memory = MemoryGame(self.pairs, profile, false)
     self.columns = math.ceil((self.pairs*2)^(1/2))
 
@@ -53,24 +53,27 @@ function MemoryView:__init()
         {x = 100, y = 300},
     utils.absolute_path("data/fonts/DroidSans.ttf"))
 
-    self.button_color = color(0, 128, 225, 255)
-    self.color_selected = color(33, 99, 111, 255)
+    self.button_color = color(250, 105, 0, 255)
+    self.color_selected = color(250, 169, 0, 255)
     self.color_disabled = color(111,222,111,255)
     self.text_color = color(255, 255, 255, 255)
 
     -- Components
+    local width = screen:get_width()
+    local height = screen:get_height()
     local button_size_big = {width = 300, height = 100}
     self.button_1 = button(self.button_color, self.color_selected,
         self.color_disabled, true, false)
     self.positions["exit"] = {x = 100, y = 450}
     self.button_1:set_textdata("Back to City", self.text_color,
-        {x = 100, y = 450}, 30,
+        {x = 100 + 65, y = 450 + 50 - 16}, 30,
         utils.absolute_path("data/fonts/DroidSans.ttf"))
 
     -- Create the button grid
-    local button_color = color(0, 128, 225, 255)
-    local color_disabled = color(111,222,111,255)
-    local color_selected = color(33, 99, 111, 255)
+    local card_color = color(250, 105, 0, 255)--color.from_html("fa6900ff")
+    --color(0, 128, 225, 255)
+    local card_color_disabled = color(111,222,111,255)
+    local card_color_selected = color(33, 99, 111, 255)
     self.button_size = {width = 100, height = 100}
     local x_gap = self.button_size.width + 50
     local y_gap = self.button_size.height + 50
@@ -79,8 +82,8 @@ function MemoryView:__init()
     self.pos_y = 50
 
     for i = 1, self.pairs*2 do
-        self.cards[i]  = CardComponent(button_color, color_selected,
-                                color_disabled, true, false)
+        self.cards[i]  = CardComponent(card_color, card_color_selected,
+                                card_color_disabled, true, false)
         --Temporary code snippet to be able to differentiate cards from eachother
         -- TODO write text or add pictures instead (?)
         local cc = (self.memory.cards[i] * 50) % 255
