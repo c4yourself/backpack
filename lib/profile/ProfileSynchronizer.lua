@@ -30,11 +30,33 @@ end
 function ProfileSynchronizer:__init()
 
 	self.url = "http://localhost:5000"
+	self.connect_url = "/connect/"
 	self.login_url = "/profile/authenticate/"
 	self.get_profile_url = "/profile/info/"
 	self.save_profile_url ="/profile/"
 	self.delete_profile_url = "/profile/delete/"
 	self.ttlyawesomekey = "c4y0ur5elf"
+
+end
+
+
+--- Check if connection to database is working
+-- @return boolean true/false depending on if database is up
+function ProfileSynchronizer:is_connected()
+
+	local server_url = "http://localhost:5000/connect/"
+
+	-- Do request to server
+  local request, code = http.request
+  {
+    url = server_url,
+  }
+
+	if code == 200 then
+		return true
+	else
+		return false
+	end
 
 end
 
