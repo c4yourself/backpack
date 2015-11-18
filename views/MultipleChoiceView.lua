@@ -42,9 +42,9 @@ function MultipleChoiceView:__init()
 	self.font = Font("data/fonts/DroidSans.ttf",32,Color(255,255,255,255))
 	-- Listeners and callbacks
 	self:listen_to(
-		event.remote_control,
-		"button_release",
-		utils.partial(self.press, self)
+	event.remote_control,
+	"button_release",
+	utils.partial(self.press, self)
 	)
 end
 
@@ -53,7 +53,8 @@ end
 -- what should be diplayed next to the user
 function MultipleChoiceView:press(key)
 	-- Determine what should happen depending on the user input and current state
-	if key == "right" and self.last_check == self.current_question and self.quiz_state ~= "DONE" then
+	if key == "right" and self.last_check == self.current_question
+	and self.quiz_state ~= "DONE" then
 		for j = 1, #self.user_input, 1 do
 			self.answer[j] = tonumber(string.sub(self.user_input,j,j))
 		end
@@ -72,7 +73,8 @@ function MultipleChoiceView:press(key)
 		--Reset user input after the answer has been initiated
 		self.answer = {}
 		self.user_input = ""
-	elseif key == "right" and self.last_check == self.current_question + 1 and end_flag ~= 1 then
+	elseif key == "right" and self.last_check == self.current_question + 1
+		 and end_flag ~= 1 then
 		-- Next question is displayed
 		-- Make sure there are questions left to display
 		self.current_question = self.current_question + 1
@@ -97,6 +99,7 @@ function MultipleChoiceView:press(key)
 				self.user_input = self.user_input .. key
 			end
 		end
+	end
 end
 
 --Renders this instance of MultipleChoiceView and all its child views, given
@@ -107,10 +110,10 @@ function MultipleChoiceView:render(surface)
 		-- listen to yet: start listening
 		local callback = utils.partial(self.press)
 		self:listen_to(
-			event.remote_control,
-			"button_release",
-			callback
-			)
+		event.remote_control,
+		"button_release",
+		callback
+		)
 		-- TODO initiate listening to the button group, when its implemented
 		self.listening_initiated = true
 	end
@@ -149,7 +152,6 @@ function MultipleChoiceView:render(surface)
 			-- Display the result from one question
 			surface:clear(color)
 			self.font:draw(screen,Rectangle(100,300,200,200):to_table(),self.result_string)
-
 		elseif self.quiz_state == "DONE" then
 			-- Display the result from the whole quiz
 			surface:clear(color)

@@ -110,13 +110,17 @@ function localprofilemanager:get_profileslist()
 		end
 
 		local profiles = {}
+		local profiles_city_list = {}
+		local profiles_email_address_list = {}
 
 		for i = 1, #profiles_name, 1 do
 			profiles[i] = localprofilemanager:load(
 			string.sub(profiles_name[i],1,string.find(profiles_name[i],"__") - 1),
 			string.sub(profiles_name[i],string.find(profiles_name[i],"__") + 2,string.len(profiles_name[i])))
+			profiles_city_list[i] = string.sub(profiles_name[i],1,string.find(profiles_name[i],"__") - 1)
+			profiles_email_address_list[i] = string.sub(profiles_name[i],string.find(profiles_name[i],"__") + 2,string.len(profiles_name[i]))
 		end
-		return profiles
+		return profiles, profiles_city_list, profiles_email_address_list
 	else
 		return false
 	end
@@ -132,12 +136,12 @@ end
 -- --else
 -- --  -- remove fail
 -- --end
-function localprofilemanager:delete(profile_city,profile_email)
+function localprofilemanager:delete(profile)
 	local path = utils.absolute_path("data/profile/")
 
 	for file in lfs.dir(path) do
-		if string.match(file,string.format("%s__%s",profile_city,profile_email)) ~= nil then
-			local thefile = utils.absolute_path(string.format("data/profile/%s__%s.profile", profile_city,profile_email))
+		if string.match(file,string.format("%s__%s",profile:get_city(),profile:get_email_address())) ~= nil then
+			local thefile = utils.absolute_path(string.format("data/profile/%s__%s.profile", profile:get_city(),profile:get_email_address()))
 
 			if(lfs.attributes(thefile, "mode") ~= "directory") then
 				resultOK, errorMsg = os.remove(thefile)
@@ -151,4 +155,10 @@ function localprofilemanager:delete(profile_city,profile_email)
 	end
 end
 
+-- Get token in profile
+-- @param profile representing the profile instance
+-- @return token representing the token of the profile
+function localprofilemanager:get_profile_token(profile)
+	return profile:get_login_token()
+end
 return localprofilemanager
