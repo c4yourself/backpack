@@ -38,8 +38,11 @@ function Font:__init(font_file, size, color)
 	-- cache.
 	if font_cache[font_key] == nil then
 		logger.trace("Creating new freetype for font:", font_path)
+
+		-- Note that color:to_table() can not be used because the freetype object
+		-- for some
 		font_cache[font_key] = sys.new_freetype(
-			color:to_table(), size, {x = 0, y = 0}, font_path)
+			color:to_table("short"), size, {x = 0, y = 0}, font_path)
 	end
 
 	-- Get freetype instance from cache
@@ -73,6 +76,7 @@ function Font:_get_text_surface(text, width)
 	surface:clear({0, 0, 0, 0})
 
 	self.freetype:draw_over_surface(surface, text)
+
 	return surface
 end
 
@@ -82,14 +86,18 @@ function Font:_get_glyph_properties()
 	local bbox = self:_get_bounding_box(surface)
 	surface:destroy()
 
-	return {
-		top = bbox.min_y,
-		bottom = bbox.max_y,
-		left = bbox.min_x,
-		right = bbox.max_x,
-		width = bbox.max_x - bbox.min_x,
-		height = bbox.max_y - bbox.min_y
-	}
+	if bbox == nil then
+		return nil
+	else
+		return {
+			top = bbox.min_y,
+			bottom = bbox.max_y,
+			left = bbox.min_x,
+			right = bbox.max_x,
+			width = bbox.max_x - bbox.min_x,
+			height = bbox.max_y - bbox.min_y
+		}
+	end
 end
 
 function Font:_get_bounding_box(surface)
@@ -113,8 +121,8 @@ function Font:_get_bounding_box(surface)
 			iterations = iterations + 1
 
 			-- If alpha value is not 0 we assume we have found text
-			local _, _, _, alpha = surface:get_pixel(x, y)
-			if alpha > 0 then
+			local c = surface:get_pixel(x, y)
+			if c.r > 0 or c.g > 0 or c.b > 0 or c.a > 0 then
 				min_x = math.min(min_x, x)
 				max_x = math.max(max_x, x)
 
@@ -130,8 +138,8 @@ function Font:_get_bounding_box(surface)
 				iterations = iterations + 1
 
 				-- If alpha value is not 0 we assume we have found text
-				local _, _, _, alpha = surface:get_pixel(x, y)
-				if alpha > 0 then
+				local c = surface:get_pixel(x, y)
+				if c.r > 0 or c.g > 0 or c.b > 0 or c.a > 0 then
 					max_x = math.max(max_x, x)
 					found_pixels = true
 					break
@@ -162,6 +170,8 @@ function Font:_get_bounding_box(surface)
 		logger.trace(
 			"Found text bounding box in " .. iterations .. " iterations", bbox)
 		return bbox
+	else
+		logger.error("Bounding box not found")
 	end
 end
 
@@ -194,6 +204,7 @@ end
 function Font:draw(surface, rectangle, text, horizontal_align, vertical_align)
 	-- Don't draw empty text strings
 	if text:gsub(" ", "") == "" then
+		logger.debug("Skipping drawing of empty text. This might be an error")
 		return
 	end
 
@@ -204,9 +215,11 @@ function Font:draw(surface, rectangle, text, horizontal_align, vertical_align)
 	if horizontal_align == nil or horizontal_align == "left" then
 		x = 0
 	elseif horizontal_align == "center" then
+		logger.trace("Calculating bounding box for '" .. text .. "'")
 		bbox = bbox or self:_get_bounding_box(text_surface)
 		x = math.max(0, rectangle.width / 2 - bbox.max_x / 2)
 	elseif horizontal_align == "right" then
+		logger.trace("Calculating bounding box for '" .. text .. "'")
 		bbox = bbox or self:_get_bounding_box(text_surface)
 		x = math.max(0, rectangle.width - bbox.max_x)
 	else
@@ -224,6 +237,7 @@ function Font:draw(surface, rectangle, text, horizontal_align, vertical_align)
 			0,
 			rectangle.height / 2 - (glyph_data.bottom - glyph_data.top) / 2 - glyph_data.top)
 	elseif vertical_align == "bottom" then
+		logger.trace("Calculating bounding box for '" .. text .. "'")
 		bbox = bbox or self:_get_bounding_box(text_surface)
 		y = math.max(0, rectangle.height - 1 - bbox.max_y)
 	else

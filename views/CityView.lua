@@ -10,6 +10,7 @@ local CityTourView = require("views.CityTourView")
 local Color = require("lib.draw.Color")
 local Font = require("lib.draw.Font")
 local event = require("lib.event")
+local logger = require("lib.logger")
 local SubSurface = require("lib.view.SubSurface")
 local utils = require("lib.utils")
 local view = require("lib.view")
@@ -82,10 +83,14 @@ function CityView:__init(remote_control)
 
 	-- Preload images for increased performance
 	self.images = {
-		paris = gfx.loadpng(utils.absolute_path("data/images/Paris.png")),
-		coin = gfx.loadpng(utils.absolute_path("data/images/coinIcon.png")),
-		paris_selected = gfx.loadpng(utils.absolute_path("data/images/ParisIconSelected.png")),
+		paris = gfx.loadpng("data/images/Paris.png"),
+		coin = gfx.loadpng("data/images/coinIcon.png"),
+		paris_selected = gfx.loadpng("data/images/ParisIconSelected.png")
 	}
+
+	-- Premultiple images with transparency to make them render properly
+	self.images.coin:premultiply()
+	self.images.paris_selected:premultiply()
 
 	self:add_view(self.button_grid, true)
 end
@@ -98,7 +103,7 @@ local width = surface:get_width()
 	local background_color = {r = 0, g = 0, b = 0}
 
 	surface:clear(background_color)
-	surface:copyfrom(self.images.paris)
+	surface:copyfrom(self.images.paris, nil, nil, false)
 
 	--creates some colors
 	local text_color = Color(0, 0, 0,255)

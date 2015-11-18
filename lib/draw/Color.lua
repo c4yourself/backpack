@@ -108,9 +108,23 @@ function Color:to_html()
 end
 
 --- Convert Color to a table that can be used with Zenterio's API functions.
--- If alpha channel is not the same as default it will be omitted.
-function Color:to_table()
-	return {self.red, self.green, self.blue, self.alpha}
+-- @param format Format of returned table. May be either `index`, `short` or `long`
+-- @return Table representation of Color
+function Color:to_table(format)
+	if format == nil or format == "index" then
+		return {self.red, self.green, self.blue, self.alpha}
+	elseif format == "short" then
+		return {r = self.red, g = self.green, b = self.blue, a = self.alpha}
+	elseif format == "long" then
+		return {
+			red = self.red,
+			green = self.green,
+			blue = self.blue,
+			alpha = self.alpha
+		}
+	else
+		error("Invalid format '" .. format .. "', expected index, short or long")
+	end
 end
 
 --- Return red, green blue and alpha as separate values.
