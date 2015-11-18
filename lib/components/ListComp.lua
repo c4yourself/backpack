@@ -14,11 +14,7 @@ function ListComp:__init(visible_items)
 
 	self.visible_items = visible_items or 3
 
-	self.item_list = {} 				-- a list contains all ListItems for the view.
-
---	self.start_indicator = true -- will function just once, help to map the indicator with
-														  -- the selected ListItem when the ListComp is created.
---	self.list_indicator = nil
+	self.item_list = {} -- a list contains all ListItems for the view.
 
 	self:listen_to(event.remote_control, "button_press", utils.partial(self.button_press, self))
 
@@ -63,24 +59,6 @@ function ListComp:render(surface)
 	surface:clear({65, 70, 72, 255})
 	surface:clear({255, 255, 255, 255},
 	{x = 5, y = 5, width = surface:get_width() - 10, height = surface:get_height() - 10})
-
---[[]
-	if self.start_indicator == true then
-		for k = 1 , #self.item_list do
-			print(self.item_list[1])
-			if self.item_list[k]:is_selected() then
-				self.list_indicator = k
-			end
-		end
-
-		if self.listItem_indicator == nil then
-			self.listItem_indicator = 1
-			self.item_list[1].listItem:select(true)
-		end
-
-		self.start_indicator = false
-	end
-]]
 
 -- Go through the item_list to render all list_items
 	local height = (surface:get_height() - 12 - self.visible_items) /self.visible_items

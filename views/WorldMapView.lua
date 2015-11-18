@@ -3,6 +3,7 @@ local utils = require("lib.utils")
 local subsurface = require("lib.view.SubSurface")
 local Rectangle = require("lib.draw.Rectangle")
 local WorldMap = class("WorldMapView")
+local view = require("lib.view")
 local count = 0
 --some colors
 local path_color = {r = 0, g = 0, b = 0}
@@ -60,6 +61,7 @@ local cities = {
 -- @param transp is the type of transportion (aeroplane, boat or train)
 -- @param this will be the cityview that is render after the trip
 function WorldMap:render(surface, start, dest, transp, view)
+	count = 0
 	self:_paint_world_map(surface)
 	transport = transp
 	trans_direction = "1"
@@ -109,7 +111,8 @@ end
 function WorldMap:_stop_timer(surface)
 	self.stop_timer:stop()
 	-- TODO call an event thats render a CityView in a fancier way
-	cityview:render(surface)
+	view.view_manager:set_view(cityview)
+	gfx.update()
 end
 
 function WorldMap:_create_area(x, y)
