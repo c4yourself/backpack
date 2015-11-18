@@ -14,11 +14,7 @@ local SubSurface = require("lib.view.SubSurface")
 local utils = require("lib.utils")
 local event = require("lib.event")
 local Font = require("lib.draw.Font")
-<<<<<<< HEAD
-local Color = require("lib.draw.Color")
-=======
->>>>>>> cityview
---local CityView = require("views.CityView")
+ --local CityView = require("views.CityView")
 
 --- Constructor for ButtonGrid
 function ButtonGrid:__init(remote_control)
@@ -42,6 +38,7 @@ function ButtonGrid:__init(remote_control)
   )
 	--
 	-- local dirtycallback = function()
+	-- 	print("I button grid")
 	-- 	self:dirty(false)
 	-- 	self:dirty(true)
 	-- end
@@ -80,9 +77,8 @@ end
 
 --- Display text for each button on the surface
 -- @param button_index To indicate which button's text shall be displayed
-function ButtonGrid:display_text(surface, area, button_index)
+function ButtonGrid:display_text(surface, button_index)
 	local button_data = self.button_list[button_index].button
-
 	local text_button = Font(
 									button_data.font_path,
 									button_data.font_size,
@@ -130,6 +126,7 @@ function ButtonGrid:press(button)
 				multiplechoice_quiz.render(screen)
 				gfx.update()
 		elseif button == "3" then
+				print("Shut down program")
 				sys.stop()
 
 		elseif button == "ok" then
@@ -144,7 +141,6 @@ function ButtonGrid:press(button)
 				end
 	end
 end
-
 
 	collectgarbage()  --ensure that memory-leak does not occur
 	-- print out the memory usage in KB
@@ -189,7 +185,7 @@ self:dirty(false)
 		local sub_surface = SubSurface(surface,area)
 			button_data.button:render(sub_surface)
       if button_data.button.text_available then
-			self:display_text(surface, area, i)
+			self:display_text(surface, i)
 	   end
    end
 end
@@ -208,6 +204,8 @@ function ButtonGrid:indicate_downward(button_indicator)
 
 	local that_distance = self:distance_to_corner(corner_position, 2)
 
+	--print("the fucking distance to 2 issss " .. that_distance)
+	--print("the fucking  distance to 9 issss ".. self:distance_to_corner(corner_position, 9))
 
 	for i=1, #button_list do
 		if button_list[i].y >= button_list[indicator].y + button_list[indicator].height then
@@ -232,6 +230,7 @@ end
 		for k=1, #button_list do
 				local distance = self:distance_to_corner(corner_position, k)
 				shortest_distance_corner = math.min(shortest_distance_corner, distance)
+				--print("the minium distance at the moment is "..shortest_distance_corner)
 		end
 	end
 
@@ -278,6 +277,7 @@ if shortest_distance_buttons ~= 720 then
 		if button_list[j].y + button_list[j].height <= button_list[indicator].y then
 			local distance = self:button_distance(indicator, j)
 			if shortest_distance_buttons == distance then
+				-- print("the distance is "..distance)
 				nearest_button_index = j
 				break
 			end
@@ -390,7 +390,9 @@ if shortest_distance_buttons ~= 1280 then
 		if  button_list[indicator].x >= button_list[j].x + button_list[j].width then
 			local distance = self:button_distance(indicator, j)
 			if shortest_distance_buttons == distance then
+				print("the distance is "..distance)
 				nearest_button_index = j
+				print("the nearast button is ".. nearest_button_index)
 				break
 			end
 		end

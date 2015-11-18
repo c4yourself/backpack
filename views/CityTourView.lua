@@ -73,6 +73,13 @@ function CityTourView:__init(remote_control, surface)
 	self.buttonGrid:add_button(position_3, button_size, button_3)
 	self.buttonGrid:add_button(position_4, button_size, button_4)
 
+	local callback = utils.partial(self.load_view, self)
+	self:listen_to(
+	event.remote_control,
+	"button_release",
+	callback
+	)
+
 	local button_callback = function()
 		self.buttonGrid:render(surface)
 		gfx.update()
@@ -116,7 +123,21 @@ function CityTourView:render(surface)
 
 	--Render buttons
 	self.buttonGrid:render(surface)
+	print("var i citytour")
+	--self:trigger("exit_view")
 end
+	function CityTourView:load_view(button)
+
+		if button == "4" then
+		self:trigger("exit_view")
+			--Stop listening to everything
+			-- TODO
+			-- Start listening to the exit
+
+		end
+	end
+
+
 
 
 return CityTourView

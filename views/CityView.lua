@@ -83,21 +83,43 @@ function CityView:__init(remote_control)
 	self.buttonGrid:add_button(position_8, button_size, button_8)
 	self.buttonGrid:add_button(city_tour_position, city_tour_size, city_tour_button)
 
+	-- Render if button is changed
 	local button_callback = function()
 		self:render(screen)
 		gfx.update()
 	end
-	self:listen_to(
-		self.buttonGrid,
-		"dirty",
-		button_callback
-	)
+
 	local callback = utils.partial(self.load_view, self)
 	self:listen_to(
 	event.remote_control,
 	"button_release",
 	callback
 	)
+
+	-- Function for exit event
+	exit_view = function()
+		print("I EN LOOOOOOOOP")
+
+		self:render(screen)
+		gfx.update()
+		-- self.buttonGrid:listen_to(
+		-- 	self.buttonGrid.event_listener,
+		-- 	"button_press",
+		-- 	callback
+		-- )
+
+	end
+
+	-- Listen for events
+	self:listen_to(
+		self.buttonGrid,
+		"dirty",
+		button_callback
+	)
+
+
+
+
 
 end
 
@@ -191,10 +213,29 @@ function CityView:load_view(button)
 		self.buttonGrid:stop_listening(self.buttonGrid.event_listener,
 		 													"button_press",
 															callback)
+
+
+
 		CT:render(city_tour_view)
 		gfx.update()
+		--
+		-- local exit_view = function()
+		-- 		print("I EN LOOOOOOOOP")
+		-- 		self:render(screen)
+		-- 		self.buttonGrid:listen_to(
+		-- 		self.buttonGrid.event_listener,
+		-- 		"button_press",
+		-- 		callback
+		-- )
+		self:listen_to_once(CT,"exit_view", exit_view)
+
+
+		end
+
+
+
 	end
 
-end
+
 
 return CityView
