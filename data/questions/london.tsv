@@ -24,19 +24,19 @@ multiple_choice	Which of the following cities in South America?	Rio de Janeiro;S
 multiple_choice	Which of the following cities in Oceania?	Sydney;Auckland;Melbourne;Brisbane	1 2 3 4
 numeric	How long is Nile river which is the longest in the world?(km)	6670
 numeric	How high is Qomolangma which is the highest in the world?(m)	8844
-numeric	How many countries and regions are there in the world?	230
-numeric	How many countries and regions are there in Europe?	45
-numeric	How many countries and regions are there in Asia?	49
-numeric	How many countries and regions are there in North America?	28
-numeric	How many countries and regions are there in South America?	13
-numeric	How many countries and regions are there in Africa?	56
-numeric	How many countries and regions are there in Oceania?	30
-city_tour1	The Sidney Opera House was designed by Jørn Utzon, where was he from?	Australia;Usa;Germany;Denmark	4
-city_tour1	How many performances is hosted by the Opera House each year?	1200;2000;1500;1700	3
-city_tour1	When was the building formally opened by Queen Eizaberg II?	1979;1973;1975;1983	2
-city_tour2	The Sydney Tower is the talles structure in Sydney, how tall is it?	299 meters (980 feet);339 meters (1112 feet);309 meters (1014 feet);319 meters (1046 feet)	3
-city_tour2	What architect designed the Sydney Tower?	Glenn Murcutt;Shane Thompson;Taylor Cullity;Donald Crone	4
-city_tour2	When did the Sydney Tower open for the public?	1985;1975;1971;1981;	4
-city_tour3	Who designed the Queen Victoria Building?	George Orwell;George McRae;Harry Seidler;Edmund Blacket	2
-city_tour3	What was the building designed to be?	A building fr parlament; An apartment building;A palace for the King;A marketplace	4
-city_tour3 When was the building finished?	1898;1893;1891;1885	1
+numeric	How many countries and regions in the world?	230
+numeric	How many countries and regions in Europe?	45
+numeric	How many countries and regions in Asia?	49
+numeric	How many countries and regions in North America?	28
+numeric	How many countries and regions in South America?	13
+numeric	How many countries and regions in Africa?	56
+numeric	How many countries and regions in Oceania?	30
+city_tour1	What is the Big Ben?	A radio tower;An observatory;A clock tower;A Sculpture	3
+city_tour1	When was the building of Big Ben completed?	1865;1858;1823;1912	2
+city_tour1	What is the tower officially known as?	The London Tower;The Elizabeth tower;The Great Tower of Britain;The Big Clock of London	2
+city_tour2	In what area of London is the museum located?	Bloomsbury;Botany Bay;Bulls Cross;Bickley	1
+city_tour2	When was the British museum established?	1783;1765;1734;1753	4
+city_tour2	Which scientists collection was the museum based upon?	Leonardo Da Vinci;John Walsh;Sir Hans Sloane;Albert Einstein	3
+city_tour3	The Tower of London has another name, what is it?	The Fortress of the Queen;Her Majesty's Royal Palace and Fortress;Elizabeth's Tower;The Fortress of London	2
+city_tour3	The Tower of London is located next to a big river, which one?	River Brent;River Crane;River Thames;Salmons Brook;	3
+city_tour3	When was The Tower of London founded?	1038;1134;1048;1066	4
