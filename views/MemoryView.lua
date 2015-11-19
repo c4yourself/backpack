@@ -79,11 +79,30 @@ function MemoryView:__init()
 
     for i = 1, self.pairs*2 do
         self.cards[i]  = CardComponent(card_color, card_color_selected,
-                                card_color_disabled, true, false)
+                                card_color, true, false)
         --Temporary code snippet to be able to differentiate cards from eachother
         -- TODO write text or add pictures instead (?)
-        local cc = (self.memory.cards[i] * 50) % 255
-        local front_color = color(cc, cc, cc, cc)
+        -- local cc = (self.memory.cards[i] * 50) % 255
+        -- local front_color = color(cc, cc, cc, cc)
+        local cc1 = 255
+        local cc2 = 255
+        local cc3 = 255
+        local cc4 = 255
+        if self.memory.cards[i] % 4 == 0 then
+          print("4")
+          cc4 = (self.memory.cards[i] * 50) % 255
+        elseif self.memory.cards[i] % 3 == 0 then
+          print("3")
+          cc3 = (self.memory.cards[i] * 50) % 255
+        elseif self.memory.cards[i] % 2 == 0 then
+          print("2")
+          cc2 = (self.memory.cards[i] * 50) % 255
+        else
+          print("1")
+          cc1 = (self.memory.cards[i] * 50) % 255
+        end
+
+        local front_color = color(cc1, cc2, cc3, cc4)
         self.cards[i].front_color = front_color
 
         -- Temporary code ends
@@ -226,12 +245,11 @@ function MemoryView:back_to_city()
     -- Appendix 2 in UX design document
     -- Trigger exit event
     self:trigger("exit_view")
-    self:trigger("exit")
 end
 
 -- Function to set pairs accoriding to profile experience
 function MemoryView:_set_pairs()
-	local exp = self.profile:get_experience()
+	local exp = self.profile:get_experience() + 350
 	if exp <= 100 then
 		self.pairs = 4
 	elseif exp <=200 then

@@ -23,7 +23,6 @@ local utils = require("lib.utils")
 local view = require("lib.view")
 local CityView = class("CityView", view.View)
 
-
 --- Constructor for CityView
 -- @param event_listener Remote control to listen to
 function CityView:__init(remote_control)
