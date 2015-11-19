@@ -95,5 +95,18 @@ function Quiz:generate_singlechoice_quiz(image_path,quiz_size)
 		return false
 	end
 end
+	-- @param attraction_number representing what attraction number you want a question for. String 1, 2 or 3.
+function Quiz:generate_citytour_quiz(image_path,quiz_size,attraction_number)
+	local tsvreader = TSVReader(image_path)
+	if tsvreader:get_question("city_tour" .. attraction_number) ~= false then
+		for i = 1, quiz_size,1 do
+			local multiplechoicequestion = tsvreader:generate_question(i)
+			self.questions[i] = multiplechoicequestion
+		end
+		return true
+	else
+		return false
+	end
+end
 
 return Quiz
