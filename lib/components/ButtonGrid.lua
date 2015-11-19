@@ -127,14 +127,9 @@ function ButtonGrid:press(button)
 		elseif button == "2" then
 				multiplechoice_quiz.render(screen)
 				gfx.update()
-<<<<<<< HEAD
-		--elseif button == "3" then
-				--print("Shut down program")
-				--sys.stop()
-=======
+
 		elseif button == "3" then
 				sys.stop()
->>>>>>> development
 
 		elseif button == "ok" then
 
@@ -393,13 +388,7 @@ if shortest_distance_buttons ~= 1280 then
 		if  button_list[indicator].x >= button_list[j].x + button_list[j].width then
 			local distance = self:button_distance(indicator, j)
 			if shortest_distance_buttons == distance then
-<<<<<<< HEAD
-				--print("the distance is "..distance)
 				nearest_button_index = j
-				--print("the nearast button is ".. nearest_button_index)
-=======
-				nearest_button_index = j
->>>>>>> development
 				break
 			end
 		end

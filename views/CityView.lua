@@ -22,7 +22,7 @@ local MemoryView = require("views.MemoryView")
 local utils = require("lib.utils")
 local view = require("lib.view")
 local CityView = class("CityView", view.View)
->>>>>>> development
+
 
 --- Constructor for CityView
 -- @param event_listener Remote control to listen to
