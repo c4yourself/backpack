@@ -35,7 +35,6 @@ TestProfile = require("test_profile")
 TestMemory = require("test_memory")
 TestTimerMock = require("test_mock_TimerMock")
 TestMockIntegration = require("integration.test_mock_integration")
-TestExample = require("test_example")
 
 
 lu = LuaUnit.LuaUnit.new()
