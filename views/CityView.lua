@@ -131,7 +131,7 @@ local width = surface:get_width()
 	local background_color = {r = 0, g = 0, b = 0}
 
 	surface:clear(background_color)
-	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/Paris.png")))
+	surface:copyfrom(gfx.loadpng("data/images/Mumbai.png"))
 
 
 	--creates some colors
@@ -160,12 +160,12 @@ local width = surface:get_width()
 	city_view_small_font:draw(surface, {x=440, y=15}, tostring(self.profile.experience) .. "/500") -- Profile experience
 	city_view_small_font:draw(surface, {x=width-100, y=15}, tostring(self.profile.cash)) -- Profile cash
 	city_view_large_font:draw(surface, {x=width/2, y=15}, self.city.name, center) -- City name
-  surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/coinIcon.png")), nil, {x = width-145, y = 10, width = 30, height = 30}) -- Coin
+  surface:copyfrom(gfx.loadpng("data/images/coinIcon.png"), nil, {x = width-145, y = 10, width = 30, height = 30}) -- Coin
 
   -- using the button grid to render all buttons and texts
 	self.buttonGrid:render(surface)
 
-	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/ParisIconSelected.png")),nil ,{x = width/3, y = 0, width=width*2/3, height=height})
+	surface:copyfrom(gfx.loadpng("data/images/MumbaiIconSelected.png"),nil ,{x = width/3, y = 0, width=width*2/3, height=height})
 
 	-- Instance remote control and mapps it to the buttons
 	--event.remote_control:on("button_release", self:load_view)
