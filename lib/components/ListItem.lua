@@ -35,7 +35,7 @@ function ListItem:render(surface)
 if self._selected then
 		surface:clear({r=250, g=169, b=0, a=255})
 		self.text_color_selected:draw(surface, self.text_position_left, self.text_left)
-		surface:copyfrom(gfx.loadpng(utils.absolute_path(self.icon)), nil, {x=10, y=28, width=40, height=40})
+		surface:copyfrom(gfx.loadpng(self.icon), nil, {x=10, y=28, width=40, height=40})
 
 
 else
@@ -47,7 +47,7 @@ else
 			self.font:draw(surface, self.text_position_left, self.text_left, nil, "middle")
 
 		]]
-		surface:copyfrom(gfx.loadpng(utils.absolute_path(self.icon)), nil, {x=10, y=28, width=40, height=40})
+		surface:copyfrom(gfx.loadpng(self.icon), nil, {x=10, y=28, width=40, height=40})
 
 end
 
