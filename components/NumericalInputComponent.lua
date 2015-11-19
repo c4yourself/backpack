@@ -17,6 +17,7 @@ function NumericalInputComponent:__init(remote_control)
 	View.__init(self)
 	self.input = ""
 	self.focused = false
+	self._selected = false
 	self.test_trigger_flag = false -- variable used for testing
 	if remote_control ~= nil then
 		self.event_listener = remote_control
@@ -24,9 +25,25 @@ function NumericalInputComponent:__init(remote_control)
 		self.event_listener = event.remote_control
 	end
 	-- Graphics
-	self.color1 = {
-			r = 255, g = 0, b = 0, a = 255
-		}
+	self.color = {r = 255, g = 0, b = 0, a = 255}
+	self.color_selected = {r = 0, b = 255, g = 0, a = 255}
+	self.color_disabled = {r = 255, b = 255, g = 255, a = 255}
+end
+
+function NumericalInputComponent:select(status)
+
+	if status == nil then
+		status = true
+	end
+
+	local old_status = self._selected
+	self._selected = status
+	self:focus()
+	self:dirty(true)
+end
+
+function NumericalInputComponent:is_selected()
+	return self._selected
 end
 
 -- NumericalInputComponent responds to a button press event
@@ -56,12 +73,18 @@ end
 
 --- Renders the NumericalInputField
 function NumericalInputComponent:render(surface)
-	surface:clear(self.color1)
-	local surface_width = surface:get_width()
-	local surface_height = surface:get_height()
+	if self._selected == true then
+		self:focus()
+		surface:clear(self.color_selected)
+	else
+		self:blur()
+		surface:clear(self.color)
+	end
+	self.width = surface:get_width()
+	self.height = surface:get_height()
 	local question_font = Font("data/fonts/DroidSans.ttf", 32, Color(255,255,255,255))
 	question_font:draw(surface, {x = 0, y = 0,
-			height = surface_height, width = surface_width}, self.input,
+			height = self.height, width = self.width}, self.input,
 			"center", "middle")
 	--font:draw_over_surface(surface, self.input)
 	gfx.update()
@@ -74,10 +97,12 @@ function NumericalInputComponent:blur()
 		self:stop_listening()
 		self.focused = false
 	end
+	print("blurred")
 end
 
 --- Focuses the NumericalInputComponent, i.e. starts to listening to events
 function NumericalInputComponent:focus()
+	print("focuses input component")
 	if not self:is_focused() then
 		self:listen_to(
 			self.event_listener,

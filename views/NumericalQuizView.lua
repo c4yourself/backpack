@@ -13,6 +13,8 @@ local NumericQuestion = require("lib.quiz.NumericQuestion")
 local SubSurface = require("lib.view.SubSurface")
 local Color = require("lib.draw.Color")
 local Font = require("lib.draw.Font")
+local NumericalQuizGrid = require("lib.components.NumericalQuizGrid")
+local Button = require("lib.components.Button")
 
 --- Constructor for NumericQuizView
 function NumericQuizView:__init()
@@ -26,11 +28,25 @@ function NumericQuizView:__init()
 	self.listening_initiated = false
 	self.input_area_defined = false
 	--Components
-	self.button_grid = button_grid(remote_control)
-
+	self.grid = NumericalQuizGrid(remote_control)
 	--Instanciate a numerical input component and make the quiz listen for changes
 	self.views.num_input_comp = NumericalInputComponent()
-	self.input_surface = Surface(300,100)
+	--self.input_surface = Surface(300,100)
+	--Add buttons
+	-- Add exit button
+	local button_color = Color(255, 99, 0, 255)
+	local color_selected = Color(255, 153, 0, 255)
+	local color_disabled = Color(111, 222, 111, 255)
+
+	local height = screen:get_height()
+	local width = screen:get_width()
+	local button_size = {width = 4*width/45, height = 4*width/45}
+
+	local button_exit = Button(button_color, color_selected, color_disabled,
+								true, true, "views.CityView")
+	self.grid:add_button({x = 10, y = 500},
+						button_size,
+						button_exit)
 
 	-- Logic
 	-- Associate a quiz instance with the View
@@ -61,11 +77,11 @@ end
 function NumericQuizView:press(key)
 	if key == "right" then
 		-- Navigate to the next question if the user already submitted an answer
-		if self.answer_flag then
-			self.answer_flag = false
-			self:dirty(false)
-			self:dirty(true) -- To make sure dirty event is triggered
-		end
+		--if self.answer_flag then
+			--self.answer_flag = false
+			--self:dirty(false)
+			--self:dirty(true) -- To make sure dirty event is triggered
+		--end
 	elseif key == "back" then
 		self:trigger("exit")
 	end
@@ -75,6 +91,23 @@ end
 function NumericQuizView:render(surface)
 	local surface_width = surface:get_width()
 	local surface_height = surface:get_height()
+
+	if not self.input_area_defined then
+		local input_x = math.ceil(surface:get_width() * 0.4)
+		local input_y = math.ceil(surface:get_height() * 0.6)
+		local input_height = math.ceil(0.2 * surface_height)
+		local input_width = math.ceil(0.2 * surface_width)
+		self.input_area = SubSurface(surface, {x = input_x, y = input_y,
+									height = input_height,
+									width = input_width})
+		self.grid:add_button({x = input_x, y = input_y},
+							{height = input_height , width = input_width},
+							self.views.num_input_comp)
+		local input_index = self.grid:get_last_index()
+		self.grid:mark_as_input_comp(input_index)
+	end
+
+
 	if self:is_dirty() then
 		surface:clear(color)
 		--Question area
@@ -115,13 +148,6 @@ function NumericQuizView:render(surface)
 	end
 	-- Render all child views and copy changes to this view
 	-- Input component
-	if not self.input_area_defined then
-		local input_x = math.ceil(surface:get_width() * 0.4)
-		local input_y = math.ceil(surface:get_height() * 0.6)
-		self.input_area = SubSurface(surface, {x = input_x, y = input_y,
-			height = math.ceil(0.2 * surface_height),
-			width = math.ceil(0.2 * surface_width)})
-	end
 	self.views.num_input_comp:render(self.input_area)
 
 	if not self.listening_initiated then
@@ -133,16 +159,22 @@ function NumericQuizView:render(surface)
 		)
 
 		self:listen_to(
+			self.grid,
+			"dirty",
+			utils.partial(self.grid.render, self.grid, surface)
+		)
+
+		self:listen_to(
 			self.views.num_input_comp,
 			"submit",
 			utils.partial(self.show_answer, self)
 		)
-		self.views.num_input_comp:focus() --TODO Move this to its proper place
+		--self.views.num_input_comp:focus() --TODO Move this to its proper place
 		self.listening_initiated = true
 	end
 
 	--surface:copyfrom(self.input_surface)
-
+	self.grid:render(surface)
 	gfx.update()
 	self:dirty(false)
 end

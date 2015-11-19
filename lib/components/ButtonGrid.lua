@@ -68,7 +68,6 @@ function ButtonGrid:add_button(position, button_size, button)
 	 width = button_size.width,
 	 height = button_size.height
 	 })
-
 else
 	error("screen boundary error")
 end
@@ -98,7 +97,7 @@ function ButtonGrid:display_next_view(transfer_path)
 end
 
 function ButtonGrid:press(button)
-
+	if not self.paused then
     if button == "down" then
 			self:indicate_downward(self.button_indicator)
 			self:trigger("dirty")
@@ -113,16 +112,16 @@ function ButtonGrid:press(button)
 			self:trigger("dirty")
 		elseif button == "1" then
 				--Instanciate a numerical quiz
-				local numerical_quiz_view = NumericalQuizView()
+				--local numerical_quiz_view = NumericalQuizView()
 				--Stop listening to everything
 				-- TODO
 				-- Start listening to the exit event, which is called when the user
 				-- exits a quiz
 
 				--Update the view
-				numerical_quiz_view:render(screen)
+				--numerical_quiz_view:render(screen)
 				-- TODO This should be done by a subsurface in the final version
-				gfx.update()
+				--gfx.update()
 		elseif button == "2" then
 				multiplechoice_quiz.render(screen)
 				gfx.update()
@@ -140,11 +139,22 @@ function ButtonGrid:press(button)
 					end
 				end
 	end
+	end
 end
 
 
 	collectgarbage()  --ensure that memory-leak does not occur
 
+end
+
+--- Makes the ButtonGrid stop listening to input until unpaused
+function ButtonGrid:pause()
+	self.paused = true
+end
+
+--- Makes the ButtonGrid start listening to input until paused
+function ButtonGrid:unpause()
+	self.paused = false
 end
 
 --- Providing a subsurface to each button,
