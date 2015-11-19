@@ -161,4 +161,10 @@ end
 function localprofilemanager:get_profile_token(profile)
 	return profile:get_login_token()
 end
+
+-- Get email_address, password and login_token in profile
+-- @param profile representing the profile instance
+function localprofilemanager:get_delete_params(profile)
+	return profile:get_email_address(), profile:get_password(), profile:get_login_token()
+end
 return localprofilemanager

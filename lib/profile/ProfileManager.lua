@@ -20,6 +20,21 @@ function ProfileManager:list()
 	return profile_list_local, profile_list_city, profile_list_email
 end
 
+--- create profile to local and server
+--- @param profile representing the profile to save
+--- @return true representing it saves successfully both in local and server
+--- @return false representing it saves unsuccessfully in server
+function ProfileManager:create_new_profile(profile)
+	localprofilemanager:save(profile)
+	if profilesynchronizer:is_connected() ~= false then
+		profilesynchronizer:delete_profile(localprofilemanager:get_delete_params(profile))
+		profilesynchronizer:save_profile(profile)
+		return true, "Create new profile successfully in local and server!"
+	else
+		return false, "Create new local profile successfully. The netowork is not connected!"
+	end
+end
+
 --- save profile to local and server
 --- @param profile representing the profile to save
 --- @return true representing it saves successfully both in local and server
