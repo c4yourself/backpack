@@ -3,6 +3,13 @@ local LuaUnit = require("luaunit")
 -- Enable import as if we were executing from the actual program
 package.path = "../?.lua;" .. package.path
 
+-- Make mocks global
+gfx = require("lib.mocks.GfxMock")
+surface = require("lib.mocks.SurfaceMock")
+player = require("lib.mocks.PlayerMock")
+freetype = require("lib.mocks.FreetypeMock")
+sys = require("lib.mocks.SysMock")
+
 -- Make sure logging is disabled since it can interfere with the tests
 local config = require("config")
 config.logging.mode = "DISABLED"
@@ -27,6 +34,8 @@ TestSysMock = require("test_mock_SysMock")
 TestProfile = require("test_profile")
 TestMemory = require("test_memory")
 TestTimerMock = require("test_mock_TimerMock")
+TestMockIntegration = require("integration.test_mock_integration")
+TestExample = require("test_example")
 
 
 lu = LuaUnit.LuaUnit.new()
