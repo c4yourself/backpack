@@ -8,6 +8,8 @@ local NumericalInputComponent = class("NumericalInputComponent", View)
 local event = require("lib.event")
 local utils = require("lib.utils")
 local sys = require("emulator.sys")
+local Color = require("lib.draw.Color")
+local Font = require("lib.draw.Font")
 
 --- Constructor for NumericalInputComponent
 -- @param event_listener Remote control to listen to
@@ -37,12 +39,16 @@ function NumericalInputComponent:press(button)
 			self:set_text(self.input:sub(1,-2))
 		end
 		self:trigger("change")
+		print("change triggered")
 	elseif button == "ok" then
 		self:trigger("submit")
+		print("submit triggered")
 	else
-		if button ~= nil and tonumber(button) ~= nil then
+		if button ~= nil and tonumber(button) ~= nil
+		and #self.input < 3 then
 			self:set_text(self.input .. button)
 			self:trigger("change")
+			print("change triggered")
 		end
 	end
 	self.test_trigger_flag = true
@@ -50,17 +56,16 @@ end
 
 --- Renders the NumericalInputField
 function NumericalInputComponent:render(surface)
-	local font = sys.new_freetype(
-		{r = 255, g = 255, b = 255, a = 255},
-		32,
-		{x = 25, y = 50},
-		utils.absolute_path("data/fonts/DroidSans.ttf"))
-
-
-		surface:clear(self.color1, self.rectangle)
-		font:draw_over_surface(surface, self.input)
-		--gfx.update()
-		self:dirty(false)
+	surface:clear(self.color1)
+	local surface_width = surface:get_width()
+	local surface_height = surface:get_height()
+	local question_font = Font("data/fonts/DroidSans.ttf", 32, Color(255,255,255,255))
+	question_font:draw(surface, {x = 0, y = 0,
+			height = surface_height, width = surface_width}, self.input,
+			"center", "middle")
+	--font:draw_over_surface(surface, self.input)
+	gfx.update()
+	self:dirty(false)
 end
 
 --- De-focuses the NumericalInputComponent, i.e. stops listening to events

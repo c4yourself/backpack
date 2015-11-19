@@ -11,7 +11,7 @@ local event = require("lib.event")
 local utils = require("lib.utils")
 --local multiplechoice_quiz = require("views.multiplechoice_quiz")
 local SubSurface = require("lib.view.SubSurface")
---local NumericalQuizView = require("views.NumericalQuizView")
+local NumericalQuizView = require("views.NumericalQuizView")
 local button= require("lib.components.Button")
 local button_grid=require("lib.components.ButtonGrid")
 local color = require("lib.draw.Color")
@@ -162,11 +162,15 @@ function CityView:load_view(button)
 		--Instanciate a numerical quiz
 		local numerical_quiz_view = NumericalQuizView()
 		--Stop listening to everything
-		-- TODO
+		self:stop_listening(event.remote_control)
+		self.buttonGrid:stop_listening(self.buttonGrid.event_listener,
+		 													"button_press",
+															callback)
 		-- Start listening to the exit event, which is called when the user
 		-- exits a quiz
 		local callback = function()
 			utils.partial(view.view_manager.set_view, view.view_manager)(self)
+			self.buttonGrid:unpause()
 			gfx.update()
 		end
 		self:listen_to(
@@ -175,6 +179,15 @@ function CityView:load_view(button)
 			--view.view_manager:set_view(self)
 			callback
 		)
+		local numerical_callback = function()
+			numerical_quiz_view:render(screen)
+		end
+		self:listen_to(
+			numerical_quiz_view,
+			"dirty",
+			numerical_callback
+		)
+
 		--Update the view
 		numerical_quiz_view:render(screen)
 		-- TODO This should be done by a subsurface in the final version
