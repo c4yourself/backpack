@@ -24,14 +24,14 @@ function BackEndStore:__init()
 
 	self.item_list = {Item(1, "Baguette", "Paris", "Good", "data/images/item_1.png",5),
 	 									Item(2, "Barret", "Paris", "Fancy", "data/images/item_2.png",45),
-										Item(3, "Barret", "Paris", "Fancy", "data/images/item_2.png",45),
-										Item(4, "Barret", "Paris", "Fancy", "data/images/item_2.png",45),
-										Item(5, "Barret", "Paris", "Fancy", "data/images/item_2.png",45),
-										Item(6, "Barret", "Paris", "Fancy", "data/images/item_2.png",45),
-										Item(7, "Barret", "Paris", "Fancy", "data/images/item_2.png",45),
-										Item(8, "Barret", "Paris", "Fancy", "data/images/item_2.png",45),
-										Item(9, "Sushi", "Tokyo", "Raw", "data/images/item_3.png",15),
-										Item(10, "Knife", "Tokyo", "Sharp", "data/images/item_4.png",78)}
+										Item(3, "Eifel Tower", "Paris", "So high", "data/images/item_3.png",45),
+										Item(4, "Barret", "Paris", "Fancy", "data/images/item_4.png",45),
+										Item(5, "Barret", "Paris", "Fancy", "data/images/item_5.png",45),
+										Item(6, "Barret", "Paris", "Fancy", "data/images/item_6.png",45),
+										Item(7, "Barret", "Paris", "Fancy", "data/images/item_7.png",45),
+										Item(8, "Barret", "Paris", "Fancy", "data/images/item_8.png",45),
+										Item(9, "Sushi", "Tokyo", "Raw", "data/images/item_9.png",15),
+										Item(10, "Knife", "Tokyo", "Sharp", "data/images/item_10png",78)}
 
 
 

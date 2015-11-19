@@ -37,6 +37,7 @@ function Store:__init(remote_control, city, profile)
 	self.shelf = gfx.loadpng("data/images/shelf.png")
 	self.backendstore = BackEndStore()
 	self.profile = profile
+
 	-- Some colors
 	self.background_color = Color{255, 255, 204, 255}
 	local button_active = Color{255, 51, 51, 255}
@@ -59,31 +60,28 @@ function Store:__init(remote_control, city, profile)
 			k = k + 1
 	end
 
-	-- Add them to button grid
+	-- Add the exit button
+	exit_font = Font("data/fonts/DroidSans.ttf", 24, Color(255, 0, 0, 255))
+	buttons[get_size(self.items)+1] = Button(button_inactive, button_active, button_inactive, true, false)
+	buttons[get_size(self.items)+1]:set_textdata("Exit",Color(255,0,0,255), {x = 100, y = 300}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
+
+	-- Add them to button grid at the correct place
 	row = 1
 	j = 1
 	while j <= get_size(self.items) do
+		print(j)
 		self.button_grid:add_button({x = width/2+70+(j-1-4*(row-1))*130,y = 100 + 140*(row-1)}, button_size, buttons[j])
 		j = j + 1
 		if (j-1) % 4 == 0 then
 			row = row + 1
 		end
 	end
-	--[[
-	local button1 = Button(button_inactive, button_active, button_inactive, true, true)
-	local button2 = Button(button_inactive, button_active, button_inactive, true, true)
-	self.button_grid:add_button({x = 50, y = 50}, button_size, button1)
-	self.button_grid:add_button({x = 50, y = 100}, button_size, button2)
-	]]
+	self.button_grid:add_button({x = 200,y = 650}, {width = 6*width/45,height = 2*width/45}, buttons[get_size(self.items)+1])
+
 	self.add_view(self.button_grid, false)
 
 	self:listen_to(event.remote_control, "button_press", function() self:dirty() end)
 
-end
-
-function Store:dirty(status)
-	print("Snuysk")
-	View.dirty(self, status)
 end
 
 function Store:render(surface)
@@ -93,23 +91,21 @@ function Store:render(surface)
 
 	-- Resets the surface and draws the background
 	surface:clear(self.background_color)
-	surface:copyfrom(self.cashier, nil, {x = 0, y = 100}, true)
+	surface:copyfrom(self.cashier, nil, {x = 0, y = 80}, true)
 	surface:copyfrom(self.shelf, nil, {x=width/2,y=100}, true)
 
-	print("beofre render")
 	self.button_grid:render(surface)
-	print("before callback")
+
 	-- Instance remote control and mapps it to the buttons
 	local callback = utils.partial(self.load_view, self)
-	print("before listen to")
 	self:listen_to(
 		event.remote_control,
 		"button_release",
 		callback
-		--utils.partial(self.load_view, self)
 	)
-	print("self time")
+
 	self:dirty(false)
+
 end
 
 function Store:load_view(button)
