@@ -101,7 +101,7 @@ function CityTourView:render(surface)
 	local text_indent = 100 -- Indents text area
 
 	-- Create the picture
-	surface:copyfrom(gfx.loadpng(utils.absolute_path(self.attraction.pic_url)) ,nil ,{ x = height/6, y = height/6, width = height*0.54*3/5, height = height*3/5})
+	surface:copyfrom(gfx.loadpng(self.attraction.pic_url) ,nil ,{ x = height/6, y = height/6, width = height*0.54*3/5, height = height*3/5})
 
 
 	-- Draw the fonts
