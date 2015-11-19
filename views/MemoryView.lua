@@ -17,6 +17,7 @@ local button = require("lib.components.Button")
 local MemoryGrid = require("lib.components.MemoryGrid")
 local CardComponent = require("components.CardComponent")
 local Profile = require("lib.profile.Profile")
+local Font = require("lib.draw.Font")
 
 function MemoryView:__init()
     View.__init(self)
@@ -47,12 +48,7 @@ function MemoryView:__init()
     end
 
     -- Graphics
-    self.font = sys.new_freetype(
-        {r = 255, g = 255, b = 255, a = 255},
-        32,
-        {x = 100, y = 300},
-    utils.absolute_path("data/fonts/DroidSans.ttf"))
-
+    self.font = Font("data/fonts/DroidSans.ttf", 32, color(255, 255, 255, 255))
     self.button_color = color(250, 105, 0, 255)
     self.color_selected = color(250, 169, 0, 255)
     self.color_disabled = color(111,222,111,255)
@@ -101,7 +97,7 @@ function MemoryView:__init()
         end
 
         self.positions[i] = {x = self.pos_x, y = self.pos_y}
-        --local card_text = to_string(self.memory.cards[i])
+        --local card_text = tostring(self.memory.cards[i])
         --local text_position =
         --self.cards[i]:set_textdata(card_text, self.text_color, text_position,
         --                            font_size, font_path)
@@ -171,6 +167,7 @@ function MemoryView:_determine_new_state()
             self.memory:open(card_index)
             self.button_grid:set_card_status(card_index, "FACING_UP")
             self.memory:is_finished()
+            self:dirty(true)
         end
     end
 end
@@ -183,11 +180,9 @@ function MemoryView:_check_match()
         --self.memory:match()
         local is_matching = self.memory:match()
         if not is_matching then
-            print("didn't match")
             local state_map = self.memory.state
             self.button_grid:set_multiple_status(state_map)
         else
-            print("matching!")
         end
     end
 end
@@ -207,21 +202,17 @@ function MemoryView:render(surface)
 --At this point, we should check the memory states and keep the card that are true in memory.states open
     if self:is_dirty() then
         surface:clear(color)
-
         -- Add the number of turns
-        local turns_text =sys.new_freetype(self.text_color:to_table(), 30,
-            {x = 100, y = 110}, utils.absolute_path("data/fonts/DroidSans.ttf"))
-        local turns = sys.new_freetype(self.text_color:to_table(), 30,
-            {x = 100, y = 150}, utils.absolute_path("data/fonts/DroidSans.ttf"))
-        turns_text:draw_over_surface(surface, "Turns")
-
+        local turns_text = Font("data/fonts/DroidSans.ttf", 30, self.text_color)
+        local turns = Font("data/fonts/DroidSans.ttf", 30, self.text_color)
+        turns_text:draw(surface, {x = 100, y = 150}, "Turns")
         if self.memory.moves == nil then
-            turns:draw_over_surface(surface, "No turns...")
+            turns:draw(surface, {x = 100, y = 150}, "No turns...")
         else
-            turns:draw_over_surface(surface, self.memory.moves)
+            turns:draw(surface, {x = 100, y = 200}, tostring(self.memory.moves))
         end
         gfx.update()
-    end
+      end
     self:dirty(false)
     -- Render child components
     self.button_grid:render(surface)
@@ -240,7 +231,7 @@ end
 
 -- Function to set pairs accoriding to profile experience
 function MemoryView:_set_pairs()
-	local exp = self.profile:get_experience() + 350
+	local exp = self.profile:get_experience()
 	if exp <= 100 then
 		self.pairs = 4
 	elseif exp <=200 then
