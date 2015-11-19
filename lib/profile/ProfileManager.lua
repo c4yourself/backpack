@@ -73,7 +73,7 @@ end
 function ProfileManager:login(email_address,password)
 	if profilesynchronizer:is_connected() == true then
 		if profilesynchronizer:login(email_address,password) == "login_token" then
-			return email_address,password
+			return true, email_address, password
 		else
 			return false, "Wrong email address or password!"
 		end
