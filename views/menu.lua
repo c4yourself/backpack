@@ -1,9 +1,9 @@
 local utils = require("lib.utils")
 local event = require("lib.event")
-local multiplechoice_quiz = require("views.multiplechoice_quiz")
+local MultipleChoiceView = require("views.MultipleChoiceView")
 local view = require("lib.view")
 local NumericalQuizView = require("views.NumericalQuizView")
-local CityView = require("views.CityView")
+local profile_selection = require("views.profile_selection")
 
 local menu = {}
 
@@ -16,13 +16,13 @@ function menu.load_view(button)
 		multiplechoice_quiz.render(screen)
 		gfx.update()
 	elseif button == "3" then
-		print("Shut down program")
 		sys.stop()
 
 	elseif button == "4" then
 		-- Only for testing
-		local city_view = CityView()
-		view.view_manager:set_view(city_view)
+		profile_selection.render(screen)
+		--local prof_sel = profile_selection()
+		--view.view_manager:set_view(prof_sel)
 		gfx.update()
 	end
 end
@@ -48,7 +48,7 @@ function menu.render(surface)
 	local score = sys.new_freetype(score_text_color, 40, {x=1010,y=170}, utils.absolute_path("data/fonts/DroidSans.ttf"))
 
 	-- Shows the score
-	score:draw_over_surface(surface, "Score: " .. "125")
+	score:draw_over_surface(surface, "Score: " .. "127")
 
 	-- Implements Button 1. Numerical
 

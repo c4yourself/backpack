@@ -11,7 +11,8 @@ local Button = class("Button", View)
 --@param color_disabled The color for a disabled button
 --@param enaled The button is enabled or not when instantiating
 --@param selected The button is selected or not when instantiating
-function Button:__init(color, color_selected, color_disabled, enabled, selected)
+--@param transfer_path The path for the view after the button is clicked
+function Button:__init(color, color_selected, color_disabled, enabled, selected, transfer_path)
 	View.__init(self)
 	self.color = color
 	self.color_selected = color_selected or color
@@ -19,8 +20,16 @@ function Button:__init(color, color_selected, color_disabled, enabled, selected)
 	self._enabled = enabled or true
 	self._selected = selected or false
 	self.text_available = false
+	if transfer_path ~= nil then
+		self.transfer_path = transfer_path
+	end
 end
 
+function Button:set_view_path(transfer_path)
+	self.transfer_path = transfer_path
+
+end
+-- TODO, remove text_position
 function Button:set_textdata(text, font_color, text_position, font_size,font_path)
 	self.text_available = true
 	self.text = text
@@ -28,6 +37,7 @@ function Button:set_textdata(text, font_color, text_position, font_size,font_pat
 	self.font_color = font_color
 	self.font_path = font_path
 	self.text_position = text_position
+
 end
 
 function Button:enable(status)
@@ -39,7 +49,8 @@ function Button:enable(status)
 	local old_status = self._enabled
 	self._enabled = status
 
-	self:mark_dirty()
+	self:dirty(false)
+	self:dirty(true)
 end
 
 function Button:is_enabled()
@@ -65,11 +76,11 @@ function Button:render(surface)
 	self:dirty(false)
 
 	if not self:is_enabled() then
-		surface:clear(self.color_disabled:to_table())
+		surface:fill(self.color_disabled:to_table())
 	elseif self:is_selected() then
-		surface:clear(self.color_selected:to_table())
+		surface:fill(self.color_selected:to_table())
 	else
-		surface:clear(self.color:to_table())
+		surface:fill(self.color:to_table())
 	end
 
 end

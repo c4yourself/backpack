@@ -7,6 +7,7 @@ local View = require("lib.view.View")
 local NumericalInputComponent = class("NumericalInputComponent", View)
 local event = require("lib.event")
 local utils = require("lib.utils")
+local sys = require("emulator.sys")
 
 --- Constructor for NumericalInputComponent
 -- @param event_listener Remote control to listen to
@@ -20,29 +21,46 @@ function NumericalInputComponent:__init(remote_control)
 	else
 		self.event_listener = event.remote_control
 	end
+	-- Graphics
+	self.color1 = {
+			r = 255, g = 0, b = 0, a = 255
+		}
 end
 
 -- NumericalInputComponent responds to a button press event
 function NumericalInputComponent:press(button)
 	if button == "backspace" then
 		if #self.input > 0 then
-			self.set_text(self.input:sub(1,-2))
+			if #self.input == 1 then
+				self:set_text("")
+			end
+			self:set_text(self.input:sub(1,-2))
 		end
-		self.trigger("change")
+		self:trigger("change")
 	elseif button == "ok" then
-		self.trigger("submit")
+		self:trigger("submit")
 	else
-		if button ~= nil then
-			self.set_text(self.input .. button)
-			self.trigger("change")
+		if button ~= nil and tonumber(button) ~= nil then
+			self:set_text(self.input .. button)
+			self:trigger("change")
 		end
 	end
 	self.test_trigger_flag = true
 end
 
 --- Renders the NumericalInputField
-function NumericalInputComponent:render()
-	self:dirty(false)
+function NumericalInputComponent:render(surface)
+	local font = sys.new_freetype(
+		{r = 255, g = 255, b = 255, a = 255},
+		32,
+		{x = 25, y = 50},
+		utils.absolute_path("data/fonts/DroidSans.ttf"))
+
+
+		surface:clear(self.color1, self.rectangle)
+		font:draw_over_surface(surface, self.input)
+		--gfx.update()
+		self:dirty(false)
 end
 
 --- De-focuses the NumericalInputComponent, i.e. stops listening to events
@@ -58,7 +76,7 @@ function NumericalInputComponent:focus()
 	if not self:is_focused() then
 		self:listen_to(
 			self.event_listener,
-			"button_press",
+			"button_release",
 			utils.partial(self.press, self)
 		)
 		self.focused = true
@@ -76,7 +94,10 @@ end
 function NumericalInputComponent:set_text(text)
 	if tonumber(text) ~= nil then
 		self.input = text
-		self:dirty()
+		self:dirty(true)
+	elseif text == nil or text == "" then
+		self.input = ""
+		self:dirty(true)
 	else
 		error("Only numerical inputs are accepted")
 	end

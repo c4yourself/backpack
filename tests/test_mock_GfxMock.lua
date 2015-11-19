@@ -21,16 +21,16 @@ end
 
 --Tests that the update does not do anything
 function TestGfxMock:test_update()
-  GfxMock.update()
-  GfxMock.set_auto_update()
+  GfxMock:update()
+  GfxMock:set_auto_update()
 end
 
 --Tests that the loadjpeg/png returns a surface (output dimensions
 --not necessary)
 function TestGfxMock:test_load()
   local surface = GfxMock.new_surface(12, 7)
-  luaunit.assertEquals(type(GfxMock.loadjpeg()), type(surface))
-  luaunit.assertEquals(type(GfxMock.loadpng()), type(surface))
+  luaunit.assertEquals(type(GfxMock:loadjpeg()), type(surface))
+  luaunit.assertEquals(type(GfxMock:loadpng()), type(surface))
 end
 
 return TestGfxMock

@@ -9,34 +9,37 @@ local view = require("lib.view")
 local CityView2 = class("CityView2", View)
 local event = require("lib.event")
 local utils = require("lib.utils")
-local multiplechoice_quiz = require("views.multiplechoice_quiz")
 local SubSurface = require("lib.view.SubSurface")
-local NumericalQuizView = require("views.NumericalQuizView")
+--local NumericalQuizView = require("views.NumericalQuizView")
 local button= require("lib.components.Button")
-local button_grid	=	require("lib.components.ButtonGrid")
+local button_grid=require("lib.components.ButtonGrid")
 local color = require("lib.draw.Color")
+--local profile_selection = require("views.profile_selection")
+--local MultipleChoiceView = require("views.MultipleChoiceView")
 
 --- Constructor for CityView
 -- @param event_listener Remote control to listen to
 function CityView2:__init(remote_control)
 	View.__init(self)
+	self.buttonGrid = button_grid(remote_control)
 	self.background_path = ""
+
 end
 
 function CityView2:render(surface)
 	-- Resets the surface and draws the background
-	local background_color = {r=0, g=0, b=0}
+	local background_color = {r=111, g=99, b=222}
 	surface:clear(background_color)
 	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/paris.png")))
 
 	--creates some colors
-	local button_color = color(0, 128, 225, 255)
+	local button_color = color(111, 128, 225, 255)
 	local text_color = color(55, 55, 55, 255)
-	local score_text_color = color(255, 255, 255, 255)
+	local score_text_color = color(11, 22, 255, 255)
 	local color_selected = color(33, 99, 111, 255)
 	local color_disabled = color(111, 222, 111, 255) --have not been used yet
 
-	-- Instance of	all Buttons
+	-- Instance of  all Buttons
 	local button_1 = button(button_color, color_selected, color_disabled,true,true)
 	local button_2 = button(button_color, color_selected, color_disabled,true,false)
 	local button_3 = button(button_color, color_selected, color_disabled,true,false)
@@ -51,41 +54,30 @@ function CityView2:render(surface)
 	local position_3={x=100,y=450}
 	local button_size_3 = {width=500,height=100}
 
-	-- create a button grid for the current view,
-	-- for managing all buttons' layout and states
-	self.buttonGrid = button_grid()
+
 
 	-- Using the button grid to create buttons
 	self.buttonGrid:add_button(position_1,button_size_1,button_1)
 	self.buttonGrid:add_button(position_2,button_size_2,button_2)
 	self.buttonGrid:add_button(position_3,button_size_3,button_3)
 
-	-- Insert text and its color, position, size, path for each button
-	-- Button always has the screen as its background, not its subsurface
+  -- Insert text and its color, position, size, path for each button
+  -- Button always has the screen as its background, not its subsurface
 	button_1:set_textdata("Numerical quiz",text_color,{x=100,y=50},30,utils.absolute_path("data/fonts/DroidSans.ttf"))
 	button_2:set_textdata("Multiple choice question",text_color,{x=100,y=250},30,utils.absolute_path("data/fonts/DroidSans.ttf"))
 	button_3:set_textdata("Exit",text_color,{x=100,y=450},30,utils.absolute_path("data/fonts/DroidSans.ttf"))
 
- -- Adding the score to surface
-	local score = sys.new_freetype(score_text_color:to_table(), 40, {x=1010,y=170}, utils.absolute_path("data/fonts/DroidSans.ttf"))
-	score:draw_over_surface(surface, "Score: " .. "125")
+ 	-- Adding the score to surface
+	--[[local score = sys.new_freetype(score_text_color:to_table(), 40, {x=1010,y=170}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	score:draw_over_surface(surface, "Score: " .. "125")]]
 
-	-- using the button grid to render all buttons and texts
+  -- using the button grid to render all buttons and texts
 	self.buttonGrid:render(surface)
 
-	-- testing the subsurface
-	local subsurface1 = SubSurface(surface,{width=100, height=100, x=0, y=0})
-	subsurface1:clear({r=255, g=255, b=255, a=255})
+  -- testing the subsurface
+	local sub_surface1 = SubSurface(surface,{width=100, height=100, x=0, y=0})
+	sub_surface1:clear({r=111, g=222, b=255, a=255})
 
-	-- Instance remote control and mapps it to the buttons
-	--event.remote_control:on("button_release", self:load_view)
-	local callback = utils.partial(self.load_view, self)
-	self:listen_to(
-		event.remote_control,
-		"button_release",
-		callback
-		--utils.partial(self.load_view, self)
-	)
 end
 
 function CityView2:load_view(button)
@@ -93,7 +85,7 @@ function CityView2:load_view(button)
 		--Instanciate a numerical quiz
 		local numerical_quiz_view = NumericalQuizView()
 		--Stop listening to everything
-		-- TODO
+		self:stop_listening(event.remote_control)
 		-- Start listening to the exit event, which is called when the user
 		-- exits a quiz
 		local callback = function()
@@ -103,67 +95,83 @@ function CityView2:load_view(button)
 		self:listen_to(
 			numerical_quiz_view,
 			"exit",
+			callback
+		)
+
+		-- Make the city view listen for the "dirty" event
+		local numerical_callback = function()
+			numerical_quiz_view:render(screen)
+		end
+		self:listen_to(
+			numerical_quiz_view,
+			"dirty",
+			numerical_callback
+		)
+		--Update the view
+		numerical_quiz_view:render(screen)
+		-- TODO ^This should be done by a subsurface in the final version
+		gfx.update()
+	elseif button == "2" then
+		local mult_quiz_view = MultipleChoiceView()
+		--Stop listening to everything
+		self:stop_listening(event.remote_control)
+		-- Start listening to the exit event, which is called when the user
+		-- exits a quiz
+		local callback = function()
+			utils.partial(view.view_manager.set_view, view.view_manager)(self)
+			gfx.update()
+		end
+		self:listen_to(
+			mult_quiz_view,
+			"exit",
+			callback
+		)
+
+		-- Make the city view listen for the "dirty" event
+		local mult_choice_callback = function()
+			mult_quiz_view:render(screen)
+		end
+		self:listen_to(
+			mult_quiz_view,
+			"dirty",
+			mult_choice_callback
+		)
+		--Update the view
+		mult_quiz_view:render(screen)
+		-- TODO ^This should be done by a subsurface in the final version
+		gfx.update()
+	elseif button == "3" then
+		sys.stop()
+	elseif button == "4" then
+		-- Only for testing
+
+		--profile_selection.render(screen)
+
+		local profile_sel = profile_selection()
+		--Stop listening to everything
+		-- TODO
+		-- Start listening to the exit event, which is called when the user
+		-- exits a quiz
+		local callback = function()
+			utils.partial(view.view_manager.set_view, view.view_manager)(self)
+			gfx.update()
+		end
+		self:listen_to(
+			profile_sel,
+			"exit",
 			--view.view_manager:set_view(self)
 			callback
 		)
 		--Update the view
-		numerical_quiz_view:render(screen)
-		-- TODO This should be done by a subsurface in the final version
-		gfx.update()
-	elseif button == "2" then
-		multiplechoice_quiz.render(screen)
-		gfx.update()
-	elseif button == "3" then
-		print("Shut down program")
-		sys.stop()
-
-	elseif button == "down" then
-		-- the indicator refers to the selecting button
-		local indicator = self.buttonGrid.button_indicator
-		local button_list = self.buttonGrid.button_list
-
-		indicator = indicator % #button_list
-		indicator = indicator + 1
-		button_list[indicator].button:select(true)
-
-		 if indicator == 1 then
-		 button_list[#button_list].button:select(false)
-	 else
-			button_list[indicator-1].button:select(false)
-	 end
-
-		self.buttonGrid.button_indicator = indicator
-
-		self.buttonGrid:render(screen)
-		gfx.update()
-
-	elseif button == "up" then
-		local indicator = self.buttonGrid.button_indicator
-		local button_list = self.buttonGrid.button_list
-
-		indicator = indicator - 1
-
-		if indicator == 0 then
-		indicator = #button_list
+		local callback_dirty = function()
+			profile_sel.render(screen)
+			gfx.update()
 		end
+		self:listen_to(profile_sel,"dirty",callback_dirty)
 
-		button_list[indicator].button:select(true)
-
-		if indicator == #button_list then
-		button_list[1].button:select(false)
-		else
-		button_list[indicator+1].button:select(false)
-		end
-
-		self.buttonGrid.button_indicator = indicator
-		self.buttonGrid:render(screen) --use the view's button grid for rendering
-
+		profile_sel.render(screen)
 		gfx.update()
-
-	elseif button == "ok" then
-	--TODO able to enter the current pointing button
 
 	end
 end
-
 return CityView2
