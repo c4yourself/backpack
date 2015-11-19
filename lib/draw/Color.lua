@@ -6,18 +6,6 @@ local utils = require("lib.utils")
 
 local bitlib = require("lib.bit")
 
-function bit_extract(value, field, width)
-	if bit32 == nil then
-		return tonumber(
-			utils.to_base(value, 2):reverse():sub(
-				field * width, (field + 1) * width):reverse(),
-			2)
-	else
-		return bit32.extract(value, field, width)
-	end
-end
-
-
 local Color = class("Color")
 
 Color.default_red = 0
@@ -72,6 +60,22 @@ function Color:blend(other)
 		255 * output_alpha)
 end
 
+function Color:replace(red, green, blue, alpha)
+	if type(red) == "table" then
+		local color = red
+		red = color.red or color.r
+		green = color.green or color.g
+		blue = color.blue or color.b
+		alpha = color.alpha or color.a
+	end
+
+	return Color(
+		red or self.red,
+		green or self.green,
+		blue or self.blue,
+		alpha or self.alpha)
+end
+
 --- Convert color object to a 32-bit integer.
 -- The bytes (8 bits) represent from low to high: red, green, blue and alpha.
 -- @return 32-bit color
@@ -104,9 +108,23 @@ function Color:to_html()
 end
 
 --- Convert Color to a table that can be used with Zenterio's API functions.
--- If alpha channel is not the same as default it will be omitted.
-function Color:to_table()
-	return {self.red, self.green, self.blue, self.alpha}
+-- @param format Format of returned table. May be either `index`, `short` or `long`
+-- @return Table representation of Color
+function Color:to_table(format)
+	if format == nil or format == "index" then
+		return {self.red, self.green, self.blue, self.alpha}
+	elseif format == "short" then
+		return {r = self.red, g = self.green, b = self.blue, a = self.alpha}
+	elseif format == "long" then
+		return {
+			red = self.red,
+			green = self.green,
+			blue = self.blue,
+			alpha = self.alpha
+		}
+	else
+		error("Invalid format '" .. format .. "', expected index, short or long")
+	end
 end
 
 --- Return red, green blue and alpha as separate values.

@@ -41,46 +41,26 @@ end
 -- @return self.questions_table representing get the question table
 -- @return false representing don't get question from TSV file
 function TSVReader:get_question(question_type)
-	local Profile
-	--Profile = profile("Jack","Jack@gmail.com","1981-01-02","male","new_york")
-	--localprofilemanager:save(Profile)
-	--Profile = localprofilemanager:load("John","rio")
-	--if Profile ~= false then
-	--	Profile:set_balance(100)
-	--	localprofilemanager:save(Profile)
-	--end
-	local Profiles = {}
-	Profiles = localprofilemanager:get_profileslist()
-	if Profiles ~= false then
-		--print("Success")
-		for i = 1, #Profiles, 1 do
-			--print(Profiles[i]:get_name() .. " " .. Profiles[i]:get_email_address() .. " " .. Profiles[i]:get_balance())
-		end
-	else
-		--print("Fail")
-	end
-	--localprofilemanager:delete("Anna","lodon")
-	--for i =1, #Profiles, 1 do
-	--	print(Profiles[i].get_name() .. " " .. profiles[i].get_email_address())
-	--end
-
 	local tmp_table = {}
 	self.filename = utils.absolute_path(string.format("data/questions/%s.tsv",self.filename))
 	if(lfs.attributes(self.filename, "mode") == "file") then
 		for line in io.lines(self.filename) do
-			if string.sub(line,1,13) == question_type then
-				table.insert(tmp_table,string.sub(line,15,#line))
+			if string.sub(line,1,string.len(question_type)) == question_type then
+				table.insert(tmp_table,string.sub(line,string.len(question_type) + 2,#line))
 			end
-			if string.sub(line,1,15) == question_type then
-				table.insert(tmp_table,string.sub(line,17,#line))
+			if string.sub(line,1,string.len(question_type)) == question_type then
+				table.insert(tmp_table,string.sub(line,string.len(question_type) + 2,#line))
 			end
-			if string.sub(line,1,7) == question_type then
-				table.insert(tmp_table,string.sub(line,9,#line))
+			if string.sub(line,1,string.len(question_type)) == question_type then
+				table.insert(tmp_table,string.sub(line,string.len(question_type) + 2,#line))
 			end
+			if string.sub(line,1,string.len(question_type)) == question_type then
+				table.insert(tmp_table,string.sub(line,string.len(question_type) + 2,#line))
 		end
 		for i = 1,#tmp_table,1 do
 			table.insert(self.questions_table,utils.split(tmp_table[i],"\t"))
 		end
+	end
 		for i = 1,#self.questions_table,1 do
 			table.insert(self.question_index,i)
 			table.insert(self.choices,utils.split(self.questions_table[i][2],";"))
@@ -120,7 +100,6 @@ end
 function TSVReader:generate_question(count)
 	seed = self.generate_random(#self.question_index,#self.question_index)
 	count = self.question_index[seed[count]]
-	--print(string.format("count=%d",count))
 	local question = MultipleChoiceQuestion(self.image_path,self.questions_table[count][1],self.correct_answers[count],self.choices[count])
 	return question
 end

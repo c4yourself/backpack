@@ -160,12 +160,13 @@ local keyboard_mapping = {
 }
 
 
-function love.keypressed(key, isrepeat)
+function love.keypressed(key, is_repeat)
 	if keyboard_mapping["KEY_"..key] then
-		if isrepeat then
-			onKey(keyboard_mapping["KEY_"..key], "repeat")
-		else
+		-- is_repeat is not available in Love 0.8
+		if not is_repeat or is_repeat == 0 then
 			onKey(keyboard_mapping["KEY_"..key], "down")
+		else
+			onKey(keyboard_mapping["KEY_"..key], "repeat")
 		end
 	end
 end

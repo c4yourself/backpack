@@ -1,71 +1,69 @@
+
 --- Base class for SplashView
 -- SplashView is the View that shows as the box starts up
 -- @classmod SplashView
 
 local class = require("lib.classy")
-local View = require("lib.view.View")
-local view = require("lib.view")
-local SplashView = class("SplashView", View)
-local event = require("lib.event")
-local utils = require("lib.utils")
-local multiplechoice_quiz = require("views.multiplechoice_quiz")
-local SubSurface = require("lib.view.SubSurface")
-local NumericalQuizView = require("views.NumericalQuizView")
-local button= require("lib.components.Button")
-local button_grid	=	require("lib.components.ButtonGrid")
-local color = require("lib.draw.Color")
+local Color = require("lib.draw.Color")
 local logger = require("lib.logger")
-local CityView2 = require("views.CityView2")
+local Rectangle = require("lib.draw.Rectangle")
+local utils = require("lib.utils")
+local view = require("lib.view")
+
+local SplashView = class("SplashView", view.View)
 
 --- Constructor for SplashView
 -- @param event_listener Remote control to listen to
-function SplashView:__init(remote_control)
-	View.__init(self)
-	self.background_path = ""
+function SplashView:__init(image_path, target_view, view_manager)
+	view.View.__init(self)
+
+	local absolute_path = utils.absolute_path(image_path)
+	logger.trace("Loading image", absolute_path)
+
+	self.splash_image = gfx.loadpng(image_path)
+	self.target_view = target_view
+	self.view_manager = view_manager
+
+	self.background_color = Color(255, 255, 255, 255)
+	self.current_opacity = 0
+	self.opacity_step = 5
+end
+
+function SplashView:destroy()
+	view.View.destroy(self)
+
+	self.splash_image:destroy()
+	self.timer = nil
+end
+
+function SplashView:start(tick_rate)
+	self.timer = sys.new_timer(tick_rate, function()
+		self.current_opacity = math.min(
+			self.current_opacity + self.opacity_step, 255)
+
+		self:dirty()
+
+		if self.current_opacity == 255 then
+			self.timer:stop()
+			self.view_manager:set_view(self.target_view)
+		end
+	end)
 end
 
 function SplashView:render(surface)
-	-- Resets the surface and draws the background
-	local background_color = {r=255, g=255, b=255}
-	surface:clear(background_color)
-	-- print logo in center
+	surface:clear(self.background_color:to_table())
 
-	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/logo.png")),nil,{x=525,y=329})
-	logo_fade_surface = SubSurface(surface,{width=280, height=62, x=525, y=329})
-	logo_fade_surface:fill({r=255, g=255, b=255, a=255})
-	gfx.update()
-	fader = 0
-	-- end_splash in 2 seconds.
+	-- Calculate splash location and size
+	local splash_rectangle = Rectangle.from_surface(self.splash_image):translate(
+		surface:get_width() / 2 - self.splash_image:get_width() / 2,
+		surface:get_height() / 2 - self.splash_image:get_height() / 2)
 
-	local callback = utils.partial(self.end_splash, self, surface)
-	self.stop_timer = sys.new_timer(40,callback)
+	surface:copyfrom(self.splash_image, nil, splash_rectangle:to_table())
+
+	splash_rectangle:fill(surface, self.background_color:replace(
+		{alpha = 255 - self.current_opacity}))
+
+	self:dirty(false)
 end
-
-function SplashView:end_splash(surface)
-
-	-- logger.trace(255-fader*7)
-	--local city_view_2 = CityView2(event.remote_control)
-	--view.view_manager:set_view(city_view_2)
-	--gfx.update()
-	if (fader < 10 ) then
-		surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/logo.png")),nil,{x=525,y=329})
-		logo_fade_surface:fill({r=255, g=255, b=255, a=(255-((fader*255)/10))})
-		logger.trace("a = " .. fader)
-		gfx.update()
-	end
-	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/logo.png")),nil,{x=525,y=329})
-	if(fader == 15) then
-		self.stop_timer:stop()
-		logger.trace("Ending Splash View")
-		local city_view_2 = CityView2(event.remote_control)
-		view.view_manager:set_view(city_view_2)
-		gfx.update()
-	end
-
-	fader = fader + 1
-
-end
-
-
 
 return SplashView
