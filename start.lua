@@ -41,19 +41,9 @@ function onStart()
 
 	view.view_manager:set_view(splash_screen)
 
-	splash_screen:start(50)
+	splash_screen:start(1)
 
-<<<<<<< HEAD
 
-	local city_view = CityView(event.remote_control)
-	view.view_manager:set_view(city_view)
 	gfx.update()
 
-	-- local city_view_2 = CityView2(event.remote_control)
-	-- view.view_manager:set_view(city_view_2)
-	-- gfx.update()
-
-=======
-	gfx.update()
->>>>>>> development
 end

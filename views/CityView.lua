@@ -71,56 +71,7 @@ function CityView:__init(remote_control)
 	local city_tour_size = {width = 2*width/3-1, height = height-51}
 
 	-- Using the button grid to create buttons
-<<<<<<< HEAD
-	self.buttonGrid:add_button(position_1, button_size, button_1)
-	self.buttonGrid:add_button(position_2, button_size, button_2)
-	self.buttonGrid:add_button(position_3, button_size, button_3)
-	self.buttonGrid:add_button(position_4, button_size, button_4)
-	self.buttonGrid:add_button(position_5, button_size, button_5)
-	self.buttonGrid:add_button(position_6, button_size, button_6)
-	self.buttonGrid:add_button(position_7, button_size, button_7)
-	self.buttonGrid:add_button(position_8, button_size, button_8)
-	self.buttonGrid:add_button(city_tour_position, city_tour_size, city_tour_button)
 
-	-- Render if button is changed
-	local button_callback = function()
-		self:render(screen)
-		gfx.update()
-	end
-
-	local callback = utils.partial(self.load_view, self)
-	self:listen_to(
-	event.remote_control,
-	"button_release",
-	callback
-	)
-
-	-- Function for exit event
-	exit_view = function()
-		print("I EN LOOOOOOOOP")
-
-		self:render(screen)
-		gfx.update()
-		-- self.buttonGrid:listen_to(
-		-- 	self.buttonGrid.event_listener,
-		-- 	"button_press",
-		-- 	callback
-		-- )
-
-	end
-
-	-- Listen for events
-	self:listen_to(
-		self.buttonGrid,
-		"dirty",
-		button_callback
-	)
-
-
-
-
-
-=======
 	self.button_grid:add_button(position_1, button_size, button_1)
 	self.button_grid:add_button(position_2, button_size, button_2)
 	self.button_grid:add_button(position_3, button_size, button_3)
@@ -143,7 +94,16 @@ function CityView:__init(remote_control)
 	self.images.paris_selected:premultiply()
 
 	self:add_view(self.button_grid, true)
->>>>>>> development
+
+	-- Instance remote control and mapps it to the buttons
+	self.callback = utils.partial(self.load_view, self)
+	self:listen_to(
+		event.remote_control,
+		"button_release",
+		self.callback
+		--utils.partial(self.load_view, self)
+	)
+
 end
 
 function CityView:render(surface)
@@ -154,12 +114,9 @@ local width = surface:get_width()
 	local background_color = {r = 0, g = 0, b = 0}
 
 	surface:clear(background_color)
-<<<<<<< HEAD
-	surface:copyfrom(gfx.loadpng("data/images/Mumbai.png"))
 
-=======
 	surface:copyfrom(self.images.paris, nil, nil, false)
->>>>>>> development
+
 
 	--creates some colors
 	local text_color = Color(0, 0, 0,255)
@@ -187,31 +144,27 @@ local width = surface:get_width()
 	city_view_small_font:draw(surface, {x=440, y=15}, tostring(self.profile.experience) .. "/500") -- Profile experience
 	city_view_small_font:draw(surface, {x=width-100, y=15}, tostring(self.profile.cash)) -- Profile cash
 	city_view_large_font:draw(surface, {x=width/2, y=15}, self.city.name, center) -- City name
-<<<<<<< HEAD
-  surface:copyfrom(gfx.loadpng("data/images/coinIcon.png"), nil, {x = width-145, y = 10, width = 30, height = 30}) -- Coin
-=======
+
 	surface:copyfrom(self.images.coin, nil, {x = width-145, y = 10, width = 30, height = 30}) -- Coin
->>>>>>> development
+
 
   -- using the button grid to render all buttons and texts
 	self.button_grid:render(surface)
 
-<<<<<<< HEAD
-	surface:copyfrom(gfx.loadpng("data/images/MumbaiIconSelected.png"),nil ,{x = width/3, y = 0, width=width*2/3, height=height})
-=======
-	surface:copyfrom(self.images.paris_selected, nil, {x = width/3, y = 0, width=width*2/3, height=height})
->>>>>>> development
 
-	-- Instance remote control and mapps it to the buttons
-	local callback = utils.partial(self.load_view, self)
-	self:listen_to(
-		event.remote_control,
-		"button_release",
-		callback
-		--utils.partial(self.load_view, self)
-	)
+	surface:copyfrom(self.images.paris_selected, nil, {x = width/3, y = 0, width=width*2/3, height=height})
+
+
+
 
 	self:dirty(false)
+end
+
+function CityView:destroy()
+	view.View.destroy(self)
+	for k,v in pairs(self.images) do
+		self.images[k]:destroy()
+	end
 end
 
 function CityView:load_view(button)
@@ -245,23 +198,18 @@ function CityView:load_view(button)
 	elseif button == "5" then
 		local city_tour_view = SubSurface(screen,{width=screen:get_width()*0.9, height=(screen:get_height()-50)*0.9, x=screen:get_width()*0.05, y=screen:get_height()*0.05+50})
 		local CT = CityTourView(remote_control, city_tour_view)
-		self.buttonGrid:stop_listening(self.buttonGrid.event_listener,
-		 													"button_press",
-															callback)
-
-
+		self.button_grid:blur()
 
 		CT:render(city_tour_view)
 		gfx.update()
-		--
-		-- local exit_view = function()
-		-- 		print("I EN LOOOOOOOOP")
-		-- 		self:render(screen)
-		-- 		self.buttonGrid:listen_to(
-		-- 		self.buttonGrid.event_listener,
-		-- 		"button_press",
-		-- 		callback
-		-- )
+
+		local exit_view = function()
+
+				self.button_grid:focus()
+				CT:destroy()
+				self:dirty(true)
+		end
+
 		self:listen_to_once(CT,"exit_view", exit_view)
 
 

@@ -31,12 +31,8 @@ function ButtonGrid:__init(remote_control)
     self.event_listener = event.remote_control
   end
 
-  local callback = utils.partial(self.press, self)
-  self:listen_to(
-  self.event_listener,
-  "button_press",
-  callback
-  )
+  self.callback = utils.partial(self.press, self)
+  self:focus()
 	--
 	-- local dirtycallback = function()
 	-- 	print("I button grid")
@@ -48,6 +44,20 @@ function ButtonGrid:__init(remote_control)
   -- "dirty",
   -- dirtycallback
   -- )
+end
+
+-- Starts the buttongrids listener
+function ButtonGrid:focus()
+	self:listen_to(
+	self.event_listener,
+	"button_press",
+	self.callback
+	)
+end
+
+-- Stops the buttongrids listener
+function ButtonGrid:blur()
+	self:stop_listening()
 end
 
 --- Used when buttons need to be added to the view
