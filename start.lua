@@ -33,7 +33,7 @@ end
 -- This function is called at the start of the program
 function onStart()
 	--start connectfour
---[[	local cfc = ConnectFourComponent(event.remote_control)
+local cfc = ConnectFourComponent(event.remote_control)
 	view.view_manager:set_view(cfc)
 	gfx.update()
 
@@ -41,7 +41,7 @@ function onStart()
 		cfc:render(screen)
 		gfx.update()
 	end
-	cfc:on("dirty",callback_dirty) ]]--
+	cfc:on("dirty",callback_dirty)
 
 	--menu.render(screen)
   --local city_view = CityView(event.remote_control)
@@ -59,8 +59,8 @@ function onStart()
 	--view.view_manager:set_view(city_view)
 	--gfx.update()
 
-	local city_view_2 = CityView2(event.remote_control)
-	view.view_manager:set_view(city_view_2)
-	gfx.update()
+	--local city_view_2 = CityView2(event.remote_control)
+	--view.view_manager:set_view(city_view_2)
+	--gfx.update()
 
 end
