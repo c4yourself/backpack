@@ -27,13 +27,35 @@ function surface:clear(color, rectangle)
 	local color = Color.from_table(color)
 	local rect = self:_get_rectangle(rectangle)
 
-	-- Loop through every pixel and blend its color
-	for x = rect.x, rect.x + rect.width - 1 do
-		for y = rect.y, rect.y + rect.height - 1 do
-			local r, g, b, a = color:to_values()
-			self.image_data:setPixel(x, y, r, g, b, a)
-		end
-	end
+	local canvas = love.graphics.newCanvas(
+		self.image_data:getWidth(), self.image_data:getHeight())
+
+	canvas:renderTo(function()
+		love.graphics.setBlendMode("premultiplied")
+		love.graphics.draw(love.graphics.newImage(self.image_data))
+
+		-- Save old color to restore it later
+		local fr, fg, fb, fa = love.graphics.getColor()
+		local br, bg, bb, ba = love.graphics.getColor()
+
+		love.graphics.setColor(color:to_values())
+		love.graphics.setBackgroundColor(0, 0, 0, 0)
+
+		love.graphics.setScissor(rect.x, rect.y, rect.width, rect.height)
+		love.graphics.clear()
+		love.graphics.setScissor()
+
+		love.graphics.rectangle(
+			"fill", rect.x, rect.y, rect.width, rect.height)
+
+		-- Restore previous color
+		love.graphics.setColor(fr, fg, fb, fa)
+		love.graphics.setBackgroundColor(br, bg, bb, ba)
+
+		love.graphics.setBlendMode("alpha")
+	end)
+
+	self.image_data = canvas:getImageData()
 end
 
 --- Blends the surface with a solid color, weighing alpha values (SRCOVER).
@@ -49,13 +71,26 @@ function surface:fill(color, rectangle)
 	local color = Color.from_table(color)
 	local rect = self:_get_rectangle(rectangle)
 
-	-- Loop through every pixel and blend its color
-	for x = rect.x, rect.x + rect.width - 1 do
-		for y = rect.y, rect.y + rect.height - 1 do
-			local current_color = Color(self.image_data:getPixel(x, y))
-			self.image_data:setPixel(x, y, current_color:blend(color):to_values())
-		end
-	end
+	local canvas = love.graphics.newCanvas(
+		self.image_data:getWidth(), self.image_data:getHeight())
+
+	canvas:renderTo(function()
+		love.graphics.setBlendMode("premultiplied")
+		love.graphics.draw(love.graphics.newImage(self.image_data))
+		love.graphics.setBlendMode("alpha")
+
+		-- Save old color to restore it later
+		local r, g, b, a = love.graphics.getColor()
+
+		love.graphics.setColor(color:to_values())
+		love.graphics.rectangle(
+			"fill", rect.x, rect.y, rect.width, rect.height)
+
+		-- Restore previous color
+		love.graphics.setColor(r, g, b, a)
+	end)
+
+	self.image_data = canvas:getImageData()
 end
 
 --- Copy pixels from one surface to another.
@@ -74,7 +109,6 @@ end
 -- @param blend_option true if alpha blending should occur, otherwise false.
 -- @zenterio
 function surface:copyfrom(src_surface, src_rectangle, dest_rectangle, blend_option)
-	-- TODO: Support blend option
 	local source_rectangle = src_surface:_get_rectangle(src_rectangle)
 	local destination_rectangle = self:_get_rectangle(dest_rectangle, {
 		width = source_rectangle.width, height = source_rectangle.height
@@ -97,7 +131,10 @@ function surface:copyfrom(src_surface, src_rectangle, dest_rectangle, blend_opti
 		if blend_option ~= false then
 			love.graphics.setBlendMode("alpha")
 		else
-			love.graphics.setBlendMode("replace")
+			if not pcall(love.graphics.setBlendMode, "replace") then
+				logger.warn(
+					"Replace blend mode not supported by this version of Love")
+			end
 		end
 
 		love.graphics.draw(
@@ -135,10 +172,11 @@ end
 --
 -- @param x X position (starting at 0)
 -- @param y Y position (starting at 0)
--- @return red, green, blue, alpha
+-- @return `{r = red, g = green, b = blue, b = alpha}`
 -- @zenterio
 function surface:get_pixel(x, y)
-	return self.image_data:getPixel(x, y)
+	local r, g, b, a = self.image_data:getPixel(x, y)
+	return {r = r, g = g, b = b, a = a}
 end
 
 --- Set color of pixel.
@@ -174,6 +212,7 @@ end
 -- The surface can not be used again after this operation.
 -- @zenterio
 function surface:destroy()
+	logger.trace("Surface destroyed")
 	self.image_data = nil
 end
 
@@ -202,7 +241,7 @@ function surface:__init(width, height)
 		logger.trace("New empty surface")
 		self.image_data = nil
 	else
-		logger.trace("New surface", {width = width, height = height})
+		logger.trace(string.format("New surface %dx%d", width, height))
 		self.image_data = love.image.newImageData(width, height)
 	end
 end
@@ -212,7 +251,6 @@ end
 -- @param path Path to the image
 -- @local
 function surface:loadImage(path)
-	logger.trace(path)
 	local tempFile = io.open(path,"rb")
 	if tempFile then
 		local imageStream = tempFile:read("*a")
@@ -223,7 +261,6 @@ function surface:loadImage(path)
 	else
 		logger.error("Error loading image - '"..path.."'")
 	end
-
 end
 
 --- Emulator function to write text on surface.

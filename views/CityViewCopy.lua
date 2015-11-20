@@ -100,7 +100,6 @@ function CityViewCopy:load_view(button)
 		gfx.update()
 
 	elseif button == "3" then
-		print("Shut down program")
 		sys.stop()
 	end
 end
