@@ -30,11 +30,33 @@ end
 function ProfileSynchronizer:__init()
 
 	self.url = "http://localhost:5000"
+	self.connect_url = "/connect/"
 	self.login_url = "/profile/authenticate/"
 	self.get_profile_url = "/profile/info/"
 	self.save_profile_url ="/profile/"
 	self.delete_profile_url = "/profile/delete/"
 	self.ttlyawesomekey = "c4y0ur5elf"
+
+end
+
+
+--- Check if connection to database is working
+-- @return boolean true/false depending on if database is up
+function ProfileSynchronizer:is_connected()
+
+	local server_url = "http://localhost:5000/connect/"
+
+	-- Do request to server
+  local request, code = http.request
+  {
+    url = server_url,
+  }
+
+	if code == 200 then
+		return true
+	else
+		return false
+	end
 
 end
 
@@ -207,14 +229,14 @@ end
 function ProfileSynchronizer:save_profile(profile)
 
 	-- Extract the data from the profile
-	local badges = "badges"--profile:get_badges()
+	local badges = profile:get_badges_string()
 	local balance = profile:get_balance()
 	local current_city = profile:get_city()
 	local date_of_birth = profile:get_date_of_birth()
 	local email_address = profile:get_email_address()
 	local experience = profile:get_experience()
 	local profile_id = profile:get_id()
-	local inventory = "inventory"--profile:get_inventory()
+	local inventory = profile:get_inventory_string()
 	local name = profile:get_name()
 	local password = profile:get_password()
 	local profile_token = profile:get_login_token()

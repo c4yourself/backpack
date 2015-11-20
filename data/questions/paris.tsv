@@ -1,4 +1,4 @@
-single_choice	Which of the following cities is the capital of France?	Paris;London;Stockholm;Moscow	1
+single_choice Which of the following cities is the capital of France?	Paris;London;Stockholm;Moscow	1
 single_choice	Which of the following cities is the capital of England?	Paris;London;Stockholm;Moscow	2
 single_choice	Which of the following cities is the capital of Sweden?	Paris;London;Stockholm;Moscow	3
 single_choice	Which of the following cities is the capital of Russia?	Paris;London;Stockholm;Moscow	4
@@ -10,7 +10,7 @@ single_choice	Which of the following cities is the capital of Germany?	Berlin;Wi
 single_choice	Which of the following cities is the capital of Austria?	Berlin;Wien;Lisboa;Amsterdam	2
 single_choice	Which of the following cities is the capital of Portugal?	Berlin;Wien;Lisboa;Amsterdam	3
 single_choice	Which of the following cities is the capital of Holland?	Berlin;Wien;Lisboa;Amsterdam	4
-multiple_choice	Which of the following countries in Europe?	Sweden;France;Italy;Canda	1 2 3
+multiple_choice Which of the following countries in Europe?	Sweden;France;Italy;Canda	1 2 3
 multiple_choice	Which of the following countries in Asia?	China;Russia;Korea;Norway	1 3
 multiple_choice	Which of the following countries in Africa?	South Africa;Egypt;Korea;Norway	1 2
 multiple_choice	Which of the following countries in North America?	America;Russia;Mexico;Norway	1 3
@@ -23,6 +23,25 @@ multiple_choice	Which of the following cities in North America?	New York;Seattle
 multiple_choice	Which of the following cities in South America?	Rio de Janeiro;Santiago;Washington;Beijing	1 2
 multiple_choice	Which of the following cities in Oceania?	Sydney;Auckland;Melbourne;Brisbane	1 2 3 4
 numeric	How long is Nile river which is the longest in the world?(km)	6670
+<<<<<<< HEAD
+numeric	How high is Qomolangma which is the highest in the world?(m)	8844
+numeric	How many countries and regions are there in the world?	230
+numeric	How many countries and regions are there in Europe?	45
+numeric	How many countries and regions are there in Asia?	49
+numeric	How many countries and regions are there in North America?	28
+numeric	How many countries and regions are there in South America?	13
+numeric	How many countries and regions are there in Africa?	56
+numeric	How many countries and regions are there in Oceania?	30
+city_tour1	How tall is the Eiffel Tower?	324;564;137;401	1
+city_tour1	When was the Eiffel Tower finished?	2001;1920;1889;1337	3
+city_tour1	How many people visit the Eiffel Tower each year?	9.23 million;6.98 million;2.03 million;4.67 million	2
+city_tour2	What are engraved on the inside of the arch pillars?	The words: La Résistance;Initials from Jean Chalgrin;Mathematcial questions;Names of military leaders	4
+city_tour2	When was Arc de Triomphe finished?	2001;1836;1993;700	2
+city_tour2	Who designed Arc de Triomphe?	Napoleon;Philippe Pétain;Jean Chalgrin;Gustave Eiffel	3
+city_tour3	Who of the following are buried here?	Napoleon Bonparte;Gustave Eiffel;Jean Chalgrin;Philippe Pétain	1
+city_tour3	What kind of museum is located here?	Art Museum;Music Museum;Museum of the army of France;French revolution museum	3
+city_tour3	What kind of people is the retirement home for?	Women;Dogs;War veterans;People with disabilities	3
+=======
 numeric	How high is Qomolangma whcih is the highest in the world?(m)	8844
 numeric	How many countries and regions in the world?	230
 numeric	How many countries and regions in Europe?	45
@@ -30,4 +49,14 @@ numeric	How many countries and regions in Asia?	49
 numeric	How many countries and regions in North America?	28
 numeric	How many countries and regions in South America?	13
 numeric	How many countries and regions in Africa?	56
-numeric	How many countries and regions in Oceania?	30
+numeric	How many countries and regions in Oceania?  30
+city_tour1	How tall is the Eiffel Tower?	324;564;137;401	1
+city_tour1 When was the Eiffel Tower finished?	2001;1920;1889;1337	3
+city_tour1 How many people visit the Eiffel Tower each year?	9.23 million;6.98 million;2.03 million;4.67 million;	2
+city_tour2 What are engraved on the inside of the arch pillars? The words: La Résistance;Initials from Jean Chalgrin;Mathematcial questions;Names of military leaders; 4
+city_tour2 When was Arc de Triomphe finished? 2001;1836;1993;700; 2
+city_tour2 Who designed Arc de Triomphe? Napoleon;Philippe Pétain;Jean Chalgrin;Gustave Eiffel; 3
+city_tour3 Who of the following are buried here? Napoleon Bonparte;Gustave Eiffel;Jean Chalgrin;Philippe Pétain; 1
+city_tour3 What kind of museum is located here? Art Museum;Music Museum;Museum of the army of France;French revolution museum; 3
+city_tour3 What kind of people is the retirement home for? Women;Dogs;War veterans;People with disabilities; 3
+>>>>>>> bdc52e5e80a2553a05615e9007c8a9db4ac8a9c2

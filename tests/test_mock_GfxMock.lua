@@ -14,7 +14,7 @@ end
 
 --Tests that a surface is created correctly
 function TestGfxMock:test_surface()
-  local surface = GfxMock:new_surface(12, 7)
+  local surface = GfxMock.new_surface(12, 7)
   luaunit.assertEquals(surface:get_width(), 12)
   luaunit.assertEquals(surface:get_height(), 7)
 end
@@ -28,7 +28,7 @@ end
 --Tests that the loadjpeg/png returns a surface (output dimensions
 --not necessary)
 function TestGfxMock:test_load()
-  local surface = GfxMock:new_surface(12, 7)
+  local surface = GfxMock.new_surface(12, 7)
   luaunit.assertEquals(type(GfxMock:loadjpeg()), type(surface))
   luaunit.assertEquals(type(GfxMock:loadpng()), type(surface))
 end

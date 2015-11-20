@@ -1,5 +1,6 @@
 local class = require("lib.classy")
 local luaunit = require("luaunit")
+local View = require("lib.view.View")
 local ViewManager = require("lib.view.ViewManager")
 
 local TestViewManager = {}
@@ -13,13 +14,19 @@ end
 -- called
 function TestViewManager:test_set_view()
 	-- Create a mock view represented by a table
-	local mockView
-	mockView = {destroy = function() mockView.destroy_flag = true end; render =function() end; destroy_flag = false}
+	local test_view = View()
+
+	test_view.destroy_flag = false
+	function test_view:destroy()
+		self.destroy_flag = true
+	end
+	function test_view:render()
+	end
 
 	-- Run test
-	view_manager:set_view(mockView)
-	view_manager:set_view(mockView)
-	luaunit.assertEquals(mockView.destroy_flag, true)
+	view_manager:set_view(test_view)
+	view_manager:set_view(test_view)
+	luaunit.assertEquals(test_view.destroy_flag, true)
 end
 
 return TestViewManager

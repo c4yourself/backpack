@@ -109,30 +109,70 @@ end
 -- Get a string of badges
 function Profile:get_badges_string()
 	local tmp = string.format("%s",self.badges[1])
+
 	for i = 2, #self.badges, 1 do
 		tmp = string.format("%s,%s",tmp,self.badges[i])
 	end
+
 	return string.format("[%s]",tmp)
 end
 -- Get a string of inventory
 function Profile:get_inventory_string()
 	local tmp = string.format("\"1\": %s",self.inventory[1])
+
 	for i = 2, #self.inventory, 1 do
 		tmp = string.format("%s, \"%s\": %s",tmp,i,self.inventory[i])
 	end
+
 	return string.format("{%s}",tmp)
 end
 -- Set balance of the user
 -- @param balance representing balance of the user
 function Profile:set_balance(balance)
 	self.balance = balance
+
 	return self.balance
 end
+-- Set name of the user
+-- @param name representing name of the user
+function Profile:set_name(name)
+	self.name = name
 
+	return self.name
+end
+-- Set email_address of the user
+-- @param email_address representing email_address of the user
+function Profile:set_email_address(email_address)
+	self.email_address = email_address
+
+	return self.email_address
+end
+-- Set date_of_birth of the user
+-- @param date_of_birth representing date_of_birth of the user
+function Profile:set_date_of_birth(date_of_birth)
+	self.date_of_birth = date_of_birth
+
+	return self.date_of_birth
+end
+-- Set sex of the user
+-- @param sex representing sex of the user
+function Profile:set_sex(sex)
+	self.sex = sex
+
+	return self.sex
+end
+-- Set city of the user
+-- @param city representing city of the user
+function Profile:set_city(city)
+	self.city = city
+
+	return self.city
+end
 -- Set experience of the user
 -- @param experience representing experience of the user
 function Profile:set_experience(experience)
 	self.experience = experience
+
 	return self.experience
 end
 
@@ -146,6 +186,7 @@ end
 function Profile:set_badges(badges_string)
 	local tmp = {}
 	tmp = utils.split(string.sub(badges_string,2, string.len(badges_string) - 1),",")
+
 	for i = 1, #tmp, 1 do
 		table.insert(self.badges,tonumber(tmp[i]))
 	end
@@ -155,6 +196,7 @@ end
 function Profile:set_inventory(inventory_string)
 	local tmp = {}
 	tmp = utils.split(string.sub(inventory_string,string.find(inventory_string,"{") + 1,string.find(inventory_string,"}") - 1),",")
+
 	for i=1, #tmp, 1 do
 		table.insert(self.inventory,tonumber(string.sub(tmp[i],string.find(tmp[i]," ") + 1,string.len(tmp[i]))))
 	end
@@ -173,6 +215,7 @@ end
 -- @param number representing the change of balance
 function Profile:modify_balance(number)
 	self.balance = self.balance + number
+
 	return self.balance
 end
 
@@ -182,6 +225,7 @@ function Profile:modify_experience(number)
 	if number >= 0 then
 		self.experience = self.experience + number
 	end
+
 	return self.experience
 end
 

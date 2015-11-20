@@ -1,6 +1,6 @@
 --- Base class for NumericQuizView
 -- @classmod NumericQuizView
-local NumericalInputComponent = require("lib.components.NumericalInputComponent")
+local NumericalInputComponent = require("components.NumericalInputComponent")
 local class = require("lib.classy")
 local View = require("lib.view.View")
 local NumericQuizView = class("NumericQuizView", View)
@@ -58,7 +58,7 @@ function NumericQuizView:press(key)
 			self:dirty(true) -- To make sure dirty event is triggered
 		end
 	elseif key == "back" then
-		self:trigger("exit")
+		self:trigger("exit_view")
 	end
 end
 
