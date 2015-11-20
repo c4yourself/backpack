@@ -113,7 +113,7 @@ function TravelView:render(surface)
 
 	local world_map_surface = SubSurface(surface, {width = 500, height=300, x=577, y=50})
 	world_map_surface:fill({r=65, g=70, b=72, a=255})
-	world_map_surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/worldmap1.png")), nil, {x=5, y=5, width=490, height=290})
+	world_map_surface:copyfrom(gfx.loadpng("data/images/worldmap1.png"), nil, {x=5, y=5, width=490, height=290})
 
 	dest_info_surface = SubSurface(surface, {width = 500, height=100, x=577, y=400})
 	dest_info_surface:clear({r=65, g=70, b=72, a=255})
