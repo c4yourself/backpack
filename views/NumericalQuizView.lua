@@ -32,22 +32,30 @@ function NumericQuizView:__init()
 	--Instanciate a numerical input component and make the quiz listen for changes
 	self.views.num_input_comp = NumericalInputComponent()
 	--self.input_surface = Surface(300,100)
-	--Add buttons
-	-- Add exit button
+	--Button data
 	local button_color = Color(255, 99, 0, 255)
 	local color_selected = Color(255, 153, 0, 255)
 	local color_disabled = Color(111, 222, 111, 255)
 
 	local height = screen:get_height()
 	local width = screen:get_width()
-	local button_size = {width = 4*width/45, height = 4*width/45}
-
+	local button_size = {width = 372, height = 107}
+	-- Add exit button
 	local button_exit = Button(button_color, color_selected, color_disabled,
 								true, true, "views.CityView")
-	self.grid:add_button({x = 10, y = 500},
+	self.grid:add_button({x = 42, y = 500},
 						button_size,
 						button_exit)
-
+	local exit_index = self.grid:get_last_index()
+	self.grid:mark_as_back_button(exit_index)
+	-- Add next button
+	local button_next = Button(button_color, color_selected, color_disabled,
+								true, false, "")
+	self.grid:add_button({x = width-372-42, y = 500},
+						button_size,
+						button_next)
+	local next_index = self.grid:get_last_index()
+	self.grid:mark_as_next_button(next_index)
 	-- Logic
 	-- Associate a quiz instance with the View
 	self.num_quiz = Quiz()
@@ -148,7 +156,7 @@ function NumericQuizView:render(surface)
 	end
 	-- Render all child views and copy changes to this view
 	-- Input component
-	self.views.num_input_comp:render(self.input_area)
+	--self.views.num_input_comp:render(self.input_area)
 
 	if not self.listening_initiated then
 		local change_callback = utils.partial(self.views.num_input_comp.render, self.views.num_input_comp, self.input_area)
@@ -169,6 +177,25 @@ function NumericQuizView:render(surface)
 			"submit",
 			utils.partial(self.show_answer, self)
 		)
+
+		--[[self:listen_to(
+			self.grid,
+			"submit",
+			utils.partial(self.show_answer, self)
+		)]]
+
+		self:listen_to(
+			self.grid,
+			"next",
+			utils.partial(self.next_question, self)
+		)
+
+		self:listen_to(
+			self.grid,
+			"back",
+			utils.partial(self.trigger, self, "exit")
+		)
+
 		--self.views.num_input_comp:focus() --TODO Move this to its proper place
 		self.listening_initiated = true
 	end
@@ -188,6 +215,15 @@ function NumericQuizView:show_answer()
 		self:dirty(false)
 		self:dirty(true)
 	end
+end
+
+-- Displays the correct answer and whether the user chose the correct one.
+function NumericQuizView:next_question()
+	self.answer_flag = false
+	self.user_answer = nil
+	self.views.num_input_comp:set_text(nil)
+	self:dirty(false)
+	self:dirty(true)
 end
 
 return NumericQuizView

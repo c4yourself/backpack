@@ -68,6 +68,7 @@ function ButtonGrid:add_button(position, button_size, button)
 	 width = button_size.width,
 	 height = button_size.height
 	 })
+
 else
 	error("screen boundary error")
 end

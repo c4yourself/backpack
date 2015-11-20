@@ -16,14 +16,45 @@ local event = require("lib.event")
 function NumericalQuizGrid:__init(remote_control)
 	ButtonGrid.__init(self, remote_control)
 	self.num_input_comp = nil-- Reference the input component
+	self.back_button = nil
+	self.next_button = nil
+
+	local callback = utils.partial(self.release, self)
+	self:listen_to(
+	self.event_listener,
+	"button_release",
+	callback
+	)
+
 end
 
 function NumericalQuizGrid:mark_as_input_comp(index)
 	self.num_input_comp = index
 end
 
+function NumericalQuizGrid:mark_as_next_button(index)
+	self.next_button = index
+end
+
+function NumericalQuizGrid:mark_as_back_button(index)
+	self.back_button = index
+end
+
 function NumericalQuizGrid:get_last_index()
 	return #self.button_list
+end
+
+function NumericalQuizGrid:release(button)
+	if button == "ok" then
+		--Depending on which button was selected do different stuff
+		if self.button_indicator == self.num_input_comp then
+			self:trigger("submit")
+		elseif self.button_indicator == self.back_button then
+			self:trigger("back")
+		elseif self.button_indicator == self.next_button then
+			self:trigger("next")
+		end
+	end
 end
 
 
@@ -52,8 +83,6 @@ end
 --- Makes sure to focus the input component if the user has moved the indicator
 -- to it
 function NumericalQuizGrid:_check_for_input_component(index)
-	print("selected button")
-	print(index)
 	if index == self.num_input_comp then
 		if not self.num_input_comp == nil then
 			self.num_input_comp:focus()
@@ -76,8 +105,6 @@ function NumericalQuizGrid:render(surface)
 	self:dirty(false)
 	if self.start_indicator == true then
 		for k = 1 , #self.button_list do
-			print(k)
-			print("k")
 			if not (self:_check_for_input_component(k)
 			or self.num_input_comp == nil) then
 				if self.button_list[k].button:is_selected() then

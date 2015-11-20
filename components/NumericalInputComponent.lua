@@ -56,16 +56,13 @@ function NumericalInputComponent:press(button)
 			self:set_text(self.input:sub(1,-2))
 		end
 		self:trigger("change")
-		print("change triggered")
 	elseif button == "ok" then
 		self:trigger("submit")
-		print("submit triggered")
 	else
 		if button ~= nil and tonumber(button) ~= nil
 		and #self.input < 3 then
 			self:set_text(self.input .. button)
 			self:trigger("change")
-			print("change triggered")
 		end
 	end
 	self.test_trigger_flag = true
@@ -97,12 +94,10 @@ function NumericalInputComponent:blur()
 		self:stop_listening()
 		self.focused = false
 	end
-	print("blurred")
 end
 
 --- Focuses the NumericalInputComponent, i.e. starts to listening to events
 function NumericalInputComponent:focus()
-	print("focuses input component")
 	if not self:is_focused() then
 		self:listen_to(
 			self.event_listener,
