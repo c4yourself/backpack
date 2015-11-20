@@ -27,6 +27,7 @@ function NumericQuizView:__init()
 	self.quiz_flag = false
 	self.listening_initiated = false
 	self.input_area_defined = false
+	self.areas_defined = false
 	--Components
 	self.grid = NumericalQuizGrid(remote_control)
 	--Instanciate a numerical input component and make the quiz listen for changes
@@ -43,7 +44,10 @@ function NumericQuizView:__init()
 	-- Add exit button
 	local button_exit = Button(button_color, color_selected, color_disabled,
 								true, true, "views.CityView")
-	self.grid:add_button({x = 42, y = 500},
+	local exit_position = {x = 42, y = 500}
+	button_exit:set_textdata("Back to city", Color(255,255,255,255),
+							{x = 0, y = 0}, 32,"data/fonts/DroidSans.ttf")
+	self.grid:add_button(exit_position,
 						button_size,
 						button_exit)
 	local exit_index = self.grid:get_last_index()
@@ -51,7 +55,11 @@ function NumericQuizView:__init()
 	-- Add next button
 	local button_next = Button(button_color, color_selected, color_disabled,
 								true, false, "")
-	self.grid:add_button({x = width-372-42, y = 500},
+	local next_position = {x = width - exit_position.x - button_size.width,
+							y = exit_position.y}
+	button_next:set_textdata("Next question", Color(255,255,255,255),
+							{x = 0, y = 0}, 32,"data/fonts/DroidSans.ttf")
+	self.grid:add_button(next_position,
 						button_size,
 						button_next)
 	local next_index = self.grid:get_last_index()
@@ -63,14 +71,8 @@ function NumericQuizView:__init()
 	-- User input
 	self.user_answer = ""
 
-	-- Graphics
-	self.font = sys.new_freetype(
-		{r = 255, g = 255, b = 255, a = 255},
-		32,
-		{x = 100, y = 300},
-		utils.absolute_path("data/fonts/DroidSans.ttf"))
-
 	self.question_area_color = Color(255,0,0,255)
+	self.progress_counter_color = Color(0,255,0,255)
 	self.question_area_font = Font("data/fonts/DroidSans.ttf", 32, Color(255,255,255,255))
 	-- Listeners and callbacks
 	self:listen_to(
@@ -83,14 +85,7 @@ end
 --Responds to a button press when the View is active (i.e. current View for the
 -- global @{ViewManager} instance)
 function NumericQuizView:press(key)
-	if key == "right" then
-		-- Navigate to the next question if the user already submitted an answer
-		--if self.answer_flag then
-			--self.answer_flag = false
-			--self:dirty(false)
-			--self:dirty(true) -- To make sure dirty event is triggered
-		--end
-	elseif key == "back" then
+	if key == "back" then
 		self:trigger("exit")
 	end
 end
@@ -115,17 +110,39 @@ function NumericQuizView:render(surface)
 		self.grid:mark_as_input_comp(input_index)
 	end
 
-
 	if self:is_dirty() then
 		surface:clear(color)
-		--Question area
-		local x = math.ceil(surface:get_width() * 0.2)
-		local y = math.ceil(surface:get_height() * 0.2)
-		local question_area_width = surface_width - 2 * x
-		local question_area_height = math.ceil(0.3*surface_height)
-		self.question_area = SubSurface(surface, {x = x, y = y,
-			height = question_area_height,
-			width = question_area_width})
+		if not self.areas_defined then
+			--Progress counter
+			local progress_margin = 26
+			self.counter_width = 128
+			self.counter_height = 128
+			local x_counter = math.ceil(surface_width - progress_margin - self.counter_width)
+			local y_counter = progress_margin
+			self.progress_counter_area = SubSurface(surface, {x = x_counter, y = y_counter,
+										height = self.counter_height,
+										width = self.counter_width})
+			--Question area
+			local x = math.ceil(surface:get_width() * 0.2)
+			local y = math.ceil(surface:get_height() * 0.2)
+			local question_area_width = surface_width - 2 * x
+			local question_area_height = math.ceil(0.3*surface_height)
+			self.question_area_width = question_area_width
+			self.question_area_height = question_area_height
+
+			self.question_area = SubSurface(surface, {x = x, y = y,
+				height = question_area_height,
+				width = question_area_width})
+
+			self.areas_defined = true
+		end
+		self.progress_counter_area:clear(self.progress_counter_color)
+		local current_question = self.num_quiz.current_question
+		local quiz_length = #self.num_quiz.questions
+		self.question_area_font:draw(self.progress_counter_area,
+			{x = 0, y = 0, height = self.counter_height,
+			width = self.counter_width},
+			tostring(current_question) .. " / " .. tostring(quiz_length), "center", "middle")
 		self.question_area:clear(self.question_area_color)
 		--Determine what should be shown on screen
 		if self.answer_flag then
@@ -133,24 +150,35 @@ function NumericQuizView:render(surface)
 			if self.num_quiz:answer(self.user_answer) then
 				output = "Correct!"
 			else
-				output = "False. You answered " .. tostring(self.user_answer) .. " and" .. "\n" .. "the correct answer was " .. tostring(self.num_quiz.questions[self.num_quiz.current_question].correct_answer) .. "."
+				output = "False. You answered " .. tostring(self.user_answer) ..
+				 " and" .. "\n" .. "the correct answer was "
+				 .. tostring(self.num_quiz.questions[self.num_quiz.current_question].correct_answer) .. "."
 			end
-			self.question_area_font:draw(self.question_area, {x = 0, y = 0, height = question_area_height, width = question_area_width}, output, "center", "middle")
+			self.question_area_font:draw(self.question_area,
+				{x = 0, y = 0, height = self.question_area_height,
+				width = self.question_area_width},
+				output, "center", "middle")
 		else
 			-- Show a new question if there is one, otherwise show final result
 			self.answer_flag = false
 			local question = self.num_quiz:get_question()
 			if question ~= nil then
-				local question = self.num_quiz:get_question()
+				--local question = self.num_quiz:get_question()
 				local question_text = "What is the answer to: " .. question .. "?"
-				self.question_area_font:draw(self.question_area, {x = 0, y = 0, height = question_area_height, width = question_area_width}, question_text, "center", "middle")
+				self.question_area_font:draw(self.question_area, {x = 0, y = 0,
+					height = self.question_area_height,
+					width = self.question_area_width},
+					question_text, "center", "middle")
 			else
 				-- The user has finished the quiz
 				self.views.num_input_comp:blur()
 				self.quiz_flag = true
 				local output = "You answered " .. tostring(self.num_quiz.correct_answers)
 				.. " questions correctly."
-				self.question_area_font:draw(self.question_area, {x = 0, y = 0, height = question_area_height, width = question_area_width}, output, "center", "middle")
+				self.question_area_font:draw(self.question_area, {x = 0, y = 0,
+					height = self.question_area_height,
+					width = self.question_area_width},
+					output, "center", "middle")
 			end
 		end
 	end
