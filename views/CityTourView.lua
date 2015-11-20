@@ -128,7 +128,7 @@ function CityTourView:render(surface)
 end
 	function CityTourView:load_view(button)
 
-		if button == "4" then
+		if button == "back" then
 		self:trigger("exit_view")
 			--Stop listening to everything
 			-- TODO
