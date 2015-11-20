@@ -71,6 +71,13 @@ function Rectangle:translate(x, y)
 	return Rectangle(self.x + x, self.y + y, self.width, self.height)
 end
 
+function Rectangle:clear(surface, color)
+	surface:clear(color:to_table(), self:to_table())
+end
+
+function Rectangle:fill(surface, color)
+	surface:fill(color:to_table(), self:to_table())
+end
 
 --- Return a new Rectangle instance based on a surface.
 -- Position is (0, 0)

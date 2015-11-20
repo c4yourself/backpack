@@ -26,7 +26,7 @@ local Button = class("Button", View)
 -- 	end
 -- end
 
-function Button:__init(color, color_selected, color_disabled, enabled, selected, transfer_path, )
+function Button:__init(color, color_selected, color_disabled, enabled, selected, transfer_path)
 	View.__init(self)
 	self.color = color
 	self.color_selected = color_selected or color
@@ -41,7 +41,9 @@ function Button:__init(color, color_selected, color_disabled, enabled, selected,
 end
 
 
--- TODO, remove text_position
+
+
+
 function Button:set_textdata(text, font_color, text_position, font_size,font_path)
 	self.text_available = true
 	self.text = text
