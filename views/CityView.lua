@@ -15,7 +15,7 @@ local NumericalQuizView = require("views.NumericalQuizView")
 local button= require("lib.components.Button")
 local button_grid=require("lib.components.ButtonGrid")
 local color = require("lib.draw.Color")
-local CityTourView = require("views.CityTourView")
+--local CityTourView = require("views.CityTourView")
 local subSurface = require("lib.view.SubSurface")
 local Font = require("lib.draw.Font")
 
@@ -46,7 +46,7 @@ function CityView:__init(remote_control)
 	local width = screen:get_width()
 
 	-- Add buttons
-	local button_1 = button(button_color, color_selected, color_disabled,true,true,"views.NumericalQuizView")
+	local button_1 = button(button_color, color_selected, color_disabled,true,true, "views.NumericalQuizView")
 	local button_2 = button(button_color, color_selected, color_disabled,true,false, "views.MultipleChoiceView")
 	local button_3 = button(button_color, color_selected, color_disabled,true,false)
 	local button_4 = button(button_color, color_selected, color_disabled,true,false)
@@ -83,21 +83,43 @@ function CityView:__init(remote_control)
 	self.buttonGrid:add_button(position_8, button_size, button_8)
 	self.buttonGrid:add_button(city_tour_position, city_tour_size, city_tour_button)
 
-	local button_callback = function()
+	local button_callback = function(button)
+		local subsurface = SubSurface(screen,{width=screen:get_width()*0.9, height=(screen:get_height()-50)*0.9, x=screen:get_width()*0.05, y=screen:get_height()*0.05+50})
+		local make_instance = self.buttonGrid:display_next_view(button.transfer_path)
+		local one_instance = make_instance(remote_control, subsurface)
+		self.buttonGrid:stop_listening(self.buttonGrid.event_listener,"button_press",callback)
+		one_instance:render(subsurface)
+
+
+		-- local CT = CityTourView(remote_control, city_tour_view)
+		-- self.buttonGrid:stop_listening(self.buttonGrid.event_listener,
+		--  													"button_press",
+		-- 													callback)
+		-- CT:render(city_tour_view)
+		gfx.update()
+	end
+
+	local button_render = function()
 		self:render(screen)
 		gfx.update()
 	end
+
 	self:listen_to(
 		self.buttonGrid,
 		"dirty",
+		button_render
+	)
+	self:listen_to(
+		self.buttonGrid,
+		"button_click",
 		button_callback
 	)
-	local callback = utils.partial(self.load_view, self)
-	self:listen_to(
-	event.remote_control,
-	"button_release",
-	callback
-	)
+	-- local callback = utils.partial(self.load_view, self)
+	-- self:listen_to(
+	-- event.remote_control,
+	-- "button_release",
+	-- callback
+	-- )
 
 end
 
@@ -147,13 +169,13 @@ local width = surface:get_width()
 
 	-- Instance remote control and mapps it to the buttons
 	--event.remote_control:on("button_release", self:load_view)
-	local callback = utils.partial(self.load_view, self)
-	self:listen_to(
-		event.remote_control,
-		"button_release",
-		callback
+	--local callback = utils.partial(self.load_view, self)
+	--self:listen_to(
+		--event.remote_control,
+		--"button_release",
+		--callback
 		--utils.partial(self.load_view, self)
-	)
+	--)
 end
 
 function CityView:load_view(button)

@@ -14,10 +14,6 @@ local SubSurface = require("lib.view.SubSurface")
 local utils = require("lib.utils")
 local event = require("lib.event")
 local Font = require("lib.draw.Font")
-<<<<<<< HEAD
-local Color = require("lib.draw.Color")
-=======
->>>>>>> cityview
 --local CityView = require("views.CityView")
 
 --- Constructor for ButtonGrid
@@ -95,9 +91,10 @@ end
 function ButtonGrid:display_next_view(transfer_path)
 
  	local view_import = require(transfer_path)
- 	local view_instance = view_import()
+	return view_import
+ 	--local view_instance = view_import()
 
- 	view.view_manager:set_view(view_instance)
+ 	--view.view_manager:set_view(view_instance)
 end
 
 function ButtonGrid:press(button)
@@ -137,18 +134,21 @@ function ButtonGrid:press(button)
 			for i=1, #self.button_list do
 				if self.button_list[i].button:is_selected() == true then
 					if self.button_list[i].button.transfer_path ~= nil then
-					self:display_next_view(self.button_list[i].button.transfer_path)
+					--self:display_next_view(self.button_list[i].button.transfer_path)
 				--	gfx.update()
+				--	break
+				-- else
+					self:trigger("button_click", self.button_list[i].button)
 					break
-					end
 				end
-	end
+			end
+		end
 end
 
 
-	collectgarbage()  --ensure that memory-leak does not occur
+	-- collectgarbage()
 	-- print out the memory usage in KB
-	print("the memory usage is " .. collectgarbage("count")*1024)
+	-- print("the memory usage is " .. collectgarbage("count")*1024)
 
 end
 
