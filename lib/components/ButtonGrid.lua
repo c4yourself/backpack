@@ -55,6 +55,7 @@ end
 -- @param button The button instance
 -- @throws Error If the button cross the boundaries of the surface
 function ButtonGrid:add_button(position, button_size, button)
+	print(position.x .. " " .. position.y)
 -- chenck if the button across the screen boundaries
 	if position.x >= 0 and button_size.width >= 0
 		 and position.x + button_size.width < 1280
@@ -75,7 +76,6 @@ function ButtonGrid:add_button(position, button_size, button)
 end
 
 function ButtonGrid:insert_button(position, button_size, button, index)
-	print(position.x .. " " .. position.y)
 	if position.x >= 0 and button_size.width >= 0
 		 and position.x + button_size.width < 1280
 		 and position.y >= 0 and button_size.height >= 0

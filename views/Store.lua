@@ -1,7 +1,5 @@
---- Base class for CityView
--- A CityView is the input field in a numerical quiz. It responds
--- to numerical input on the remote.
--- @classmod CityVie
+--- Base class for Store
+-- @classmod Store
 
 local class = require("lib.classy")
 local View = require("lib.view.View")
@@ -41,6 +39,7 @@ function Store:__init(remote_control, city, profile)
 	self.profile = profile
 	self.remote_control = remote_control
 
+
 	-- Some colors
 	self.background_color = Color{255, 255, 204, 255}
 	self.button_active = Color{255, 51, 51, 255}
@@ -78,7 +77,7 @@ function Store:__init(remote_control, city, profile)
 	while j <= get_size(self.items) + get_size(self.backpack_items) do
 		self.button_grid:add_button({x = width/2+170+((j-1)-2*(row-1))*180+own_items*140,
 																y = 115 + 140*(row-1-0.8*own_items) + own_items*175}, self.button_size, self.buttons[j])
-		j = j + 1
+		j = j+1
 		if (j-1) % 2 == 0 then
 			row = row + 1
 		end
@@ -91,10 +90,13 @@ function Store:__init(remote_control, city, profile)
 	self.button_grid:add_button({x = 200,y = 650}, {width = 6*width/45,height = 2*width/45}, self.buttons[k])
 
 	-- Add to view
+
+
 	self.add_view(self.button_grid, false)
 
 	-- Some fix for movement
 	self:listen_to(event.remote_control, "button_press", function() self:dirty() end)
+
 
 end
 
@@ -139,6 +141,10 @@ function Store:render(surface)
 
 	-- Instance remote control and mapps it to the buttons
 	local callback = utils.partial(self.action_made, self)
+
+	self.button_grid:render(surface)
+
+	-- Instance remote control and mapps it to the button
 	self:listen_to(
 		event.remote_control,
 		"button_release",
@@ -146,6 +152,7 @@ function Store:render(surface)
 	)
 
 	self:dirty(false)
+
 
 end
 

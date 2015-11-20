@@ -29,7 +29,8 @@ function BackEndStore:__init()
 										Item(5, "Sushi", "Tokyo", "Raw", "data/images/item_9.png",15),
 										Item(6, "Knife", "Tokyo", "Sharp", "data/images/item_10png",78),
 										Item(7, "Sushi", "Tokyo", "Raw", "data/images/item_9.png",15),
-										Item(8, "Sushi", "Tokyo", "Raw", "data/images/item_9.png",15),}
+										Item(8, "Sushi", "Tokyo", "Raw", "data/images/item_9.png",15)}
+
 
 
 
