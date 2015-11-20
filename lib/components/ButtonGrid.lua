@@ -61,7 +61,7 @@ function ButtonGrid:add_button(position, button_size, button)
 		 and position.y >= 0 and button_size.height >= 0
 		 and position.y + button_size.height < 720	then
 -- if ok, insert each button to the button_list
-	 table.insert(self.button_list,
+	 table.insert(self.button_list,j,
 	 {button = button,
 	 x = position.x,
 	 y = position.y,
@@ -69,9 +69,27 @@ function ButtonGrid:add_button(position, button_size, button)
 	 height = button_size.height
 	 })
 
-else
-	error("screen boundary error")
+	else
+		error("screen boundary error")
+	end
 end
+
+function ButtonGrid:insert_button(position, button_size, button, index)
+	print(position.x .. " " .. position.y)
+	if position.x >= 0 and button_size.width >= 0
+		 and position.x + button_size.width < 1280
+		 and position.y >= 0 and button_size.height >= 0
+		 and position.y + button_size.height < 720	then
+			 table.insert(self.button_list, index,
+			 {button = button,
+			 x = position.x,
+			 y = position.y,
+			 width = button_size.width,
+			 height = button_size.height
+			 })
+		 else
+			 error("screen boundary error")
+		 end
 
 end
 
@@ -101,16 +119,16 @@ function ButtonGrid:press(button)
 
     if button == "down" then
 			self:indicate_downward(self.button_indicator)
-			self:trigger("dirty")
+			self:dirty()
 		elseif button == "up" then
 			self:indicate_upward(self.button_indicator)
-			self:trigger("dirty")
+			self:dirty()
 		elseif button == "right" then
 			self:indicate_rightward(self.button_indicator)
-			self:trigger("dirty")
+			self:dirty()
 		elseif button == "left" then
 			self:indicate_leftward(self.button_indicator, "left")
-			self:trigger("dirty")
+			self:dirty()
 		elseif button == "1" then
 				--Instanciate a numerical quiz
 				local numerical_quiz_view = NumericalQuizView()
@@ -155,6 +173,7 @@ function ButtonGrid:render(surface)
 -- then the first button in the list will be selected.
 -- The indicator always points to the selected button
 self:dirty(false)
+
 	if self.start_indicator == true then
 		for k = 1 , #self.button_list do
 			if self.button_list[k].button:is_selected() then
@@ -173,6 +192,7 @@ self:dirty(false)
 
 -- Go through the button_list to render all buttons
     for i=1 , #self.button_list do
+
 		local button_data = self.button_list[i]
 		local area = {
 			width = button_data.width,
@@ -418,7 +438,13 @@ end
 	self.button_indicator = indicator
 end
 
-
+function ButtonGrid:get_selected()
+	for i = 1, #self.button_list do
+		if self.button_list[i].button:is_selected() then
+			return i
+		end
+	end
+end
 
 function ButtonGrid:button_distance(sel_button_index, button_index)
 	local sel_central_x = self.button_list[sel_button_index].x + math.floor(self.button_list[sel_button_index].width/2)

@@ -24,14 +24,12 @@ function BackEndStore:__init()
 
 	self.item_list = {Item(1, "Baguette", "Paris", "Good", "data/images/item_1.png",5),
 	 									Item(2, "Barret", "Paris", "Fancy", "data/images/item_2.png",45),
-										Item(3, "Barret", "Paris", "Fancy", "data/images/item_2.png",45),
-										Item(4, "Barret", "Paris", "Fancy", "data/images/item_2.png",45),
-										Item(5, "Barret", "Paris", "Fancy", "data/images/item_2.png",45),
-										Item(6, "Barret", "Paris", "Fancy", "data/images/item_2.png",45),
-										Item(7, "Barret", "Paris", "Fancy", "data/images/item_2.png",45),
-										Item(8, "Barret", "Paris", "Fancy", "data/images/item_2.png",45),
-										Item(9, "Sushi", "Tokyo", "Raw", "data/images/item_3.png",15),
-										Item(10, "Knife", "Tokyo", "Sharp", "data/images/item_4.png",78)}
+										Item(3, "Eifel Tower", "Paris", "So high", "data/images/item_3.png",45),
+										Item(4, "Barret", "Paris", "Fancy", "data/images/item_4.png",45),
+										Item(5, "Sushi", "Tokyo", "Raw", "data/images/item_9.png",15),
+										Item(6, "Knife", "Tokyo", "Sharp", "data/images/item_10png",78),
+										Item(7, "Sushi", "Tokyo", "Raw", "data/images/item_9.png",15),
+										Item(8, "Sushi", "Tokyo", "Raw", "data/images/item_9.png",15),}
 
 
 
@@ -60,5 +58,33 @@ function BackEndStore:reutrnOfferPrice(item, curr_city)
 	return item.get_price()*multiplier
 end
 
+function BackEndStore:returnItem(id)
+	local i = 1
+	while i <= get_size(self.item_list) do
+		if self.item_list[i]:get_id() == id then
+			return self.item_list[i]
+		end
+		i = i+1
+	end
+	return error("Trying to find non-existing item")
+end
+
+function BackEndStore:returnBackPackItems(inventory)
+	local i = 1
+	local j = 1
+	local ret_list = {}
+
+	while i <= #inventory do
+		while j <= get_size(self.item_list) do
+			if self.item_list[j]:get_id() == inventory[i] then
+				ret_list[i] = self.item_list[j]
+			end
+			j = j+1
+		end
+		j = 1
+		i = i+1
+	end
+	return ret_list
+end
 
 return BackEndStore

@@ -197,9 +197,20 @@ function Profile:set_inventory(inventory_string)
 	local tmp = {}
 	tmp = utils.split(string.sub(inventory_string,string.find(inventory_string,"{") + 1,string.find(inventory_string,"}") - 1),",")
 
+	for i = 1, #tmp, 1 do
+		table.insert(self.inventory, tonumber(tmp[i]))
+	end
+	--[[
 	for i=1, #tmp, 1 do
 		table.insert(self.inventory,tonumber(string.sub(tmp[i],string.find(tmp[i]," ") + 1,string.len(tmp[i]))))
 	end
+	]]
+end
+
+-- Add item to inventory
+-- @param item representing the id of the item
+function Profile:add_item(item)
+	table.insert(self.inventory, item)
 end
 -- set id from server
 -- @param id representing id of the profile from server database

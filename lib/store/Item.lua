@@ -36,7 +36,7 @@ function Item:get_image_path()
 end
 
 function Item:get_price()
-	return price
+	return self.price
 end
 
 return Item
