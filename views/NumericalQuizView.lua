@@ -72,9 +72,8 @@ function NumericQuizView:__init()
 	self.num_quiz:generate_numerical_quiz("NOVICE", 5+1, "image_path")
 	for i=1, #self.num_quiz.questions do
 		self.progress_table[i] = -1
-		print("constructing table")
-		print(#self.progress_table)
 	end
+
 	-- User input
 	self.user_answer = ""
 
@@ -164,14 +163,12 @@ function NumericQuizView:render(surface)
 				width = self.question_area_width},
 				output, "center", "middle")
 			self.answer_flag = false
-			print("Correct answers: " .. tostring(self.num_quiz.correct_answers))
-			print("Wrong answers: " .. tostring(self.num_quiz.wrong_answers))
+			--print("Correct answers: " .. tostring(self.num_quiz.correct_answers))
+			--print("Wrong answers: " .. tostring(self.num_quiz.wrong_answers))
 		else
 			-- Show a new question if there is one, otherwise show final result
 			self.answer_flag = false
 			local question = self.num_quiz:get_question()
-			print("------------------------------------" .. "\n" .. "Incremented question!")
-			print("current question is: " .. tostring(self.num_quiz.current_question))
 			if question ~= nil then
 				local question_text = "What is the answer to: " .. question .. "?"
 				self.question_area_font:draw(self.question_area, {x = 0, y = 0,
@@ -222,9 +219,6 @@ function NumericQuizView:render(surface)
 		end
 		self.prevent = false
 	end
-	-- Render all child views and copy changes to this view
-	-- Input component
-	--self.views.num_input_comp:render(self.input_area)
 
 	if not self.listening_initiated then
 		local change_callback = utils.partial(self.views.num_input_comp.render, self.views.num_input_comp, self.input_area)
