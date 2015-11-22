@@ -28,6 +28,7 @@ function NumericQuizView:__init()
 	self.listening_initiated = false
 	self.input_area_defined = false
 	self.areas_defined = false
+	self.prevent = false
 	--Components
 	self.grid = NumericalQuizGrid(remote_control)
 	--Instanciate a numerical input component and make the quiz listen for changes
@@ -67,7 +68,13 @@ function NumericQuizView:__init()
 	-- Logic
 	-- Associate a quiz instance with the View
 	self.num_quiz = Quiz()
+	self.progress_table = {}
 	self.num_quiz:generate_numerical_quiz("NOVICE", 5+1, "image_path")
+	for i=1, #self.num_quiz.questions do
+		self.progress_table[i] = -1
+		print("constructing table")
+		print(#self.progress_table)
+	end
 	-- User input
 	self.user_answer = ""
 
@@ -115,11 +122,11 @@ function NumericQuizView:render(surface)
 		if not self.areas_defined then
 			--Progress counter
 			local progress_margin = 26
-			self.counter_width = 128
-			self.counter_height = 128
-			local x_counter = math.ceil(surface_width - progress_margin - self.counter_width)
-			local y_counter = progress_margin
-			self.progress_counter_area = SubSurface(surface, {x = x_counter, y = y_counter,
+			self.counter_width = 72
+			self.counter_height = 72
+			self.x_counter = math.ceil(surface_width - progress_margin - self.counter_width)
+			self.y_counter = progress_margin
+			self.progress_counter_area = SubSurface(surface, {x = self.x_counter, y = self.y_counter,
 										height = self.counter_height,
 										width = self.counter_width})
 			--Question area
@@ -136,34 +143,36 @@ function NumericQuizView:render(surface)
 
 			self.areas_defined = true
 		end
-		self.progress_counter_area:clear(self.progress_counter_color)
-		local current_question = self.num_quiz.current_question
-		local quiz_length = #self.num_quiz.questions
-		self.question_area_font:draw(self.progress_counter_area,
-			{x = 0, y = 0, height = self.counter_height,
-			width = self.counter_width},
-			tostring(current_question) .. " / " .. tostring(quiz_length), "center", "middle")
+		-- Question area
 		self.question_area:clear(self.question_area_color)
+
 		--Determine what should be shown on screen
 		if self.answer_flag then
 			-- The user has answered a question
+			local current_question = self.num_quiz.current_question
 			if self.num_quiz:answer(self.user_answer) then
 				output = "Correct!"
+				self.progress_table[current_question] = true
 			else
 				output = "False. You answered " .. tostring(self.user_answer) ..
 				 " and" .. "\n" .. "the correct answer was "
-				 .. tostring(self.num_quiz.questions[self.num_quiz.current_question].correct_answer) .. "."
+				 .. tostring(self.num_quiz.questions[current_question].correct_answer) .. "."
+				self.progress_table[current_question] = false
 			end
 			self.question_area_font:draw(self.question_area,
 				{x = 0, y = 0, height = self.question_area_height,
 				width = self.question_area_width},
 				output, "center", "middle")
+			self.answer_flag = false
+			print("Correct answers: " .. tostring(self.num_quiz.correct_answers))
+			print("Wrong answers: " .. tostring(self.num_quiz.wrong_answers))
 		else
 			-- Show a new question if there is one, otherwise show final result
 			self.answer_flag = false
 			local question = self.num_quiz:get_question()
+			print("------------------------------------" .. "\n" .. "Incremented question!")
+			print("current question is: " .. tostring(self.num_quiz.current_question))
 			if question ~= nil then
-				--local question = self.num_quiz:get_question()
 				local question_text = "What is the answer to: " .. question .. "?"
 				self.question_area_font:draw(self.question_area, {x = 0, y = 0,
 					height = self.question_area_height,
@@ -181,6 +190,37 @@ function NumericQuizView:render(surface)
 					output, "center", "middle")
 			end
 		end
+		-- Progress counter
+		self.progress_counter_area:clear(self.progress_counter_color)
+		local current_question = self.num_quiz.current_question
+		local quiz_length = #self.num_quiz.questions
+		self.question_area_font:draw(self.progress_counter_area,
+			{x = 0, y = 0, height = self.counter_height,
+			width = self.counter_width},
+			tostring(current_question) .. " / " .. tostring(quiz_length), "center", "middle")
+		-- Progress bar
+		local bar_component_width = 45
+		local bar_component_height = 45
+		local progress_bar_margin = 10
+		local bar_component_x = self.x_counter + self.counter_width - bar_component_width
+		local bar_component_y = self.y_counter + progress_bar_margin + self.counter_height
+		local quiz_length = #self.progress_table
+		for i = 1, quiz_length do
+			local progress_bar_component = SubSurface(surface, {x = bar_component_x, y = bar_component_y,
+										height = bar_component_height,
+										width = bar_component_width})
+			local bar_component_color = nil
+			if self.progress_table[i] == true then
+				bar_component_color = Color(0,255,0,255)
+			elseif self.progress_table[i] == false then
+				bar_component_color = Color(255,0,0,255)
+			else
+				bar_component_color = Color(255, 255, 255, 255)
+			end
+			progress_bar_component:clear(bar_component_color)
+			bar_component_y = bar_component_y + progress_bar_margin + bar_component_height
+		end
+		self.prevent = false
 	end
 	-- Render all child views and copy changes to this view
 	-- Input component
@@ -205,12 +245,6 @@ function NumericQuizView:render(surface)
 			"submit",
 			utils.partial(self.show_answer, self)
 		)
-
-		--[[self:listen_to(
-			self.grid,
-			"submit",
-			utils.partial(self.show_answer, self)
-		)]]
 
 		self:listen_to(
 			self.grid,
@@ -237,17 +271,21 @@ end
 -- Displays the correct answer and whether the user chose the correct one.
 function NumericQuizView:show_answer()
 	if self.views.num_input_comp:get_text() ~= "" then
-		self.answer_flag = true
-		self.user_answer = tonumber(self.views.num_input_comp:get_text())
-		self.views.num_input_comp:set_text(nil)
-		self:dirty(false)
-		self:dirty(true)
+		if not self.prevent then
+			self.prevent = not self.prevent
+			self.answer_flag = true
+			self.user_answer = tonumber(self.views.num_input_comp:get_text())
+			self.views.num_input_comp:set_text(nil)
+			self:dirty(false)
+			self:dirty(true)
+		end
 	end
 end
 
--- Displays the correct answer and whether the user chose the correct one.
+-- Set up for the next question in the quiz
 function NumericQuizView:next_question()
 	self.answer_flag = false
+	self.prevent = false
 	self.user_answer = nil
 	self.views.num_input_comp:set_text(nil)
 	self:dirty(false)

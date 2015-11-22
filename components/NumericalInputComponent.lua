@@ -57,7 +57,9 @@ function NumericalInputComponent:press(button)
 		end
 		self:trigger("change")
 	elseif button == "ok" then
-		self:trigger("submit")
+		if #self.input > 0 then
+			self:trigger("submit")
+		end
 	else
 		if button ~= nil and tonumber(button) ~= nil
 		and #self.input < 3 then
