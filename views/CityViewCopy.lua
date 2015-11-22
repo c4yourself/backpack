@@ -25,7 +25,7 @@ function CityViewCopy:render(surface)
 	-- Resets the surface and draws the background
 	local background_color = {r=0, g=0, b=0}
 	surface:clear(background_color)
-	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/paris.png")))
+	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/Paris.png")))
 
 	--creates some colors
 	local button_color = {r=0, g=128, b=225}
