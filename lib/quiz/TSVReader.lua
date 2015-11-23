@@ -30,9 +30,11 @@ function TSVReader:get_correct_answers(answers)
 	local output = {}
 	local tmp = {}
 	tmp = utils.split(answers," ")
+
 	for i = 1, #tmp, 1 do
 		table.insert(output,tonumber(tmp[i]))
 	end
+
 	return output
 end
 
@@ -43,29 +45,28 @@ end
 function TSVReader:get_question(question_type)
 	local tmp_table = {}
 	self.filename = utils.absolute_path(string.format("data/questions/%s.tsv",self.filename))
+
 	if(lfs.attributes(self.filename, "mode") == "file") then
+
+		--get the questions from TSV file
 		for line in io.lines(self.filename) do
 			if string.sub(line,1,string.len(question_type)) == question_type then
 				table.insert(tmp_table,string.sub(line,string.len(question_type) + 2,#line))
 			end
-			if string.sub(line,1,string.len(question_type)) == question_type then
-				table.insert(tmp_table,string.sub(line,string.len(question_type) + 2,#line))
-			end
-			if string.sub(line,1,string.len(question_type)) == question_type then
-				table.insert(tmp_table,string.sub(line,string.len(question_type) + 2,#line))
-			end
-			if string.sub(line,1,string.len(question_type)) == question_type then
-				table.insert(tmp_table,string.sub(line,string.len(question_type) + 2,#line))
 		end
+
+		--generate a question table
 		for i = 1,#tmp_table,1 do
 			table.insert(self.questions_table,utils.split(tmp_table[i],"\t"))
 		end
-	end
+
+		--seperate the data in question table to get questions, choices and correct answers
 		for i = 1,#self.questions_table,1 do
 			table.insert(self.question_index,i)
 			table.insert(self.choices,utils.split(self.questions_table[i][2],";"))
 			table.insert(self.correct_answers,self:get_correct_answers(self.questions_table[i][3]))
 		end
+
 		return self.questions_table
 	else
 		return false
@@ -78,9 +79,11 @@ function TSVReader:generate_random(tabNum,indexNum)
 	local t = {}
 	local rt = {}
 	math.randomseed(os.time())
+
 	for i = 1, indexNum do
 		local ri = math.random(1, tabNum + 1 - i)
 		local v = ri
+		
 		for j = 1,tabNum do
 			if not t[j] then
 				ri = ri - 1

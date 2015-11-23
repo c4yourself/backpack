@@ -229,14 +229,14 @@ end
 function ProfileSynchronizer:save_profile(profile)
 
 	-- Extract the data from the profile
-	local badges = "badges"--profile:get_badges()
+	local badges = profile:get_badges_string()
 	local balance = profile:get_balance()
 	local current_city = profile:get_city()
 	local date_of_birth = profile:get_date_of_birth()
 	local email_address = profile:get_email_address()
 	local experience = profile:get_experience()
 	local profile_id = profile:get_id()
-	local inventory = "inventory"--profile:get_inventory()
+	local inventory = profile:get_inventory_string()
 	local name = profile:get_name()
 	local password = profile:get_password()
 	local profile_token = profile:get_login_token()

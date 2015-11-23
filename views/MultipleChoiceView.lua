@@ -90,7 +90,7 @@ function MultipleChoiceView:press(key)
 		self.quiz_state = "DONE"
 		self:dirty(true)
 	elseif key == "back" then
-		self:trigger("exit_view")
+		self:trigger("exit")
 	else
 		--Check if the user input can be interpreted as a answer and in that case
 		-- append it to the current answer

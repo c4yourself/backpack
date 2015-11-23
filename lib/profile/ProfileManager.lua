@@ -17,7 +17,26 @@ end
 --- @return profile_list_email representing the list of profiles email_address as string
 function ProfileManager:list()
 	profile_list_local, profile_list_city, profile_list_email = localprofilemanager.get_profileslist()
+
 	return profile_list_local, profile_list_city, profile_list_email
+end
+
+--- create profile to local and server
+--- @param profile representing the profile to save
+--- @return true representing it saves successfully both in local and server
+--- @return false representing it saves unsuccessfully in server
+function ProfileManager:create_new_profile(profile)
+	localprofilemanager:save(profile)
+
+	--check the network
+	if profilesynchronizer:is_connected() ~= false then
+		profilesynchronizer:delete_profile(localprofilemanager:get_delete_params(profile))
+		profilesynchronizer:save_profile(profile)
+
+		return true, "Create new profile successfully in local and server!"
+	else
+		return false, "Create new local profile successfully. The netowork is not connected!"
+	end
 end
 
 --- save profile to local and server
@@ -26,8 +45,11 @@ end
 --- @return false representing it saves unsuccessfully in server
 function ProfileManager:save(profile)
 	localprofilemanager:save(profile)
+
+	--check the network
 	if profilesynchronizer:is_connected() ~= false then
 		profilesynchronizer:save_profile(profile)
+
 		return true, "Save profile successfully in local and server!"
 	else
 		return false, "The netowork is not connected!"
@@ -41,6 +63,8 @@ end
 --- @return false representing now profile in local with such city and email_address
 function ProfileManager:load(city,email_address)
 	profile = localprofilemanager:load(city,email_address)
+
+	--check the city and email right or not
 	if profile ~= false then
 		return profile
 	else
@@ -53,6 +77,8 @@ end
 --- @return server_profile representing the profile instance get from server
 function ProfileManager:synchronize(profile)
 	server_profile = profilesynchronizer:get_profile(localprofilemanager:get_profile_token(profile))
+
+	--check if it's a profile instance form server
 	if server_profile ~= nil then
 		localprofilemanager:save(server_profile)
 		return server_profile
@@ -71,12 +97,16 @@ end
 --- @param email_address
 --- @param password
 function ProfileManager:login(email_address,password)
+	--check the network
 	if profilesynchronizer:is_connected() == true then
+
+		--Login server
 		if profilesynchronizer:login(email_address,password) == "login_token" then
-			return email_address,password
+			return true, email_address, password
 		else
 			return false, "Wrong email address or password!"
 		end
+
 	else
 		return false, "The netowork is not connected!"
 	end
