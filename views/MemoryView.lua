@@ -35,7 +35,7 @@ function MemoryView:__init()
     self.profile = Profile("Lisa", "lisa@lisa.se", "04-08-1992", "female", "paris")
     self:_set_pairs()
     --self.pairs = 3 -- TODO For quicker manual testing, remove once done coding
-    self.memory = MemoryGame(self.pairs, profile, false)
+    self.memory = MemoryGame(self.pairs, self.profile)
     self.columns = math.ceil((self.pairs*2)^(1/2))
 
     -- Adjust the board so that rows*columns = 2*pairs

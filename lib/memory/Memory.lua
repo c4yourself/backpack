@@ -2,11 +2,12 @@
 local class = require("lib.classy")
 local serpent = require("lib.serpent")
 local Memory = class("Memory")
+local Profile = require("lib.profile.Profile")
 
 --- Constructor for Memory
 -- @param paris is an integer
 -- @param scrambled is false, then the pairs should be {1,1,2,2,etc.}
-function Memory:__init(pairs, scrambled)
+function Memory:__init(pairs, profile, scrambled)
 	if scrambled == false then
 		self.scrambled = false
  	else
@@ -19,9 +20,18 @@ function Memory:__init(pairs, scrambled)
 	self.state = {}
 	self.first_card = nil
 	self.second_card = nil
+	self.coins = 0
+	self.experience = 0
+	self.finished = false
 
+--	if profile == nil then
+	--	error("Cannot play without having a profile")
+--	else
+	--self. profile = Profile("", "", "", "", "")
+	self.profile = profile
+	--end
 
-	for i = 1, pairs do
+	for i = 1, self.pairs do
 		table.insert(self.state, false)
 		table.insert(self.state, false)
 	end
@@ -89,30 +99,29 @@ end
 
 
 function Memory:match()
-	if self.cards[self.first_card] ~= self.cards[self.second_card] then
-		self.state[self.first_card] = false
-		self.state[self.second_card] = false
+	if self.state[self.second_card] ~= nil then
+		if self.cards[self.first_card] ~= self.cards[self.second_card] then
+			self.state[self.first_card] = false
+			self.state[self.second_card] = false
+		end
 		self.first_card = nil
 		self.second_card = nil
-		return false
 	end
-	self.first_card = nil
-	self.second_card = nil
-	return true
 end
 
 function Memory:is_finished()
-	local is_finished = false
-
 	for i = 1, #self.state do
 		if self.state[i] == false then
-			is_finished = false
+			self.finished = false
 			break
 		else
-			is_finished = true
+			self.finished = true
+			self.coins, self.experience = self:_calculate_reward()
+			self.profile:modify_balance(self.coins)
+			self.profile:modify_experience(self.experience)
 		end
 	end
-	return is_finished
+	return self.finished
 end
 
 function Memory:serialize(columns)
@@ -133,14 +142,13 @@ function Memory:serialize(columns)
 	return string_serialize
 end
 
-function Memory.unserialize(new_state)
+function Memory.unserialize(new_state, profile)
 	local length = string.len(new_state)
 	local no_of_pairs = (length - 1) / 4
-	local memory = Memory(no_of_pairs)
+	local memory = Memory(no_of_pairs, profile)
 	local state = {}
 	local cards = {}
 	local moves = 0
-
 	for i = 1,string.len(new_state) do
 		local char = new_state:sub(i,i)
 		if char == "." then
@@ -159,5 +167,25 @@ function Memory.unserialize(new_state)
 	end
 	return memory
 end
+
+function Memory:_calculate_reward()
+	local reward_factor = (self.moves * 2) / (2 * self.pairs)
+	local reward = 0
+	if reward_factor >= 2 then
+		reward = 20
+	elseif reward_factor >= 1.8 then
+		reward = 40
+	elseif reward_factor >= 1.6 then
+		reward = 60
+	elseif reward_factor >= 1.4 then
+		reward = 80
+	elseif reward_factor >= 1.2 then
+		reward = 100
+	else
+		reward = 120
+	end
+	return reward, reward
+end
+
 
 return Memory
