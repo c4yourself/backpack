@@ -88,6 +88,13 @@ function CityView:__init(remote_control, profile)
 		self.button_grid:stop_listening(self.button_grid.event_listener,"button_press",callback)
 		one_instance:render(subsurface)
 
+				local exit_view = function()
+						self.button_grid:focus()
+						one_instance:destroy()
+						self:dirty(true)
+				end
+
+				self:listen_to_once(one_instance,"exit_view", exit_view)
 
 		-- local CT = CityTourView(remote_control, city_tour_view)
 		-- self.button_grid:stop_listening(self.buttonGrid.event_listener,
@@ -244,13 +251,6 @@ function CityView:load_view(button)
 		CT:render(city_tour_view)
 		gfx.update()
 
-		local exit_view = function()
-				self.button_grid:focus()
-				CT:destroy()
-				self:dirty(true)
-		end
-
-		self:listen_to_once(CT,"exit_view", exit_view)
 
 
 		end
