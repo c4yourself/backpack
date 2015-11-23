@@ -1,6 +1,5 @@
---- Base class for Store
+-- The view class store
 -- @classmod Store
-
 local class = require("lib.classy")
 local View = require("lib.view.View")
 local view = require("lib.view")
@@ -18,6 +17,7 @@ local Button = require("lib.components.Button")
 local ButtonGrid=require("lib.components.ButtonGrid")
 
 -- Get size of Table
+-- @param a Is the table to get ther size of
 local function get_size(a)
 	i = 0
 	for _ in pairs(a) do i = i+1 end
@@ -33,13 +33,14 @@ function Store:__init(remote_control, city, profile)
 	self.current_city = city
 	self.button_grid = ButtonGrid(remote_control)
 	self.cashier = gfx.loadpng("data/images/cashier.png")
-	self.shelf = gfx.loadpng("data/images/shelf1.png")
+	self.shelf = gfx.loadpng("data/images/shelf.png")
 	self.backpack = gfx.loadpng("data/images/backpack.png")
 	self.backendstore = BackEndStore()
 	self.profile = profile
 	self.remote_control = remote_control
 	self.item_positions = {}
 	self.item_images = {}
+	self.message = {["message"] = ""}
 
 
 	-- Some colors
@@ -59,7 +60,7 @@ function Store:__init(remote_control, city, profile)
 
 	-- Create the number of buttons that correspond to items in backpack + items for sale
 	self.button_size = {width = 2.5*width/45, height = 2.5*width/45}
-	print(self.button_size.width.." ".. self.button_size.height)
+
 	self.buttons = {}
 	self.buttons[1] = Button(self.background_color, self.button_active, self.background_color, true, true)
 	k = 2
@@ -69,7 +70,7 @@ function Store:__init(remote_control, city, profile)
 	end
 
 	-- Add the exit button
-	exit_font = Font("data/fonts/DroidSans.ttf", 24, Color(255, 0, 0, 255))
+	self.font = Font("data/fonts/DroidSans.ttf", 20, Color(0, 0, 0, 255))
 	self.buttons[k] = Button(self.button_inactive, self.button_active, self.button_inactive, true, false)
 	self.buttons[k]:set_textdata("Exit",Color(255,0,0,255), {x = 100, y = 300}, 20, utils.absolute_path("data/fonts/DroidSans.ttf"))
 
@@ -109,6 +110,8 @@ function Store:__init(remote_control, city, profile)
 
 end
 
+-- Load all the images for the items
+-- @param none
 function Store:loadItemImages()
 	local ret_list = {}
 	local numItems =  get_size(self.items)
@@ -146,7 +149,6 @@ function Store:insert_button()
 		end
 	end
 	own_items = 1
-	print("majs")
 	table.insert(self.item_positions, add_index, {x = width/2+((add_index-1)-2*(row-1))*130+own_items*70,
 															y = 205 + 105*(row-1-0.8*own_items) + own_items*125})
 	-- Add to button grid
@@ -160,7 +162,6 @@ function Store:remove_button(index)
 
 	-- Get the index of the button to be removed
 	remove_index = get_size(self.items) + get_size(self.backpack_items) + 1
-
 	-- Remove it from the button table
 	table.remove(self.buttons, remove_index)
 	-- Remove it from the images to be drawn
@@ -175,14 +176,12 @@ end
 -- @param surface is the surface to draw on
 function Store:render(surface)
 
-	self:destroy()
+
 	-- Creates local variables for height and width
 	local height = screen:get_height()
 	local width = screen:get_width()
 
-	self:dirty(false)
-
-	-- Resets the surface and draws the background
+		-- Resets the surface and draws the background
 	surface:clear(self.background_color)
 	surface:copyfrom(self.cashier, nil, {x = 0, y = 280}, true)
 	surface:copyfrom(self.shelf, nil, {x=width/2-150,y=200}, true)
@@ -196,7 +195,39 @@ function Store:render(surface)
 		surface:copyfrom(self.item_images[i], nil, self.item_positions[i], true)
 	end
 
+	-- Draw balacne
+	local coins = self.profile:get_balance()
+	self.font:draw(surface, {x = 3.1*width/4, y = height/3},"Coins: "..coins)
 
+	--Draw item info is one is selected, exit info otherwise
+	local selected_item_index = self.button_grid:get_selected()
+	local exit_selected = false
+	local item
+
+	-- Find which is selected
+	if selected_item_index <= get_size(self.items) then
+		item = self.items[selected_item_index]
+	elseif selected_item_index <= get_size(self.items) + get_size(self.backpack_items) then
+		item = self.backpack_items[selected_item_index - get_size(self.items)]
+	else
+		exit_selected = true
+	end
+
+	-- See what we're doing
+	if exit_selected then
+		self.font:draw(surface, {x = 3.1*width/4, y = height/3+45}, "Exit the store")
+	else
+		self.font:draw(surface, {x = 3.1*width/4, y = height/3+45}, "Item: " .. item:get_name())
+		self.font:draw(surface, {x = 3.1*width/4, y = height/3+70}, "Description: "..item:get_description())
+		if selected_item_index <= get_size(self.items) then
+			self.font:draw(surface, {x = 3.1*width/4, y = height/3+95}, "Purchase price: " .. item:get_price())
+		else
+			self.font:draw(surface, {x = 3.1*width/4, y = height/3+95},
+			"Sale price: "..self.backendstore:returnOfferPrice(item, self.current_city))
+		end
+	end
+	self.font:draw(surface, {x = 3.1*width/4, y = height/3+130}, self.message["message"])
+	self:dirty(false)
 
 end
 
@@ -212,6 +243,7 @@ function Store:purchase_item(item_index)
 	local balance = self.profile:get_balance()
 	local item = self.items[item_index]
 	local item_price = item:get_price()
+	local error_msg
 
 	-- Start by checking if the user are allowed to purchase this item
 
@@ -227,12 +259,14 @@ function Store:purchase_item(item_index)
 		else
 
 				can_buy = false
+				error_msg = "Not enough coins"
 
 		end
 
 	else
 
 		can_buy = false
+		error_msg = "No room in backpack"
 
 	end
 
@@ -248,7 +282,11 @@ function Store:purchase_item(item_index)
 		self:insert_button()
 
 		self:dirty(false)
+
+		return "Item purchased"
 	end
+
+	return error_msg
 
 end
 
@@ -269,44 +307,54 @@ function Store:sell_item(item_index)
 	self:remove_button(item_index+get_size(self.items))
 
 	self:dirty(false)
+
+	return "Item sold"
 end
 
+-- The function that decides what happends when the "ok" button is pressed
+-- @param button The button that has been pressed
 function Store:action_made(button)
 
 	-- If the player has presseed enter a choice has been made
 	if button == "ok" then
 
-		-- Get the current
+		-- Get the current index of button that is selected
 		selected_index = self.button_grid:get_selected()
 
+		-- If we have selected on of the purchasable items
 		if selected_index <= get_size(self.items) then
-			print("kalas")
-			purchase = self:purchase_item(selected_index)
 
+			self.message["message"] = self:purchase_item(selected_index)
+
+		-- Elseif we have sold one of our items
 		elseif selected_index <= (get_size(self.items) + get_size(self.backpack_items)) then
 
-			sell_off = self:sell_item(selected_index-get_size(self.items))
+			self.message["message"] = self:sell_item(selected_index-get_size(self.items))
 
+		-- Otherwise we've exited
 		else
-
+			self:destroy()
 			sys.stop()
 
 		end
 
 	end
 
+	-- Reload the relevant images after an action is made
 	self.item_images = self:loadItemImages()
 
 
 end
 
-
-
+-- Function to destory images
 function Store:destroy()
   --view.View.destroy(self)
-  --for k,v in pairs(self.images) do
-     --self.images[k]:destroy()
-  --end
+  for k,v in pairs(self.item_images) do
+     --self.item_images[k]:destroy()
+  end
+	--self.cashier:destory()
+	--self.shelf:destroy()
+	--self.backpack:destroy()
 end
 
 return Store

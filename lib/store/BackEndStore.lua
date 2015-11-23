@@ -25,7 +25,7 @@ function BackEndStore:__init()
 	self.item_list = {Item(1, "Baguette", "Paris", "Good", "data/images/store_items/item1.png",5),
 	 									Item(2, "Beret", "Paris", "Fancy", "data/images/store_items/item2.png",45),
 										Item(3, "Eiffel Tower", "Paris", "So high", "data/images/store_items/item3.png",90),
-										Item(4, "Barret", "Paris", "Fancy", "data/images/store_items/item4.png",450),
+										Item(4, "Scooter", "Paris", "Fancy", "data/images/store_items/item4.png",450),
 										Item(5, "Sushi", "Tokyo", "Raw", "data/images/store_items/item1.png",15),
 										Item(6, "Knife", "Tokyo", "Sharp", "data/images/store_items/item1.png",78),
 										Item(7, "Sushi", "Tokyo", "Raw", "data/images/store_items/item1.png",15),

@@ -93,7 +93,7 @@ function ButtonGrid:insert_button(position, button_size, button, index)
 		 else
 			 error("screen boundary error")
 		 end
-		 self:dirty()
+		 self:dirty(false)
 end
 
 -- Used to remove an existing button from the grid
@@ -111,7 +111,7 @@ function ButtonGrid:remove_button(index, remove_index)
 	else
 		error("Trying to remove a button out of range")
 	end
-	self:dirty()
+	self:dirty(false)
 
 end
 
