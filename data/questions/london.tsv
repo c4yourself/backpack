@@ -1,27 +1,12 @@
-single_choice	Which of the following cities is the capital of France?	Paris;London;Stockholm;Moscow	1
-single_choice	Which of the following cities is the capital of England?	Paris;London;Stockholm;Moscow	2
-single_choice	Which of the following cities is the capital of Sweden?	Paris;London;Stockholm;Moscow	3
-single_choice	Which of the following cities is the capital of Russia?	Paris;London;Stockholm;Moscow	4
-single_choice	Which of the following cities is the capital of America?	Washington;Roma;Madrid;Oslo	1
-single_choice	Which of the following cities is the capital of Italy?	Washington;Roma;Madrid;Oslo	2
-single_choice	Which of the following cities is the capital of Spain?	Washington;Roma;Madrid;Oslo	3
-single_choice	Which of the following cities is the capital of Norway?	Washington;Roma;Madrid;Oslo	4
-single_choice	Which of the following cities is the capital of Germany?	Berlin;Wien;Lisboa;Amsterdam	1
-single_choice	Which of the following cities is the capital of Austria?	Berlin;Wien;Lisboa;Amsterdam	2
-single_choice	Which of the following cities is the capital of Portugal?	Berlin;Wien;Lisboa;Amsterdam	3
-single_choice	Which of the following cities is the capital of Holland?	Berlin;Wien;Lisboa;Amsterdam	4
-multiple_choice	Which of the following countries in Europe?	Sweden;France;Italy;Canda	1 2 3
-multiple_choice	Which of the following countries in Asia?	China;Russia;Korea;Norway	1 3
-multiple_choice	Which of the following countries in Africa?	South Africa;Egypt;Korea;Norway	1 2
-multiple_choice	Which of the following countries in North America?	America;Russia;Mexico;Norway	1 3
-multiple_choice	Which of the following countries in South America?	Brazil;Russia;Korea;Norway	1
-multiple_choice	Which of the following countries in Oceania?	Australia;Russia;Korea;New Zealand	1 4
-multiple_choice	Which of the following cities in Europe?	Stockholm;Paris;Washington;Hong Kong	1 2
-multiple_choice	Which of the following cities in Asia?	Beijing;Paris;Washington;Hong Kong	1 4
-multiple_choice	Which of the following cities in Africa?	Cario;Cape Town;Washington;Hong Kong	1 2
-multiple_choice	Which of the following cities in North America?	New York;Seattle;Toronto;Port-au-Prince;Beijing	1 2 3 4
-multiple_choice	Which of the following cities in South America?	Rio de Janeiro;Santiago;Washington;Beijing	1 2
-multiple_choice	Which of the following cities in Oceania?	Sydney;Auckland;Melbourne;Brisbane	1 2 3 4
+single_choice	What is Big Ben?	Clock Tower;Ferris Wheel;Bridge;Stadium	1
+single_choice	Which of these countries are not part of the United Kingdom?	England;Wales;Ireland;Scotland	3
+single_choice	What is the name of the residence where Queen Elizabeth II of the United Kingdom lives?	Villa Eliza;London Eye;Buckingham Palace;Allerton Castle	3
+single_choice	If you are watching a Barclays Premier League game, you are most likely interested in...	Rugby;Horse Polo;Golf;Football	4
+single_choice	What is the name of the river flowing through London?	Elbe;Thames;River Shannon;Lagan	2
+single_choice	What is usually included in an English Breakfast?	Eggs, bacon, sausages, fried bread, mushrooms, baked beans;Lettuce, cheese, vinegar, chicken, tomatoes;French fries, fish, mayonnaise;Sheperd's pie	1
+single_choice	Who were William Shakespear?	Poet, playwright and actor;Professional footballer;Prince;Artist, producer and dancer	1
+single_choice	What is the name of an English physicist and mathematician known as one of the most influential scientists of all time?	Charles Darwin;Albert Einstein;Alexander Graham Bell;Isaac Newton	4
+single_choice	What is the name of the highly skilled archer who was "robbing from the rich and giving to the poor" and later became an animated movie character?	Aladdin;Peter Pan;Robin Hood;James Bond	3
 numeric	How long is Nile river which is the longest in the world?(km)	6670
 numeric	How high is Qomolangma which is the highest in the world?(m)	8844
 numeric	How many countries and regions in the world?	230
@@ -31,12 +16,3 @@ numeric	How many countries and regions in North America?	28
 numeric	How many countries and regions in South America?	13
 numeric	How many countries and regions in Africa?	56
 numeric	How many countries and regions in Oceania?	30
-city_tour1	What is the Big Ben?	A radio tower;An observatory;A clock tower;A Sculpture	3
-city_tour1	When was the building of Big Ben completed?	1865;1858;1823;1912	2
-city_tour1	What is the tower officially known as?	The London Tower;The Elizabeth tower;The Great Tower of Britain;The Big Clock of London	2
-city_tour2	In what area of London is the museum located?	Bloomsbury;Botany Bay;Bulls Cross;Bickley	1
-city_tour2	When was the British museum established?	1783;1765;1734;1753	4
-city_tour2	Which scientists collection was the museum based upon?	Leonardo Da Vinci;John Walsh;Sir Hans Sloane;Albert Einstein	3
-city_tour3	The Tower of London has another name, what is it?	The Fortress of the Queen;Her Majesty's Royal Palace and Fortress;Elizabeth's Tower;The Fortress of London	2
-city_tour3	The Tower of London is located next to a big river, which one?	River Brent;River Crane;River Thames;Salmons Brook;	3
-city_tour3	When was The Tower of London founded?	1038;1134;1048;1066	4
