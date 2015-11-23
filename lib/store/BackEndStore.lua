@@ -22,14 +22,14 @@ function BackEndStore:__init()
 	self.item_list = {self.a,self.b,self.c,self.d}]]
 	-- List of all items
 
-	self.item_list = {Item(1, "Baguette", "Paris", "Good", "data/images/item_1.png",5),
-	 									Item(2, "Barret", "Paris", "Fancy", "data/images/item_2.png",45),
-										Item(3, "Eifel Tower", "Paris", "So high", "data/images/item_3.png",45),
-										Item(4, "Barret", "Paris", "Fancy", "data/images/item_4.png",45),
-										Item(5, "Sushi", "Tokyo", "Raw", "data/images/item_9.png",15),
-										Item(6, "Knife", "Tokyo", "Sharp", "data/images/item_10png",78),
-										Item(7, "Sushi", "Tokyo", "Raw", "data/images/item_9.png",15),
-										Item(8, "Sushi", "Tokyo", "Raw", "data/images/item_9.png",15)}
+	self.item_list = {Item(1, "Baguette", "Paris", "Good", "data/images/store_items/item1.png",5),
+	 									Item(2, "Beret", "Paris", "Fancy", "data/images/store_items/item2.png",45),
+										Item(3, "Eiffel Tower", "Paris", "So high", "data/images/store_items/item3.png",90),
+										Item(4, "Barret", "Paris", "Fancy", "data/images/store_items/item4.png",450),
+										Item(5, "Sushi", "Tokyo", "Raw", "data/images/store_items/item1.png",15),
+										Item(6, "Knife", "Tokyo", "Sharp", "data/images/store_items/item1.png",78),
+										Item(7, "Sushi", "Tokyo", "Raw", "data/images/store_items/item1.png",15),
+										Item(8, "Sushi", "Tokyo", "Raw", "data/images/store_items/item1.png",15)}
 
 
 
@@ -54,9 +54,9 @@ function BackEndStore:returnItemList(city)
 	return ret_list
 end
 
-function BackEndStore:reutrnOfferPrice(item, curr_city)
-	local multiplier = self.city_multiplier[self.city_list[item.get_city()]][self.city_list[curr_city]]
-	return item.get_price()*multiplier
+function BackEndStore:returnOfferPrice(item, curr_city)
+	local multiplier = self.city_multiplier[self.city_list[item:get_city()]][self.city_list[curr_city]]
+	return item:get_price()*multiplier
 end
 
 function BackEndStore:returnItem(id)

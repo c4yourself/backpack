@@ -24,7 +24,7 @@ local function get_size(a)
 	return i
 end
 
---- Constructor for CityView
+--- Constructor for Store
 -- @param event_listener Remote control to listen to
 function Store:__init(remote_control, city, profile)
 	-- Add some internal variables that we will want to use later
@@ -35,9 +35,14 @@ function Store:__init(remote_control, city, profile)
 	self.cashier = gfx.loadpng("data/images/cashier1.png")
 	self.shelf = gfx.loadpng("data/images/shelf.png")
 	self.backpack = gfx.loadpng("data/images/backpack.png")
+	-- Test item
+	self.item1 = gfx.loadpng("data/images/store_items/item1.png")
+
 	self.backendstore = BackEndStore()
 	self.profile = profile
 	self.remote_control = remote_control
+	self.item_positions = {}
+	self.item_images = {}
 
 
 	-- Some colors
@@ -57,11 +62,12 @@ function Store:__init(remote_control, city, profile)
 
 	-- Create the number of buttons that correspond to items in backpack + items for sale
 	self.button_size = {width = 3.5*width/45, height = 3.5*width/45}
+	print(self.button_size.width.. " ".. self.button_size.height )
 	self.buttons = {}
-	self.buttons[1] = Button(self.button_inactive, self.button_active, self.button_inactive, true, true)
+	self.buttons[1] = Button(self.background_color, self.button_active, self.background_color, true, true)
 	k = 2
 	while k <= get_size(self.items) + get_size(self.backpack_items) do
-			self.buttons[k] = Button(self.button_inactive, self.button_active, self.button_inactive, true, false)
+			self.buttons[k] = Button(self.background_color, self.button_active, self.background_color, true, false)
 			k = k + 1
 	end
 
@@ -75,8 +81,9 @@ function Store:__init(remote_control, city, profile)
 	j = 1
 	own_items = 0
 	while j <= get_size(self.items) + get_size(self.backpack_items) do
-		self.button_grid:add_button({x = width/2+170+((j-1)-2*(row-1))*180+own_items*140,
-																y = 115 + 140*(row-1-0.8*own_items) + own_items*175}, self.button_size, self.buttons[j])
+		self.item_positions[j] = {x = width/2+170+((j-1)-2*(row-1))*180+own_items*140,
+																y = 100 + 140*(row-1-0.8*own_items) + own_items*175}
+		self.button_grid:add_button(self.item_positions[j], self.button_size, self.buttons[j])
 		j = j+1
 		if (j-1) % 2 == 0 then
 			row = row + 1
@@ -86,31 +93,53 @@ function Store:__init(remote_control, city, profile)
 		end
 	end
 
+	-- Create list of item images
+	self.item_images = self:loadItemImages()
+
 	-- Add exit button
 	self.button_grid:add_button({x = 200,y = 650}, {width = 6*width/45,height = 2*width/45}, self.buttons[k])
 
 	-- Add to view
-
-
 	self.add_view(self.button_grid, false)
 
 	-- Some fix for movement
-	self:listen_to(event.remote_control, "button_press", function() self:dirty() end)
+	self:listen_to(event.remote_control, "button_release", function() self:dirty() end)
+
+	-- Instance remote control and mapps it to pressing enter
+	self.callback = utils.partial(self.action_made, self)
+	self:listen_to(event.remote_control,"button_release",self.callback)
 
 
 end
 
+function Store:loadItemImages()
+	local ret_list = {}
+	local numItems =  get_size(self.items)
+	for i = 1, numItems do
+		ret_list[i] = gfx.loadpng(self.items[i]:get_image_path())
+	end
+
+	for j = 1, get_size(self.backpack_items) do
+		ret_list[j+numItems] = gfx.loadpng(self.backpack_items[j]:get_image_path())
+	end
+	return ret_list
+end
+
+
+-- Function to insert a new item on the correct place
+-- @param no needed
 function Store:insert_button()
-
+	-- Where to add
 	add_index = get_size(self.items) + get_size(self.backpack_items)
-	print(add_index)
 
+	-- Some sizes for positioning
 	local height = screen:get_height()
 	local width = screen:get_width()
-	print(height.. " " .. width)
 
-	table.insert(self.buttons, add_index, Button(self.button_inactive, self.button_active, self.button_inactive, true, false))
+	-- Add to table of buttons
+	table.insert(self.buttons, add_index, Button(self.background_color, self.button_active, self.background_color, true, false))
 
+	-- Calculations of where to draw the button
 	j = 1
 	row = 1
 	while j < add_index do
@@ -120,15 +149,39 @@ function Store:insert_button()
 		end
 	end
 	own_items = 1
-	self.button_grid:insert_button({x = width/2+170+((add_index-1)-2*(row-1))*180+own_items*140,
-															y = 115 + 140*(row-1-0.8*own_items) + own_items*175}, self.button_size, self.buttons[add_index],add_index)
+
+	table.insert(self.item_positions, add_index, {x = width/2+170+((add_index-1)-2*(row-1))*180+own_items*140,
+															y = 115 + 140*(row-1-0.8*own_items) + own_items*175})
+	-- Add to button grid
+	self.button_grid:insert_button(self.item_positions[add_index], self.button_size, self.buttons[add_index],add_index)
 
 end
 
+-- Function to remove a button, as an item has been sold
+-- @param item_index to know item is actually removed
+function Store:remove_button(index)
+
+	-- Get the index of the button to be removed
+	remove_index = get_size(self.items) + get_size(self.backpack_items) + 1
+
+	-- Remove it from the button table
+	table.remove(self.buttons, remove_index)
+	-- Remove it from the images to be drawn
+	table.remove(self.item_positions, remove_index)
+	-- Remove the picture
+	table.remove(self.item_images, index)
+	-- Remove it from the button_grid
+	self.button_grid:remove_button(remove_index, index)
+end
+
+-- Render view function
+-- @param surface is the surface to draw on
 function Store:render(surface)
 	-- Creates local variables for height and width
 	local height = screen:get_height()
 	local width = screen:get_width()
+
+	self:dirty(false)
 
 	-- Resets the surface and draws the background
 	surface:clear(self.background_color)
@@ -139,23 +192,20 @@ function Store:render(surface)
 	-- Print the buttons
 	self.button_grid:render(surface)
 
-	-- Instance remote control and mapps it to the buttons
-	local callback = utils.partial(self.action_made, self)
+	-- Print the items
+	for i = 1, #self.item_images do
+		surface:copyfrom(self.item_images[i], nil, self.item_positions[i], true)
+	end
 
-	self.button_grid:render(surface)
-
-	-- Instance remote control and mapps it to the button
-	self:listen_to(
-		event.remote_control,
-		"button_release",
-		callback
-	)
-
-	self:dirty(false)
 
 
 end
 
+
+
+-- Function that handles the purchase of an item with
+-- checks if the item is allowed to be purchased
+-- @param item_index is the index of the item to be purchased
 function Store:purchase_item(item_index)
 
 	-- Some variables for ease
@@ -187,17 +237,39 @@ function Store:purchase_item(item_index)
 
 	end
 
+	-- If we are allowed to purchase then...
 	if can_buy then
+		-- Change the balance of the profile
 		self.profile:modify_balance(-1*item_price)
+		-- Add the item to the profiles inventory
 		self.profile:add_item(item:get_id())
+		-- Get the new list of items
 		self.backpack_items = self.backendstore:returnBackPackItems(self.profile:get_inventory())
+		-- Insert a new button
 		self:insert_button()
+
+		self:dirty(false)
 	end
 
 end
 
-function Store:sell_item(item)
+-- Function that handles the sale of an item
+-- @param item_index is the index item that has been sold
+function Store:sell_item(item_index)
 
+	-- Local variables; which is sold and the price it's sold for
+	local item = self.backpack_items[item_index]
+	local sale_price = self.backendstore:returnOfferPrice(item, self.current_city)
+	-- Add the sale price to the profiles balance
+	self.profile:modify_balance(sale_price)
+	-- Remove the item from the profile's backpack
+	self.profile:remove_item(item:get_id())
+	-- Get the new list of backpack items
+	self.backpack_items = self.backendstore:returnBackPackItems(self.profile:get_inventory())
+	-- Remove a button
+	self:remove_button(item_index+get_size(self.items))
+
+	self:dirty(false)
 end
 
 function Store:action_made(button)
@@ -207,7 +279,6 @@ function Store:action_made(button)
 
 		-- Get the current
 		selected_index = self.button_grid:get_selected()
-		print(selected_index)
 
 		if selected_index <= get_size(self.items) then
 
@@ -215,7 +286,7 @@ function Store:action_made(button)
 
 		elseif selected_index <= (get_size(self.items) + get_size(self.backpack_items)) then
 
-			sell_off = sell_item(selected_index-get_size(self.items))
+			sell_off = self:sell_item(selected_index-get_size(self.items))
 
 		else
 
@@ -225,8 +296,15 @@ function Store:action_made(button)
 
 	end
 
+	self:listen_to(event.remote_control, "button_release", function() self:dirty() end)
+
+	self:listen_to(event.remote_control,"button_release",self.callback)
+
+	self.item_images = self:loadItemImages()
+
+
 end
 
--- Function that purchases the item
+
 
 return Store

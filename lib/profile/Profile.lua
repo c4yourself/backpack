@@ -212,6 +212,26 @@ end
 function Profile:add_item(item)
 	table.insert(self.inventory, item)
 end
+
+-- Remove an item from the inventory
+-- @param item representing the id of the item
+function Profile:remove_item(item)
+	local index = 0
+
+	for i in pairs(self.inventory) do
+		if i == item then
+			index = i
+		end
+	end
+
+	if index > 0 then
+		table.remove(self.inventory, index)
+	else
+		error("No item to remove found")
+	end
+
+end
+
 -- set id from server
 -- @param id representing id of the profile from server database
 function Profile:set_id(id)

@@ -31,12 +31,8 @@ function ButtonGrid:__init(remote_control)
     self.event_listener = event.remote_control
   end
 
-  local callback = utils.partial(self.press, self)
-  self:listen_to(
-  self.event_listener,
-  "button_press",
-  callback
-  )
+  self.callback = utils.partial(self.press, self)
+  self:listen_to(self.event_listener,"button_release",self.callback )
 	--
 	-- local dirtycallback = function()
 	-- 	self:dirty(false)
@@ -55,7 +51,7 @@ end
 -- @param button The button instance
 -- @throws Error If the button cross the boundaries of the surface
 function ButtonGrid:add_button(position, button_size, button)
-	print(position.x .. " " .. position.y)
+
 -- chenck if the button across the screen boundaries
 	if position.x >= 0 and button_size.width >= 0
 		 and position.x + button_size.width < 1280
@@ -75,6 +71,13 @@ function ButtonGrid:add_button(position, button_size, button)
 	end
 end
 
+-- Used to insert a new button on a specific index
+-- Primarily created for the store view
+-- @param position The button's position on the surface
+-- @param button_size The size of button
+-- @param button The button instance
+-- @param index The index where to add the new button
+-- @throws Error If the button cross the boundaries of the surface
 function ButtonGrid:insert_button(position, button_size, button, index)
 	if position.x >= 0 and button_size.width >= 0
 		 and position.x + button_size.width < 1280
@@ -90,6 +93,25 @@ function ButtonGrid:insert_button(position, button_size, button, index)
 		 else
 			 error("screen boundary error")
 		 end
+		 self:dirty()
+end
+
+-- Used to remove an existing button from the grid
+-- Primarily created for the store view
+-- @param index The index where to remove the button
+-- @param remove_index The index that is actually removed
+-- @throws Error in the button does not exist
+function ButtonGrid:remove_button(index, remove_index)
+
+	if index <= #self.button_list then
+		table.remove(self.button_list, index)
+		if remove_index == index then
+			self.button_list[index-1].button:select(true)
+		end
+	else
+		error("Trying to remove a button out of range")
+	end
+	self:dirty()
 
 end
 
@@ -119,48 +141,21 @@ function ButtonGrid:press(button)
 
     if button == "down" then
 			self:indicate_downward(self.button_indicator)
-			self:dirty()
+			self:dirty(false)
 		elseif button == "up" then
 			self:indicate_upward(self.button_indicator)
-			self:dirty()
+			self:dirty(false)
 		elseif button == "right" then
 			self:indicate_rightward(self.button_indicator)
-			self:dirty()
+			self:dirty(false)
 		elseif button == "left" then
 			self:indicate_leftward(self.button_indicator, "left")
-			self:dirty()
-		elseif button == "1" then
-				--Instanciate a numerical quiz
-				local numerical_quiz_view = NumericalQuizView()
-				--Stop listening to everything
-				-- TODO
-				-- Start listening to the exit event, which is called when the user
-				-- exits a quiz
-
-				--Update the view
-				numerical_quiz_view:render(screen)
-				-- TODO This should be done by a subsurface in the final version
-				gfx.update()
-		elseif button == "2" then
-				multiplechoice_quiz.render(screen)
-				gfx.update()
-		elseif button == "3" then
-				sys.stop()
-
+			self:dirty(false)
 		elseif button == "ok" then
 
-			for i=1, #self.button_list do
-				if self.button_list[i].button:is_selected() == true then
-					if self.button_list[i].button.transfer_path ~= nil then
-					self:display_next_view(self.button_list[i].button.transfer_path)
-				--	gfx.update()
-					break
-					end
-				end
-	end
-end
+		end
 
-
+		self:listen_to(self.event_listener,"button_release",self.callback)
 	collectgarbage()  --ensure that memory-leak does not occur
 
 end
@@ -172,7 +167,8 @@ function ButtonGrid:render(surface)
 -- If no button is selected when this button_grid is created,
 -- then the first button in the list will be selected.
 -- The indicator always points to the selected button
-self:dirty(false)
+
+	self:dirty(false)
 
 	if self.start_indicator == true then
 		for k = 1 , #self.button_list do
