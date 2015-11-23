@@ -32,12 +32,9 @@ function Store:__init(remote_control, city, profile)
 	self.background_path = ""
 	self.current_city = city
 	self.button_grid = ButtonGrid(remote_control)
-	self.cashier = gfx.loadpng("data/images/cashier1.png")
-	self.shelf = gfx.loadpng("data/images/shelf.png")
+	self.cashier = gfx.loadpng("data/images/cashier.png")
+	self.shelf = gfx.loadpng("data/images/shelf1.png")
 	self.backpack = gfx.loadpng("data/images/backpack.png")
-	-- Test item
-	self.item1 = gfx.loadpng("data/images/store_items/item1.png")
-
 	self.backendstore = BackEndStore()
 	self.profile = profile
 	self.remote_control = remote_control
@@ -61,8 +58,8 @@ function Store:__init(remote_control, city, profile)
 	self.backpack_items = self.backendstore:returnBackPackItems(self.profile:get_inventory())
 
 	-- Create the number of buttons that correspond to items in backpack + items for sale
-	self.button_size = {width = 3.5*width/45, height = 3.5*width/45}
-	print(self.button_size.width.. " ".. self.button_size.height )
+	self.button_size = {width = 2.5*width/45, height = 2.5*width/45}
+	print(self.button_size.width.." ".. self.button_size.height)
 	self.buttons = {}
 	self.buttons[1] = Button(self.background_color, self.button_active, self.background_color, true, true)
 	k = 2
@@ -81,8 +78,8 @@ function Store:__init(remote_control, city, profile)
 	j = 1
 	own_items = 0
 	while j <= get_size(self.items) + get_size(self.backpack_items) do
-		self.item_positions[j] = {x = width/2+170+((j-1)-2*(row-1))*180+own_items*140,
-																y = 100 + 140*(row-1-0.8*own_items) + own_items*175}
+		self.item_positions[j] = {x = width/2+((j-1)-2*(row-1))*130+own_items*70,
+																y = 205 + 105*(row-1-0.8*own_items) + own_items*125}
 		self.button_grid:add_button(self.item_positions[j], self.button_size, self.buttons[j])
 		j = j+1
 		if (j-1) % 2 == 0 then
@@ -97,7 +94,7 @@ function Store:__init(remote_control, city, profile)
 	self.item_images = self:loadItemImages()
 
 	-- Add exit button
-	self.button_grid:add_button({x = 200,y = 650}, {width = 6*width/45,height = 2*width/45}, self.buttons[k])
+	self.button_grid:add_button({x = 720,y = 650}, {width = 6*width/45,height = 2*width/45}, self.buttons[k])
 
 	-- Add to view
 	self.add_view(self.button_grid, false)
@@ -149,9 +146,9 @@ function Store:insert_button()
 		end
 	end
 	own_items = 1
-
-	table.insert(self.item_positions, add_index, {x = width/2+170+((add_index-1)-2*(row-1))*180+own_items*140,
-															y = 115 + 140*(row-1-0.8*own_items) + own_items*175})
+	print("majs")
+	table.insert(self.item_positions, add_index, {x = width/2+((add_index-1)-2*(row-1))*130+own_items*70,
+															y = 205 + 105*(row-1-0.8*own_items) + own_items*125})
 	-- Add to button grid
 	self.button_grid:insert_button(self.item_positions[add_index], self.button_size, self.buttons[add_index],add_index)
 
@@ -177,6 +174,8 @@ end
 -- Render view function
 -- @param surface is the surface to draw on
 function Store:render(surface)
+
+	self:destroy()
 	-- Creates local variables for height and width
 	local height = screen:get_height()
 	local width = screen:get_width()
@@ -185,9 +184,9 @@ function Store:render(surface)
 
 	-- Resets the surface and draws the background
 	surface:clear(self.background_color)
-	surface:copyfrom(self.cashier, nil, {x = 0, y = 80}, true)
-	surface:copyfrom(self.shelf, nil, {x=width/2,y=100}, true)
-	surface:copyfrom(self.backpack, nil, {x=width/2+40, y = 450}, true)
+	surface:copyfrom(self.cashier, nil, {x = 0, y = 280}, true)
+	surface:copyfrom(self.shelf, nil, {x=width/2-150,y=200}, true)
+	surface:copyfrom(self.backpack, nil, {x=width/2-140, y = 450}, true)
 
 	-- Print the buttons
 	self.button_grid:render(surface)
@@ -281,7 +280,7 @@ function Store:action_made(button)
 		selected_index = self.button_grid:get_selected()
 
 		if selected_index <= get_size(self.items) then
-
+			print("kalas")
 			purchase = self:purchase_item(selected_index)
 
 		elseif selected_index <= (get_size(self.items) + get_size(self.backpack_items)) then
@@ -296,15 +295,18 @@ function Store:action_made(button)
 
 	end
 
-	self:listen_to(event.remote_control, "button_release", function() self:dirty() end)
-
-	self:listen_to(event.remote_control,"button_release",self.callback)
-
 	self.item_images = self:loadItemImages()
 
 
 end
 
 
+
+function Store:destroy()
+  --view.View.destroy(self)
+  --for k,v in pairs(self.images) do
+     --self.images[k]:destroy()
+  --end
+end
 
 return Store

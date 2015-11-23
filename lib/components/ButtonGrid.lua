@@ -155,7 +155,6 @@ function ButtonGrid:press(button)
 
 		end
 
-		self:listen_to(self.event_listener,"button_release",self.callback)
 	collectgarbage()  --ensure that memory-leak does not occur
 
 end

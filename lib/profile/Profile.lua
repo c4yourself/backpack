@@ -217,9 +217,11 @@ end
 -- @param item representing the id of the item
 function Profile:remove_item(item)
 	local index = 0
+	print(item)
 
-	for i in pairs(self.inventory) do
-		if i == item then
+	for i,j in pairs(self.inventory) do
+		print(j)
+		if j == item then
 			index = i
 		end
 	end
