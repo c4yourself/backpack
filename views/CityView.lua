@@ -19,12 +19,12 @@ local CityView = class("CityView", view.View)
 
 --- Constructor for CityView
 -- @param event_listener Remote control to listen to
-function CityView:__init(remote_control)
+function CityView:__init(remote_control, city)
 	view.View.__init(self)
 	self.background_path = ""
 	self.profile = {name = "Mohamed", level = 5, experience = 300, cash = 500}
-	self.city = {name = "Paris"}
 	self.button_grid = ButtonGrid(remote_control)
+	self.city = city
 
 	local text_color = Color(111, 189, 88, 255)
 	-- Create some button colors
@@ -84,9 +84,9 @@ function CityView:__init(remote_control)
 
 	-- Preload images for increased performance
 	self.images = {
-		paris = gfx.loadpng("data/images/Paris.png"),
+		paris = gfx.loadpng("data/images/"..self.city.name..".png"),
 		coin = gfx.loadpng("data/images/coinIcon.png"),
-		paris_selected = gfx.loadpng("data/images/ParisIconSelected.png")
+		paris_selected = gfx.loadpng("data/images/"..self.city.name.."IconSelected.png")
 	}
 
 	-- Premultiple images with transparency to make them render properly
@@ -160,6 +160,7 @@ local width = surface:get_width()
 	self:dirty(false)
 end
 
+-- Destroys all images and views when leaving cityview
 function CityView:destroy()
 	view.View.destroy(self)
 	for k,v in pairs(self.images) do
