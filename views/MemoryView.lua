@@ -89,16 +89,12 @@ function MemoryView:__init()
         local cc3 = 255
         local cc4 = 255
         if self.memory.cards[i] % 4 == 0 then
-          print("4")
           cc4 = (self.memory.cards[i] * 50) % 255
         elseif self.memory.cards[i] % 3 == 0 then
-          print("3")
           cc3 = (self.memory.cards[i] * 50) % 255
         elseif self.memory.cards[i] % 2 == 0 then
-          print("2")
           cc2 = (self.memory.cards[i] * 50) % 255
         else
-          print("1")
           cc1 = (self.memory.cards[i] * 50) % 255
         end
 
