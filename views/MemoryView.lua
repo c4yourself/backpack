@@ -249,7 +249,7 @@ end
 
 -- Function to set pairs accoriding to profile experience
 function MemoryView:_set_pairs()
-	local exp = self.profile:get_experience() + 350
+	local exp = self.profile:get_experience()
 	if exp <= 100 then
 		self.pairs = 4
 	elseif exp <=200 then
@@ -261,5 +261,13 @@ function MemoryView:_set_pairs()
 	end
 end
 
+function MemoryView:destroy()
+  print("in destroy")
+  view.View.destroy(self)
+  print("in destroy 2")
+  -- for k,v in pairs(self.images) do
+  --    self.images[k]:destroy()
+  -- end
+end
 
 return MemoryView
