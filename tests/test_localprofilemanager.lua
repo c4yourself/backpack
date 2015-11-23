@@ -6,6 +6,6 @@ local Testlocalprofilemanager = {}
 
 
 function Testlocalprofilemanager:setUp()
-  self.profile = Profile("HuanyuLi","lihuanyuasas@163.com","1992-06-29","male","lodon")
+	self.profile = Profile("HuanyuLi","lihuanyuasas@163.com","1992-06-29","male","lodon")
 end
 return TestProfile

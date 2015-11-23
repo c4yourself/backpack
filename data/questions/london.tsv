@@ -24,19 +24,19 @@ multiple_choice	Which of the following cities in South America?	Rio de Janeiro;S
 multiple_choice	Which of the following cities in Oceania?	Sydney;Auckland;Melbourne;Brisbane	1 2 3 4
 numeric	How long is Nile river which is the longest in the world?(km)	6670
 numeric	How high is Qomolangma which is the highest in the world?(m)	8844
-numeric	How many countries and regions are there in the world?	230
-numeric	How many countries and regions are there in Europe?	45
-numeric	How many countries and regions are there in Asia?	49
-numeric	How many countries and regions are there in North America?	28
-numeric	How many countries and regions are there in South America?	13
-numeric	How many countries and regions are there in Africa?	56
-numeric	How many countries and regions are there in Oceania?	30
-city_tour1	When was The Gateway of India inaugurated?	1926;1924;1928;1932	2
-city_tour1	Who was the architect behind the design?	Paul Waterhouse;George Wittet;Frank Lloyd Wright;Elisabeth Scott	2
-city_tour1	It was built specifically as a welcome to a British king, whicho one?	George V;Edward VII;Edward VIII;George III	1
-city_tour2	According to legends, Haji Ali once jabbed a finger into the soil making what gush out?	Gold;Water;Wine;Oil	4
-city_tour2	Why did they construct the Dargah at that specific place?	Haji Ali's casket float a shore at that spot;Haji Ali was born there;Haji Ali's famility lived there;It was a place that had been blessed by Haji Ali	1
-city_tour2	The Dargah is built on a tiny islet in middle of Worli Bay. How far out from the coast is located?	200 meters;330 meters;500 meters;420 meters	3
-city_tour3	The station was designed after a masterpiece watercolor sketch, who did this painting?	Leonardo Da Vinci;Picasso;Axel Haig;Rembrandt	3
-city_tour3	The railway station was renamed to its current name in 1996. What was its previous name?	Mumbai railways;Victoria terminus; Terminus of India; Central Mumbai Terminus	2
-city_tour3	How many years did it take to build the station?	12;8;14;10	4
+numeric	How many countries and regions in the world?	230
+numeric	How many countries and regions in Europe?	45
+numeric	How many countries and regions in Asia?	49
+numeric	How many countries and regions in North America?	28
+numeric	How many countries and regions in South America?	13
+numeric	How many countries and regions in Africa?	56
+numeric	How many countries and regions in Oceania?	30
+city_tour1	What is the Big Ben?	A radio tower;An observatory;A clock tower;A Sculpture	3
+city_tour1	When was the building of Big Ben completed?	1865;1858;1823;1912	2
+city_tour1	What is the tower officially known as?	The London Tower;The Elizabeth tower;The Great Tower of Britain;The Big Clock of London	2
+city_tour2	In what area of London is the museum located?	Bloomsbury;Botany Bay;Bulls Cross;Bickley	1
+city_tour2	When was the British museum established?	1783;1765;1734;1753	4
+city_tour2	Which scientists collection was the museum based upon?	Leonardo Da Vinci;John Walsh;Sir Hans Sloane;Albert Einstein	3
+city_tour3	The Tower of London has another name, what is it?	The Fortress of the Queen;Her Majesty's Royal Palace and Fortress;Elizabeth's Tower;The Fortress of London	2
+city_tour3	The Tower of London is located next to a big river, which one?	River Brent;River Crane;River Thames;Salmons Brook;	3
+city_tour3	When was The Tower of London founded?	1038;1134;1048;1066	4

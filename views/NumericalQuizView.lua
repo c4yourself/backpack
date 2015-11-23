@@ -191,7 +191,7 @@ function NumericQuizView:render(surface)
 				-- The user has finished the quiz
 				self.views.num_input_comp:blur()
 				self.quiz_flag = true
-				local output = "You answered " ..
+				local output = "You answered "
 								.. tostring(self.num_quiz.correct_answers)
 								.. " questions correctly."
 				self.question_area_font:draw(self.question_area, {x = 0, y = 0,
@@ -204,6 +204,8 @@ function NumericQuizView:render(surface)
 		self.progress_counter_area:clear(self.progress_counter_color)
 		local current_question = self.num_quiz.current_question
 		local quiz_length = #self.num_quiz.questions
+		local current_question = math.min(self.num_quiz.current_question,
+												quiz_length)
 		self.question_area_font:draw(self.progress_counter_area,
 									{x = 0, y = 0, height = self.counter_height,
 									width = self.counter_width},

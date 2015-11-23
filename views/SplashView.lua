@@ -15,13 +15,16 @@ local SplashView = class("SplashView", view.View)
 function SplashView:__init(image_path, target_view, view_manager)
 	view.View.__init(self)
 
-	self.splash_image = gfx.loadpng(utils.absolute_path(image_path))
+	local absolute_path = utils.absolute_path(image_path)
+	logger.trace("Loading image", absolute_path)
+
+	self.splash_image = gfx.loadpng(image_path)
 	self.target_view = target_view
 	self.view_manager = view_manager
 
 	self.background_color = Color(255, 255, 255, 255)
 	self.current_opacity = 0
-	self.opacity_step = 25
+	self.opacity_step = 5
 end
 
 function SplashView:destroy()

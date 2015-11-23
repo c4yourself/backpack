@@ -131,7 +131,10 @@ function surface:copyfrom(src_surface, src_rectangle, dest_rectangle, blend_opti
 		if blend_option ~= false then
 			love.graphics.setBlendMode("alpha")
 		else
-			love.graphics.setBlendMode("replace")
+			if not pcall(love.graphics.setBlendMode, "replace") then
+				logger.warn(
+					"Replace blend mode not supported by this version of Love")
+			end
 		end
 
 		love.graphics.draw(
@@ -169,10 +172,11 @@ end
 --
 -- @param x X position (starting at 0)
 -- @param y Y position (starting at 0)
--- @return red, green, blue, alpha
+-- @return `{r = red, g = green, b = blue, b = alpha}`
 -- @zenterio
 function surface:get_pixel(x, y)
-	return self.image_data:getPixel(x, y)
+	local r, g, b, a = self.image_data:getPixel(x, y)
+	return {r = r, g = g, b = b, a = a}
 end
 
 --- Set color of pixel.
@@ -247,7 +251,6 @@ end
 -- @param path Path to the image
 -- @local
 function surface:loadImage(path)
-	logger.trace(path)
 	local tempFile = io.open(path,"rb")
 	if tempFile then
 		local imageStream = tempFile:read("*a")
@@ -258,7 +261,6 @@ function surface:loadImage(path)
 	else
 		logger.error("Error loading image - '"..path.."'")
 	end
-
 end
 
 --- Emulator function to write text on surface.

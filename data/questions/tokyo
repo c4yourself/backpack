@@ -23,11 +23,20 @@ multiple_choice	Which of the following cities in North America?	New York;Seattle
 multiple_choice	Which of the following cities in South America?	Rio de Janeiro;Santiago;Washington;Beijing	1 2
 multiple_choice	Which of the following cities in Oceania?	Sydney;Auckland;Melbourne;Brisbane	1 2 3 4
 numeric	How long is Nile river which is the longest in the world?(km)	6670
-numeric	How high is Qomolangma whcih is the highest in the world?(m)	8844
-numeric	How many countries and regions in the world?	230
-numeric	How many countries and regions in Europe?	45
-numeric	How many countries and regions in Asia?	49
-numeric	How many countries and regions in North America?	28
-numeric	How many countries and regions in South America?	13
-numeric	How many countries and regions in Africa?	56
-numeric	How many countries and regions in Oceania?	30
+numeric	How high is Qomolangma which is the highest in the world?(m)	8844
+numeric	How many countries and regions are there in the world?	230
+numeric	How many countries and regions are there in Europe?	45
+numeric	How many countries and regions are there in Asia?	49
+numeric	How many countries and regions are there in North America?	28
+numeric	How many countries and regions are there in South America?	13
+numeric	How many countries and regions are there in Africa?	56
+numeric	How many countries and regions are there in Oceania?	30
+city_tour1	The Tokyo Skytree is the tallest building in Japan, how tall is it?	634 meters (2080 feet);645 meters (2116 feet);673 meters (2208 feet);643 meters (2109 feet)	1
+city_tour1	The Tokyo Skytree is the second tallest structure in the world, which structure is the tallest?	The Canton Tower;The Eiffel Tower;The Empire State Building;Burj Khalifa	4
+city_tour1	The Tokyo Skytress opened to the Public in May 2012, but when was the structure finished?	February 2010;February 2012;February 2011;February 2009	2
+city_tour2	What type of temple is Sensõ-ji?	A Hindu Temple;A Muslim Temple;A Buddhist Temple;A Christian Temple	3
+city_tour2	The Sensõ-ji temple is know for a very specific attribute, which one?	It's the biggest temple in the world;The Temple was once a famous restaurant;It's where all the Japanese emperors are buried;It's the oldest temple in Tokyo	1
+city_tour2	During the World War II the temple was destroyed by bombings. It was later rebuilt and is now a symbol of?	Love & Compassion;Bravery & Patience;Rebirth & Peace;Strength & Courage	3
+city_tour3	How many themes does Tokyo Disneyland have?	10;9;7;8	3
+city_tour3	How many visitors did Tokyo Disneyland have in 2013?	18.2 million;17.2 million;12.4 million;20.2 million	2
+city_tour3	It is the second most visited theme park in the world, which one is the most visited one?	Walt Disney World Resort, Florida;Disneyland, Paris;Disneyland, Hong Kong;Disneyland Park, Anaheim	1
