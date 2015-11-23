@@ -159,12 +159,13 @@ function CityView:load_view(button)
 		local numerical_quiz_view = NumericalQuizView()
 		--Stop listening to everything
 		self:stop_listening(event.remote_control)
-		self.button_grid:pause()
+		self.button_grid:stop_listening()
+		-- TODO Blur button grid
 		-- Start listening to the exit event, which is called when the user
 		-- exits a quiz
 		local numerical_exit_callback = function()
 			utils.partial(view.view_manager.set_view, view.view_manager)(self)
-			self.button_grid:unpause()
+			-- TODO Focus buttongrid
 			gfx.update()
 		end
 		self:listen_to(

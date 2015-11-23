@@ -148,16 +148,6 @@ end
 
 end
 
---- Makes the ButtonGrid stop listening to input until unpaused
-function ButtonGrid:pause()
-	self.paused = true
-end
-
---- Makes the ButtonGrid start listening to input until paused
-function ButtonGrid:unpause()
-	self.paused = false
-end
-
 --- Providing a subsurface to each button,
 -- so the button can be rendered with its own render function.
 -- If the button has text, then display the text as well
