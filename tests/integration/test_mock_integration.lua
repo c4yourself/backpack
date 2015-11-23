@@ -39,8 +39,8 @@ function TestMockIntegration:test_subsurface()
 end
 
 function TestMockIntegration:test_something()
-		local city_view = CityView(event.remote_control)
-	view.view_manager:set_view(city_view)
+	--local city_view = CityView(event.remote_control)
+	--view.view_manager:set_view(city_view)
 end
 
 
