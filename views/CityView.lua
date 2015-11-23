@@ -19,12 +19,12 @@ local CityView = class("CityView", view.View)
 
 --- Constructor for CityView
 -- @param event_listener Remote control to listen to
-function CityView:__init(remote_control, city)
+function CityView:__init(remote_control, profile)
 	view.View.__init(self)
 	self.background_path = ""
-	self.profile = {name = "Mohamed", level = 5, experience = 300, cash = 500}
+	--Instance of the  current profile, can be used to get name, sex etc
+	self.profile = profile
 	self.button_grid = ButtonGrid(remote_control)
-	self.city = city
 
 	local text_color = Color(111, 189, 88, 255)
 	-- Create some button colors
@@ -82,11 +82,13 @@ function CityView:__init(remote_control, city)
 	self.button_grid:add_button(position_8, button_size, button_8)
 	self.button_grid:add_button(city_tour_position, city_tour_size, city_tour_button)
 
+
 	-- Preload images for increased performance
+
 	self.images = {
-		paris = gfx.loadpng("data/images/"..self.city.name..".png"),
+		paris = gfx.loadpng("data/images/"..self.profile.city.name..".png"),
 		coin = gfx.loadpng("data/images/coinIcon.png"),
-		paris_selected = gfx.loadpng("data/images/"..self.city.name.."IconSelected.png")
+		paris_selected = gfx.loadpng("data/images/"..self.profile.city.name.."IconSelected.png")
 	}
 
 	-- Premultiple images with transparency to make them render properly
@@ -140,10 +142,10 @@ local width = surface:get_width()
 
 	-- Add info to statusbar
 	city_view_large_font:draw(surface,  {x=10, y=10}, self.profile.name) -- Profile name
-	city_view_small_font:draw(surface, {x=200, y=15}, "Level: " .. tostring(self.profile.level)) -- Profile level
-	city_view_small_font:draw(surface, {x=440, y=15}, tostring(self.profile.experience) .. "/500") -- Profile experience
-	city_view_small_font:draw(surface, {x=width-100, y=15}, tostring(self.profile.cash)) -- Profile cash
-	city_view_large_font:draw(surface, {x=width/2, y=15}, self.city.name, center) -- City name
+	city_view_small_font:draw(surface, {x=200, y=15}, "Level: 3") -- Profile level
+	city_view_small_font:draw(surface, {x=440, y=15}, tostring(self.profile.experience .. "/500")) -- Profile experience
+	city_view_small_font:draw(surface, {x=width-100, y=15}, tostring(self.profile.balance)) -- Profile cash
+	city_view_large_font:draw(surface, {x=width/2, y=15}, self.profile.city.name, center) -- City name
 
 	surface:copyfrom(self.images.coin, nil, {x = width-145, y = 10, width = 30, height = 30}) -- Coin
 
@@ -205,7 +207,6 @@ function CityView:load_view(button)
 		gfx.update()
 
 		local exit_view = function()
-
 				self.button_grid:focus()
 				CT:destroy()
 				self:dirty(true)
