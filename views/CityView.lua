@@ -6,7 +6,7 @@
 local Button = require("lib.components.Button")
 local ButtonGrid=require("lib.components.ButtonGrid")
 local class = require("lib.classy")
---local multiplechoice_quiz = require("views.multiplechoice_quiz")
+local MultipleChoiceView = require("views.MultipleChoiceView")
 local NumericalQuizView = require("views.NumericalQuizView")
 local CityTourView = require("views.CityTourView")
 local Color = require("lib.draw.Color")
@@ -159,8 +159,7 @@ function CityView:load_view(button)
 		local numerical_quiz_view = NumericalQuizView()
 		--Stop listening to everything
 		self:stop_listening(event.remote_control)
-		self.button_grid:stop_listening()
-		-- TODO Blur button grid
+		self.button_grid:stop_listening() -- TODO Use button_grid:blur instead
 		-- Start listening to the exit event, which is called when the user
 		-- exits a quiz
 		local numerical_exit_callback = function()
@@ -187,7 +186,34 @@ function CityView:load_view(button)
 		-- TODO This should be done with a subsurface in the final version
 		gfx.update()
 	elseif button == "2" then
-		multiplechoice_quiz.render(screen)
+		local mult_quiz_view = MultipleChoiceView()
+		--Stop listening to everything
+		self:stop_listening(event.remote_control)
+		self.button_grid:stop_listening() -- TODO Use button_grid:blur instead
+		-- Start listening to the exit event, which is called when the user
+		-- exits a quiz
+		local mult_choice_exit_callback = function()
+			utils.partial(view.view_manager.set_view, view.view_manager)(self)
+			gfx.update()
+		end
+		self:listen_to(
+			mult_quiz_view,
+			"exit",
+			mult_choice_exit_callback
+		)
+
+		-- Make the city view listen for the "dirty" event
+		local mult_choice_dirty_callback = function()
+			mult_quiz_view:render(screen)
+		end
+		self:listen_to(
+			mult_quiz_view,
+			"dirty",
+			mult_choice_dirty_callback
+		)
+		--Update the view
+		mult_quiz_view:render(screen)
+		-- TODO ^This should be done by a subsurface in the final version
 		gfx.update()
 	elseif button == "3" then
 		sys.stop()
