@@ -13,30 +13,57 @@ end
 
 --- Constructor for ProfileSynchronizer
 function BackEndStore:__init()
---[[
-	self.a = Item(1, "Baguette", "Paris", "Good", "data/images/item_1.png",5)
-	self.b = Item(2, "Barret", "Paris", "Fancy", "data/images/item_2.png",45)
-	self.c = Item(3, "Sushi", "Tokyo", "Raw", "data/images/item_3.png",15)
-	self.d = Item(4, "Knife", "Tokyo", "Sharp", "data/images/item_4.png",78)
 
-	self.item_list = {self.a,self.b,self.c,self.d}]]
 	-- List of all items
 
 	self.item_list = {Item(1, "Baguette", "Paris", "Good", "data/images/store_items/item1.png",5),
 	 									Item(2, "Beret", "Paris", "Fancy", "data/images/store_items/item2.png",45),
 										Item(3, "Eiffel Tower", "Paris", "So high", "data/images/store_items/item3.png",90),
-										Item(4, "Scooter", "Paris", "Fancy", "data/images/store_items/item4.png",450),
-										Item(5, "Sushi", "Tokyo", "Raw", "data/images/store_items/item1.png",15),
-										Item(6, "Knife", "Tokyo", "Sharp", "data/images/store_items/item1.png",78),
-										Item(7, "Sushi", "Tokyo", "Raw", "data/images/store_items/item1.png",15),
-										Item(8, "Sushi", "Tokyo", "Raw", "data/images/store_items/item1.png",15)}
+										Item(4, "Scooter", "Paris", "Convenient", "data/images/store_items/item4.png",450),
+										Item(5, "Sushi", "Tokyo", "Raw", "data/images/store_items/item5.png",35),
+										Item(6, "Cherry Blossom", "Tokyo", "Lovely", "data/images/store_items/item6.png",20),
+										Item(7, "Game Boy", "Tokyo", "Fun", "data/images/store_items/item7.png",175),
+										Item(8, "Samurai Sward", "Tokyo", "Sharp", "data/images/store_items/item8.png",320),
+										Item(9, "Curry", "Bombay", "Raw", "data/images/store_items/item9.png",5),
+										Item(10, "Buddah", "Bombay", "Peaceful", "data/images/store_items/item10.png",85),
+										Item(11, "Rickshaw", "Bombay", "Comfy", "data/images/store_items/item11.png",500),
+										Item(12, "Cow", "Bombay", "Holy", "data/images/store_items/item12.png",600),
+										Item(13, "Saffron", "Kairo", "Yellow", "data/images/store_items/item13.png",40),
+										Item(14, "Carpet", "Kairo", "Maybe flying", "data/images/store_items/item14.png",150),
+										Item(15, "Pyramid", "Kairo", "Huge", "data/images/store_items/item15.png",75),
+										Item(16, "Genei lamp", "Kairo", "Wishful", "data/images/store_items/item16.png",110),
+										Item(17, "Telephone box", "London", "Connected", "data/images/store_items/item17.png",150),
+										Item(18, "Tea", "London", "British", "data/images/store_items/item18.png",15),
+										Item(19, "Umbrella", "London", "Dry", "data/images/store_items/item19.png",45),
+										Item(20, "Big Ben", "London", "Timely", "data/images/store_items/item20.png",65),
+										Item(21, "Apple", "New York", "The Big...", "data/images/store_items/item21.png",10),
+										Item(22, "Statue of Liberty", "New York", "Free", "data/images/store_items/item22.png",45),
+										Item(23, "T-Shirt", "New York", "Touristy", "data/images/store_items/item23.png",80),
+										Item(24, "Hamburger", "New York", "Tasty", "data/images/store_items/item24.png",70),
+										Item(25, "Jesus Statue", "Rio De Jeneiro", "Saved", "data/images/store_items/item25.png",86),
+										Item(26, "Sugarloaf Mountain", "Rio De Jeneiro", "Sweet", "data/images/store_items/item26.png",70),
+										Item(27, "Football", "Rio De Jeneiro", "Kicked", "data/images/store_items/item27.png",50),
+										Item(28, "Carnival Mask", "Rio De Jeneiro", "Disguised", "data/images/store_items/item28.png",80),
+										Item(29, "Kangaroo", "Sydney", "Hoppy", "data/images/store_items/item29.png",165),
+										Item(30, "Surfing Board", "Sydney", "Hoppy", "data/images/store_items/item30.png",100),
+										Item(31, "Crocodile", "Sydney", "Edgy", "data/images/store_items/item31.png",170),
+										Item(32, "Opera House", "Sydney", "Clammy", "data/images/store_items/item32.png",65)
+					}
 
 
 
 
-	self.city_list = {["Paris"] = 1, ["Tokyo"] = 2}
+	self.city_list = {["Paris"] = 1, ["Tokyo"] = 2, ["Bombay"] = 3, ["Kairo"] = 4,
+										["London"] = 5, ["New York"]= 6, ["Rio De Jeneiro"] = 7, ["Sydney"] = 8}
 	-- Matrix for increase value between cities
-	self.city_multiplier = {{1, 1.5 }, {1.2, 1}}
+	self.city_multiplier = {{1, 1.8, 1.4, 1.5, 0.9, 1.2, 1.2, 1.1},
+													{1.2, 1, 1.3, 0.8, 1.3, 1.3, 0.9, 1.5},
+													{1.2, 1.4, 1, 1.1, 0.9, 1.4, 1.2, 1.5},
+													{1.3, 1.3, 0.8, 1, 0.9, 1.4, 1.6, 1.2},
+													{0.8, 1.4, 0.9, 1.0, 1, 1.3, 1.3, 1.2},
+													{0.9, 1.5, 1.3, 0.9, 1.1, 1, 1.3, 1.1},
+													{1.2, 1.6, 1.2, 1.1, 0.9, 1.2, 1, 1.6},
+													{0.8, 1.3, 1.1, 1.2, 1.4, 1.6, 1.2, 1}}
 
 end
 

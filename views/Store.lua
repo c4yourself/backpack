@@ -40,7 +40,7 @@ function Store:__init(remote_control, city, profile)
 	self.remote_control = remote_control
 	self.item_positions = {}
 	self.item_images = {}
-	self.message = {["message"] = ""}
+	self.message = {["message"] = "Select item to purchase or sell"}
 
 
 	-- Some colors
