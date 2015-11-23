@@ -46,6 +46,9 @@ function CityTourView:__init(remote_control, surface)
 										question = "How tall is the Eiffel Tower?",
 										answers = {"324 metres", "564 metres", "137 metres", "401 metres"}}
 
+	-- Create the tour image
+	self.tour_attraction_image = gfx.loadpng(self.attraction.pic_url)
+
 	-- Create answer buttons
 	local button_1 = button(button_color, color_selected, color_disabled,true, true)
 	local button_2 = button(button_color, color_selected, color_disabled,true, false)
@@ -73,6 +76,13 @@ function CityTourView:__init(remote_control, surface)
 	self.buttonGrid:add_button(position_3, button_size, button_3)
 	self.buttonGrid:add_button(position_4, button_size, button_4)
 
+	local callback = utils.partial(self.load_view, self)
+	self:listen_to(
+	event.remote_control,
+	"button_release",
+	callback
+	)
+
 	local button_callback = function()
 		self.buttonGrid:render(surface)
 		gfx.update()
@@ -94,7 +104,7 @@ function CityTourView:render(surface)
 	local text_indent = 100 -- Indents text area
 
 	-- Create the picture
-	surface:copyfrom(gfx.loadpng(utils.absolute_path(self.attraction.pic_url)) ,nil ,{ x = height/6, y = height/6, width = height*0.54*3/5, height = height*3/5})
+	surface:copyfrom(self.tour_attraction_image ,nil ,{ x = height/6, y = height/6, width = height*0.54*3/5, height = height*3/5})
 
 
 	-- Draw the fonts
@@ -116,7 +126,28 @@ function CityTourView:render(surface)
 
 	--Render buttons
 	self.buttonGrid:render(surface)
+	print("var i citytour")
+	--self:trigger("exit_view")
 end
+
+function CityTourView:destroy()
+	view.View.destroy(self)
+	self.tour_attraction_image:destroy()
+end
+
+	function CityTourView:load_view(button)
+
+		if button == "back" then
+
+		self:trigger("exit_view")
+			--Stop listening to everything
+			-- TODO
+			-- Start listening to the exit
+
+		end
+	end
+
+
 
 
 return CityTourView
