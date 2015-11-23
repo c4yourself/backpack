@@ -6,32 +6,38 @@
 local class = require("lib.classy")
 local View = require("lib.view.View")
 local view = require("lib.view")
-local TestKeyboardView = class("TestKeyboardView", View)
 local event = require("lib.event")
 local utils = require("lib.utils")
 local SubSurface = require("lib.view.SubSurface")
 local button= require("lib.components.Button")
 local button_grid	=	require("lib.components.ButtonGrid")
-local KeyboardComponent	=	require("components.KeyboardComponent")
+--local KeyboardComponent	=	require("components.KeyboardComponent")
 local InputField	=	require("components.InputField")
 local color = require("lib.draw.Color")
 local logger = require("lib.logger")
+local TestKeyboardView = class("TestKeyboardView", View)
 
 --- Constructor for CityView
 -- @param event_listener Remote control to listen to
 function TestKeyboardView:__init(remote_control)
 	View.__init(self)
 	self.background_path = ""
-	input_field = InputField("name", {x = 700, y = 80}, true)
-	--input_field2 = InputField("name", {x = 700, y = 230}, true)
+	input_field = InputField("Name:", {x = 700, y = 80}, true)
+	input_field2 = InputField("Mail:", {x = 700, y = 230}, false)
+
+	self.content_list = {input_field,input_field2}
+	self.content_pointer = 1
 end
 
 function TestKeyboardView:render(surface)
 	-- -- Resets the surface and draws the background
 	local background_color = {r=255, g=255, b=255}
 	surface:clear(background_color)
-	input_field:render(surface)
 
+
+
+	input_field:render(surface)
+	input_field2:render(surface)
 	-- --surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/paris.png")))
 	--
 	-- local log_in_button = sys.new_freetype({r=23, g=155, b=23}, 30, {x=700+50,y=35}, utils.absolute_path("data/fonts/DroidSans.ttf"))
@@ -63,14 +69,22 @@ function TestKeyboardView:render(surface)
 end
 
 function TestKeyboardView:load_view(button)
-	-- TODO set mappings to RC
-	if (keyboard:is_active()) then
-		keyboard:button_press(button)
-	else
-		logger:trace("regular bindings")
-		--regular RC bindings
+	-- -- TODO set mappings to RC
+	-- if (keyboard:is_active()) then
+	-- 	--keyboard:button_press(button)
+	-- else
+	-- 	logger:trace("regular bindings")
+	-- 	--regular RC bindings
+	-- end
+	if button == "down" then
+		self.content_list[self.content_pointer]:set_highlighted(false)
+		self.content_pointer = self.content_pointer + 1
+		self.content_list[self.content_pointer]:set_highlighted(true)
+	elseif button == "ok" then
+		self.content_list[self.content_pointer]:activate_keyboard(true)
 	end
-
+	self:render(screen)
+	gfx.update()
 end
 
 return TestKeyboardView
