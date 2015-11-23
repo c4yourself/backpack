@@ -1,5 +1,5 @@
---- Event module
--- @module event
+
+-- @module city
 local city = {}
 
 city.City = require("lib.city.City")
@@ -9,7 +9,7 @@ city.Country = require("lib.city.Country")
 city.country = {france = city.Country("France", "FRA", "%.2f €", nil, 1),
                 egypt = city.Country("Egypt", "EGY", "%.2f ج.م", nil, 1)}
 
-city.cities = {paris = city.City("paris", "Paris", city.country.france, nil),
+city.cities = {paris = city.City("paris", "Paris", city.country.france, nil ),
               cairo = city.City("cairo", "Cairo", city.country.egypt, nil)}
 
 return city

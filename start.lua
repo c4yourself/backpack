@@ -37,8 +37,7 @@ end
 -- This function is called at the start of the program
 function onStart()
 	logger.trace("Started")
-
-	print(City.cities.cairo.name)
+	
 	local profile = Profile("Tstar","Tstar@tstar.com",1975,"M", City.cities.cairo)
 
 	local city_view = CityView(event.remote_control, profile)
