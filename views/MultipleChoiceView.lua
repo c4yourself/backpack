@@ -12,6 +12,7 @@ local Quiz = require("lib.quiz.Quiz")
 local Font = require("lib.draw.Font")
 local Color = require("lib.draw.Color")
 local Rectangle = require("lib.draw.Rectangle")
+local SubSurface = require("lib.view.SubSurface")
 
 --- Constructor for MultipleChoiceView
 function MultipleChoiceView:__init()
@@ -24,6 +25,7 @@ function MultipleChoiceView:__init()
 	self.check_question_flag = 0
 	self.last_check = 1
 	self.quiz_state = "IDLE" -- To keep track of quiz state
+	self.areas_defined = false
 	--Components
 
 	-- Logic
@@ -38,7 +40,8 @@ function MultipleChoiceView:__init()
 	self.user_input = ""
 	self.answer = {}
 
-	-- Graphics
+	-- Graphics and colors
+	self.question_area_color = Color(255, 0, 0, 255)
 	self.font = Font("data/fonts/DroidSans.ttf",32,Color(255,255,255,255))
 	-- Listeners and callbacks
 	self:listen_to(
@@ -119,12 +122,31 @@ function MultipleChoiceView:render(surface)
 	end
 
 	if self:is_dirty() then
+		local surface_width = surface:get_width()
+		local surface_height = surface:get_height()
+		-- If the areas haven't been defined yet, define them
+		if not self.areas_defined then
+			-- Question area
+			local x = math.ceil(surface:get_width() * 0.2)
+			local y = math.ceil(surface:get_height() * 0.2)
+			local question_area_width = surface_width - 2 * x
+			local question_area_height = math.ceil(0.3*surface_height)
+			self.question_area_width = question_area_width
+			self.question_area_height = question_area_height
+
+			self.question_area = SubSurface(surface, {x = x, y = y,
+				height = question_area_height,
+				width = question_area_width})
+
+			self.areas_defined = true
+		end
+
+		self.question_area:clear(self.question_area_color)
 		-- If the view is marked as dirty, re-render it
 		if self.quiz_state == "IDLE" then
 			surface:clear(color)
 			--Buttons
 			local buttonColor = {r=0, g=128, b=225}
-			--local textColor = {r=0, g=0, b=0}
 			local textColor = Color(0,0,0,255)
 			local choiceButton1 = Font("data/fonts/DroidSans.ttf",30,textColor)
 			local choiceButton2 = Font("data/fonts/DroidSans.ttf",30,textColor)
