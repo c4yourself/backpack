@@ -83,7 +83,7 @@ function TSVReader:generate_random(tabNum,indexNum)
 	for i = 1, indexNum do
 		local ri = math.random(1, tabNum + 1 - i)
 		local v = ri
-		
+
 		for j = 1,tabNum do
 			if not t[j] then
 				ri = ri - 1
