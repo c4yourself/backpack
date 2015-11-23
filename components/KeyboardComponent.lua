@@ -5,7 +5,7 @@ local View = require("lib.view.View")
 local view = require("lib.view")
 local KeyboardComponent = class("KeyboardComponent", View)
 local logger = require("lib.logger")
-local button = require("lib.components.Button")
+local button = require("lib.components.TextButton")
 local button_grid	=	require("lib.components.ButtonGrid")
 local color = require("lib.draw.Color")
 
@@ -15,7 +15,7 @@ KeyboardComponent.active = true
 function KeyboardComponent:__init(remote_control)
 	View.__init(self)
 	self.background_path = ""
-	local button_color = color(0, 128, 225, 255)
+	local TextButton_color = color(0, 128, 225, 255)
 	local text_color = color(55, 55, 55, 255)
 	local score_text_color = color(255, 255, 255, 255)
 	local color_selected = color(33, 99, 111, 255)
@@ -31,14 +31,14 @@ function KeyboardComponent:__init(remote_control)
 
 	local button_size= {width=90,height=70}
 	local button_padding = 10
-	self.nbr_of_buttons = {x=3, y=3}
+	self.nbr_of_buttons = {x=5, y=7}
 
 	local button_start_location = {left=((screen:get_width()/2)-(self.nbr_of_buttons["x"]*(button_size["width"]+button_padding)))/2, top=100}
 	self.buttonGrid = button_grid()
 	for i=1, self.nbr_of_buttons["x"]*self.nbr_of_buttons["y"] do
-		local temp_button = button(button_color, color_selected, color_disabled,true,false)
+		local temp_button = button(utils.absolute_path("data/fonts/DroidSans.ttf"), button_size["height"]/2, true,false)
 		positions[i] = {x=(button_start_location["left"]+((button_size["width"]+button_padding)*mx)), y=(button_start_location["top"]+((button_size["height"]+button_padding)*my))}
-		temp_button:set_textdata(self.letters[i],text_color,{x=(button_start_location["left"]+((button_size["width"]+button_padding)*mx))+button_size["height"]/2, y=(button_start_location["top"]+((button_size["height"]+button_padding)*my))+button_size["height"]/4},button_size["height"]/2,utils.absolute_path("data/fonts/DroidSans.ttf"))
+		temp_button:set_textdata(self.letters[i])
 
 		mx = mx+1
 		if (i%self.nbr_of_buttons["x"]==0) then
