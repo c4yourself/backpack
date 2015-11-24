@@ -1,213 +1,76 @@
---- ButtonGrid class.
--- This class handles the layout of buttons,
--- renders buttons on the current view, and
--- renders texts for each button.
--- Each view shall have its own ButtonGrid
+--- MemoryGrid class.
+-- This class builds on the ButtonGrid class and represents a set of memory cards
+-- and buttons in the MemoryView. Memory cards are represented by the
+-- CardComponent class
 -- @classmod ButtonGrid
 
 local class = require("lib.classy")
-local view = require("lib.view")
-local View = require("lib.view.View")
 local button = require("lib.components.Button")
-local ButtonGrid = class("ButtonGrid",View)
+local ButtonGrid = require("lib.components.ButtonGrid")
+local MemoryGrid = class("MemoryGrid", ButtonGrid)
 local SubSurface = require("lib.view.SubSurface")
 local utils = require("lib.utils")
 local event = require("lib.event")
-local Font = require("lib.draw.Font")
-local Color = require("lib.draw.Color")
 
---- Constructor for ButtonGrid
-function ButtonGrid:__init(remote_control)
-	View.__init(self)
-	self.button_list = {} -- a list contains all buttons for the view.
-	self.start_indicator = true -- will function just once, help to map the indicator with
-															-- the selected button when the button grid is created.
-	self.button_indicator = nil-- the indicator will point to the selected button when rendering occurs.
-
-  if remote_control ~= nil then
-    self.event_listener = remote_control
-  else
-    self.event_listener = event.remote_control
-  end
-
-  self.callback = utils.partial(self.press, self)
-  self:focus()
-
-	--
-	-- local dirtycallback = function()
-	-- 	print("I button grid")
-	-- 	self:dirty(false)
-	-- 	self:dirty(true)
-	-- end
-  -- self:listen_to(
-	--
-  -- "dirty",
-  -- dirtycallback
-  -- )
+--- Constructor for MemoryGrid
+function MemoryGrid:__init(remote_control)
+	ButtonGrid.__init(self, remote_control)
+	self.temp_turned = {}
+	self.turned = {}
+	self.last_selection = 0
 end
 
--- Starts the buttongrids listener
-function ButtonGrid:focus()
-	self:listen_to(
-	self.event_listener,
-	"button_press",
-	self.callback
-	)
-end
-
--- Stops the buttongrids listener
-function ButtonGrid:blur()
-	self:stop_listening()
-end
-
---- Used when buttons need to be added to the view
--- @param position The button's position on the surface
--- @param button_size The size of button
--- @param button The button instance
--- @throws Error If the button cross the boundaries of the surface
-function ButtonGrid:add_button(position, button_size, button)
--- chenck if the button across the screen boundaries
-
+--- Used when buttons/cards need to be added to the view
+-- @param position The button's/cards position on the surface
+-- @param button_size The size of button/card
+-- @param button The button/card instance
+-- @throws Error If the button/card cross the boundaries of the surface
+function MemoryGrid:add_button(position, button_size, button)
 	if position.x >= 0 and button_size.width >= 0
 		 and position.x + button_size.width < 1280
 		 and position.y >= 0 and button_size.height >= 0
 		 and position.y + button_size.height < 720	then
--- if ok, insert each button to the button_list
-	 table.insert(self.button_list,
-	 {button = button,
-	 x = position.x,
-	 y = position.y,
-	 width = button_size.width,
-	 height = button_size.height
-	 })
-
-else
-	error("screen boundary error")
+	-- if ok, insert button to the button_list
+		table.insert(self.button_list,
+			{button = button,
+			x = position.x,
+			y = position.y,
+	 		width = button_size.width,
+	 		height = button_size.height
+	 		})
+		local callback = utils.partial(self.trigger, self, "dirty")
+	 	self:listen_to(
+	 		button,
+			"dirty",
+			callback
+	 	)
+	else
+		error("screen boundary error")
+	end
 end
 
-end
-
---- Display text for each button on the surface
+--- Display text for each button/card on the surface
 -- @param button_index To indicate which button's text shall be displayed
-function ButtonGrid:display_text(surface, button_index)
+function MemoryGrid:display_text(surface, button_index)
 	local button_data = self.button_list[button_index].button
-	local text_button = Font(
-									button_data.font_path,
+	local text_button = sys.new_freetype(
+									button_data.font_color:to_table(),
 									button_data.font_size,
-									button_data.font_color)
+									button_data.text_position,
+									button_data.font_path)
 
-	text_button:draw(surface, {x = self.button_list[button_index].x, y = self.button_list[button_index].y,
-														width = self.button_list[button_index].width, height = self.button_list[button_index].height}, button_data.text, "center", "middle")
+	text_button:draw_over_surface(surface, button_data.text)
 end
 
-function ButtonGrid:display_next_view(transfer_path)
-
+function MemoryGrid:display_next_view(transfer_path)
  	local view_import = require(transfer_path)
-	return view_import
- 	--local view_instance = view_import()
-
- 	--view.view_manager:set_view(view_instance)
-end
-
-function ButtonGrid:press(button)
-	if not self.paused then
-    if button == "down" then
-			self:indicate_downward(self.button_indicator)
-			self:trigger("dirty")
-		elseif button == "up" then
-			self:indicate_upward(self.button_indicator)
-			self:trigger("dirty")
-		elseif button == "right" then
-			self:indicate_rightward(self.button_indicator)
-			self:trigger("dirty")
-		elseif button == "left" then
-			self:indicate_leftward(self.button_indicator, "left")
-			self:trigger("dirty")
-		elseif button == "1" then
-				--Instanciate a numerical quiz
-				--local numerical_quiz_view = NumericalQuizView()
-				--Stop listening to everything
-				-- TODO
-				-- Start listening to the exit event, which is called when the user
-				-- exits a quiz
-
-				--Update the view
-				--numerical_quiz_view:render(screen)
-				-- TODO This should be done by a subsurface in the final version
-				--gfx.update()
-		elseif button == "2" then
-				multiplechoice_quiz.render(screen)
-				gfx.update()
-
-		elseif button == "3" then
-				sys.stop()
-
-		elseif button == "ok" then
-
-			for i=1, #self.button_list do
-				if self.button_list[i].button:is_selected() == true then
-					if self.button_list[i].button.transfer_path ~= nil then
-					--self:display_next_view(self.button_list[i].button.transfer_path)
-				--	gfx.update()
-				--	break
-				-- else
-					self:trigger("button_click", self.button_list[i].button)
-					break
-				end
-			end
-		end
-end
-
-
-end
-end
-
---- Providing a subsurface to each button,
--- so the button can be rendered with its own render function.
--- If the button has text, then display the text as well
-function ButtonGrid:render(surface)
--- If no button is selected when this button_grid is created,
--- then the first button in the list will be selected.
--- The indicator always points to the selected button
-self:dirty(false)
-	if self.start_indicator == true then
-		for k = 1 , #self.button_list do
-			if self.button_list[k].button:is_selected() then
-				self.button_indicator = k
-			end
-		end
-
-		if self.button_indicator == nil then
-			self.button_indicator = 1
-			self.button_list[1].button:select(true)
-		end
-
-		self.start_indicator = false
-  end
-
-
--- Go through the button_list to render all buttons
-    for i=1 , #self.button_list do
-		local button_data = self.button_list[i]
-		local area = {
-			width = button_data.width,
-			height	=button_data.height,
-			x = button_data.x,
-			y = button_data.y
-		}
-
-		local sub_surface = SubSurface(surface,area)
-			button_data.button:render(sub_surface)
-      if button_data.button.text_available then
-			self:display_text(surface, i)
-	   end
-   end
-   gfx.update()
+ 	local view_instance = view_import()
+ 	view.view_manager:set_view(view_instance)
 end
 
 --- When "down" is pressed, the indicator shall follow the down-direction
 -- @param button_indicator The current indicator that points to the selected button
-function ButtonGrid:indicate_downward(button_indicator)
+function MemoryGrid:indicate_downward(button_indicator)
 	local indicator = button_indicator
 	local button_list = self.button_list
 	local shortest_distance_buttons = 720
@@ -270,7 +133,7 @@ end
 
 --- When "up" is pressed, the indicator shall follow the up-direction
 -- @param button_indicator The current indicator that points to the selected button
-function ButtonGrid:indicate_upward(button_indicator)
+function MemoryGrid:indicate_upward(button_indicator)
 	local indicator = button_indicator
 	local button_list = self.button_list
 	local shortest_distance_buttons = 720
@@ -327,7 +190,7 @@ end
 	self.button_indicator = indicator
 end
 
-function ButtonGrid:indicate_rightward(button_indicator)
+function MemoryGrid:indicate_rightward(button_indicator)
 	local indicator = button_indicator
 	local button_list = self.button_list
 	local shortest_distance_buttons = 1280
@@ -382,7 +245,7 @@ end
 	self.button_indicator = indicator
 end
 
-function ButtonGrid:indicate_leftward(button_indicator, direction)
+function MemoryGrid:indicate_leftward(button_indicator, direction)
 	local indicator = button_indicator
 	local button_list = self.button_list
 	local shortest_distance_buttons = 1280
@@ -405,9 +268,9 @@ if shortest_distance_buttons ~= 1280 then
 		if  button_list[indicator].x >= button_list[j].x + button_list[j].width then
 			local distance = self:button_distance(indicator, j)
 			if shortest_distance_buttons == distance then
-				print("the distance is "..distance)
+				--print("the distance is "..distance)
 				nearest_button_index = j
-				print("the nearast button is ".. nearest_button_index)
+				--print("the nearast button is ".. nearest_button_index)
 				break
 			end
 		end
@@ -442,7 +305,7 @@ end
 
 
 
-function ButtonGrid:button_distance(sel_button_index, button_index)
+function MemoryGrid:button_distance(sel_button_index, button_index)
 	local sel_central_x = self.button_list[sel_button_index].x + math.floor(self.button_list[sel_button_index].width/2)
 	local sel_central_y = self.button_list[sel_button_index].y + math.floor(self.button_list[sel_button_index].height/2)
 	local central_x = self.button_list[button_index].x + math.floor(self.button_list[button_index].width/2)
@@ -451,7 +314,7 @@ function ButtonGrid:button_distance(sel_button_index, button_index)
 	return distances
 end
 
-function ButtonGrid:distance_to_corner(corner_position, button_index)
+function MemoryGrid:distance_to_corner(corner_position, button_index)
 
 	local central_x = self.button_list[button_index].x + math.floor(self.button_list[button_index].width/2)
 	local central_y = self.button_list[button_index].y + math.floor(self.button_list[button_index].height/2)
@@ -461,4 +324,88 @@ function ButtonGrid:distance_to_corner(corner_position, button_index)
 	return distances
 end
 
-return ButtonGrid
+
+function MemoryGrid:press(button)
+	if button == "down" then
+		self:indicate_downward(self.button_indicator)
+		--self:trigger("dirty")
+		self:trigger("navigation")
+	elseif button == "up" then
+		self:indicate_upward(self.button_indicator)
+		--self:trigger("dirty")
+		self:trigger("navigation")
+	elseif button == "right" then
+		self:indicate_rightward(self.button_indicator)
+		--self:trigger("dirty")
+		self:trigger("navigation")
+	elseif button == "left" then
+		self:indicate_leftward(self.button_indicator, "left")
+		--self:trigger("dirty")
+		self:trigger("navigation")
+	end
+
+	if button == "ok" then
+		self.last_selection = self.button_indicator
+		self:trigger("submit")
+	end
+end
+
+function MemoryGrid:render(surface)
+-- If no button is selected when this button_grid is created,
+-- then the first button in the list will be selected.
+-- The indicator always points to the selected button
+	self:dirty(false)
+	self.render_surface = surface
+	if self.start_indicator == true then
+		for k = 1 , #self.button_list do
+			if self.button_list[k].button:is_selected() then
+				self.button_indicator = k
+			end
+		end
+
+		if self.button_indicator == nil then
+			self.button_indicator = 1
+			self.button_list[1].button:select(true)
+		end
+
+		self.start_indicator = false
+  end
+
+
+-- Go through the button_list to render all buttons
+	for i=1 , #self.button_list do
+		local button_data = self.button_list[i]
+		local area = {
+			width = button_data.width,
+			height	=button_data.height,
+			x = button_data.x,
+			y = button_data.y
+		}
+
+		local sub_surface = SubSurface(surface,area)
+			button_data.button:render(sub_surface)
+			if button_data.button.text_available then
+				self:display_text(surface, i)
+			end
+   		end
+   gfx.update()
+end
+
+
+function MemoryGrid:set_card_status(card_index, status)
+	self.button_list[card_index].button:set_card_status(status)
+end
+
+function MemoryGrid:set_multiple_status(state_map)
+	for i=1, #state_map do
+		local state = state_map[i]
+		if state == true then
+			self.button_list[i].button.status = "FACING_UP"
+		else
+			self.button_list[i].button.status = "FACING_DOWN"
+		end
+	end
+	self:trigger("dirty")
+end
+
+return MemoryGrid
