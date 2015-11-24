@@ -15,7 +15,9 @@ local Rectangle = require("lib.draw.Rectangle")
 local SubSurface = require("lib.view.SubSurface")
 local ButtonGrid = require("lib.components.ButtonGrid")
 local Button = require("lib.components.Button")
+local MultipleChoiceGrid = require("lib.components.MultipleChoiceGrid")
 local NumericalQuizGrid = require("lib.components.NumericalQuizGrid")
+local ToggleButton = require("lib.components.ToggleButton")
 
 --- Constructor for MultipleChoiceView
 function MultipleChoiceView:__init()
@@ -48,7 +50,7 @@ function MultipleChoiceView:__init()
 	self.font = Font("data/fonts/DroidSans.ttf",32,Color(255,255,255,255))
 
 	-- Buttons and grids
-	self.views.grid = NumericalQuizGrid()
+	self.views.grid = MultipleChoiceGrid()
 
 	local height = screen:get_height()
 	local width = screen:get_width()
@@ -128,13 +130,13 @@ function MultipleChoiceView:__init()
 	local button_position_4 = {x = x_margin + 3 * question_button_size.width + 3 * button_margin,
 								y = 400}
 
-	self.question_button_1 = Button(button_color, color_selected, color_disabled,
+	self.question_button_1 = ToggleButton(button_color, color_selected, color_disabled,
 								true, false, "")
-	self.question_button_2 = Button(button_color, color_selected, color_disabled,
+	self.question_button_2 = ToggleButton(button_color, color_selected, color_disabled,
 								true, false, "")
-	self.question_button_3 = Button(button_color, color_selected, color_disabled,
+	self.question_button_3 = ToggleButton(button_color, color_selected, color_disabled,
 								true, false, "")
-	self.question_button_4 = Button(button_color, color_selected, color_disabled,
+	self.question_button_4 = ToggleButton(button_color, color_selected, color_disabled,
 								true, false, "")
 
 	self.views.grid:add_button(button_position_1,
@@ -161,11 +163,48 @@ end
 ---Triggered everytime the user presses the submit button
 function MultipleChoiceView:_submit()
 	print("answered")
+	if self.last_check == self.current_question and self.quiz_state ~= "DONE" then
+		self.user_input = self.views.grid.input
+		for j = 1, #self.user_input, 1 do
+			self.answer[j] = tonumber(string.sub(self.user_input,j,j))
+		end
+		if self.mult_choice_quiz.questions[self.current_question]:is_correct(self.answer) == true then
+			self.correct_answer_number = self.correct_answer_number + 1
+			self.result_string = "Right. You've answered "
+			.. self.correct_answer_number .. " questions correctly."
+			self.last_check = self.last_check + 1
+		else
+			self.result_string = "Wrong. You've answered "
+			.. self.correct_answer_number .. " questions correctly."
+			self.last_check=self.last_check + 1
+		end
+		self.quiz_state = "DISPLAY_RESULT"
+		self:dirty(true)
+		--Reset user input after the answer has been initiated
+		self.answer = {}
+		self.user_input = ""
+	end
 end
 
 ---Triggered everytime the user presses the next button
 function MultipleChoiceView:_next()
-	print("next")
+	print("next triggered")
+	if end_flag ~= 1 then
+		-- Next question is displayed
+		-- Make sure there are questions left to display
+		self.current_question = self.current_question + 1
+		if self.current_question > self.quiz_size then
+			end_flag = 1
+			self.quiz_state = "DONE"
+		else
+			self.quiz_state = "IDLE"
+		end
+		self:dirty(true)
+	elseif self.end_flag == 1 then
+		-- Quiz is finished. Set up for a final result screen
+		self.quiz_state = "DONE"
+		self:dirty(true)
+	end
 end
 
 ---Triggered everytime the user presses the back to city button

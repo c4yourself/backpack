@@ -1,8 +1,5 @@
 --- NumericalQuizGrid class.
--- This class builds on the ButtonGrid class and represents a set of memory cards
--- and buttons in the MemoryView. Memory cards are represented by the
--- CardComponent class
--- @classmod ButtonGrid
+-- @classmod NumericalQuizGrid
 
 local class = require("lib.classy")
 local button = require("lib.components.Button")
