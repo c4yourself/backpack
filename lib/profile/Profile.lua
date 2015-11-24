@@ -35,6 +35,7 @@ Profile.login_token = ""
 -- @param email_address string representing email address of user
 -- @param date_of_birth string date birth of user
 -- @param sex string representing the gender of the user
+-- @param city instance of the current city the profile is located at
 function Profile:__init(name,email_address,date_of_birth,sex,city)
 	self.name = name
 	self.email_address = email_address

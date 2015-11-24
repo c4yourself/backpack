@@ -6,9 +6,13 @@
 local Button = require("lib.components.Button")
 local ButtonGrid=require("lib.components.ButtonGrid")
 local class = require("lib.classy")
+<<<<<<< HEAD
 local MultipleChoiceView = require("views.MultipleChoiceView")
 local NumericalQuizView = require("views.NumericalQuizView")
 local CityTourView = require("views.CityTourView")
+=======
+--local CityTourView = require("views.CityTourView")
+>>>>>>> cityview
 local Color = require("lib.draw.Color")
 local Font = require("lib.draw.Font")
 local event = require("lib.event")
@@ -21,12 +25,12 @@ local CityView = class("CityView", view.View)
 
 --- Constructor for CityView
 -- @param event_listener Remote control to listen to
-function CityView:__init(remote_control, city)
+function CityView:__init(remote_control, profile)
 	view.View.__init(self)
 	self.background_path = ""
-	self.profile = {name = "Mohamed", level = 5, experience = 300, cash = 500}
+	--Instance of the  current profile, can be used to get name, sex etc
+	self.profile = profile
 	self.button_grid = ButtonGrid(remote_control)
-	self.city = city
 
 	local text_color = Color(111, 189, 88, 255)
 	-- Create some button colors
@@ -48,10 +52,10 @@ function CityView:__init(remote_control, city)
 	-- Add buttons
 	local button_1 = Button(button_color, color_selected, color_disabled,true,true,"views.NumericalQuizView")
 	local button_2 = Button(button_color, color_selected, color_disabled,true,false, "views.MultipleChoiceView")
-	local button_3 = Button(button_color, color_selected, color_disabled,true,false)
+	local button_3 = Button(button_color, color_selected, color_disabled,true,false, "view.MemoryView")
 	local button_4 = Button(button_color, color_selected, color_disabled,true,false)
 	local button_5 = Button(button_color, color_selected, color_disabled,true,false)
-	local button_6 = Button(button_color, color_selected, color_disabled,true,false)
+	local button_6 = Button(button_color, color_selected, color_disabled,true,false, "views.profile_selection")
 	local button_7 = Button(button_color, color_selected, color_disabled,true,false, "views.TravelView")
 	local button_8 = Button(button_color, color_selected, color_disabled,true,false)
 	local city_tour_button = Button(city_view_color, city_view_selected_color, color_disabled, true, false, "views.CityTourView")
@@ -73,7 +77,6 @@ function CityView:__init(remote_control, city)
 	local city_tour_size = {width = 2*width/3-1, height = height-51}
 
 	-- Using the button grid to create buttons
-
 	self.button_grid:add_button(position_1, button_size, button_1)
 	self.button_grid:add_button(position_2, button_size, button_2)
 	self.button_grid:add_button(position_3, button_size, button_3)
@@ -84,11 +87,47 @@ function CityView:__init(remote_control, city)
 	self.button_grid:add_button(position_8, button_size, button_8)
 	self.button_grid:add_button(city_tour_position, city_tour_size, city_tour_button)
 
+	local button_callback = function(button)
+		local subsurface = SubSurface(screen,{width=screen:get_width()*0.9, height=(screen:get_height()-50)*0.9, x=screen:get_width()*0.05, y=screen:get_height()*0.05+50})
+		local make_instance = self.button_grid:display_next_view(button.transfer_path)
+		local one_instance = make_instance(remote_control, subsurface)
+		self.button_grid:stop_listening(self.button_grid.event_listener,"button_press",callback)
+		one_instance:render(subsurface)
+
+				local exit_view = function()
+						self.button_grid:focus()
+						one_instance:destroy()
+						self:dirty(true)
+				end
+
+				self:listen_to_once(one_instance,"exit_view", exit_view)
+
+		gfx.update()
+	end
+
+	local button_render = function()
+		self:render(screen)
+		gfx.update()
+	end
+
+	self:listen_to(
+		self.button_grid,
+		"dirty",
+		button_render
+	)
+	self:listen_to(
+		self.button_grid,
+		"button_click",
+		button_callback
+)
+
+
 	-- Preload images for increased performance
+
 	self.images = {
-		paris = gfx.loadpng("data/images/"..self.city.name..".png"),
+		paris = gfx.loadpng("data/images/"..self.profile.city.name..".png"),
 		coin = gfx.loadpng("data/images/coinIcon.png"),
-		paris_selected = gfx.loadpng("data/images/"..self.city.name.."IconSelected.png")
+		paris_selected = gfx.loadpng("data/images/"..self.profile.city.name.."IconSelected.png")
 	}
 
 	-- Premultiple images with transparency to make them render properly
@@ -105,6 +144,12 @@ function CityView:__init(remote_control, city)
 		self.callback
 		--utils.partial(self.load_view, self)
 	)
+	-- local callback = utils.partial(self.load_view, self)
+	-- self:listen_to(
+	-- event.remote_control,
+	-- "button_release",
+	-- callback
+	-- )
 
 end
 
@@ -142,16 +187,17 @@ local width = surface:get_width()
 
 	-- Add info to statusbar
 	city_view_large_font:draw(surface,  {x=10, y=10}, self.profile.name) -- Profile name
-	city_view_small_font:draw(surface, {x=200, y=15}, "Level: " .. tostring(self.profile.level)) -- Profile level
-	city_view_small_font:draw(surface, {x=440, y=15}, tostring(self.profile.experience) .. "/500") -- Profile experience
-	city_view_small_font:draw(surface, {x=width-100, y=15}, tostring(self.profile.cash)) -- Profile cash
-	city_view_large_font:draw(surface, {x=width/2, y=15}, self.city.name, center) -- City name
+	city_view_small_font:draw(surface, {x=200, y=15}, "Level: 3") -- Profile level
+	city_view_small_font:draw(surface, {x=440, y=15}, tostring(self.profile.experience .. "/500")) -- Profile experience
+	city_view_small_font:draw(surface, {x=width-100, y=15}, tostring(self.profile.balance)) -- Profile cash
+	city_view_large_font:draw(surface, {x=width/2, y=15}, self.profile.city.name, center) -- City name
 
 	surface:copyfrom(self.images.coin, nil, {x = width-145, y = 10, width = 30, height = 30}) -- Coin
 
 
   -- using the button grid to render all buttons and texts
 	self.button_grid:render(surface)
+
 
 
 	surface:copyfrom(self.images.paris_selected, nil, {x = width/3, y = 0, width=width*2/3, height=height})
@@ -172,6 +218,7 @@ end
 
 function CityView:load_view(button)
 
+<<<<<<< HEAD
 	if button == "1" then
 		--Instanciate a numerical quiz
 		local numerical_quiz_view = NumericalQuizView()
@@ -258,6 +305,9 @@ function CityView:load_view(button)
 
 
 	end
+=======
+end
+>>>>>>> cityview
 
 
 

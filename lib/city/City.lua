@@ -13,7 +13,7 @@ local City = class("City")
 -- @param travel_routes contains a list of available destinations. Format for this list is {city, mean of travel, cost}, example {"paris", "train", 300}
 
 function City:__init(code, name, country, travel_routes)
-
+	print(name)
 	self.code = code
   self.name = name
   self.country = country
