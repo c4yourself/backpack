@@ -15,7 +15,7 @@
 local class = require("lib.classy")
 local utils = require("lib.utils")
 local Profile = class("Profile")
-local event = require("lib.event")
+local Event = require("lib.event.Event")
 
 Profile.name = ""
 Profile.email_address = ""
@@ -35,6 +35,7 @@ Profile.login_token = ""
 -- @param email_address string representing email address of user
 -- @param date_of_birth string date birth of user
 -- @param sex string representing the gender of the user
+-- @param city instance of the current city the profile is located at
 function Profile:__init(name,email_address,date_of_birth,sex,city)
 	self.name = name
 	self.email_address = email_address
@@ -216,6 +217,12 @@ end
 function Profile:modify_balance(number)
 	self.balance = self.balance + number
 
+	Event:__init()
+	call_back = function(...)
+		ProfileManager:save(...)
+	end
+	Event:on("balance_change",call_back)
+	Event:trigger("balance_change",self)
 	return self.balance
 end
 
@@ -226,7 +233,14 @@ function Profile:modify_experience(number)
 		self.experience = self.experience + number
 	end
 
+	Event:__init()
+	call_back = function(...)
+		ProfileManager:save(...)
+	end
+	Event:on("experience_change",call_back)
+	Event:trigger("experience_change",self)
 	return self.experience
 end
+
 
 return Profile
