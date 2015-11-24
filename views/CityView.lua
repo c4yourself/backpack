@@ -46,7 +46,7 @@ function CityView:__init(remote_control, profile)
 	-- Add buttons
 	local button_1 = Button(button_color, color_selected, color_disabled,true,true,"views.NumericalQuizView")
 	local button_2 = Button(button_color, color_selected, color_disabled,true,false, "views.MultipleChoiceView")
-	local button_3 = Button(button_color, color_selected, color_disabled,true,false)
+	local button_3 = Button(button_color, color_selected, color_disabled,true,false, "views.MemoryView")
 	local button_4 = Button(button_color, color_selected, color_disabled,true,false)
 	local button_5 = Button(button_color, color_selected, color_disabled,true,false)
 	local button_6 = Button(button_color, color_selected, color_disabled,true,false)
@@ -88,7 +88,13 @@ function CityView:__init(remote_control, profile)
 		self.button_grid:stop_listening(self.button_grid.event_listener,"button_press",callback)
 		one_instance:render(subsurface)
 
+		local exit_view = function()
+				self.button_grid:focus()
+				one_instance:destroy()
+				self:dirty(true)
+		end
 
+		self:listen_to_once(one_instance,"exit_view", exit_view)
 		-- local CT = CityTourView(remote_control, city_tour_view)
 		-- self.button_grid:stop_listening(self.buttonGrid.event_listener,
 		--  													"button_press",
@@ -210,50 +216,8 @@ end
 
 function CityView:load_view(button)
 
-	if button == "1" then
-		--Instanciate a numerical quiz
-		local numerical_quiz_view = NumericalQuizView()
-		--Stop listening to everything
-		-- TODO
-		-- Start listening to the exit event, which is called when the user
-		-- exits a quiz
-		local callback = function()
-			utils.partial(view.view_manager.set_view, view.view_manager)(self)
-			gfx.update()
-		end
-		self:listen_to(
-			numerical_quiz_view,
-			"exit",
-			--view.view_manager:set_view(self)
-			callback
-		)
-		--Update the view
-		numerical_quiz_view:render(screen)
-		-- TODO This should be done by a subsurface in the final version
-		gfx.update()
-	elseif button == "2" then
-		multiplechoice_quiz.render(screen)
-		gfx.update()
-	elseif button == "3" then
-		sys.stop()
-	elseif button == "5" then
-		local city_tour_view = SubSurface(screen,{width=screen:get_width()*0.9, height=(screen:get_height()-50)*0.9, x=screen:get_width()*0.05, y=screen:get_height()*0.05+50})
-		local CT = CityTourView(remote_control, city_tour_view)
-		self.button_grid:blur()
-
-		CT:render(city_tour_view)
-		gfx.update()
-
-		local exit_view = function()
-				self.button_grid:focus()
-				CT:destroy()
-				self:dirty(true)
-		end
-
-		self:listen_to_once(CT,"exit_view", exit_view)
 
 
-		end
 
 
 
