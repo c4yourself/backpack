@@ -124,8 +124,8 @@ function ButtonGrid:press(button)
 				-- TODO This should be done by a subsurface in the final version
 				--gfx.update()
 		elseif button == "2" then
-				multiplechoice_quiz.render(screen)
-				gfx.update()
+				--multiplechoice_quiz.render(screen)
+				--gfx.update()
 		elseif button == "3" then
 				sys.stop()
 

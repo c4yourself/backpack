@@ -40,7 +40,8 @@ function onStart()
 	local splash_screen = SplashView(
 		"data/images/logo.png", city_view, view.view_manager)
 
-	view.view_manager:set_view(splash_screen)
+	--view.view_manager:set_view(splash_screen)
+	--splash_screen:start(50)
 
 	--start connectfour
 --[[local cfc = ConnectFourComponent(event.remote_control)
@@ -54,13 +55,12 @@ function onStart()
 	cfc:on("dirty",callback_dirty) ]]--
 
 	--menu.render(screen)
-  --local city_view = CityView(event.remote_control)
-	--view.view_manager:set_view(city_view)
+  	--local city_view = CityView(event.remote_control)
+	view.view_manager:set_view(city_view)
 
 	-- the "up" and "down" buttons are enabled for
 	-- choosing alternatives in city_view_2
 
-	splash_screen:start(50)
 
 	gfx.update()
 
