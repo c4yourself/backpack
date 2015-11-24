@@ -123,9 +123,9 @@ function CityView:__init(remote_control, profile)
 	-- Preload images for increased performance
 
 	self.images = {
-		paris = gfx.loadpng("data/images/"..self.profile.city.name..".png"),
+		paris = gfx.loadpng("data/images/"..self.profile.city ..".png"),
 		coin = gfx.loadpng("data/images/coinIcon.png"),
-		paris_selected = gfx.loadpng("data/images/"..self.profile.city.name.."IconSelected.png")
+		paris_selected = gfx.loadpng("data/images/"..self.profile.city .."IconSelected.png")
 	}
 
 	-- Premultiple images with transparency to make them render properly
@@ -188,7 +188,7 @@ local width = surface:get_width()
 	city_view_small_font:draw(surface, {x=200, y=15}, "Level: 3") -- Profile level
 	city_view_small_font:draw(surface, {x=440, y=15}, tostring(self.profile.experience .. "/500")) -- Profile experience
 	city_view_small_font:draw(surface, {x=width-100, y=15}, tostring(self.profile.balance)) -- Profile cash
-	city_view_large_font:draw(surface, {x=width/2, y=15}, self.profile.city.name, center) -- City name
+	city_view_large_font:draw(surface, {x=width/2, y=15}, self.profile.city, center) -- City name
 
 	surface:copyfrom(self.images.coin, nil, {x = width-145, y = 10, width = 30, height = 30}) -- Coin
 

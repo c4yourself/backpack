@@ -9,6 +9,7 @@ local localprofilemanager = require("lib.profile.localprofilemanager")
 local profilesynchronizer = require("lib.profile.ProfileSynchronizer")
 
 function ProfileManager:__init()
+	self:list()
 end
 
 --- list the profiles
@@ -17,8 +18,22 @@ end
 --- @return profile_list_email representing the list of profiles email_address as string
 function ProfileManager:list()
 	profile_list_local, profile_list_city, profile_list_email = localprofilemanager.get_profileslist()
-
+	self.profile_list_local = profile_list_local
+	self.profile_list_city = profile_list_city
+	self.profile_list_email = profile_list_email
 	return profile_list_local, profile_list_city, profile_list_email
+end
+
+function ProfileManager:get_local()
+	return self.profile_list_local
+end
+
+function ProfileManager:get_cities()
+	return self.profile_list_city
+end
+
+function ProfileManager:get_email()
+	return self.profile_list_email
 end
 
 --- create profile to local and server
