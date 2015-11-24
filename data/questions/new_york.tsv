@@ -1,27 +1,12 @@
-single_choice	Which of the following cities is the capital of France?	Paris;London;Stockholm;Moscow	1
-single_choice	Which of the following cities is the capital of England?	Paris;London;Stockholm;Moscow	2
-single_choice	Which of the following cities is the capital of Sweden?	Paris;London;Stockholm;Moscow	3
-single_choice	Which of the following cities is the capital of Russia?	Paris;London;Stockholm;Moscow	4
-single_choice	Which of the following cities is the capital of America?	Washington;Roma;Madrid;Oslo	1
-single_choice	Which of the following cities is the capital of Italy?	Washington;Roma;Madrid;Oslo	2
-single_choice	Which of the following cities is the capital of Spain?	Washington;Roma;Madrid;Oslo	3
-single_choice	Which of the following cities is the capital of Norway?	Washington;Roma;Madrid;Oslo	4
-single_choice	Which of the following cities is the capital of Germany?	Berlin;Wien;Lisboa;Amsterdam	1
-single_choice	Which of the following cities is the capital of Austria?	Berlin;Wien;Lisboa;Amsterdam	2
-single_choice	Which of the following cities is the capital of Portugal?	Berlin;Wien;Lisboa;Amsterdam	3
-single_choice	Which of the following cities is the capital of Holland?	Berlin;Wien;Lisboa;Amsterdam	4
-multiple_choice	Which of the following countries in Europe?	Sweden;France;Italy;Canda	1 2 3
-multiple_choice	Which of the following countries in Asia?	China;Russia;Korea;Norway	1 3
-multiple_choice	Which of the following countries in Africa?	South Africa;Egypt;Korea;Norway	1 2
-multiple_choice	Which of the following countries in North America?	America;Russia;Mexico;Norway	1 3
-multiple_choice	Which of the following countries in South America?	Brazil;Russia;Korea;Norway	1
-multiple_choice	Which of the following countries in Oceania?	Australia;Russia;Korea;New Zealand	1 4
-multiple_choice	Which of the following cities in Europe?	Stockholm;Paris;Washington;Hong Kong	1 2
-multiple_choice	Which of the following cities in Asia?	Beijing;Paris;Washington;Hong Kong	1 4
-multiple_choice	Which of the following cities in Africa?	Cario;Cape Town;Washington;Hong Kong	1 2
-multiple_choice	Which of the following cities in North America?	New York;Seattle;Toronto;Port-au-Prince;Beijing	1 2 3 4
-multiple_choice	Which of the following cities in South America?	Rio de Janeiro;Santiago;Washington;Beijing	1 2
-multiple_choice	Which of the following cities in Oceania?	Sydney;Auckland;Melbourne;Brisbane	1 2 3 4
+single_choice	What does the stars on the American flag represent?	The 50 civil wars;The 50 states;The 50 presidents in the American history;The 50 lakes and mountains	2
+single_choice	Who discovered America?	Vasco da Gama;Michelangelo;Christopher Columbus;Luciano Pavarotti	3
+single_choice	Which building in New York was the tallest building in the world between 1931-1970 and stands 443 meters high?	One World Trade Center;Empire State Building;John Hancock Center;Princess Tower	2
+single_choice	What did the American Thomas Edison invent in 1879?	The light bulb;The telephone;The computer;The oven	1
+single_choice	Which sports are the most popular in USA?	Handball, Cricket, Golf and Soccer;Tennis, Baseball, Wrestling and Swimming;Track & Field, Boxing, Tennis and American Football;Ice Hockey, Basketball, Baseball and American Football	4
+single_choice	What is the name of the first man on the moon?	Lucas Hamilton;Neil Armstrong;Tiger Woods;Benjamin Franklin	2
+single_choice	What is the name of the serie with the characters: Leonardo, Donatello, Michelangelo and Raphael, living in the sewers of New York, fighting evil crooks in the city?	Biker Mice from Mars;Talespin;Darkwing Duck;Teenage Mutant Ninja Turtles	4
+single_choice	What is the name of the capital city of USA?	Washington D.C;New York;Denver;San Fransico	1
+single_choice	What is the name of the president of the United States (2015)?	George W. Bush;Bill Clinton;Abraham Lincoln;Barack Obama	4
 numeric	How long is Nile river which is the longest in the world?(km)	6670
 numeric	How high is Qomolangma which is the highest in the world?(m)	8844
 numeric	How many countries and regions are there in the world?	230
@@ -31,12 +16,3 @@ numeric	How many countries and regions are there in North America?	28
 numeric	How many countries and regions are there in South America?	13
 numeric	How many countries and regions are there in Africa?	56
 numeric	How many countries and regions are there in Oceania?	30
-city_tour1	After being delivered to USA by ship, the Statue of Liberty was finally unveiled in New York. What year was this?	1854;1895;1869;1886	4
-city_tour1	The project was halted several times due to lack of money. How did the project get the money to finish?	The American state;Public fundraising and gifts;The French state; From companies	2
-city_tour1	The Statue of Liberty is a very big piece of art. How high is from the feet to the end of the torch?	36 meters(118ft);56 meters(183ft);46 meters(85ft);26 meters(150ft)	3
-city_tour2	What is the total height of The Empire State Building?	443 meters(1453ft);325 meters(1066ft);286 meters(938ft);417 meters(1368ft)	1
-city_tour2	As a tourist you can get up to the top floor and have all of New York as your view. How many floors does the building have?	84;118;103;97	3
-city_tour2	How many workers was involved in the construction project?	2800;3400;1900;4200	3
-city_tour3	Times Square in New York is one of the most visited tourist attractions in the whole world. How many estimated tourists visitors does it have every year?	100 million;35 million;80 million;50 million	4
-city_tour3	How many visitors does it have in total every year?	183 million;131 million;90 million;210 million	2
-city_tour3	On a specific day every year Times Square gets crowded by people celebrating. Which day is celebrated by over a million people every year on this very place?	Independence day;Valentine's day;The end of world war II;New year's eve	4

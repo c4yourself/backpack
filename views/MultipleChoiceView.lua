@@ -29,8 +29,8 @@ function MultipleChoiceView:__init()
 	-- Logic
 	-- Associate a quiz instance with the MultipleChoiceView
 	self.mult_choice_quiz = Quiz()
-	self.quiz_size = 4
-	self.mult_choice_quiz:generate_multiplechoice_quiz("paris",self.quiz_size)
+	self.quiz_size = 2
+	self.mult_choice_quiz:generate_citytour_quiz("paris",self.quiz_size,1)
 	self.current_question = 1
 	self.correct_answer_number = 0
 
@@ -90,7 +90,7 @@ function MultipleChoiceView:press(key)
 		self.quiz_state = "DONE"
 		self:dirty(true)
 	elseif key == "back" then
-		self:trigger("exit_view")
+		self:trigger("exit")
 	else
 		--Check if the user input can be interpreted as a answer and in that case
 		-- append it to the current answer

@@ -10,7 +10,9 @@ local CityView2 = class("CityView2", View)
 local event = require("lib.event")
 local utils = require("lib.utils")
 local SubSurface = require("lib.view.SubSurface")
---local NumericalQuizView = require("views.NumericalQuizView")
+local NumericalQuizView = require("views.NumericalQuizView")
+local MemoryView = require("views.MemoryView")
+
 local button= require("lib.components.Button")
 local button_grid=require("lib.components.ButtonGrid")
 local color = require("lib.draw.Color")
@@ -171,7 +173,6 @@ function CityView2:load_view(button)
 
 		profile_sel.render(screen)
 		gfx.update()
-
 	end
 end
 return CityView2

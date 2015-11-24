@@ -15,7 +15,7 @@
 local class = require("lib.classy")
 local utils = require("lib.utils")
 local Profile = class("Profile")
-local event = require("lib.event")
+local Event = require("lib.event.Event")
 
 Profile.name = ""
 Profile.email_address = ""
@@ -35,6 +35,7 @@ Profile.login_token = ""
 -- @param email_address string representing email address of user
 -- @param date_of_birth string date birth of user
 -- @param sex string representing the gender of the user
+-- @param city instance of the current city the profile is located at
 function Profile:__init(name,email_address,date_of_birth,sex,city)
 	self.name = name
 	self.email_address = email_address
@@ -197,10 +198,43 @@ function Profile:set_inventory(inventory_string)
 	local tmp = {}
 	tmp = utils.split(string.sub(inventory_string,string.find(inventory_string,"{") + 1,string.find(inventory_string,"}") - 1),",")
 
+	for i = 1, #tmp, 1 do
+		table.insert(self.inventory, tonumber(tmp[i]))
+	end
+	--[[
 	for i=1, #tmp, 1 do
 		table.insert(self.inventory,tonumber(string.sub(tmp[i],string.find(tmp[i]," ") + 1,string.len(tmp[i]))))
 	end
+	]]
 end
+
+-- Add item to inventory
+-- @param item representing the id of the item
+function Profile:add_item(item)
+	table.insert(self.inventory, item)
+end
+
+-- Remove an item from the inventory
+-- @param item representing the id of the item
+function Profile:remove_item(item)
+	local index = 0
+	print(item)
+
+	for i,j in pairs(self.inventory) do
+		print(j)
+		if j == item then
+			index = i
+		end
+	end
+
+	if index > 0 then
+		table.remove(self.inventory, index)
+	else
+		error("No item to remove found")
+	end
+
+end
+
 -- set id from server
 -- @param id representing id of the profile from server database
 function Profile:set_id(id)
@@ -216,6 +250,12 @@ end
 function Profile:modify_balance(number)
 	self.balance = self.balance + number
 
+	Event:__init()
+	call_back = function(...)
+		ProfileManager:save(...)
+	end
+	Event:on("balance_change",call_back)
+	Event:trigger("balance_change",self)
 	return self.balance
 end
 
@@ -226,7 +266,14 @@ function Profile:modify_experience(number)
 		self.experience = self.experience + number
 	end
 
+	Event:__init()
+	call_back = function(...)
+		ProfileManager:save(...)
+	end
+	Event:on("experience_change",call_back)
+	Event:trigger("experience_change",self)
 	return self.experience
 end
+
 
 return Profile

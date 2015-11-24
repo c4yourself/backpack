@@ -12,18 +12,24 @@ local Font = require("lib.draw.Font")
 local event = require("lib.event")
 local logger = require("lib.logger")
 local SubSurface = require("lib.view.SubSurface")
+local NumericalQuizView = require("views.NumericalQuizView")
+local button= require("lib.components.Button")
+local button_grid=require("lib.components.ButtonGrid")
+local color = require("lib.draw.Color")
+--local CityTourView = require("views.CityTourView")
+local subSurface = require("lib.view.SubSurface")
+local MemoryView = require("views.MemoryView")
 local utils = require("lib.utils")
 local view = require("lib.view")
-
 local CityView = class("CityView", view.View)
 
 --- Constructor for CityView
 -- @param event_listener Remote control to listen to
-function CityView:__init(remote_control)
+function CityView:__init(remote_control, profile)
 	view.View.__init(self)
 	self.background_path = ""
-	self.profile = {name = "Mohamed", level = 5, experience = 300, cash = 500}
-	self.city = {name = "Paris"}
+	--Instance of the  current profile, can be used to get name, sex etc
+	self.profile = profile
 	self.button_grid = ButtonGrid(remote_control)
 
 	local text_color = Color(111, 189, 88, 255)
@@ -44,9 +50,10 @@ function CityView:__init(remote_control)
 	local width = screen:get_width()
 
 	-- Add buttons
+
 	local button_1 = Button(button_color, color_selected, color_disabled,true,true,"views.NumericalQuizView")
 	local button_2 = Button(button_color, color_selected, color_disabled,true,false, "views.MultipleChoiceView")
-	local button_3 = Button(button_color, color_selected, color_disabled,true,false)
+	local button_3 = Button(button_color, color_selected, color_disabled,true,false, "views.MemoryView")
 	local button_4 = Button(button_color, color_selected, color_disabled,true,false)
 	local button_5 = Button(button_color, color_selected, color_disabled,true,false)
 	local button_6 = Button(button_color, color_selected, color_disabled,true,false)
@@ -56,6 +63,7 @@ function CityView:__init(remote_control)
 
 	button_1:set_textdata("Numerical quiz",text_color,{x=100,y=300},16,utils.absolute_path("data/fonts/DroidSans.ttf"))
 	button_2:set_textdata("Multiple choice question",text_color,{x=200,y=300},16,utils.absolute_path("data/fonts/DroidSans.ttf"))
+	button_3:set_textdata("Memory",text_color,{x=100,y=400},16,utils.absolute_path("data/fonts/DroidSans.ttf"))
 
 	-- Define each button's posotion and size
 	local button_size = {width = 4*width/45, height = 4*width/45}
@@ -81,11 +89,51 @@ function CityView:__init(remote_control)
 	self.button_grid:add_button(position_8, button_size, button_8)
 	self.button_grid:add_button(city_tour_position, city_tour_size, city_tour_button)
 
+	local button_callback = function(button)
+		local subsurface = SubSurface(screen,{width=screen:get_width()*0.9, height=(screen:get_height()-50)*0.9, x=screen:get_width()*0.05, y=screen:get_height()*0.05+50})
+		local make_instance = self.button_grid:display_next_view(button.transfer_path)
+		local one_instance = make_instance(remote_control, subsurface)
+		self.button_grid:stop_listening(self.button_grid.event_listener,"button_press",callback)
+		one_instance:render(subsurface)
+
+		local exit_view = function()
+				self.button_grid:focus()
+				one_instance:destroy()
+				self:dirty(true)
+		end
+
+		self:listen_to_once(one_instance,"exit_view", exit_view)
+		-- local CT = CityTourView(remote_control, city_tour_view)
+		-- self.button_grid:stop_listening(self.buttonGrid.event_listener,
+		--  													"button_press",
+		-- 													callback)
+		-- CT:render(city_tour_view)
+		gfx.update()
+	end
+
+	local button_render = function()
+		self:render(screen)
+		gfx.update()
+	end
+
+	self:listen_to(
+		self.button_grid,
+		"dirty",
+		button_render
+	)
+	self:listen_to(
+		self.button_grid,
+		"button_click",
+		button_callback
+)
+
+
 	-- Preload images for increased performance
+
 	self.images = {
-		paris = gfx.loadpng("data/images/Paris.png"),
+		paris = gfx.loadpng("data/images/"..self.profile.city.name..".png"),
 		coin = gfx.loadpng("data/images/coinIcon.png"),
-		paris_selected = gfx.loadpng("data/images/ParisIconSelected.png")
+		paris_selected = gfx.loadpng("data/images/"..self.profile.city.name.."IconSelected.png")
 	}
 
 	-- Premultiple images with transparency to make them render properly
@@ -93,6 +141,22 @@ function CityView:__init(remote_control)
 	self.images.paris_selected:premultiply()
 
 	self:add_view(self.button_grid, true)
+
+	-- Instance remote control and mapps it to the buttons
+	self.callback = utils.partial(self.load_view, self)
+	self:listen_to(
+		event.remote_control,
+		"button_release",
+		self.callback
+		--utils.partial(self.load_view, self)
+	)
+	-- local callback = utils.partial(self.load_view, self)
+	-- self:listen_to(
+	-- event.remote_control,
+	-- "button_release",
+	-- callback
+	-- )
+
 end
 
 function CityView:render(surface)
@@ -103,7 +167,9 @@ local width = surface:get_width()
 	local background_color = {r = 0, g = 0, b = 0}
 
 	surface:clear(background_color)
+
 	surface:copyfrom(self.images.paris, nil, nil, false)
+
 
 	--creates some colors
 	local text_color = Color(0, 0, 0,255)
@@ -127,67 +193,40 @@ local width = surface:get_width()
 
 	-- Add info to statusbar
 	city_view_large_font:draw(surface,  {x=10, y=10}, self.profile.name) -- Profile name
-	city_view_small_font:draw(surface, {x=200, y=15}, "Level: " .. tostring(self.profile.level)) -- Profile level
-	city_view_small_font:draw(surface, {x=440, y=15}, tostring(self.profile.experience) .. "/500") -- Profile experience
-	city_view_small_font:draw(surface, {x=width-100, y=15}, tostring(self.profile.cash)) -- Profile cash
-	city_view_large_font:draw(surface, {x=width/2, y=15}, self.city.name, center) -- City name
+	city_view_small_font:draw(surface, {x=200, y=15}, "Level: 3") -- Profile level
+	city_view_small_font:draw(surface, {x=440, y=15}, tostring(self.profile.experience .. "/500")) -- Profile experience
+	city_view_small_font:draw(surface, {x=width-100, y=15}, tostring(self.profile.balance)) -- Profile cash
+	city_view_large_font:draw(surface, {x=width/2, y=15}, self.profile.city.name, center) -- City name
+
 	surface:copyfrom(self.images.coin, nil, {x = width-145, y = 10, width = 30, height = 30}) -- Coin
+
 
   -- using the button grid to render all buttons and texts
 	self.button_grid:render(surface)
 
+
+
 	surface:copyfrom(self.images.paris_selected, nil, {x = width/3, y = 0, width=width*2/3, height=height})
 
-	-- Instance remote control and mapps it to the buttons
-	local callback = utils.partial(self.load_view, self)
-	self:listen_to(
-		event.remote_control,
-		"button_release",
-		callback
-		--utils.partial(self.load_view, self)
-	)
+
+
 
 	self:dirty(false)
 end
 
+-- Destroys all images and views when leaving cityview
+function CityView:destroy()
+	view.View.destroy(self)
+	for k,v in pairs(self.images) do
+		self.images[k]:destroy()
+	end
+end
+
 function CityView:load_view(button)
 
-	if button == "1" then
-		--Instanciate a numerical quiz
-		local numerical_quiz_view = NumericalQuizView()
-		--Stop listening to everything
-		-- TODO
-		-- Start listening to the exit event, which is called when the user
-		-- exits a quiz
-		local callback = function()
-			utils.partial(view.view_manager.set_view, view.view_manager)(self)
-			gfx.update()
-		end
-		self:listen_to(
-			numerical_quiz_view,
-			"exit",
-			--view.view_manager:set_view(self)
-			callback
-		)
-		--Update the view
-		numerical_quiz_view:render(screen)
-		-- TODO This should be done by a subsurface in the final version
-		gfx.update()
-	elseif button == "2" then
-		multiplechoice_quiz.render(screen)
-		gfx.update()
-	elseif button == "3" then
-		sys.stop()
-	elseif button == "5" then
-		local city_tour_view = SubSurface(screen,{width=screen:get_width()*0.9, height=(screen:get_height()-50)*0.9, x=screen:get_width()*0.05, y=screen:get_height()*0.05+50})
-		local CT = CityTourView(remote_control, city_tour_view)
-		self.buttonGrid:stop_listening(self.buttonGrid.event_listener,
-		 													"button_press",
-															callback)
-		CT:render(city_tour_view)
-		gfx.update()
+
 	end
 
-end
+
 
 return CityView

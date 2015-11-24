@@ -7,6 +7,8 @@ local logger = require("lib.logger")
 local SplashView = require("views.SplashView")
 local utils = require("lib.utils")
 local view = require("lib.view")
+local City = require("lib.city")
+local Profile = require("lib.profile.Profile")
 
 --- This function runs every time a key is pressed
 -- The current mapping for the emulator can be found in emulator/zto.lua
@@ -36,11 +38,14 @@ end
 function onStart()
 
 	logger.trace("Started")
-	local city_view = CityView(event.remote_control)
+
+	local profile = Profile("Tstar","Tstar@tstar.com",1975,"M", City.cities.cairo)
+
+	local city_view = CityView(event.remote_control, profile)
 	local splash_screen = SplashView(
 		"data/images/logo.png", city_view, view.view_manager)
 
-	view.view_manager:set_view(splash_screen)
+	view.view_manager:set_view(city_view)
 
 	--start connectfour
 --[[local cfc = ConnectFourComponent(event.remote_control)
@@ -60,9 +65,11 @@ function onStart()
 	-- the "up" and "down" buttons are enabled for
 	-- choosing alternatives in city_view_2
 
-	splash_screen:start(50)
+	--splash_screen:start(50)
 
-	gfx.update()
+	-- local city_view_2 = CityView2(event.remote_control)
+	-- view.view_manager:set_view(city_view_2)
+	-- gfx.update()
 
 	--local city_view = CityView(event.remote_control)
 	--view.view_manager:set_view(city_view)
@@ -71,5 +78,4 @@ function onStart()
 	--local city_view_2 = CityView2(event.remote_control)
 	--view.view_manager:set_view(city_view_2)
 	--gfx.update()
-
 end

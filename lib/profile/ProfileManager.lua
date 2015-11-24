@@ -4,7 +4,7 @@ local utils = require("lib.utils")
 local lfs = require("lfs")
 local class = require("lib.classy")
 --local profile = require("lib.profile.Profile")
-local ProfileManager = class("ProfileManager")
+ProfileManager = class("ProfileManager")
 local localprofilemanager = require("lib.profile.localprofilemanager")
 local profilesynchronizer = require("lib.profile.ProfileSynchronizer")
 
