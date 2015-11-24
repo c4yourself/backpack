@@ -74,6 +74,7 @@ function Store:__init(remote_control, surface, profile)
 
 	-- Add the exit button
 	self.font = Font("data/fonts/DroidSans.ttf", 20, Color(0, 0, 0, 255))
+	self.header_font = Font("data/fonts/DroidSans.ttf", 40, Color(0,0,0,255))
 	self.buttons[k] = Button(self.button_inactive, self.button_active, self.button_inactive, true, false)
 	self.buttons[k]:set_textdata("Exit",Color(255,0,0,255), {x = 100, y = 300}, 20, utils.absolute_path("data/fonts/DroidSans.ttf"))
 
@@ -82,8 +83,8 @@ function Store:__init(remote_control, surface, profile)
 	j = 1
 	own_items = 0
 	while j <= get_size(self.items) + get_size(self.backpack_items) do
-		self.item_positions[j] = {x = width/2+((j-1)-2*(row-1))*130+own_items*70,
-																y = 205 + 105*(row-1-0.8*own_items) + own_items*125}
+		self.item_positions[j] = {x = width/2-100+((j-1)-2*(row-1))*130+own_items*185,
+																y = 30 + 105*(row-1-0.8*own_items) + own_items*205}
 		self.button_grid:add_button(self.item_positions[j], self.button_size, self.buttons[j])
 		j = j+1
 		if (j-1) % 2 == 0 then
@@ -162,8 +163,8 @@ function Store:insert_button()
 		end
 	end
 	own_items = 1
-	table.insert(self.item_positions, add_index, {x = width/2+((add_index-1)-2*(row-1))*130+own_items*70,
-															y = 205 + 105*(row-1-0.8*own_items) + own_items*125})
+	table.insert(self.item_positions, add_index, {x = width/2-100+((add_index-1)-2*(row-1))*130+own_items*185,
+															y = 30 + 105*(row-1-0.8*own_items) + own_items*205})
 	-- Add to button grid
 	self.button_grid:insert_button(self.item_positions[add_index], self.button_size, self.buttons[add_index],add_index)
 
@@ -196,9 +197,9 @@ function Store:render(surface)
 
 		-- Resets the surface and draws the background
 	surface:clear(self.background_color)
-	surface:copyfrom(self.cashier, nil, {x = 0, y = 280, width = height*0.54*3/5, height = height*3/5}, true)
-	surface:copyfrom(self.shelf, nil, {x=width/2-150,y=200, width = height*0.54*3/5, height = height*3/5}, true)
-	surface:copyfrom(self.backpack, nil, {x=width/2-140, y = 450, width = height*0.54*3/5, height = height*3/5}, true)
+	surface:copyfrom(self.cashier, nil, {x = 0, y = 100}, true)
+	surface:copyfrom(self.shelf, nil, {x=width/2-250,y=20}, true)
+	surface:copyfrom(self.backpack, nil, {x=width/2-100, y = 350}, true)
 
 	-- Print the buttons
 	self.button_grid:render(surface)
@@ -210,7 +211,7 @@ function Store:render(surface)
 
 	-- Draw balacne
 	local coins = self.profile:get_balance()
-	self.font:draw(surface, {x = 3.1*width/4, y = height/3},"Coins: "..coins)
+	self.font:draw(surface, {x = 2.9*width/4, y = height/8},"Coins: "..coins)
 
 	--Draw item info is one is selected, exit info otherwise
 	local selected_item_index = self.button_grid:get_selected()
@@ -228,20 +229,21 @@ function Store:render(surface)
 
 	-- See what we're doing
 	if exit_selected then
-		self.font:draw(surface, {x = 3.1*width/4, y = height/3+45}, "Exit the store")
+		self.font:draw(surface, {x = 2.9*width/4, y = height/8+45}, "Exit the store")
 	else
-		self.font:draw(surface, {x = 3.1*width/4, y = height/3+45}, "Item: " .. item:get_name())
-		self.font:draw(surface, {x = 3.1*width/4, y = height/3+70}, "Description: "..item:get_description())
+		self.font:draw(surface, {x = 2.9*width/4, y = height/8+45}, "Item: " .. item:get_name())
+		self.font:draw(surface, {x = 2.9*width/4, y = height/8+70}, "Description: "..item:get_description())
 		if selected_item_index <= get_size(self.items) then
-			self.font:draw(surface, {x = 3.1*width/4, y = height/3+95}, "Purchase price: " .. item:get_price())
+			self.font:draw(surface, {x = 2.9*width/4, y = height/8+95}, "Purchase price: " .. item:get_price())
 		else
-			self.font:draw(surface, {x = 3.1*width/4, y = height/3+95},
+			self.font:draw(surface, {x = 2.9*width/4, y = height/8+95},
 			"Sale price: "..self.backendstore:returnOfferPrice(item, self.current_city))
 		end
 	end
 	print("i shoppen")
-	self.font:draw(surface, {x = 3.1*width/4, y = height/3+130}, self.message["message"])
-	--self:dirty(false)
+	self.font:draw(surface, {x = 2.9*width/4, y = height/8+130}, self.message["message"])
+	--Draw header
+	self.header_font:draw(surface, {x=10,y=10}, "Store")
 
 end
 
