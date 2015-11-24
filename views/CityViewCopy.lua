@@ -18,14 +18,14 @@ local NumericalQuizView = require("views.NumericalQuizView")
 function CityViewCopy:__init(remote_control)
 	View.__init(self)
 	self.background_path = ""
-	tv = travel_view(remote_control)
+
 end
 
 function CityViewCopy:render(surface)
 	-- Resets the surface and draws the background
 	local background_color = {r=0, g=0, b=0}
 	surface:clear(background_color)
-	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/paris.png")))
+	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/Paris.png")))
 
 	--creates some colors
 	local button_color = {r=0, g=128, b=225}
@@ -93,13 +93,15 @@ function CityViewCopy:load_view(button)
 		gfx.update()
 
 	elseif button == "2" then
-
+		self:stop_listening(event.remote_control)
 		local sub_surface_travel_view = SubSurface(screen,{width=screen:get_width()*0.86, height=screen:get_height()*0.9-100*0.9, x=screen:get_width()*0.04, y=screen:get_height()*0.05+50})
-
+		tv = travel_view(event.remote_control)
 		tv:render(sub_surface_travel_view)
+
 		gfx.update()
 
 	elseif button == "3" then
+		print("Shut down program")
 		sys.stop()
 	end
 end
