@@ -32,6 +32,7 @@ function Store:__init(remote_control, surface, profile)
 	self.surface = surface
 	self.background_path = ""
 	self.current_city = profile:get_city().name
+	print(self.current_city)
 	self.button_grid = ButtonGrid(remote_control)
 	self.cashier = gfx.loadpng("data/images/cashier.png")
 	self.shelf = gfx.loadpng("data/images/shelf.png")
@@ -65,17 +66,17 @@ function Store:__init(remote_control, surface, profile)
 	self.button_size = {width = 2.5*width/45, height = 2.5*width/45}
 
 	self.buttons = {}
-	self.buttons[1] = Button(self.background_color, self.button_active, self.background_color, true, true)
+	self.buttons[1] = Button(self.background_color, self.button_active, self.background_color, true, true,1)
 	k = 2
 	while k <= get_size(self.items) + get_size(self.backpack_items) do
-			self.buttons[k] = Button(self.background_color, self.button_active, self.background_color, true, false)
+			self.buttons[k] = Button(self.background_color, self.button_active, self.background_color, true, false,k)
 			k = k + 1
 	end
 
 	-- Add the exit button
 	self.font = Font("data/fonts/DroidSans.ttf", 20, Color(0, 0, 0, 255))
 	self.header_font = Font("data/fonts/DroidSans.ttf", 40, Color(0,0,0,255))
-	self.buttons[k] = Button(self.button_inactive, self.button_active, self.button_inactive, true, false)
+	self.buttons[k] = Button(self.button_inactive, self.button_active, self.button_inactive, true, false, k)
 	self.buttons[k]:set_textdata("Exit",Color(255,0,0,255), {x = 100, y = 300}, 20, utils.absolute_path("data/fonts/DroidSans.ttf"))
 
 	-- Add them to button grid at the correct place
@@ -99,7 +100,7 @@ function Store:__init(remote_control, surface, profile)
 	self.item_images = self:loadItemImages()
 
 	-- Add exit button
-	self.button_grid:add_button({x = 720,y = 650}, {width = 6*width/45,height = 2*width/45}, self.buttons[k])
+	self.button_grid:add_button({x = width/6,y = height-60}, {width = 6*width/45,height = 2*width/45}, self.buttons[k])
 
 	-- Add to view
 	self.add_view(self.button_grid, false)
@@ -111,15 +112,35 @@ function Store:__init(remote_control, surface, profile)
 		gfx.update()
 	end
 
-	self:listen_to(
-		self.button_grid,
-		"dirty",
-		button_render
-	)
+	self:listen_to(self.button_grid,"dirty",button_render)
+
+	local button_callback = function(button)
+
+		-- Get the current index of button that is selected
+		selected_index = button.transfer_path
+
+		-- If we have selected on of the purchasable items
+		if selected_index <= get_size(self.items) then
+
+			self.message["message"] = self:purchase_item(selected_index)
+
+		-- Elseif we have sold one of our items
+		elseif selected_index <= (get_size(self.items) + get_size(self.backpack_items)) then
+
+			self.message["message"] = self:sell_item(selected_index-get_size(self.items))
+
+		end
+
+		self.item_images = self:loadItemImages()
+		gfx.update()
+		self:dirty(true)
+	end
 
 	-- Instance remote control and mapps it to pressing enter
 	self.callback = utils.partial(self.action_made, self)
 	self:listen_to(event.remote_control,"button_release",self.callback)
+
+	self:listen_to(self.button_grid,"button_click",	button_callback)
 
 
 end
@@ -151,7 +172,7 @@ function Store:insert_button()
 	local width = self.surface:get_width()
 
 	-- Add to table of buttons
-	table.insert(self.buttons, add_index, Button(self.background_color, self.button_active, self.background_color, true, false))
+	table.insert(self.buttons, add_index, Button(self.background_color, self.button_active, self.background_color, true, false, add_index))
 
 	-- Calculations of where to draw the button
 	j = 1
@@ -359,7 +380,7 @@ function Store:action_made(button)
 	end
 
 	-- Reload the relevant images after an action is made
-	self.item_images = self:loadItemImages()
+
 
 
 end
