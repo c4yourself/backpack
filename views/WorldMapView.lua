@@ -83,7 +83,8 @@ function WorldMap:start()
 			self.timer:stop()
 
 			-- TODO: Fix this to use profile instead
-			self.view_manager:set_view(CityView(event.remote_control, Profile("Andreas", nil, nil, nil, "paris")))
+			self.view_manager:set_view(
+				CityView(event.remote_control, Profile("Andreas", nil, nil, nil, self.destination.code)))
 		end
 
 		self:dirty()
@@ -101,7 +102,7 @@ function WorldMap:destroy()
 end
 --- Renders a loading screen which shows the traveling path
 -- @param surface is the screen with is drawn on
-function WorldMap:render(surface, start, dest, transp, view)
+function WorldMap:render(surface)
 	-- Calculate step size
 	self:_paint_world_map(surface)
 
