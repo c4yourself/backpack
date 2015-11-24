@@ -26,11 +26,12 @@ end
 
 --- Constructor for Store
 -- @param event_listener Remote control to listen to
-function Store:__init(remote_control, city, profile)
+function Store:__init(remote_control, surface, profile)
 	-- Add some internal variables that we will want to use later
 	View.__init(self)
+	self.surface = surface
 	self.background_path = ""
-	self.current_city = city
+	self.current_city = profile:get_city().name
 	self.button_grid = ButtonGrid(remote_control)
 	self.cashier = gfx.loadpng("data/images/cashier.png")
 	self.shelf = gfx.loadpng("data/images/shelf.png")
@@ -49,11 +50,13 @@ function Store:__init(remote_control, city, profile)
 	self.button_inactive = Color{255, 153, 153, 255}
 
 	-- Creates local variables for height and width
-	local height = screen:get_height()
-	local width = screen:get_width()
+	local height = self.surface:get_height()
+	local width = self.surface:get_width()
 
 	-- Get the items relevant for the current city
 	self.items = self.backendstore:returnItemList(self.current_city)
+	print(#self.items)
+	print(profile:get_city().name)
 
 	-- Get the profiles backpack items
 	self.backpack_items = self.backendstore:returnBackPackItems(self.profile:get_inventory())
@@ -101,7 +104,17 @@ function Store:__init(remote_control, city, profile)
 	self.add_view(self.button_grid, false)
 
 	-- Some fix for movement
-	self:listen_to(event.remote_control, "button_release", function() self:dirty() end)
+	--self:listen_to(event.remote_control, "button_release", function() self:dirty() end)
+	local button_render = function()
+		self:render(self.surface)
+		gfx.update()
+	end
+
+	self:listen_to(
+		self.button_grid,
+		"dirty",
+		button_render
+	)
 
 	-- Instance remote control and mapps it to pressing enter
 	self.callback = utils.partial(self.action_made, self)
@@ -133,8 +146,8 @@ function Store:insert_button()
 	add_index = get_size(self.items) + get_size(self.backpack_items)
 
 	-- Some sizes for positioning
-	local height = screen:get_height()
-	local width = screen:get_width()
+	local height = self.surface:get_height()
+	local width = self.surface:get_width()
 
 	-- Add to table of buttons
 	table.insert(self.buttons, add_index, Button(self.background_color, self.button_active, self.background_color, true, false))
@@ -178,14 +191,14 @@ function Store:render(surface)
 
 
 	-- Creates local variables for height and width
-	local height = screen:get_height()
-	local width = screen:get_width()
+	local height = self.surface:get_height()
+	local width = self.surface:get_width()
 
 		-- Resets the surface and draws the background
 	surface:clear(self.background_color)
-	surface:copyfrom(self.cashier, nil, {x = 0, y = 280}, true)
-	surface:copyfrom(self.shelf, nil, {x=width/2-150,y=200}, true)
-	surface:copyfrom(self.backpack, nil, {x=width/2-140, y = 450}, true)
+	surface:copyfrom(self.cashier, nil, {x = 0, y = 280, width = height*0.54*3/5, height = height*3/5}, true)
+	surface:copyfrom(self.shelf, nil, {x=width/2-150,y=200, width = height*0.54*3/5, height = height*3/5}, true)
+	surface:copyfrom(self.backpack, nil, {x=width/2-140, y = 450, width = height*0.54*3/5, height = height*3/5}, true)
 
 	-- Print the buttons
 	self.button_grid:render(surface)
@@ -226,8 +239,9 @@ function Store:render(surface)
 			"Sale price: "..self.backendstore:returnOfferPrice(item, self.current_city))
 		end
 	end
+	print("i shoppen")
 	self.font:draw(surface, {x = 3.1*width/4, y = height/3+130}, self.message["message"])
-	self:dirty(false)
+	--self:dirty(false)
 
 end
 
@@ -317,26 +331,28 @@ function Store:action_made(button)
 
 	-- If the player has presseed enter a choice has been made
 	if button == "ok" then
-
-		-- Get the current index of button that is selected
-		selected_index = self.button_grid:get_selected()
-
-		-- If we have selected on of the purchasable items
-		if selected_index <= get_size(self.items) then
-
-			self.message["message"] = self:purchase_item(selected_index)
-
-		-- Elseif we have sold one of our items
-		elseif selected_index <= (get_size(self.items) + get_size(self.backpack_items)) then
-
-			self.message["message"] = self:sell_item(selected_index-get_size(self.items))
-
+		--
+		-- -- Get the current index of button that is selected
+		-- selected_index = self.button_grid:get_selected()
+		--
+		-- -- If we have selected on of the purchasable items
+		-- if selected_index <= get_size(self.items) then
+		--
+		-- 	self.message["message"] = self:purchase_item(selected_index)
+		--
+		-- -- Elseif we have sold one of our items
+		-- elseif selected_index <= (get_size(self.items) + get_size(self.backpack_items)) then
+		--
+		-- 	self.message["message"] = self:sell_item(selected_index-get_size(self.items))
+		-- end
 		-- Otherwise we've exited
-		else
-			self:destroy()
-			sys.stop()
+	elseif button =="back" then
 
-		end
+		self:trigger("exit_view")
+			--self:destroy()
+			--sys.stop()
+
+
 
 	end
 

@@ -55,7 +55,7 @@ function CityView:__init(remote_control, profile)
 	local button_2 = Button(button_color, color_selected, color_disabled,true,false, "views.MultipleChoiceView")
 	local button_3 = Button(button_color, color_selected, color_disabled,true,false, "views.MemoryView")
 	local button_4 = Button(button_color, color_selected, color_disabled,true,false)
-	local button_5 = Button(button_color, color_selected, color_disabled,true,false)
+	local button_5 = Button(button_color, color_selected, color_disabled,true,false, "views.Store")
 	local button_6 = Button(button_color, color_selected, color_disabled,true,false)
 	local button_7 = Button(button_color, color_selected, color_disabled,true,false, "views.TravelView")
 	local button_8 = Button(button_color, color_selected, color_disabled,true,false)
@@ -92,7 +92,7 @@ function CityView:__init(remote_control, profile)
 	local button_callback = function(button)
 		local subsurface = SubSurface(screen,{width=screen:get_width()*0.9, height=(screen:get_height()-50)*0.9, x=screen:get_width()*0.05, y=screen:get_height()*0.05+50})
 		local make_instance = self.button_grid:display_next_view(button.transfer_path)
-		local one_instance = make_instance(remote_control, subsurface)
+		local one_instance = make_instance(remote_control, subsurface, self.profile)
 		self.button_grid:stop_listening(self.button_grid.event_listener,"button_press",callback)
 		one_instance:render(subsurface)
 
@@ -212,9 +212,6 @@ local width = surface:get_width()
   -- using the button grid to render all buttons and texts
 	self.button_grid:render(surface)
 
-
-	print(self.button_grid.button_list)
-	print(self.button_grid.button_list[1].x)
 
 	surface:copyfrom(self.images.paris_selected, nil, {x = width/3, y = 0, width=width*2/3, height=height})
 	surface:copyfrom(self.images.multiple_choice_icon, nil, {x = self.button_grid.button_list[1].x, y = self.button_grid.button_list[1].y, width = self.button_grid.button_list[1].width, height = self.button_grid.button_list[1].height})

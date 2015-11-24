@@ -2,7 +2,7 @@
 local class = require("lib.classy")
 local BackEndStore = class("BackEndStore")
 local Item = require("lib.store.Item")
-
+local ProfileManager = require("lib.profile.ProfileManager")
 -- Get size of Table
 function get_size(input)
 	i = 0
@@ -28,10 +28,10 @@ function BackEndStore:__init()
 										Item(10, "Buddah", "Bombay", "Peaceful", "data/images/store_items/item10.png",85),
 										Item(11, "Rickshaw", "Bombay", "Comfy", "data/images/store_items/item11.png",500),
 										Item(12, "Cow", "Bombay", "Holy", "data/images/store_items/item12.png",600),
-										Item(13, "Saffron", "Kairo", "Yellow", "data/images/store_items/item13.png",40),
-										Item(14, "Carpet", "Kairo", "Maybe flying", "data/images/store_items/item14.png",150),
-										Item(15, "Pyramid", "Kairo", "Huge", "data/images/store_items/item15.png",75),
-										Item(16, "Genei lamp", "Kairo", "Wishful", "data/images/store_items/item16.png",110),
+										Item(13, "Saffron", "Cairo", "Yellow", "data/images/store_items/item13.png",40),
+										Item(14, "Carpet", "Cairo", "Maybe flying", "data/images/store_items/item14.png",150),
+										Item(15, "Pyramid", "Cairo", "Huge", "data/images/store_items/item15.png",75),
+										Item(16, "Genei lamp", "Cairo", "Wishful", "data/images/store_items/item16.png",110),
 										Item(17, "Telephone box", "London", "Connected", "data/images/store_items/item17.png",150),
 										Item(18, "Tea", "London", "British", "data/images/store_items/item18.png",15),
 										Item(19, "Umbrella", "London", "Dry", "data/images/store_items/item19.png",45),
@@ -82,7 +82,7 @@ function BackEndStore:returnItemList(city)
 end
 
 function BackEndStore:returnOfferPrice(item, curr_city)
-	local multiplier = self.city_multiplier[self.city_list[item:get_city()]][self.city_list[curr_city]]
+	local multiplier = 2 --sself.city_multiplier[self.city_list[item:get_city()]][self.city_list[curr_city]]
 	return item:get_price()*multiplier
 end
 
