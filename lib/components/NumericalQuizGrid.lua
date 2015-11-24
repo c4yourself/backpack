@@ -135,7 +135,7 @@ function NumericalQuizGrid:render(surface)
 		if not self:_check_for_input_component(i) then
 				button_data.button:render(sub_surface)
       		if button_data.button.text_available then
-				self:display_text(surface, area, i)
+				self:display_text(surface, i)
 	   		end
 		else
 			button_data.button:render(sub_surface)
