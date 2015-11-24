@@ -37,8 +37,8 @@ end
 -- This function is called at the start of the program
 function onStart()
 	logger.trace("Started")
-	
-	local profile = Profile("Tstar","Tstar@tstar.com",1975,"M", City.cities.cairo)
+
+	local profile = Profile("Tstar","Tstar@tstar.com",1975,"M", City.cities.paris)
 
 	local city_view = CityView(event.remote_control, profile)
 	local splash_screen = SplashView(
