@@ -14,9 +14,7 @@ local SubSurface = require("lib.view.SubSurface")
 local utils = require("lib.utils")
 local event = require("lib.event")
 local Font = require("lib.draw.Font")
-
 local Color = require("lib.draw.Color")
-
 
 --- Constructor for ButtonGrid
 function ButtonGrid:__init(remote_control)
@@ -158,7 +156,7 @@ function ButtonGrid:press(button)
 end
 
 
-
+end
 end
 
 --- Providing a subsurface to each button,

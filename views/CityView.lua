@@ -6,13 +6,7 @@
 local Button = require("lib.components.Button")
 local ButtonGrid=require("lib.components.ButtonGrid")
 local class = require("lib.classy")
-<<<<<<< HEAD
-local MultipleChoiceView = require("views.MultipleChoiceView")
-local NumericalQuizView = require("views.NumericalQuizView")
 local CityTourView = require("views.CityTourView")
-=======
---local CityTourView = require("views.CityTourView")
->>>>>>> cityview
 local Color = require("lib.draw.Color")
 local Font = require("lib.draw.Font")
 local event = require("lib.event")
@@ -52,10 +46,10 @@ function CityView:__init(remote_control, profile)
 	-- Add buttons
 	local button_1 = Button(button_color, color_selected, color_disabled,true,true,"views.NumericalQuizView")
 	local button_2 = Button(button_color, color_selected, color_disabled,true,false, "views.MultipleChoiceView")
-	local button_3 = Button(button_color, color_selected, color_disabled,true,false, "view.MemoryView")
+	local button_3 = Button(button_color, color_selected, color_disabled,true,false)
 	local button_4 = Button(button_color, color_selected, color_disabled,true,false)
 	local button_5 = Button(button_color, color_selected, color_disabled,true,false)
-	local button_6 = Button(button_color, color_selected, color_disabled,true,false, "views.profile_selection")
+	local button_6 = Button(button_color, color_selected, color_disabled,true,false)
 	local button_7 = Button(button_color, color_selected, color_disabled,true,false, "views.TravelView")
 	local button_8 = Button(button_color, color_selected, color_disabled,true,false)
 	local city_tour_button = Button(city_view_color, city_view_selected_color, color_disabled, true, false, "views.CityTourView")
@@ -94,14 +88,12 @@ function CityView:__init(remote_control, profile)
 		self.button_grid:stop_listening(self.button_grid.event_listener,"button_press",callback)
 		one_instance:render(subsurface)
 
-				local exit_view = function()
-						self.button_grid:focus()
-						one_instance:destroy()
-						self:dirty(true)
-				end
 
-				self:listen_to_once(one_instance,"exit_view", exit_view)
-
+		-- local CT = CityTourView(remote_control, city_tour_view)
+		-- self.button_grid:stop_listening(self.buttonGrid.event_listener,
+		--  													"button_press",
+		-- 													callback)
+		-- CT:render(city_tour_view)
 		gfx.update()
 	end
 
@@ -218,67 +210,29 @@ end
 
 function CityView:load_view(button)
 
-<<<<<<< HEAD
 	if button == "1" then
 		--Instanciate a numerical quiz
 		local numerical_quiz_view = NumericalQuizView()
 		--Stop listening to everything
-		self:stop_listening(event.remote_control)
-		self.button_grid:stop_listening() -- TODO Use button_grid:blur instead
+		-- TODO
 		-- Start listening to the exit event, which is called when the user
 		-- exits a quiz
-		local numerical_exit_callback = function()
+		local callback = function()
 			utils.partial(view.view_manager.set_view, view.view_manager)(self)
-			-- TODO Focus buttongrid
 			gfx.update()
 		end
 		self:listen_to(
 			numerical_quiz_view,
 			"exit",
-			numerical_exit_callback
+			--view.view_manager:set_view(self)
+			callback
 		)
-		local numerical_dirty_callback = function()
-			numerical_quiz_view:render(screen)
-		end
-		self:listen_to(
-			numerical_quiz_view,
-			"dirty",
-			numerical_dirty_callback
-		)
-
 		--Update the view
 		numerical_quiz_view:render(screen)
-		-- TODO This should be done with a subsurface in the final version
+		-- TODO This should be done by a subsurface in the final version
 		gfx.update()
 	elseif button == "2" then
-		local mult_quiz_view = MultipleChoiceView()
-		--Stop listening to everything
-		self:stop_listening(event.remote_control)
-		self.button_grid:stop_listening() -- TODO Use button_grid:blur instead
-		-- Start listening to the exit event, which is called when the user
-		-- exits a quiz
-		local mult_choice_exit_callback = function()
-			utils.partial(view.view_manager.set_view, view.view_manager)(self)
-			gfx.update()
-		end
-		self:listen_to(
-			mult_quiz_view,
-			"exit",
-			mult_choice_exit_callback
-		)
-
-		-- Make the city view listen for the "dirty" event
-		local mult_choice_dirty_callback = function()
-			mult_quiz_view:render(screen)
-		end
-		self:listen_to(
-			mult_quiz_view,
-			"dirty",
-			mult_choice_dirty_callback
-		)
-		--Update the view
-		mult_quiz_view:render(screen)
-		-- TODO ^This should be done by a subsurface in the final version
+		multiplechoice_quiz.render(screen)
 		gfx.update()
 	elseif button == "3" then
 		sys.stop()
@@ -291,7 +245,6 @@ function CityView:load_view(button)
 		gfx.update()
 
 		local exit_view = function()
-
 				self.button_grid:focus()
 				CT:destroy()
 				self:dirty(true)
@@ -305,9 +258,6 @@ function CityView:load_view(button)
 
 
 	end
-=======
-end
->>>>>>> cityview
 
 
 
