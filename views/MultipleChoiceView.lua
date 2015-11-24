@@ -67,8 +67,15 @@ function MultipleChoiceView:__init()
 	self.views.grid:add_button(exit_position,
 						button_size,
 						button_exit)
-	--local exit_index = self.grid:get_last_index()
-	--self.views.grid:mark_as_back_button(exit_index)
+	local exit_index = self.views.grid:get_last_index()
+	self.views.grid:mark_as_back_button(exit_index)
+
+	self:listen_to(
+		self.views.grid,
+		"back",
+		utils.partial(self._exit, self)
+	)
+
 	-- Add next button
 	local button_next = Button(button_color, color_selected, color_disabled,
 								true, false, "")
@@ -79,6 +86,35 @@ function MultipleChoiceView:__init()
 	self.views.grid:add_button(next_position,
 						button_size,
 						button_next)
+	local next_index = self.views.grid:get_last_index()
+	self.views.grid:mark_as_next_button(next_index)
+
+	self:listen_to(
+		self.views.grid,
+		"next",
+		utils.partial(self._next, self)
+	)
+
+	-- Add submit button
+	local button_submit = Button(button_color, color_selected, color_disabled,
+								true, false, "")
+	local submit_position = {x = math.ceil((width - button_size.width)/2),
+							y = exit_position.y}
+	button_submit:set_textdata("Submit", Color(255,255,255,255),
+							{x = 0, y = 0}, 32,"data/fonts/DroidSans.ttf")
+	self.views.grid:add_button(submit_position,
+						button_size,
+						button_submit)
+	local submit_index = self.views.grid:get_last_index()
+	self.views.grid:mark_as_input_comp(submit_index)
+
+	--local submit_callback = utils.partial(self.submit)
+	self:listen_to(
+		self.views.grid,
+		"submit",
+		utils.partial(self._submit, self)
+	)
+
 	-- Question buttons
 	local button_margin = 35
 	local question_button_size = {width = 200, height = 60}
@@ -114,10 +150,6 @@ function MultipleChoiceView:__init()
 								question_button_size,
 								self.question_button_4)
 
-	--local next_index = self.grid:get_last_index()
-	--self.views.grid:mark_as_next_button(next_index)
-
-
 	-- Listeners and callbacks
 	self:listen_to(
 	event.remote_control,
@@ -125,6 +157,22 @@ function MultipleChoiceView:__init()
 	utils.partial(self.press, self)
 	)
 end
+
+---Triggered everytime the user presses the submit button
+function MultipleChoiceView:_submit()
+	print("answered")
+end
+
+---Triggered everytime the user presses the next button
+function MultipleChoiceView:_next()
+	print("next")
+end
+
+---Triggered everytime the user presses the back to city button
+function MultipleChoiceView:_exit()
+	self:trigger("exit")
+end
+
 
 --Responds to a button press when the View is active (i.e. current View for the
 -- global @{ViewManager} instance). This method handles the logic and determines
@@ -307,5 +355,7 @@ function MultipleChoiceView:render(surface)
 	gfx.update()
 	self:dirty(false)
 end
+
+
 
 return MultipleChoiceView
