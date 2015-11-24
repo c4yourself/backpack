@@ -131,10 +131,9 @@ function CityView:__init(remote_control, profile)
 	-- Preload images for increased performance
 
 	self.images = {
-		paris = gfx.loadpng("data/images/"..self.profile.city ..".png"),
+		paris = gfx.loadpng("data/images/"..self.profile.city..".png"),
 		coin = gfx.loadpng("data/images/coinIcon.png"),
-
-		paris_selected = gfx.loadpng("data/images/"..self.profile.city .."IconSelected.png"),
+		paris_selected = gfx.loadpng("data/images/"..self.profile.city.."IconSelected.png"),
 		math_icon = gfx.loadpng("data/images/MathIcon.png"),
 		flight_icon = gfx.loadpng("data/images/FlightIcon.png"),
 		exit_icon = gfx.loadpng("data/images/ExitIcon.png"),
@@ -143,7 +142,6 @@ function CityView:__init(remote_control, profile)
 		store_icon = gfx.loadpng("data/images/StoreIcon.png"),
 		four_in_a_row_icon = gfx.loadpng("data/images/4inRowIcon.png"),
 		multiple_choice_icon = gfx.loadpng("data/images/MultipleChoiceIcon.png")
-
 	}
 
 	-- Premultiple images with transparency to make them render properly

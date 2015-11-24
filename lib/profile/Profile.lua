@@ -16,6 +16,7 @@ local class = require("lib.classy")
 local utils = require("lib.utils")
 local Profile = class("Profile")
 local Event = require("lib.event.Event")
+local City = require("lib.city")
 
 Profile.name = ""
 Profile.email_address = ""
@@ -71,7 +72,7 @@ end
 
 -- Get city of the user
 function Profile:get_city()
-	return self.city
+	return City.cities[self.city]
 end
 
 -- Get balance of the user

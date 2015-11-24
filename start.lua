@@ -42,8 +42,6 @@ function onStart()
 	--local profile = Profile("Tstar","Tstar@tstar.com",1975,"M", City.cities.cairo)
 
 
-	local profile = Profile("Tstar","Tstar@tstar.com",1975,"M", City.cities["paris"])
-	profile:set_inventory("{3,5,9}")
 
 
 

@@ -15,7 +15,7 @@ function CityTourView:__init(remote_control, surface, profile)
 	View.__init(self)
 	self.buttonGrid = button_grid(remote_control)
 	self.city = profile:get_city()
-
+print(self.city)
 	local width = screen:get_width()*0.9
 	local height = (screen:get_height()-50)*0.9
 
@@ -39,8 +39,14 @@ function CityTourView:__init(remote_control, surface, profile)
 	self.attraction = {question = "How tall is the Eiffel Tower?",
 										answers = {"324 metres", "564 metres", "137 metres", "401 metres"}}
 
-	-- Create the tour image
-	self.tour_attraction_image = gfx.loadpng(attractions.attraction[self.city.code][1].pic_url)
+	-- Create the tour images
+	self.tour_attraction_images = {}
+	for k,v in pairs(attractions.attraction[self.city.code]) do
+		table.insert(self.tour_attraction_images, gfx.loadpng(attractions.attraction[self.city.code][k].pic_url))
+	end
+	-- = {gfx.loadpng(attractions.attraction[self.city.code][1].pic_url),
+	-- 															gfx.loadpng(attractions.attraction[self.city.code][2].pic_url]),
+	-- 															gfx.loadpng(attractions.attraction[self.city.code][3])
 
 	-- Create answer buttons
 	local button_1 = button(button_color, color_selected, color_disabled,true, true, "Correct")
@@ -113,7 +119,7 @@ function CityTourView:render(surface)
 	local text_indent = 100 -- Indents text area
 
 	-- Create the picture
-	surface:copyfrom(self.tour_attraction_image ,nil ,{ x = height/6, y = height/6, width = height*0.54*3/5, height = height*3/5})
+	surface:copyfrom(self.tour_attraction_images[attractionpoint] ,nil ,{ x = height/6, y = height/6, width = height*0.54*3/5, height = height*3/5})
 
 	-- Draw the fonts
 	city_tour_head_font:draw(surface, {x = height/6-10, y = 20}, "City Tour")
