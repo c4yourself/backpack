@@ -77,7 +77,43 @@ attractions.attraction = { paris = {
                                     "gang and a reference to fourth dynasty Egyptian Pharaoh Khufu,",
                                     "Egyptologists believe that the pyramid was built as a tomb over a",
                                     "10 to 20-year period concluding around 2560 BC."}
-                                  }
+                                  },
+                                  {name = "Egyptian museum",
+                                  pic_url = "data/images/CityTourEiffelTower.png",
+                                  text = {"The Museum of Egyptian Antiquities, known commonly as the",
+                                   "Egyptian Museum or Museum of Cairo, in Cairo, Egypt, is home to",
+                                   "an extensive collection of ancient Egyptian antiquities. It has",
+                                   "120,000 items, with a representative amount on display, the",
+                                   "remainder in storerooms. During the Egyptian Revolution of 2011,",
+                                   "the museum was broken into, and two mummies were reportedly",
+                                   "destroyed. Several artifacts were also shown to have been damaged.",
+                                   "Around 50 objects were lost. Since then 25 objects have been found,",
+                                     "as of October 2015, it is open to the public."}
+                                },
+                                {name = "Al-Azhar mosque",
+                                pic_url = "data/images/CityTourEiffelTower.png",
+                                text = {"Al-Azhar (mosque of the most resplendent) is a mosque in Islamic",
+                                "Cairo in Egypt. Al-Mu'izz li-Din Allah of the Fatimid Caliphate",
+                                "commissioned its construction for the newly established capital city",
+                                "in 970. Its name is usually thought to allude to the Islamic prophet",
+                                "Muhammad's daughter Fatimah, a revered figure in Islam who was",
+                                "given the title az-Zahrā′ (the shining or resplendent one). It was the",
+                                "first mosque established in Cairo, a city that has since gained the",
+                                "nickname the City of a Thousand Minarets."}
+                              },
+                              {name = "The Citadel",
+                              pic_url = "data/images/CityTourEiffelTower.png",
+                              "(Saladin) between 1176 and 1183 CE, to protect it from the Crusaders.",
+                              text = {"The Citadel was fortified by the Ayyubid ruler Salah al-Di (Saladin)",
+                              "Only a few years after defeating the Fatimid Caliphate, Saladin",
+                              "set out to build a wall that would surround both Cairo and Fustat.",
+                              "Saladin is recorded as saying, With a wall I will make the two ",
+                              "(cities of Cairo and Fustat) into a unique whole, so that one army ",
+                              "may defend them both; and I believe it is good to encircle them",
+                              "with a single wall from the bank of the Nile to the bank of the ",
+                              "Nile”. The Citadel would be the centerpiece ofthe wall. It is now a",
+                              "preserved historic site, with mosques and museums."}
+                            }
 
                               }
 
