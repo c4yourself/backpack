@@ -54,9 +54,12 @@ function ListComp:render(surface)
 	surface:clear({255, 255, 255, 255},
 	{x = 5, y = 5, width = surface:get_width() - 10, height = surface:get_height() - 10})
 
-	local height = (surface:get_height() - 12 - self.visible_items) /self.visible_items
+	local height = math.floor(
+		(surface:get_height() - 12 - self.visible_items) / self.visible_items)
 
-	for i = self.start_index , self.start_index + self.visible_items - 1 do
+	local end_index = self.start_index + self.visible_items - 1
+	for i = self.start_index , end_index do
+
 		local list_data = self.item_list[i]
 
 		if i == self.current_index then
@@ -65,9 +68,18 @@ function ListComp:render(surface)
 			list_data:select(false)
 		end
 
+		local current_height = height
+		if i == end_index then
+			current_height = surface:get_height() - 12 - (self.visible_items - 1) * (height + 1)
+		end
+
 		local sub_surface = SubSurface(surface, {
-			x = 6, y = 6 + (i - self.start_index) * (height + 1), width = surface:get_width() - 12, height = height})
-		  list_data:render(sub_surface)
+			x = 6,
+			y = 6 + (i - self.start_index) * (height + 1),
+			width = surface:get_width() - 12,
+			height = current_height
+		})
+		list_data:render(sub_surface)
   end
 	self:dirty(false)
 end

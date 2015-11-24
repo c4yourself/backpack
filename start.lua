@@ -7,8 +7,10 @@ local logger = require("lib.logger")
 local SplashView = require("views.SplashView")
 local utils = require("lib.utils")
 local view = require("lib.view")
+
 local City = require("lib.city")
 local Profile = require("lib.profile.Profile")
+
 
 --- This function runs every time a key is pressed
 -- The current mapping for the emulator can be found in emulator/zto.lua
@@ -78,4 +80,5 @@ function onStart()
 	--local city_view_2 = CityView2(event.remote_control)
 	--view.view_manager:set_view(city_view_2)
 	--gfx.update()
+
 end
