@@ -1,0 +1,79 @@
+--- Card class.
+-- @classmod Card
+
+local class = require("lib.classy")
+local View = require("lib.view.View")
+local Card = class("Card", View)
+
+--- Constructor for Card
+--@param color The color of Card which is neither disabled nor selected
+--@param color_selected The color for a selected Card
+--@param color_disabled The color for a disabled Card
+--@param enaled The Card is enabled or not when instantiating
+--@param selected The Card is selected or not when instantiating
+function Card:__init(color, color_selected, color_disabled, enabled, selected, index)
+	View.__init(self)
+	self.color = color
+	self.color_selected = color_selected or color
+	self.color_disabled = color_disabled or color
+	self._enabled = enabled or true
+	self._selected = selected or false
+	self.text_available = false
+	self.index = index
+end
+
+function Card:set_textdata(text, font_color, text_position, font_size,font_path)
+	self.text_available = true
+	self.text = text
+	self.font_size = font_size
+	self.font_color = font_color
+	self.font_path = font_path
+	self.text_position = text_position
+end
+
+function Card:enable(status)
+
+	if status == nil then
+		status = true
+	end
+
+	local old_status = self._enabled
+	self._enabled = status
+
+	self:mark_dirty()
+end
+
+function Card:is_enabled()
+	return self._enabled
+end
+
+function Card:select(status)
+
+	if status == nil then
+		status = true
+	end
+
+	local old_status = self._selected
+	self._selected = status
+	self:dirty(true)
+end
+
+function Card:is_selected()
+	return self._selected
+end
+
+function Card:render(surface)
+	self:dirty(false)
+
+	if not self:is_enabled() then
+		surface:clear(self.color_disabled:to_table())
+	elseif self:is_selected() then
+		surface:clear(self.color_selected:to_table())
+	else
+		surface:clear(self.color:to_table())
+	end
+
+end
+
+
+return Card
