@@ -171,7 +171,18 @@ function ButtonGrid:press(button)
 			self:indicate_leftward(self.button_indicator, "left")
 			self:trigger("dirty")
 		elseif button == "ok" then
+			for i=1, #self.button_list do
+				if self.button_list[i].button:is_selected() == true then
 
+					--self:display_next_view(self.button_list[i].button.transfer_path)
+				--	gfx.update()
+				--	break
+				-- else
+					self:trigger("button_click", self.button_list[i].button)
+					break
+				
+			end
+		end
 		end
 
 
