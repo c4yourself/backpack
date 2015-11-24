@@ -94,8 +94,18 @@ end
 ---Responds to a button press when the View is active
 -- @param key Key that was pressed
 function NumericQuizView:press(key)
-	if key == "back" then
-		self:trigger("exit")
+
+	if key == "right" then
+		-- Navigate to the next question if the user already submitted an answer
+		if self.answer_flag then
+			self.answer_flag = false
+			self:dirty(false)
+			self:dirty(true) -- To make sure dirty event is triggered
+		end
+	elseif key == "back" then
+		self:trigger("exit_view")
+
+
 	end
 end
 

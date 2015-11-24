@@ -16,7 +16,6 @@ local event = require("lib.event")
 local Font = require("lib.draw.Font")
 local Color = require("lib.draw.Color")
 
-
 --- Constructor for ButtonGrid
 function ButtonGrid:__init(remote_control)
 	View.__init(self)
@@ -32,7 +31,11 @@ function ButtonGrid:__init(remote_control)
   end
 
   self.callback = utils.partial(self.press, self)
+
+  --self:listen_to(self.event_listener,"button_release",self.callback )
+
   self:focus()
+
 	--
 	-- local dirtycallback = function()
 	-- 	print("I button grid")
@@ -66,7 +69,9 @@ end
 -- @param button The button instance
 -- @throws Error If the button cross the boundaries of the surface
 function ButtonGrid:add_button(position, button_size, button)
+
 -- chenck if the button across the screen boundaries
+
 	if position.x >= 0 and button_size.width >= 0
 		 and position.x + button_size.width < 1280
 		 and position.y >= 0 and button_size.height >= 0
@@ -80,9 +85,52 @@ function ButtonGrid:add_button(position, button_size, button)
 	 height = button_size.height
 	 })
 
-else
-	error("screen boundary error")
+	else
+		error("screen boundary error")
+	end
 end
+
+-- Used to insert a new button on a specific index
+-- Primarily created for the store view
+-- @param position The button's position on the surface
+-- @param button_size The size of button
+-- @param button The button instance
+-- @param index The index where to add the new button
+-- @throws Error If the button cross the boundaries of the surface
+function ButtonGrid:insert_button(position, button_size, button, index)
+	if position.x >= 0 and button_size.width >= 0
+		 and position.x + button_size.width < 1280
+		 and position.y >= 0 and button_size.height >= 0
+		 and position.y + button_size.height < 720	then
+			 table.insert(self.button_list, index,
+			 {button = button,
+			 x = position.x,
+			 y = position.y,
+			 width = button_size.width,
+			 height = button_size.height
+			 })
+		 else
+			 error("screen boundary error")
+		 end
+		 self:dirty(false)
+end
+
+-- Used to remove an existing button from the grid
+-- Primarily created for the store view
+-- @param index The index where to remove the button
+-- @param remove_index The index that is actually removed
+-- @throws Error in the button does not exist
+function ButtonGrid:remove_button(index, remove_index)
+
+	if index <= #self.button_list then
+		table.remove(self.button_list, index)
+		if remove_index == index then
+			self.button_list[index-1].button:select(true)
+		end
+	else
+		error("Trying to remove a button out of range")
+	end
+	self:dirty(false)
 
 end
 
@@ -102,9 +150,10 @@ end
 function ButtonGrid:display_next_view(transfer_path)
 
  	local view_import = require(transfer_path)
- 	local view_instance = view_import()
+	return view_import
+ 	--local view_instance = view_import()
 
- 	view.view_manager:set_view(view_instance)
+ 	--view.view_manager:set_view(view_instance)
 end
 
 function ButtonGrid:press(button)
@@ -121,41 +170,22 @@ function ButtonGrid:press(button)
 		elseif button == "left" then
 			self:indicate_leftward(self.button_indicator, "left")
 			self:trigger("dirty")
-		elseif button == "1" then
-				--Instanciate a numerical quiz
-				--local numerical_quiz_view = NumericalQuizView()
-				--Stop listening to everything
-				-- TODO
-				-- Start listening to the exit event, which is called when the user
-				-- exits a quiz
-
-				--Update the view
-				--numerical_quiz_view:render(screen)
-				-- TODO This should be done by a subsurface in the final version
-				--gfx.update()
-		elseif button == "2" then
-				multiplechoice_quiz.render(screen)
-				gfx.update()
-		elseif button == "3" then
-				print("Shut down program")
-				sys.stop()
-
 		elseif button == "ok" then
-
 			for i=1, #self.button_list do
 				if self.button_list[i].button:is_selected() == true then
-					if self.button_list[i].button.transfer_path ~= nil then
-					self:display_next_view(self.button_list[i].button.transfer_path)
+
+					--self:display_next_view(self.button_list[i].button.transfer_path)
 				--	gfx.update()
+				--	break
+				-- else
+					self:trigger("button_click", self.button_list[i].button)
 					break
-					end
-				end
-	end
-	end
+			end
+		end
+		end
+
+
 end
-
-	collectgarbage()  --ensure that memory-leak does not occur
-
 end
 
 --- Providing a subsurface to each button,
@@ -165,7 +195,9 @@ function ButtonGrid:render(surface)
 -- If no button is selected when this button_grid is created,
 -- then the first button in the list will be selected.
 -- The indicator always points to the selected button
-self:dirty(false)
+
+	self:dirty(false)
+
 	if self.start_indicator == true then
 		for k = 1 , #self.button_list do
 			if self.button_list[k].button:is_selected() then
@@ -184,6 +216,7 @@ self:dirty(false)
 
 -- Go through the button_list to render all buttons
     for i=1 , #self.button_list do
+
 		local button_data = self.button_list[i]
 		local area = {
 			width = button_data.width,
@@ -198,6 +231,7 @@ self:dirty(false)
 			self:display_text(surface, i)
 	   end
    end
+   gfx.update()
 end
 
 --- When "down" is pressed, the indicator shall follow the down-direction
@@ -400,9 +434,9 @@ if shortest_distance_buttons ~= 1280 then
 		if  button_list[indicator].x >= button_list[j].x + button_list[j].width then
 			local distance = self:button_distance(indicator, j)
 			if shortest_distance_buttons == distance then
-				print("the distance is "..distance)
+				--print("the distance is "..distance)
 				nearest_button_index = j
-				print("the nearast button is ".. nearest_button_index)
+				--print("the nearast button is ".. nearest_button_index)
 				break
 			end
 		end
@@ -435,7 +469,13 @@ end
 	self.button_indicator = indicator
 end
 
-
+function ButtonGrid:get_selected()
+	for i = 1, #self.button_list do
+		if self.button_list[i].button:is_selected() then
+			return i
+		end
+	end
+end
 
 function ButtonGrid:button_distance(sel_button_index, button_index)
 	local sel_central_x = self.button_list[sel_button_index].x + math.floor(self.button_list[sel_button_index].width/2)
