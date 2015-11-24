@@ -6,6 +6,7 @@ local hash = require("lib.hash")
 local ProfileSynchronizer = class("ProfileSynchronizer")
 local json = require("lib.dkjson")
 local Profile = require("lib.profile.Profile")
+local City = require"lib.city"
 
 -- Some possible test code to use; this really can't be automateed
 --[[
@@ -66,8 +67,7 @@ end
 local function create_existing_profile(data)
 
 	-- Constructor
-	new_profile = Profile(data.name, data.email_address, data.date_of_birth, data.sex, data.current_city)
-
+	new_profile = Profile(data.name, data.email_address, data.date_of_birth, data.sex, City.cities[data.current_city])
 	-- And additional data
  	new_profile:set_balance(data.balance)
 	new_profile:set_id(data.id)

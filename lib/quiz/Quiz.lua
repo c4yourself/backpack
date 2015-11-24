@@ -1,15 +1,17 @@
---- Base class for Quiz
+---Base class for Quiz
 -- @classmod Quiz
 -- @field questions table with Strings representing questions
 -- @field current_question counter keeping track of the current question
 -- @field correct_answers counter keeping track of the correct answers
 -- @field wrong_answers keeping track of the wrong answers
+
 local class = require("lib.classy")
 local questiongenerator = require("lib.quiz.questiongenerator")
 local TSVReader = require("lib.quiz.TSVReader")
 local NumericQuestion = require("lib.quiz.NumericQuestion")
 local Quiz = class("Quiz")
---- Constructor for the Quiz class
+
+---Constructor for the Quiz class
 function Quiz:__init()
 	self.questions = {}
 	self.current_question = 0
@@ -17,9 +19,9 @@ function Quiz:__init()
 	self.wrong_answers = 0
 	self.score = 0
 end
---- Returns the next question in the quiz
--- @return String representing the next question or nil when there's no
--- questions left
+
+---Returns the next question in the quiz
+-- @return String representing the next question or nil when there's no questions left
 function Quiz:get_question()
 	self.current_question = self.current_question + 1
 	if self.questions[self.current_question] == nil then
@@ -27,7 +29,9 @@ function Quiz:get_question()
 	end
 	return self.questions[self.current_question].question
 end
--- Checks if the users answer to the current question is correct
+
+---Checks if the users answer to the current question is correct
+-- @param anwer
 -- @return Boolean to show if the answer was correct or not
 function Quiz:answer(answer)
 	if self.questions[self.current_question] ~= nil then
@@ -39,6 +43,7 @@ function Quiz:answer(answer)
 	end
 	return self.questions[self.current_question]:is_correct(answer)
 end
+
 -- Generates a numerical quiz of a given size and difficulty
 function Quiz:generate_numerical_quiz(level, quiz_size, image_path)
 	for i = 1, quiz_size do
@@ -47,20 +52,20 @@ function Quiz:generate_numerical_quiz(level, quiz_size, image_path)
 	end
 end
 
--- Calculate score of the quiz
+---Calculate score of the quiz
 -- @param representing how many correct answers of the quiz
 function Quiz:calculate_score(correct_question_number)
 	--maybe some other scoring algorithm
 	self.score = correct_question_number * 2
 end
 
--- Get the score of the quiz
+---Get the score of the quiz
 -- @return self.score
 function Quiz:get_score()
 	return self.score
 end
 
--- Generates a multiple_choice quiz of a given size
+---Generates a multiple_choice quiz of a given size
 -- @param image_path representing the city now
 -- @param quiz_size representing how many questions it need
 -- @return true representing get the question table
@@ -78,7 +83,7 @@ function Quiz:generate_multiplechoice_quiz(image_path,quiz_size)
 	end
 end
 
--- Generates a single quiz of a given size
+---Generates a single quiz of a given size
 -- @param image_path representing the city now
 -- @param quiz_size representing how many questions it need
 -- @return true representing get the question table
@@ -95,7 +100,13 @@ function Quiz:generate_singlechoice_quiz(image_path,quiz_size)
 		return false
 	end
 end
-	-- @param attraction_number representing what attraction number you want a question for. String 1, 2 or 3.
+
+---Generates a citytour quiz of a given size
+-- @param image_path representing the city now
+-- @param quiz_size representing how many questions it need
+-- @param attraction_number representing what attraction number you want a question for. String 1, 2 or 3
+-- @return true representing get the question table
+-- @return false representing don't get question from TSV
 function Quiz:generate_citytour_quiz(image_path,quiz_size,attraction_number)
 	local tsvreader = TSVReader(image_path .. "_city_tour")
 	if tsvreader:get_question("city_tour" .. attraction_number) ~= false then
