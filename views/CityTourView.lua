@@ -34,10 +34,6 @@ function CityTourView:__init(remote_control, surface)
 	local color_selected = Color(255, 153, 0, 255)
 	local button_text_color = Color(0, 0, 0, 255)
 
---	local color_disabled = color(111, 222, 111, 255) --have not been used yet
-	self.attraction = {question = "How tall is the Eiffel Tower?",
-										answers = {"324 metres", "564 metres", "137 metres", "401 metres"}}
-
 	-- Create the tour image
 	self.tour_attraction_image = gfx.loadpng(attractions.attraction.paris[1].pic_url)
 
@@ -49,10 +45,10 @@ function CityTourView:__init(remote_control, surface)
 
 	-- Create text on buttons
 	-- X and y values are not used!
-	button_1:set_textdata(self.attraction.answers[1], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
-	button_2:set_textdata(self.attraction.answers[2], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
-	button_3:set_textdata(self.attraction.answers[3], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
-	button_4:set_textdata(self.attraction.answers[4], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	button_1:set_textdata(attractions.attraction.paris[attractionpoint].answers[1], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	button_2:set_textdata(attractions.attraction.paris[attractionpoint].answers[2], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	button_3:set_textdata(attractions.attraction.paris[attractionpoint].answers[3], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	button_4:set_textdata(attractions.attraction.paris[attractionpoint].answers[4], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
 
 	local text_height = 75+25*table.getn(attractions.attraction.paris[attractionpoint].text)
 	local indent = 55
@@ -85,6 +81,10 @@ function CityTourView:__init(remote_control, surface)
 			self:trigger("exit_view")
 		else
 			attractionpoint = attractionpoint + 1
+			button_1:set_textdata(attractions.attraction.paris[attractionpoint].answers[1], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
+			button_2:set_textdata(attractions.attraction.paris[attractionpoint].answers[2], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
+			button_3:set_textdata(attractions.attraction.paris[attractionpoint].answers[3], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
+			button_4:set_textdata(attractions.attraction.paris[attractionpoint].answers[4], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
 			self:render(surface)
 			gfx.update()
 		end
@@ -129,7 +129,7 @@ function CityTourView:render(surface)
 	end
 
 	-- Tour question
-	city_tour_text:draw(surface, {x = width/3+text_indent, y = (height+50+25*table.getn(attractions.attraction.paris[attractionpoint].text))/2, width = 50, height = 50}, self.attraction.question)
+	city_tour_text:draw(surface, {x = width/3+text_indent, y = (height+50+25*table.getn(attractions.attraction.paris[attractionpoint].text))/2, width = 50, height = 50}, attractions.attraction.paris[attractionpoint].question)
 
 	--Render buttons
 	self.buttonGrid:render(surface)
