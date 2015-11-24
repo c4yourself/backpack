@@ -7,8 +7,6 @@ local utils = require("lib.utils")
 local ConnectFour = class("ConnectFour")
 
 --- Constructor for ConnectFour
--- @param board table containing the board
--- @param player current player
 function ConnectFour:__init()
 
 	self.board = {{},{},{},{},{},{}}
@@ -59,7 +57,7 @@ return connect_four
 end
 
 
---- Returns the color of the disc at the given position. If there is no disc in the given column nil is returned
+--- Returns the color of the coin at the given position. If there is no coin in the given column nil is returned
 -- @param row
 -- @param column
 -- @return output the value at the given position
@@ -97,7 +95,7 @@ function ConnectFour:get_player()
 	end
 end
 
---- Calculates which row the disc will stop at given a columnn
+--- Calculates which row the coin will stop at given a columnn
 -- @param column
 -- @return row
 function ConnectFour:get_current_row(column)
@@ -115,9 +113,18 @@ function ConnectFour:get_current_row(column)
 	return row
 end
 
---- Returns true if the given player can add a disc to the given column
+--- Resets the game-board to nil, clear the board
+function ConnectFour:reset_board()
+	for row = 1,6 do
+		for column = 1, 7 do
+			self.board[row][column] = nil
+		end
+	end
+end
+
+--- Returns true if the given player can add a coin to the given column
 -- @param player the player who tries to make a move
--- @param column the column where the player wants to drop the disc
+-- @param column the column where the player wants to drop the coin
 -- @return boolean
 function ConnectFour:is_valid_move(player, column)
 	row = self:get_current_row(column)
@@ -129,9 +136,9 @@ function ConnectFour:is_valid_move(player, column)
 	end
 end
 
---- Drops a disc of the given player into the given column. If the move is invalid an error is raised. If it is not the given player’s turn an error is raised
+--- Drops a coin of the given player into the given column. If the move is invalid an error is raised. If it is not the given player’s turn an error is raised
 -- @param player the player who makes the move
--- @param column the column where the player puts the disc
+-- @param column the column where the player puts the coin
 function ConnectFour:move(player, column)
 
 	--guard condition
@@ -250,6 +257,8 @@ function ConnectFour:find_winner(player, row, column)
 	return nil
 end
 
+---Checks if there is a winner by calling find_winner() with the top-coin in each column as a parameter
+-- @return player string containing the player if there is a winner else nil
 function ConnectFour:get_winner()
 	for i = 1, 7 do
 		local row = self:get_current_row(i)
@@ -267,14 +276,25 @@ function ConnectFour:get_winner()
 return nil
 end
 
+--- Decides which column the computer should choose during next move
+-- @param x_column , column for the last put coin by the player
+-- @return random_column, number choosen column
+function ConnectFour:computer_AI(x_column)
 
-function ConnectFour:computer_AI()
 	local random_column
-	repeat
+	random_probability = math.random(1,10) --probability
+
+	if random_probability < 8 then
+		repeat
+			random_close = math.random(-1, 1)
+			random_column = x_column + random_close
+		until self:is_valid_move("O", random_column)
+	elseif random_probability >= 8 then
 		random_column = math.random(1,7)
-	until self:is_valid_move("O", random_column)
+	end
 
 	return random_column
+
 end
 
 return ConnectFour

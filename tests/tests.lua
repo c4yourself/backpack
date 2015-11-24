@@ -3,6 +3,14 @@ local LuaUnit = require("luaunit")
 -- Enable import as if we were executing from the actual program
 package.path = "../?.lua;" .. package.path
 
+-- Make mocks global
+gfx = require("lib.mocks.GfxMock")
+surface = require("lib.mocks.SurfaceMock")
+player = require("lib.mocks.PlayerMock")
+freetype = require("lib.mocks.FreetypeMock")
+sys = require("lib.mocks.SysMock")
+screen = surface(1280, 720)
+
 -- Make sure logging is disabled since it can interfere with the tests
 local config = require("config")
 config.logging.mode = "DISABLED"
@@ -17,16 +25,19 @@ TestConnectFour = require("test_connectfour")
 TestViewManager = require("test_view_ViewManager")
 --TestNumericalInputComponent = require("test_components_NumericalInputComponent")
 TestNumerical = require("test_numerical")
-TestSurfaceMock = require("test_mock_SurfaceMock")
 TestIntegrationNumerical = require("test_integration_numerical")
 TestTSV = require("test_tsvreader")
-TestGfxMock = require("test_mock_GfxMock")
-TestFreetypeMock = require("test_mock_FreetypeMock")
-TestPlayerMock = require("test_mock_PlayerMock")
-TestSysMock = require("test_mock_SysMock")
 TestProfile = require("test_profile")
 TestMemory = require("test_memory")
-TestTimerMock = require("test_mock_TimerMock")
+--Mocks
+TestTimerMock = require("mocks.test_mock_TimerMock")
+TestGfxMock = require("mocks.test_mock_GfxMock")
+TestFreetypeMock = require("mocks.test_mock_FreetypeMock")
+TestPlayerMock = require("mocks.test_mock_PlayerMock")
+TestSysMock = require("mocks.test_mock_SysMock")
+TestSurfaceMock = require("mocks.test_mock_SurfaceMock")
+--integration
+TestMockIntegration = require("integration.test_mock_integration")
 
 
 lu = LuaUnit.LuaUnit.new()
