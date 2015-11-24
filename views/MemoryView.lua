@@ -236,7 +236,7 @@ function MemoryView:render(surface)
 end
 
 function MemoryView:back_to_city()
-    self:destroy()
+    --self:destroy()
     -- TODO Implement/connect pop-up for quit game
     -- Appendix 2 in UX design document
     -- Trigger exit event
@@ -258,9 +258,7 @@ function MemoryView:_set_pairs()
 end
 
 function MemoryView:destroy()
-  print("in destroy")
-  view.View.destroy(self)
-  print("in destroy 2")
+    view.View.destroy(self)
   -- for k,v in pairs(self.images) do
   --    self.images[k]:destroy()
   -- end
