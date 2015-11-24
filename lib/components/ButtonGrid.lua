@@ -98,7 +98,7 @@ function ButtonGrid:display_next_view(transfer_path)
 end
 
 function ButtonGrid:press(button)
-	if not self.paused then
+	--if not self.paused then
     if button == "down" then
 			self:indicate_downward(self.button_indicator)
 			self:trigger("dirty")
@@ -140,7 +140,7 @@ function ButtonGrid:press(button)
 					end
 				end
 	end
-	end
+	--end
 end
 
 

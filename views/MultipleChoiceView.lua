@@ -15,6 +15,7 @@ local Rectangle = require("lib.draw.Rectangle")
 local SubSurface = require("lib.view.SubSurface")
 local ButtonGrid = require("lib.components.ButtonGrid")
 local Button = require("lib.components.Button")
+local NumericalQuizGrid = require("lib.components.NumericalQuizGrid")
 
 --- Constructor for MultipleChoiceView
 function MultipleChoiceView:__init()
@@ -47,7 +48,7 @@ function MultipleChoiceView:__init()
 	self.font = Font("data/fonts/DroidSans.ttf",32,Color(255,255,255,255))
 
 	-- Buttons and grids
-	self.views.grid = ButtonGrid()
+	self.views.grid = NumericalQuizGrid()
 
 	local height = screen:get_height()
 	local width = screen:get_width()
@@ -123,12 +124,6 @@ function MultipleChoiceView:__init()
 	"button_release",
 	utils.partial(self.press, self)
 	)
-
-	self:listen_to(
-		self.views.grid,
-		"dirty",
-		utils.partial(self.trigger, self, "dirty")
-	)
 end
 
 --Responds to a button press when the View is active (i.e. current View for the
@@ -197,6 +192,14 @@ function MultipleChoiceView:render(surface)
 		"button_release",
 		callback
 		)
+
+		self:listen_to(
+			self.views.grid,
+			"dirty",
+			utils.partial(self.views.grid.render,
+							self.views.grid, surface)
+		)
+
 		-- TODO initiate listening to the button group, when its implemented
 		self.listening_initiated = true
 	end
@@ -273,8 +276,6 @@ function MultipleChoiceView:render(surface)
 			self.question_button_4:set_textdata(button_4_text, Color(255,255,255,255),
 										{x = 0, y = 0}, 32,"data/fonts/DroidSans.ttf")
 
-			self.views.grid:render(surface)
-
 		elseif self.quiz_state == "DISPLAY_RESULT" then
 			-- Display the result from one question
 			-- self.font:draw(screen,Rectangle(100,300,200,200):to_table(),self.result_string)
@@ -293,11 +294,12 @@ function MultipleChoiceView:render(surface)
 				{x = 0, y = 0, height = self.question_area_height,
 				width = self.question_area_width},
 				result, "center", "middle")
-
 			--[[self.font:draw(screen,Rectangle(100,300,200,200):to_table(),"You answered "
 			.. self.correct_answer_number .. " questions correctly and your score is "
 			.. self.mult_choice_quiz:get_score() .. ".")]]
 		end
+
+		self.views.grid:render(surface)
 	end
 	-- TODO Render all child views and copy changes to this view
 	-- Render children
