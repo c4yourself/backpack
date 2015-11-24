@@ -11,9 +11,10 @@ local button_grid=require("lib.components.ButtonGrid")
 local CityTourView = class("CityTourView", View)
 local attractions  = require("lib.attractions")
 
-function CityTourView:__init(remote_control, surface)
+function CityTourView:__init(remote_control, surface, profile)
 	View.__init(self)
 	self.buttonGrid = button_grid(remote_control)
+	self.city = profile:get_city()
 
 	local width = screen:get_width()*0.9
 	local height = (screen:get_height()-50)*0.9
@@ -39,7 +40,7 @@ function CityTourView:__init(remote_control, surface)
 										answers = {"324 metres", "564 metres", "137 metres", "401 metres"}}
 
 	-- Create the tour image
-	self.tour_attraction_image = gfx.loadpng(attractions.attraction.paris[1].pic_url)
+	self.tour_attraction_image = gfx.loadpng(attractions.attraction[self.city.code][1].pic_url)
 
 	-- Create answer buttons
 	local button_1 = button(button_color, color_selected, color_disabled,true, true, "Correct")
@@ -54,7 +55,7 @@ function CityTourView:__init(remote_control, surface)
 	button_3:set_textdata(self.attraction.answers[3], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
 	button_4:set_textdata(self.attraction.answers[4], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
 
-	local text_height = 75+25*table.getn(attractions.attraction.paris[attractionpoint].text)
+	local text_height = 75+25*table.getn(attractions.attraction[self.city.code][attractionpoint].text)
 	local indent = 55
 	-- Create buttons positions and size
 	local button_size = {width=4*(width-indent)/27, height=4*(height-text_height)/13}
@@ -81,7 +82,7 @@ function CityTourView:__init(remote_control, surface)
 	end
 
 	local button_click = function()
-		if table.getn(attractions.attraction.paris) == attractionpoint then
+		if table.getn(attractions.attraction[self.city.code]) == attractionpoint then
 			self:trigger("exit_view")
 		else
 			attractionpoint = attractionpoint + 1
@@ -116,20 +117,20 @@ function CityTourView:render(surface)
 
 	-- Draw the fonts
 	city_tour_head_font:draw(surface, {x = height/6-10, y = 20}, "City Tour")
-	city_tour_attraction_font:draw(surface, {x = height/6, y = height*23/30+5, width = height*0.54*3/5, height = 30}, attractions.attraction.paris[attractionpoint].name, center)
+	city_tour_attraction_font:draw(surface, {x = height/6, y = height*23/30+5, width = height*0.54*3/5, height = 30}, attractions.attraction[self.city.code][attractionpoint].name, center)
 
 	-- Draw tour text square x-axis
 	surface:fill({0,0,0,255}, {width = 2/3*width-150, height = 2, x = width/3+95, y =45})
-	surface:fill({0,0,0,255}, {width = 2/3*width-150, height = 2, x = width/3+95, y =75+25*table.getn(attractions.attraction.paris[attractionpoint].text)})
+	surface:fill({0,0,0,255}, {width = 2/3*width-150, height = 2, x = width/3+95, y =75+25*table.getn(attractions.attraction[self.city.code][attractionpoint].text)})
 
 	--Write all the tour text
-	for i, text in ipairs(attractions.attraction.paris[attractionpoint].text) do
+	for i, text in ipairs(attractions.attraction[self.city.code][attractionpoint].text) do
 		local text_width= width*2/3-2*text_indent
 		city_tour_text:draw(surface, {x = width/3+text_indent, y = 50+25*i, width = text_width, height = 25}, text, nil, nil)
 	end
 
 	-- Tour question
-	city_tour_text:draw(surface, {x = width/3+text_indent, y = (height+50+25*table.getn(attractions.attraction.paris[attractionpoint].text))/2, width = 50, height = 50}, self.attraction.question)
+	city_tour_text:draw(surface, {x = width/3+text_indent, y = (height+50+25*table.getn(attractions.attraction[self.city.code][attractionpoint].text))/2, width = 50, height = 50}, self.attraction.question)
 
 	--Render buttons
 	self.buttonGrid:render(surface)

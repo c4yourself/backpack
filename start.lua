@@ -39,9 +39,9 @@ function onStart()
 
 	logger.trace("Started")
 
-	local profile = Profile("Tstar","Tstar@tstar.com",1975,"M", City.cities.cairo)
+	local profile = Profile("Tstar","Tstar@tstar.com",1975,"M", City.cities["paris"])
 	profile:set_inventory("{3,5,9}")
-	for i = 1, #profile.inventory do print(profile.inventory[i]) end
+
 
 	local city_view = CityView(event.remote_control, profile)
 	local splash_screen = SplashView(
