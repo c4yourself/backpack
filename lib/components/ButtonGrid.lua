@@ -180,7 +180,6 @@ function ButtonGrid:press(button)
 				-- else
 					self:trigger("button_click", self.button_list[i].button)
 					break
-				
 			end
 		end
 		end
