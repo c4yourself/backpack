@@ -364,13 +364,13 @@ end
 
 -- Function to destory images
 function Store:destroy()
-  --view.View.destroy(self)
+  view.View.destroy(self)
   for k,v in pairs(self.item_images) do
-     --self.item_images[k]:destroy()
+     self.item_images[k]:destroy()
   end
-	--self.cashier:destory()
-	--self.shelf:destroy()
-	--self.backpack:destroy()
+	self.cashier:destroy()
+	self.shelf:destroy()
+	self.backpack:destroy()
 end
 
 return Store
