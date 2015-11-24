@@ -7,7 +7,7 @@
 		"id": 0,
 		"inventory": {"1": nil},
 		"login_token": " ",
-		"name": "paris__John010@gmail.com",
+		"name": "Jimmy",
 		"password": "",
 		"sex": "male",
 		"city": "paris",
