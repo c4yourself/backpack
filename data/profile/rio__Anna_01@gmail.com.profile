@@ -7,8 +7,8 @@
 		"id": 0,
 		"inventory": {}
 		"login_token": " ",
-		"name": "rio__Anna_01@gmail.com",
+		"name": "Annabelle",
 		"password": "",
 		"sex": "female",
-		"city": "rio",
+		"city": "london",
 }
