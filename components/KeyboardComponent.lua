@@ -25,13 +25,13 @@ function KeyboardComponent:__init(remote_control)
   --"www.jochentopf.com/email/chars.html"
 
 	self.input_string = ""
-	self.letters={"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","x","y","z","@","-","_","1","2","3","4","5","6","7","8","9","0"}
+	self.letters={"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","x","y","z","@","-","_",".","1","2","3","4","5","6","7","8","9","0","<-","[X]","OK"}
 	mx = 0
 	my = 0
 
 	self.button_size= {width=90,height=70}
 	self.button_padding = 10
-	self.nbr_of_buttons = {x=5, y=7}
+	self.nbr_of_buttons = {x=6, y=7}
 
 	self.button_start_location = {left=((screen:get_width()/2)-(self.nbr_of_buttons["x"]*(self.button_size["width"]+self.button_padding)))/2, top=100}
 	self.buttonGrid = button_grid()
@@ -60,9 +60,6 @@ function KeyboardComponent:__init(remote_control)
 		end
 		self.buttonGrid:add_button(positions[i],self.button_size,temp_button)
 	end
-
-
-
 end
 
 function KeyboardComponent:render(surface)
@@ -154,8 +151,10 @@ end
 function KeyboardComponent:set_active(active)
 	if(active == false) then
 		logger:trace("keyboard is set: INACTIVE")
+		self.buttonGrid:blur()
 	else
 		logger:trace("keyboard is set: ACTIVE")
+		self.buttonGrid:focus()
 	end
   KeyboardComponent.active = active
 end

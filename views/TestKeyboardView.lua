@@ -69,6 +69,12 @@ function TestKeyboardView:render(surface)
 end
 
 function TestKeyboardView:load_view(button)
+	hasActiveKeyboard = false
+	for key,value in pairs(self.content_list) do
+		if value:is_active() then
+			hasActiveKeyboard = true
+		end
+	end
 	-- -- TODO set mappings to RC
 	-- if (keyboard:is_active()) then
 	-- 	--keyboard:button_press(button)
@@ -76,15 +82,18 @@ function TestKeyboardView:load_view(button)
 	-- 	logger:trace("regular bindings")
 	-- 	--regular RC bindings
 	-- end
-	if button == "down" then
-		self.content_list[self.content_pointer]:set_highlighted(false)
-		self.content_pointer = self.content_pointer + 1
-		self.content_list[self.content_pointer]:set_highlighted(true)
-	elseif button == "ok" then
-		self.content_list[self.content_pointer]:activate_keyboard(true)
+	if hasActiveKeyboard == false then
+		if button == "down" then
+			self.content_list[self.content_pointer]:set_highlighted(false)
+			self.content_pointer = self.content_pointer + 1
+			self.content_list[self.content_pointer]:set_highlighted(true)
+		elseif button == "ok" then
+			--print(tostring(self.content_list[self.content_pointer]) .. "prrrrroooooooooooo-ap")
+			self.content_list[self.content_pointer]:activate_keyboard(true)
+		end
+		self:render(screen)
+		gfx.update()
 	end
-	self:render(screen)
-	gfx.update()
 end
 
 return TestKeyboardView

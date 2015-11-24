@@ -21,6 +21,7 @@ function InputField:__init(name, position, highlighted)
 
 
   self.keyboard = KeyboardComponent()
+	self.keyboard:set_active(false)
 end
 
 -- TODO, remove text_position
@@ -38,6 +39,10 @@ end
 
 function InputField:activate_keyboard(status)
 	self.keyboard:set_active(status)
+end
+
+function InputField:is_active()
+	return self.keyboard:is_active()
 end
 
 function InputField:render(surface)
