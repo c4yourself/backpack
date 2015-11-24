@@ -12,9 +12,15 @@ local Font = require("lib.draw.Font")
 local event = require("lib.event")
 local logger = require("lib.logger")
 local SubSurface = require("lib.view.SubSurface")
+local NumericalQuizView = require("views.NumericalQuizView")
+local button= require("lib.components.Button")
+local button_grid=require("lib.components.ButtonGrid")
+local color = require("lib.draw.Color")
+--local CityTourView = require("views.CityTourView")
+local subSurface = require("lib.view.SubSurface")
+local MemoryView = require("views.MemoryView")
 local utils = require("lib.utils")
 local view = require("lib.view")
-
 local CityView = class("CityView", view.View)
 
 --- Constructor for CityView
@@ -44,6 +50,7 @@ function CityView:__init(remote_control, profile)
 	local width = screen:get_width()
 
 	-- Add buttons
+
 	local button_1 = Button(button_color, color_selected, color_disabled,true,true,"views.NumericalQuizView")
 	local button_2 = Button(button_color, color_selected, color_disabled,true,false, "views.MultipleChoiceView")
 	local button_3 = Button(button_color, color_selected, color_disabled,true,false, "views.MemoryView")
@@ -56,6 +63,7 @@ function CityView:__init(remote_control, profile)
 
 	button_1:set_textdata("Numerical quiz",text_color,{x=100,y=300},16,utils.absolute_path("data/fonts/DroidSans.ttf"))
 	button_2:set_textdata("Multiple choice question",text_color,{x=200,y=300},16,utils.absolute_path("data/fonts/DroidSans.ttf"))
+	button_3:set_textdata("Memory",text_color,{x=100,y=400},16,utils.absolute_path("data/fonts/DroidSans.ttf"))
 
 	-- Define each button's posotion and size
 	local button_size = {width = 4*width/45, height = 4*width/45}
@@ -215,10 +223,6 @@ function CityView:destroy()
 end
 
 function CityView:load_view(button)
-
-
-
-
 
 
 	end
