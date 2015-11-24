@@ -74,7 +74,7 @@ function Store:__init(remote_control, surface, profile)
 
 	-- Add the exit button
 	self.font = Font("data/fonts/DroidSans.ttf", 20, Color(0, 0, 0, 255))
-	self.header_font = Font("data/fonts/DriodSans.ttf", 40, Color(0,0,0,255))
+	self.header_font = Font("data/fonts/DroidSans.ttf", 40, Color(0,0,0,255))
 	self.buttons[k] = Button(self.button_inactive, self.button_active, self.button_inactive, true, false)
 	self.buttons[k]:set_textdata("Exit",Color(255,0,0,255), {x = 100, y = 300}, 20, utils.absolute_path("data/fonts/DroidSans.ttf"))
 
