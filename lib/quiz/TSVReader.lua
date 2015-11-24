@@ -12,6 +12,7 @@ local TSVReader = class("TSVReader")
 local MultipleChoiceQuestion = require("lib.quiz.MultipleChoiceQuestion")
 local profile = require("lib.profile.Profile")
 local localprofilemanager = require("lib.profile.localprofilemanager")
+local ProfileManager = require("lib.profile.ProfileManager")
 
 TSVReader.filename = ""
 TSVReader.questions_table = {}
@@ -43,6 +44,11 @@ end
 -- @return self.questions_table representing get the question table
 -- @return false representing don't get question from TSV file
 function TSVReader:get_question(question_type)
+
+	profile = ProfileManager:load("paris","John010@gmail.com")
+	profile:modify_experience(1234)
+	profile:modify_balance(345)
+
 	local tmp_table = {}
 	self.filename = utils.absolute_path(string.format("data/questions/%s.tsv",self.filename))
 
