@@ -36,7 +36,6 @@ function ButtonGrid:__init(remote_control)
 
   self:focus()
 
-
 	--
 	-- local dirtycallback = function()
 	-- 	print("I button grid")
