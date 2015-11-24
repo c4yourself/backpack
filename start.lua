@@ -8,7 +8,7 @@ local logger = require("lib.logger")
 local SplashView = require("views.SplashView")
 local utils = require("lib.utils")
 local view = require("lib.view")
---local City = require("lib.city")
+local City = require("lib.city")
 local Profile = require("lib.profile.Profile")
 
 --- This function runs every time a key is pressed
@@ -40,6 +40,11 @@ function onStart()
 
 	logger.trace("Started")
 	--local profile = Profile("Tstar","Tstar@tstar.com",1975,"M", City.cities.cairo)
+
+
+	local profile = Profile("Tstar","Tstar@tstar.com",1975,"M", City.cities["paris"])
+	profile:set_inventory("{3,5,9}")
+
 
 
 	--local city_view = CityView(event.remote_control, profile)
