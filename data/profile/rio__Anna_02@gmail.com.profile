@@ -10,5 +10,5 @@
 		"name": "Andeline",
 		"password": "",
 		"sex": "female",
-		"city": "mumbai",
+		"city": "bombay",
 }
