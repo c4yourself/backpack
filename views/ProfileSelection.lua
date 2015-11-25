@@ -115,7 +115,7 @@ end
 
 function ProfileSelection:upBtnPress()
 	if self.isLeftMenu then
-		if self.profile_index - 1 < 1 then
+		if self.profile_index - 1 < 0 then
 			self.profile_index = #self.profile_list-1
 		else
 			self.profile_index = self.profile_index - 1

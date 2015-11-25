@@ -41,7 +41,7 @@ end
 -- @return profile representing the instance of profile
 -- @return false representing the file path is illegal
 function localprofilemanager:load(profile_city, profile_email)
-	local profile_tmp
+	local profile_tmp = {}
 	local name, email_address, date_of_birth
 	local sex, city, balance, experience, inventory
 	local path = utils.absolute_path(string.format("data/profile/%s__%s.profile",profile_city,profile_email))

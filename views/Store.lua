@@ -32,7 +32,6 @@ function Store:__init(remote_control, surface, profile)
 	self.surface = surface
 	self.background_path = ""
 	self.current_city = profile:get_city().name
-	print(self.current_city)
 	self.button_grid = ButtonGrid(remote_control)
 	self.cashier = gfx.loadpng("data/images/cashier.png")
 	self.shelf = gfx.loadpng("data/images/shelf.png")
@@ -155,9 +154,11 @@ function Store:loadItemImages()
 	for i = 1, numItems do
 		ret_list[i] = gfx.loadpng(self.items[i]:get_image_path())
 	end
-
-	for j = 1, get_size(self.backpack_items) do
-		ret_list[j+numItems] = gfx.loadpng(self.backpack_items[j]:get_image_path())
+	print(#self.backpack_items)
+	if #self.backpack_items>0 then
+		for j = 1, get_size(self.backpack_items) do
+			ret_list[j+numItems] = gfx.loadpng(self.backpack_items[j]:get_image_path())
+		end
 	end
 	return ret_list
 end
