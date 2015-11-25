@@ -29,8 +29,8 @@ function MultipleChoiceView:__init()
 	-- Logic
 	-- Associate a quiz instance with the MultipleChoiceView
 	self.mult_choice_quiz = Quiz()
-	self.quiz_size = 4
-	self.mult_choice_quiz:generate_multiplechoice_quiz("paris",self.quiz_size)
+	self.quiz_size = 2
+	self.mult_choice_quiz:generate_citytour_quiz("paris",self.quiz_size,1)
 	self.current_question = 1
 	self.correct_answer_number = 0
 
@@ -42,9 +42,9 @@ function MultipleChoiceView:__init()
 	self.font = Font("data/fonts/DroidSans.ttf",32,Color(255,255,255,255))
 	-- Listeners and callbacks
 	self:listen_to(
-		event.remote_control,
-		"button_release",
-		utils.partial(self.press, self)
+	event.remote_control,
+	"button_release",
+	utils.partial(self.press, self)
 	)
 end
 
@@ -54,18 +54,18 @@ end
 function MultipleChoiceView:press(key)
 	-- Determine what should happen depending on the user input and current state
 	if key == "right" and self.last_check == self.current_question
-		and self.quiz_state ~= "DONE" then
+	and self.quiz_state ~= "DONE" then
 		for j = 1, #self.user_input, 1 do
 			self.answer[j] = tonumber(string.sub(self.user_input,j,j))
 		end
 		if self.mult_choice_quiz.questions[self.current_question]:is_correct(self.answer) == true then
 			self.correct_answer_number = self.correct_answer_number + 1
 			self.result_string = "Right. You've answered "
-				.. self.correct_answer_number .. " questions correctly."
+			.. self.correct_answer_number .. " questions correctly."
 			self.last_check = self.last_check + 1
 		else
 			self.result_string = "Wrong. You've answered "
-				.. self.correct_answer_number .. " questions correctly."
+			.. self.correct_answer_number .. " questions correctly."
 			self.last_check=self.last_check + 1
 		end
 		self.quiz_state = "DISPLAY_RESULT"
@@ -74,7 +74,7 @@ function MultipleChoiceView:press(key)
 		self.answer = {}
 		self.user_input = ""
 	elseif key == "right" and self.last_check == self.current_question + 1
-		and end_flag ~= 1 then
+		 and end_flag ~= 1 then
 		-- Next question is displayed
 		-- Make sure there are questions left to display
 		self.current_question = self.current_question + 1
@@ -110,9 +110,9 @@ function MultipleChoiceView:render(surface)
 		-- listen to yet: start listening
 		local callback = utils.partial(self.press)
 		self:listen_to(
-			event.remote_control,
-			"button_release",
-			callback
+		event.remote_control,
+		"button_release",
+		callback
 		)
 		-- TODO initiate listening to the button group, when its implemented
 		self.listening_initiated = true
@@ -133,11 +133,11 @@ function MultipleChoiceView:render(surface)
 
 			-- Draw question
 			self.font:draw(surface,Rectangle(100,300,200,200):to_table(),self.current_question ..
-				"." .. self.mult_choice_quiz.questions[self.current_question].question)
+			"." .. self.mult_choice_quiz.questions[self.current_question].question)
 			--Button text
 			surface:fill(buttonColor, {width=200, height=60, x=100, y=400})
 			choiceButton1:draw(surface,Rectangle(100,400,200,60):to_table(),"(1)." ..
-			 	self.mult_choice_quiz.questions[self.current_question].Choices[1])
+				self.mult_choice_quiz.questions[self.current_question].Choices[1])
 			surface:fill(buttonColor, {width=200, height=60, x=350, y=400})
 			choiceButton2:draw(surface,Rectangle(350,400,200,60):to_table(),"(2)." ..
 				self.mult_choice_quiz.questions[self.current_question].Choices[2])
@@ -152,7 +152,6 @@ function MultipleChoiceView:render(surface)
 			-- Display the result from one question
 			surface:clear(color)
 			self.font:draw(screen,Rectangle(100,300,200,200):to_table(),self.result_string)
-
 		elseif self.quiz_state == "DONE" then
 			-- Display the result from the whole quiz
 			surface:clear(color)

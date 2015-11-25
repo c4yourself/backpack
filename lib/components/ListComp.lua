@@ -67,7 +67,6 @@ function ListComp:render(surface)
 --[[]
 	if self.start_indicator == true then
 		for k = 1 , #self.item_list do
-			print(self.item_list[1])
 			if self.item_list[k]:is_selected() then
 				self.list_indicator = k
 			end

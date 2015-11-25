@@ -14,9 +14,10 @@ local SubSurface = require("lib.view.SubSurface")
 local utils = require("lib.utils")
 local event = require("lib.event")
 local Font = require("lib.draw.Font")
---local Color = require("lib.draw.Color")
 
---local CityView = require("views.CityView")
+
+local Color = require("lib.draw.Color")
+
 
 --- Constructor for ButtonGrid
 function ButtonGrid:__init(remote_control)
@@ -32,14 +33,11 @@ function ButtonGrid:__init(remote_control)
     self.event_listener = event.remote_control
   end
 
-  local callback = utils.partial(self.press, self)
-  self:listen_to(
-  self.event_listener,
-  "button_press",
-  callback
-  )
+  self.callback = utils.partial(self.press, self)
+  self:focus()
 	--
 	-- local dirtycallback = function()
+	-- 	print("I button grid")
 	-- 	self:dirty(false)
 	-- 	self:dirty(true)
 	-- end
@@ -48,6 +46,20 @@ function ButtonGrid:__init(remote_control)
   -- "dirty",
   -- dirtycallback
   -- )
+end
+
+-- Starts the buttongrids listener
+function ButtonGrid:focus()
+	self:listen_to(
+	self.event_listener,
+	"button_press",
+	self.callback
+	)
+end
+
+-- Stops the buttongrids listener
+function ButtonGrid:blur()
+	self:stop_listening()
 end
 
 --- Used when buttons need to be added to the view
@@ -78,9 +90,8 @@ end
 
 --- Display text for each button on the surface
 -- @param button_index To indicate which button's text shall be displayed
-function ButtonGrid:display_text(surface, area, button_index)
+function ButtonGrid:display_text(surface, button_index)
 	local button_data = self.button_list[button_index].button
-
 	local text_button = Font(
 									button_data.font_path,
 									button_data.font_size,
@@ -93,13 +104,14 @@ end
 function ButtonGrid:display_next_view(transfer_path)
 
  	local view_import = require(transfer_path)
- 	local view_instance = view_import()
+	return view_import
+ 	--local view_instance = view_import()
 
- 	view.view_manager:set_view(view_instance)
+ 	--view.view_manager:set_view(view_instance)
 end
 
 function ButtonGrid:press(button)
-
+	if not self.paused then
     if button == "down" then
 			self:indicate_downward(self.button_indicator)
 			self:trigger("dirty")
@@ -114,16 +126,16 @@ function ButtonGrid:press(button)
 			self:trigger("dirty")
 		elseif button == "1" then
 				--Instanciate a numerical quiz
-				local numerical_quiz_view = NumericalQuizView()
+				--local numerical_quiz_view = NumericalQuizView()
 				--Stop listening to everything
 				-- TODO
 				-- Start listening to the exit event, which is called when the user
 				-- exits a quiz
 
 				--Update the view
-				numerical_quiz_view:render(screen)
+				--numerical_quiz_view:render(screen)
 				-- TODO This should be done by a subsurface in the final version
-				gfx.update()
+				--gfx.update()
 		elseif button == "2" then
 				multiplechoice_quiz.render(screen)
 				gfx.update()
@@ -135,18 +147,18 @@ function ButtonGrid:press(button)
 			for i=1, #self.button_list do
 				if self.button_list[i].button:is_selected() == true then
 					if self.button_list[i].button.transfer_path ~= nil then
-					self:display_next_view(self.button_list[i].button.transfer_path)
+					--self:display_next_view(self.button_list[i].button.transfer_path)
 				--	gfx.update()
+				--	break
+				-- else
+					self:trigger("button_click", self.button_list[i].button)
 					break
-					end
 				end
-	end
+			end
+		end
 end
 
-
-	collectgarbage()  --ensure that memory-leak does not occur
-	-- print out the memory usage in KB
-	print("the memory usage is " .. collectgarbage("count")*1024)
+end
 
 end
 
@@ -187,7 +199,7 @@ self:dirty(false)
 		local sub_surface = SubSurface(surface,area)
 			button_data.button:render(sub_surface)
       if button_data.button.text_available then
-			self:display_text(surface, area, i)
+			self:display_text(surface, i)
 	   end
    end
 end
@@ -206,6 +218,8 @@ function ButtonGrid:indicate_downward(button_indicator)
 
 	local that_distance = self:distance_to_corner(corner_position, 2)
 
+	--print("the fucking distance to 2 issss " .. that_distance)
+	--print("the fucking  distance to 9 issss ".. self:distance_to_corner(corner_position, 9))
 
 	for i=1, #button_list do
 		if button_list[i].y >= button_list[indicator].y + button_list[indicator].height then
@@ -230,6 +244,7 @@ end
 		for k=1, #button_list do
 				local distance = self:distance_to_corner(corner_position, k)
 				shortest_distance_corner = math.min(shortest_distance_corner, distance)
+				--print("the minium distance at the moment is "..shortest_distance_corner)
 		end
 	end
 
@@ -276,6 +291,7 @@ if shortest_distance_buttons ~= 720 then
 		if button_list[j].y + button_list[j].height <= button_list[indicator].y then
 			local distance = self:button_distance(indicator, j)
 			if shortest_distance_buttons == distance then
+				-- print("the distance is "..distance)
 				nearest_button_index = j
 				break
 			end
@@ -388,7 +404,9 @@ if shortest_distance_buttons ~= 1280 then
 		if  button_list[indicator].x >= button_list[j].x + button_list[j].width then
 			local distance = self:button_distance(indicator, j)
 			if shortest_distance_buttons == distance then
+				print("the distance is "..distance)
 				nearest_button_index = j
+				print("the nearast button is ".. nearest_button_index)
 				break
 			end
 		end

@@ -12,6 +12,8 @@ local button_grid	=	require("lib.components.ButtonGrid")
 
 local ConnectFourComponent = class("ConnectFourComponent", View)
 
+--- Constructor for ConnectFour component
+-- @param remote_control
 function ConnectFourComponent:__init(remote_control)
 	View.__init(self)
 
@@ -25,6 +27,8 @@ function ConnectFourComponent:__init(remote_control)
 	)
 end
 
+--- Responds differently depending on which key pressed on the remote control
+-- @param key, the key pressed on the remote control
 function ConnectFourComponent:press(key)
 	if key == "right" then
 		repeat
@@ -47,6 +51,9 @@ function ConnectFourComponent:press(key)
 	elseif key == "ok" then
 		self.connectfour:move(self.connectfour:get_player(), self.current_column)
 
+		self:stop_listening(event.remote_control)
+
+
 	elseif key == "exit" then
 		local exit_popup = subsurface(surface, area(100, 100, 400, 400))
 		local color_popup = color(255, 255, 255, 255)
@@ -60,7 +67,11 @@ function ConnectFourComponent:press(key)
 	self:dirty(true)
 end
 
---prints out the top row
+---Prints out the top row
+-- @param surface
+-- @param column, the column that the coin will be placed into
+-- @param width_coinbox, width of a single coinbox
+-- @param height_coinbox, height of a single coinbox
 function ConnectFourComponent:top_row(surface, column, width_coinbox, height_coinbox)
 	local posx = 0.35*surface:get_width()
 	local posy = 0.1*surface:get_height() - 0.5*height_coinbox
@@ -87,6 +98,8 @@ function ConnectFourComponent:top_row(surface, column, width_coinbox, height_coi
 	end
 end
 
+--- Prints the surface connected with ConnectFour
+-- @param surface
 function ConnectFourComponent:render(surface)
 
 	self:dirty(false)
@@ -183,8 +196,8 @@ function ConnectFourComponent:render(surface)
 	end
 end
 
-
-
+---Puts a delay on computers move to slow down the process
+-- @param surface
 function ConnectFourComponent:delay(surface)
 
 	self.stop_timer:stop()
@@ -202,17 +215,21 @@ function ConnectFourComponent:delay(surface)
 		end
 	until self.connectfour:get_current_row(self.current_column) ~= 0
 
+	self:listen_to(
+	event.remote_control,
+	"button_release",
+	utils.partial(self.press, self)
+	)
+
 		self:dirty(true)
 end
 
-
-	function ConnectFourComponent:delay2(surface)
-		self.stop_timer:stop()
-		self.trigger("exit_view")
-	end
-
-
-
+---Delays the winner pop-up after the game have finished
+-- @param surface
+function ConnectFourComponent:delay2(surface)
+	self.stop_timer:stop()
+	self.trigger("exit_view")
+end
 
 --[[	repeat
 		if self.connectfour:get_current_row(self.current_column) == 0 then

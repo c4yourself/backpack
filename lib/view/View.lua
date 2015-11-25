@@ -3,16 +3,29 @@
 
 local class = require("lib.classy")
 local Event = require("lib.event.Event")
+local utils = require("lib.utils")
 
 local View = class("View", Event)
 
 --- Constructor for View
 function View:__init()
+	Event.__init(self)
 	self.views = {}
 	self._dirty = true
-	Event.__init(self)
 end
 
+--- Add a view as a child view to this view. Note that this does not mean it is
+-- rendered automatically when this view is rendered.
+-- @param view View to add
+-- @param propagate_dirty If true dirty events triggered by child view propagates
+--                        upwards by marking this view as dirty.
+function View:add_view(view, propagate_dirty)
+	table.insert(self.views, view)
+
+	if propagate_dirty then
+		self:listen_to(view, "dirty", utils.partial(self.dirty, self))
+	end
+end
 
 --- Destroys the view and all child views
 function View:destroy()
@@ -24,11 +37,17 @@ function View:destroy()
 end
 
 --- Checks if the view or child views is dirty
+-- @param[opt] deep True if child views should influence this View's dirty status
 -- @return boolean
-function View:is_dirty()
+function View:is_dirty(deep)
 	if self._dirty then
 		return true
 	end
+
+	if not deep and deep ~= nil then
+		return false
+	end
+
 	for i = 1, #self.views do
 		local view = self.views[i]
 		if view:is_dirty() then
