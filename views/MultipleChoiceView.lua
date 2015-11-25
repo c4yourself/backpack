@@ -18,7 +18,6 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 	View.__init(self)
 	event.remote_control:off("button_release") -- TODO remove this once the ViewManager is fully implemented
 	self.profile = profile
-	--print("NAME---" .. self.profile:get_city())
 	-- Flags (and similiar)
 	self.listening_initiated = false
 	self.end_flag = 0 -- To indicate if the quiz if complete
