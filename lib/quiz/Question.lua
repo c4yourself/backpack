@@ -32,10 +32,10 @@ end
 -- @param font
 -- @param textColor
 -- @param surface
-function Question: show(font,textColor,surface)
-	local something = sys.new_freetype({r = textColor[1],g = textColor[2],b = textColor[3]}, 30, {x = 200,y = 80}, utils.absolute_path("data/fonts/"..font..".ttf"))
-	something : draw_over_surface(surface,self.question)
-end
+--function Question: show(font,textColor,surface)
+--	local something = sys.new_freetype({r = textColor[1],g = textColor[2],b = textColor[3]}, 30, {x = 200,y = 80}, utils.absolute_path("data/fonts/"..font..".ttf"))
+--	something : draw_over_surface(surface,self.question)
+--end
 --function Question:is_correct(answer)
 --end
 return Question

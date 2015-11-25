@@ -31,7 +31,7 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 	-- Associate a quiz instance with the MultipleChoiceView
 	self.mult_choice_quiz = Quiz()
 	self.quiz_size = 2
-	self.mult_choice_quiz:generate_citytour_quiz(self.profile:get_city(),self.quiz_size,1)
+	self.mult_choice_quiz:generate_citytour_quiz(self.profile:get_current_city(),self.quiz_size,1)
 	self.current_question = 1
 	self.correct_answer_number = 0
 

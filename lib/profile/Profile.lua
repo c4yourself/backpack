@@ -81,6 +81,11 @@ function Profile:get_city()
 	return City.cities[self.city]
 end
 
+---Get  current city of the user
+-- @return city
+function Profile:get_current_city()
+	return self.city
+end
 ---Get balance of the user
 -- @return balance
 function Profile:get_balance()
