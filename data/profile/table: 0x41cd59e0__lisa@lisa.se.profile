@@ -1,0 +1,12 @@
+{
+		"badges": [nil],
+		"balance": 120,
+		"date_of_birth": "04-08-1992",
+		"email_address": "lisa@lisa.se",
+		"experience": 0,
+		"id": 0,
+		"inventory": {"1": 3, "2": 5, "3": 9},
+		"login_token": " ",
+		"name": "paris__lisa@lisa.se",
+		"password": "",
+		"sex": "female",

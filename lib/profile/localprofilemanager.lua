@@ -1,4 +1,4 @@
---- localprofilemanager
+---localprofilemanager
 -- @classmod localprofilemanager
 
 local class = require("lib.classy")
@@ -7,7 +7,7 @@ local utils = require("lib.utils")
 local Profile = require("lib.profile.Profile")
 local localprofilemanager = class("localprofilemanager")
 
--- Create a profile
+---Create a profile
 -- @param profile representing a profile instance
 -- @return profile representing the instance of profile
 function localprofilemanager:save(profile)
@@ -35,7 +35,7 @@ function localprofilemanager:save(profile)
 	return profile
 end
 
--- Load a local profile
+---Load a local profile
 -- @param profile representing a nil table to generate a profile instance
 -- @param filename representing the unique identifier of a profile
 -- @return profile representing the instance of profile
@@ -110,7 +110,7 @@ function localprofilemanager:load(profile_city, profile_email)
 	end
 end
 
--- Get the profiles instances
+---Get the profiles instances
 -- @return profiles representing the list of profile instance
 -- @return false representing the dir is illegal
 function localprofilemanager:get_profileslist()
@@ -146,16 +146,10 @@ function localprofilemanager:get_profileslist()
 	end
 end
 
--- Remove a profile
--- @param filename representing the name of the profile to remove
+---Remove a profile
+-- @param profile representing the name of the profile to remove
 -- @return true representing remove successfully
 -- @return false representing remove unsuccessfully
--- @usage
--- --if localprofilemanager:remove("Anna") then
--- --  -- remove success
--- --else
--- --  -- remove fail
--- --end
 function localprofilemanager:delete(profile)
 	local path = utils.absolute_path("data/profile/")
 
@@ -177,14 +171,14 @@ function localprofilemanager:delete(profile)
 	end
 end
 
--- Get token in profile
+---Get token in profile
 -- @param profile representing the profile instance
 -- @return token representing the token of the profile
 function localprofilemanager:get_profile_token(profile)
 	return profile:get_login_token()
 end
 
--- Get email_address, password and login_token in profile
+---Get email_address, password and login_token in profile
 -- @param profile representing the profile instance
 function localprofilemanager:get_delete_params(profile)
 	return profile:get_email_address(), profile:get_password(), profile:get_login_token()

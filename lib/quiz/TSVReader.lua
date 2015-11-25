@@ -10,6 +10,7 @@ local class = require("lib.classy")
 local utils = require("lib.utils")
 local TSVReader = class("TSVReader")
 local MultipleChoiceQuestion = require("lib.quiz.MultipleChoiceQuestion")
+local lfs = require("lfs")
 --local profile = require("lib.profile.Profile")
 
 

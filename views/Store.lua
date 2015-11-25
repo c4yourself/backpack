@@ -32,6 +32,7 @@ function Store:__init(remote_control, surface, profile)
 	self.surface = surface
 	self.background_path = ""
 	self.current_city = profile:get_city().name
+	print(self.current_city)
 	self.button_grid = ButtonGrid(remote_control)
 	self.cashier = gfx.loadpng("data/images/cashier.png")
 	self.shelf = gfx.loadpng("data/images/shelf.png")
@@ -65,16 +66,17 @@ function Store:__init(remote_control, surface, profile)
 	self.button_size = {width = 2.5*width/45, height = 2.5*width/45}
 
 	self.buttons = {}
-	self.buttons[1] = Button(self.background_color, self.button_active, self.background_color, true, true)
+	self.buttons[1] = Button(self.background_color, self.button_active, self.background_color, true, true,1)
 	k = 2
 	while k <= get_size(self.items) + get_size(self.backpack_items) do
-			self.buttons[k] = Button(self.background_color, self.button_active, self.background_color, true, false)
+			self.buttons[k] = Button(self.background_color, self.button_active, self.background_color, true, false,k)
 			k = k + 1
 	end
 
 	-- Add the exit button
 	self.font = Font("data/fonts/DroidSans.ttf", 20, Color(0, 0, 0, 255))
-	self.buttons[k] = Button(self.button_inactive, self.button_active, self.button_inactive, true, false)
+	self.header_font = Font("data/fonts/DroidSans.ttf", 40, Color(0,0,0,255))
+	self.buttons[k] = Button(self.button_inactive, self.button_active, self.button_inactive, true, false, k)
 	self.buttons[k]:set_textdata("Exit",Color(255,0,0,255), {x = 100, y = 300}, 20, utils.absolute_path("data/fonts/DroidSans.ttf"))
 
 	-- Add them to button grid at the correct place
@@ -82,8 +84,8 @@ function Store:__init(remote_control, surface, profile)
 	j = 1
 	own_items = 0
 	while j <= get_size(self.items) + get_size(self.backpack_items) do
-		self.item_positions[j] = {x = width/2+((j-1)-2*(row-1))*130+own_items*70,
-																y = 205 + 105*(row-1-0.8*own_items) + own_items*125}
+		self.item_positions[j] = {x = width/2-100+((j-1)-2*(row-1))*130+own_items*185,
+																y = 30 + 105*(row-1-0.8*own_items) + own_items*205}
 		self.button_grid:add_button(self.item_positions[j], self.button_size, self.buttons[j])
 		j = j+1
 		if (j-1) % 2 == 0 then
@@ -98,7 +100,7 @@ function Store:__init(remote_control, surface, profile)
 	self.item_images = self:loadItemImages()
 
 	-- Add exit button
-	self.button_grid:add_button({x = 720,y = 650}, {width = 6*width/45,height = 2*width/45}, self.buttons[k])
+	self.button_grid:add_button({x = width/6,y = height-60}, {width = 6*width/45,height = 2*width/45}, self.buttons[k])
 
 	-- Add to view
 	self.add_view(self.button_grid, false)
@@ -110,15 +112,39 @@ function Store:__init(remote_control, surface, profile)
 		gfx.update()
 	end
 
-	self:listen_to(
-		self.button_grid,
-		"dirty",
-		button_render
-	)
+	self:listen_to(self.button_grid,"dirty",button_render)
+
+	local button_callback = function(button)
+
+		-- Get the current index of button that is selected
+		selected_index = button.transfer_path
+
+		-- If we have selected on of the purchasable items
+		if selected_index <= get_size(self.items) then
+
+			self.message["message"] = self:purchase_item(selected_index)
+
+		-- Elseif we have sold one of our items
+		elseif selected_index <= (get_size(self.items) + get_size(self.backpack_items)) then
+
+			self.message["message"] = self:sell_item(selected_index-get_size(self.items))
+
+		else
+			self:destroy()
+			self:trigger("exit_view")
+
+		end
+
+		self.item_images = self:loadItemImages()
+		gfx.update()
+		self:dirty(true)
+	end
 
 	-- Instance remote control and mapps it to pressing enter
 	self.callback = utils.partial(self.action_made, self)
 	self:listen_to(event.remote_control,"button_release",self.callback)
+
+	self:listen_to(self.button_grid,"button_click",	button_callback)
 
 
 end
@@ -150,7 +176,7 @@ function Store:insert_button()
 	local width = self.surface:get_width()
 
 	-- Add to table of buttons
-	table.insert(self.buttons, add_index, Button(self.background_color, self.button_active, self.background_color, true, false))
+	table.insert(self.buttons, add_index, Button(self.background_color, self.button_active, self.background_color, true, false, add_index))
 
 	-- Calculations of where to draw the button
 	j = 1
@@ -162,8 +188,8 @@ function Store:insert_button()
 		end
 	end
 	own_items = 1
-	table.insert(self.item_positions, add_index, {x = width/2+((add_index-1)-2*(row-1))*130+own_items*70,
-															y = 205 + 105*(row-1-0.8*own_items) + own_items*125})
+	table.insert(self.item_positions, add_index, {x = width/2-100+((add_index-1)-2*(row-1))*130+own_items*185,
+															y = 30 + 105*(row-1-0.8*own_items) + own_items*205})
 	-- Add to button grid
 	self.button_grid:insert_button(self.item_positions[add_index], self.button_size, self.buttons[add_index],add_index)
 
@@ -196,9 +222,9 @@ function Store:render(surface)
 
 		-- Resets the surface and draws the background
 	surface:clear(self.background_color)
-	surface:copyfrom(self.cashier, nil, {x = 0, y = 280, width = height*0.54*3/5, height = height*3/5}, true)
-	surface:copyfrom(self.shelf, nil, {x=width/2-150,y=200, width = height*0.54*3/5, height = height*3/5}, true)
-	surface:copyfrom(self.backpack, nil, {x=width/2-140, y = 450, width = height*0.54*3/5, height = height*3/5}, true)
+	surface:copyfrom(self.cashier, nil, {x = 0, y = 100}, true)
+	surface:copyfrom(self.shelf, nil, {x=width/2-250,y=20}, true)
+	surface:copyfrom(self.backpack, nil, {x=width/2-100, y = 350}, true)
 
 	-- Print the buttons
 	self.button_grid:render(surface)
@@ -210,7 +236,7 @@ function Store:render(surface)
 
 	-- Draw balacne
 	local coins = self.profile:get_balance()
-	self.font:draw(surface, {x = 3.1*width/4, y = height/3},"Coins: "..coins)
+	self.font:draw(surface, {x = 2.9*width/4, y = height/8},"Coins: "..coins)
 
 	--Draw item info is one is selected, exit info otherwise
 	local selected_item_index = self.button_grid:get_selected()
@@ -228,20 +254,21 @@ function Store:render(surface)
 
 	-- See what we're doing
 	if exit_selected then
-		self.font:draw(surface, {x = 3.1*width/4, y = height/3+45}, "Exit the store")
+		self.font:draw(surface, {x = 2.9*width/4, y = height/8+45}, "Exit the store")
 	else
-		self.font:draw(surface, {x = 3.1*width/4, y = height/3+45}, "Item: " .. item:get_name())
-		self.font:draw(surface, {x = 3.1*width/4, y = height/3+70}, "Description: "..item:get_description())
+		self.font:draw(surface, {x = 2.9*width/4, y = height/8+45}, "Item: " .. item:get_name())
+		self.font:draw(surface, {x = 2.9*width/4, y = height/8+70}, "Description: "..item:get_description())
 		if selected_item_index <= get_size(self.items) then
-			self.font:draw(surface, {x = 3.1*width/4, y = height/3+95}, "Purchase price: " .. item:get_price())
+			self.font:draw(surface, {x = 2.9*width/4, y = height/8+95}, "Purchase price: " .. item:get_price())
 		else
-			self.font:draw(surface, {x = 3.1*width/4, y = height/3+95},
+			self.font:draw(surface, {x = 2.9*width/4, y = height/8+95},
 			"Sale price: "..self.backendstore:returnOfferPrice(item, self.current_city))
 		end
 	end
 	print("i shoppen")
-	self.font:draw(surface, {x = 3.1*width/4, y = height/3+130}, self.message["message"])
-	--self:dirty(false)
+	self.font:draw(surface, {x = 2.9*width/4, y = height/8+130}, self.message["message"])
+	--Draw header
+	self.header_font:draw(surface, {x=10,y=10}, "Store")
 
 end
 
@@ -357,7 +384,7 @@ function Store:action_made(button)
 	end
 
 	-- Reload the relevant images after an action is made
-	self.item_images = self:loadItemImages()
+
 
 
 end

@@ -58,7 +58,7 @@ function ProfileSelection:get_email()
 end
 
 function ProfileSelection:get_city()
-	return self.profile_list[self.profile_index+1].city
+	return self.profile_list[self.profile_index+1]:get_city().name
 end
 
 function ProfileSelection:setLeftMenu(bool)
