@@ -41,7 +41,8 @@ end
 -- @param blend_option
 function SubSurface:copyfrom(src_surface, src_rectangle, dest_rectangle, blend_option)
 	local src_rect = src_surface:_get_rectangle(src_rectangle)
-	local dest_rectangle = self:_get_rectangle(dest_rectangle)
+
+	local dest_rectangle = self:_get_rectangle(dest_rectangle, src_rect)
 
 	self.surface:copyfrom(src_surface, src_rect, dest_rectangle, blend_option)
 end

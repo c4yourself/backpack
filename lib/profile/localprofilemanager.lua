@@ -1,4 +1,4 @@
---- localprofilemanager
+---localprofilemanager
 -- @classmod localprofilemanager
 
 local class = require("lib.classy")
@@ -7,7 +7,7 @@ local utils = require("lib.utils")
 local Profile = require("lib.profile.Profile")
 local localprofilemanager = class("localprofilemanager")
 
--- Create a profile
+---Create a profile
 -- @param profile representing a profile instance
 -- @return profile representing the instance of profile
 function localprofilemanager:save(profile)
@@ -35,15 +35,15 @@ function localprofilemanager:save(profile)
 	return profile
 end
 
--- Load a local profile
+---Load a local profile
 -- @param profile representing a nil table to generate a profile instance
 -- @param filename representing the unique identifier of a profile
 -- @return profile representing the instance of profile
 -- @return false representing the file path is illegal
 function localprofilemanager:load(profile_city, profile_email)
-	local profile
+	local profile_tmp
 	local name, email_address, date_of_birth
-	local sex, city, balance, experience
+	local sex, city, balance, experience, inventory
 	local path = utils.absolute_path(string.format("data/profile/%s__%s.profile",profile_city,profile_email))
 
 	--check the file exist or not
@@ -87,6 +87,13 @@ function localprofilemanager:load(profile_city, profile_email)
 				_,_,_,city = string.find(tmp[2],"([\"'])(.-)%1")
 			end
 
+			--match inventory
+			if string.match(line,"\"inventory\"") ~= nil then
+				local tmp = {}
+				tmp = utils.split(line," ")
+				_,_,_,inventory = string.find(tmp[2],"([\"'])(.-)%1")
+			end
+
 			--match balance
 			if string.match(line,"\"balance\"") ~= nil then
 				balance = tonumber(string.sub(line,string.find(line," ")+1,string.find(line,",")-1))
@@ -96,21 +103,28 @@ function localprofilemanager:load(profile_city, profile_email)
 			if string.match(line,"\"experience\"") ~= nil then
 				experience = tonumber(string.sub(line,string.find(line," ")+1,string.find(line,",")-1))
 			end
+
+			--match id
+			if string.match(line,"\"id\"") ~= nil then
+				id = tonumber(string.sub(line,string.find(line," ")+1,string.find(line,",")-1))
+			end
 		end
 
 		--generate a profile instance
-		profile = Profile(name,email_address,date_of_birth,sex,city)
-		profile:set_balance(balance)
-		profile:set_experience(experience)
+		profile_tmp = Profile(name,email_address,date_of_birth,sex,city)
+		profile_tmp:set_balance(balance)
+		profile_tmp:set_experience(experience)
+		profile_tmp:set_inventory(inventory)
+		profile_tmp:set_id(id)
 		io.close()
 
-		return profile
+		return profile_tmp
 	else
 		return false
 	end
 end
 
--- Get the profiles instances
+---Get the profiles instances
 -- @return profiles representing the list of profile instance
 -- @return false representing the dir is illegal
 function localprofilemanager:get_profileslist()
@@ -146,16 +160,10 @@ function localprofilemanager:get_profileslist()
 	end
 end
 
--- Remove a profile
--- @param filename representing the name of the profile to remove
+---Remove a profile
+-- @param profile representing the name of the profile to remove
 -- @return true representing remove successfully
 -- @return false representing remove unsuccessfully
--- @usage
--- --if localprofilemanager:remove("Anna") then
--- --  -- remove success
--- --else
--- --  -- remove fail
--- --end
 function localprofilemanager:delete(profile)
 	local path = utils.absolute_path("data/profile/")
 
@@ -177,14 +185,14 @@ function localprofilemanager:delete(profile)
 	end
 end
 
--- Get token in profile
+---Get token in profile
 -- @param profile representing the profile instance
 -- @return token representing the token of the profile
 function localprofilemanager:get_profile_token(profile)
 	return profile:get_login_token()
 end
 
--- Get email_address, password and login_token in profile
+---Get email_address, password and login_token in profile
 -- @param profile representing the profile instance
 function localprofilemanager:get_delete_params(profile)
 	return profile:get_email_address(), profile:get_password(), profile:get_login_token()

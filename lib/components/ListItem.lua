@@ -8,22 +8,17 @@ local Color = require("lib.draw.Color")
 local utils = require("lib.utils")
 
 
-function ListItem:__init(icon, text_left, font, text_position_left, text_color_selected, enabled, selected)
+function ListItem:__init(text_left, icon, money, font, text_position_left, text_position_right, font_highlight)
 	View.__init(self)
 
-	--text_right, font_size, font_path, icon
 	self.icon = icon
 	self.text_left = text_left
+	self.money = money
 	self.text_position_left = text_position_left
-	--self.text_right = text_right
-  self.font = font
-  self.text_color_selected = text_color_selected
- 	self._enabled = enabled or true
-  self._selected = selected or false
-	self.text_available = false
---	self.font_size = font_size
---	self.font_path = font_path
---  self.icon = icon
+	self.text_position_right = text_position_right
+	self.font = font
+	self.font_highlight = font_highlight
+	
 end
 
 function ListItem:select(status)
@@ -32,26 +27,27 @@ end
 
 function ListItem:render(surface)
 
-if self._selected then
+	local icon_height = 40
+
+	if self._selected then
 		surface:clear({r=250, g=169, b=0, a=255})
-		self.text_color_selected:draw(surface, self.text_position_left, self.text_left)
-		surface:copyfrom(gfx.loadpng(utils.absolute_path(self.icon)), nil, {x=10, y=28, width=40, height=40})
 
+		self.font_highlight:draw(surface, {x = 70, y = 0, height = surface:get_height()},
+			self.text_left, "left", "middle")
 
-else
---  surface:clear({r=255, g=255, b=255, a=255})
+		self.font_highlight:draw(surface, self.text_position_right, tostring(self.money))
+		surface:copyfrom(gfx.loadpng(self.icon), nil, {x=15, y=(surface:get_height()/2)-(icon_height/2),
+			width=40, height=icon_height})
+
+	else
 		surface:clear({r=255, g=150, b=0, a=255})
-		self.font:draw(surface, self.text_position_left, self.text_left)
-		--[[Efter merge från Development kan följande skrivas för vertikal centrering:
+		self.font:draw(surface, {x = 70, y = 0, height = surface:get_height()}, self.text_left, "left", "middle")
+		self.font:draw(surface, self.text_position_right, tostring(self.money))
 
-			self.font:draw(surface, self.text_position_left, self.text_left, nil, "middle")
-
-		]]
-		surface:copyfrom(gfx.loadpng(utils.absolute_path(self.icon)), nil, {x=10, y=28, width=40, height=40})
+		surface:copyfrom(gfx.loadpng(self.icon), nil, {x=15, y=(surface:get_height()/2)-(icon_height/2),
+			width=40, height=icon_height})
 
 end
-
---self.font:draw(surface, self.text_position_left, self.text_left)
 
 self:dirty(false)
 

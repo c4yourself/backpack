@@ -1,4 +1,4 @@
---- Profile
+---Profile
 -- @classmod Profile
 -- @field name
 -- @field email_address
@@ -16,6 +16,7 @@ local class = require("lib.classy")
 local utils = require("lib.utils")
 local Profile = class("Profile")
 local Event = require("lib.event.Event")
+local City = require("lib.city")
 
 Profile.name = ""
 Profile.email_address = ""
@@ -30,7 +31,7 @@ Profile.id = 0
 Profile.inventory = {}
 Profile.login_token = ""
 
---- Constructor for Profile
+---Constructor for Profile
 -- @param name string representing name of user
 -- @param email_address string representing email address of user
 -- @param date_of_birth string date birth of user
@@ -44,70 +45,86 @@ function Profile:__init(name,email_address,date_of_birth,sex,city)
 	self.city = city
 end
 
--- Get name of the user
+---Get name of the user
+-- @return name
 function Profile:get_name()
 	return self.name
 end
 
--- Get profile name
+---Get profile name
+-- @return profile name
 function Profile:get_profile_name()
 	return string.format("%s__%s",self.city,self.email_address)
 end
 
--- Get email_address of the user
+---Get email_address of the user
+-- @return email_address
 function Profile:get_email_address()
 	return self.email_address
 end
 
--- Get email_address of the user
+---Get date_of_birth of the user
+-- @return date_of_birth
 function Profile:get_date_of_birth()
 	return self.date_of_birth
 end
 
--- Get sex of the user
+---Get sex of the user
+-- @return sex
 function Profile:get_sex()
 	return self.sex
 end
 
--- Get city of the user
+---Get city of the user
+-- @return city
 function Profile:get_city()
-	return self.city
+	return City.cities[self.city]
 end
 
--- Get balance of the user
+---Get balance of the user
+-- @return balance
 function Profile:get_balance()
 	return self.balance
 end
 
--- Get balance of the user
+---Get balance of the user
+-- @return experience
 function Profile:get_experience()
 	return self.experience
 end
 
--- Get balance of the user
+---Get password of the user
+-- @return password
 function Profile:get_password()
 	return self.password
 end
 
--- Get login_token of the user
+---Get login_token of the user
+-- @return login_token
 function Profile:get_login_token()
 	return self.login_token
 end
 
--- Get id of the user
+---Get id of the user
+-- @return id
 function Profile:get_id()
 	return self.id
 end
 
--- Get inventory of the user
+---Get inventory of the user
+-- @return inventory table
 function Profile:get_inventory()
 	return self.inventory
 end
--- Get badges of the user
+
+---Get badges of the user
+-- @return badges table
 function Profile:get_badges()
 	return self.badges
 end
--- Get a string of badges
+
+---Get a string of badges
+-- @return badges_string
 function Profile:get_badges_string()
 	local tmp = string.format("%s",self.badges[1])
 
@@ -117,7 +134,9 @@ function Profile:get_badges_string()
 
 	return string.format("[%s]",tmp)
 end
--- Get a string of inventory
+
+---Get a string of inventory
+-- @return inventory_string
 function Profile:get_inventory_string()
 	local tmp = string.format("\"1\": %s",self.inventory[1])
 
@@ -127,63 +146,78 @@ function Profile:get_inventory_string()
 
 	return string.format("{%s}",tmp)
 end
--- Set balance of the user
+
+---Set balance of the user
 -- @param balance representing balance of the user
+-- @return balance
 function Profile:set_balance(balance)
 	self.balance = balance
 
 	return self.balance
 end
--- Set name of the user
+
+---Set name of the user
 -- @param name representing name of the user
+-- @return name
 function Profile:set_name(name)
 	self.name = name
 
 	return self.name
 end
--- Set email_address of the user
+
+---Set email_address of the user
 -- @param email_address representing email_address of the user
+-- @return email_address
 function Profile:set_email_address(email_address)
 	self.email_address = email_address
 
 	return self.email_address
 end
--- Set date_of_birth of the user
+
+---Set date_of_birth of the user
 -- @param date_of_birth representing date_of_birth of the user
+-- @return date_of_birth
 function Profile:set_date_of_birth(date_of_birth)
 	self.date_of_birth = date_of_birth
 
 	return self.date_of_birth
 end
--- Set sex of the user
+
+---Set sex of the user
 -- @param sex representing sex of the user
+-- @return sex
 function Profile:set_sex(sex)
 	self.sex = sex
 
 	return self.sex
 end
--- Set city of the user
+
+---Set city of the user
 -- @param city representing city of the user
+-- @return city
 function Profile:set_city(city)
 	self.city = city
 
 	return self.city
 end
--- Set experience of the user
+
+---Set experience of the user
 -- @param experience representing experience of the user
+-- @return experience
 function Profile:set_experience(experience)
 	self.experience = experience
 
 	return self.experience
 end
 
--- Set password of the user from server
+---Set password of the user from server
 -- @param password representing password of the user from server database
 function Profile:set_password(password)
 	self.password = password
 end
--- set badges from server
--- @param badges representing badges of the profile from server database
+
+---Set badges from server
+-- @param badges_string representing badges of the profile from server database
 function Profile:set_badges(badges_string)
 	local tmp = {}
 	tmp = utils.split(string.sub(badges_string,2, string.len(badges_string) - 1),",")
@@ -192,15 +226,18 @@ function Profile:set_badges(badges_string)
 		table.insert(self.badges,tonumber(tmp[i]))
 	end
 end
--- set inventory from server
--- @param inventory representing inventory of the profile from server database
+
+---Set inventory from server
+-- @param inventory_string representing inventory of the profile from server database
 function Profile:set_inventory(inventory_string)
 	local tmp = {}
 	tmp = utils.split(string.sub(inventory_string,string.find(inventory_string,"{") + 1,string.find(inventory_string,"}") - 1),",")
 
 	for i = 1, #tmp, 1 do
-		table.insert(self.inventory, tonumber(tmp[i]))
+		self.inventory[i] = tonumber(tmp[i])
+		--table.insert(self.inventory, tonumber(tmp[i]))
 	end
+
 	--[[
 	for i=1, #tmp, 1 do
 		table.insert(self.inventory,tonumber(string.sub(tmp[i],string.find(tmp[i]," ") + 1,string.len(tmp[i]))))
@@ -208,17 +245,17 @@ function Profile:set_inventory(inventory_string)
 	]]
 end
 
--- Add item to inventory
+---Add item to inventory
 -- @param item representing the id of the item
 function Profile:add_item(item)
 	table.insert(self.inventory, item)
 end
 
--- Remove an item from the inventory
+---Remove an item from the inventory
 -- @param item representing the id of the item
 function Profile:remove_item(item)
 	local index = 0
-	print(item)
+	--print(item)
 
 	for i,j in pairs(self.inventory) do
 		print(j)
@@ -235,18 +272,21 @@ function Profile:remove_item(item)
 
 end
 
--- set id from server
+---Set id from server
 -- @param id representing id of the profile from server database
 function Profile:set_id(id)
 	self.id = id
 end
--- set login_token from server
+
+--Set login_token from server
 -- @param login_token representing login_token of the profile from server database
 function Profile:set_login_token(login_token)
 	self.login_token = login_token
 end
--- Modify balance of the user
+
+--Modify balance of the user
 -- @param number representing the change of balance
+-- @return balance
 function Profile:modify_balance(number)
 	self.balance = self.balance + number
 
@@ -259,8 +299,9 @@ function Profile:modify_balance(number)
 	return self.balance
 end
 
--- Modify experience of the user
+---Modify experience of the user
 -- @param number representing the change of experience
+-- @return experience
 function Profile:modify_experience(number)
 	if number >= 0 then
 		self.experience = self.experience + number
@@ -274,6 +315,5 @@ function Profile:modify_experience(number)
 	Event:trigger("experience_change",self)
 	return self.experience
 end
-
 
 return Profile
