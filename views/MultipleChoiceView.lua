@@ -40,6 +40,13 @@ function MultipleChoiceView:__init()
 	self.current_question = 1
 	self.correct_answer_number = 0
 
+	--Progress Bar
+	self.progress_table = {}
+	for i=1, #self.mult_choice_quiz.questions do
+		self.progress_table[i] = -1
+	end
+	self.progress_counter_color = Color(0,255,0,255)
+
 	-- User input
 	self.user_input = ""
 	self.answer = {}
@@ -167,10 +174,12 @@ function MultipleChoiceView:_submit()
 			self.correct_answer_number = self.correct_answer_number + 1
 			self.result_string = "Correct! You've answered "
 			.. self.correct_answer_number .. " questions correctly this far."
+			self.progress_table[self.mult_choice_quiz.current_question] = true
 			self.last_check = self.last_check + 1
 		else
 			self.result_string = "Wrong. You've answered "
 			.. self.correct_answer_number .. " questions correctly this far."
+			self.progress_table[self.mult_choice_quiz.current_question] = false
 			self.last_check=self.last_check + 1
 		end
 		self.quiz_state = "DISPLAY_RESULT"
@@ -203,7 +212,7 @@ end
 
 ---Triggered everytime the user presses the back to city button
 function MultipleChoiceView:_exit()
-	self:trigger("exit_view")
+	self:trigger("exit_view", self.profile)
 end
 
 
@@ -211,54 +220,6 @@ end
 -- global @{ViewManager} instance). This method handles the logic and determines
 -- what should be diplayed next to the user
 function MultipleChoiceView:press(key)
-	-- Determine what should happen depending on the user input and current state
-	--[[if key == "right" and self.last_check == self.current_question
-	and self.quiz_state ~= "DONE" then
-		for j = 1, #self.user_input, 1 do
-			self.answer[j] = tonumber(string.sub(self.user_input,j,j))
-		end
-		if self.mult_choice_quiz.questions[self.current_question]:is_correct(self.answer) == true then
-			self.correct_answer_number = self.correct_answer_number + 1
-			self.result_string = "Right. You've answered "
-			.. self.correct_answer_number .. " questions correctly."
-			self.last_check = self.last_check + 1
-		else
-			self.result_string = "Wrong. You've answered "
-			.. self.correct_answer_number .. " questions correctly."
-			self.last_check=self.last_check + 1
-		end
-		self.quiz_state = "DISPLAY_RESULT"
-		self:dirty(true)
-		--Reset user input after the answer has been initiated
-		self.answer = {}
-		self.user_input = ""
-	elseif key == "right" and self.last_check == self.current_question + 1
-		 and end_flag ~= 1 then
-		-- Next question is displayed
-		-- Make sure there are questions left to display
-		self.current_question = self.current_question + 1
-		if self.current_question > self.quiz_size then
-			end_flag = 1
-			self.quiz_state = "DONE"
-		else
-			self.quiz_state = "IDLE"
-		end
-		self:dirty(true)
-	elseif key == "right" and self.end_flag == 1 then
-		-- Quiz is finished. Set up for a final result screen
-		self.quiz_state = "DONE"
-		self:dirty(true)
-	elseif key == "back" then
-		self:trigger("exit")
-	else
-		--Check if the user input can be interpreted as a answer and in that case
-		-- append it to the current answer
-		if self.user_input ~= nil and #self.user_input <= 3 then
-			if(key == "1" or key == "2" or key == "3" or key == "4") then
-				self.user_input = self.user_input .. key
-			end
-		end
-	end]]
 end
 
 --Renders this instance of MultipleChoiceView and all its child views, given
@@ -310,15 +271,6 @@ function MultipleChoiceView:render(surface)
 		-- If the view is marked as dirty, re-render it
 		if self.quiz_state == "IDLE" then
 
-			--Buttons
-			--local button_size = {width = 372, height = 107}
-			--local buttonColor = Color(0, 128, 225, 255)
-		--	local question_text_color = Color(0,0,0,255)
-		--	local choiceButton1 = Font("data/fonts/DroidSans.ttf", 30, question_text_color)
-		--	local choiceButton2 = Font("data/fonts/DroidSans.ttf", 30, question_text_color)
-		--	local choiceButton3 = Font("data/fonts/DroidSans.ttf", 30, question_text_color)
-		--	local choiceButton4 = Font("data/fonts/DroidSans.ttf", 30, question_text_color)
-
 			-- Draw question
 			local question = self.current_question .. ". "
 					.. self.mult_choice_quiz.questions[self.current_question].question
@@ -326,21 +278,6 @@ function MultipleChoiceView:render(surface)
 				{x = 0, y = 0, height = self.question_area_height,
 				width = self.question_area_width},
 				question, "center", "middle")
-
-			--Button text
-			--[[surface:fill(buttonColor, {width=200, height=60, x=100, y=400})
-			choiceButton1:draw(surface,Rectangle(100,400,200,60):to_table(),"(1)." ..
-				self.mult_choice_quiz.questions[self.current_question].Choices[1])
-			surface:fill(buttonColor, {width=200, height=60, x=350, y=400})
-			choiceButton2:draw(surface,Rectangle(350,400,200,60):to_table(),"(2)." ..
-				self.mult_choice_quiz.questions[self.current_question].Choices[2])
-			surface:fill(buttonColor, {width=200, height=60, x=600, y=400})
-			choiceButton3:draw(surface,Rectangle(600,400,200,60):to_table(),"(3)." ..
-				self.mult_choice_quiz.questions[self.current_question].Choices[3])
-			surface:fill(buttonColor, {width=200, height=60, x=850, y=400})
-			choiceButton4:draw(surface,Rectangle(850,400,200,60):to_table(),"(4)." ..
-				self.mult_choice_quiz.questions[self.current_question].Choices[4])]]
-			-- Question buttons
 			local button_1_text =  "A. " .. self.mult_choice_quiz.questions[self.current_question].Choices[1]
 			local button_2_text =  "B. " .. self.mult_choice_quiz.questions[self.current_question].Choices[2]
 			local button_3_text =  "C. " .. self.mult_choice_quiz.questions[self.current_question].Choices[3]
@@ -381,9 +318,62 @@ function MultipleChoiceView:render(surface)
 			.. self.correct_answer_number .. " questions correctly and your score is "
 			.. self.mult_choice_quiz:get_score() .. ".")]]
 		end
+		
+		--Progress counter
+		local progress_margin = 26
+		self.counter_width = 72
+		self.counter_height = 72
+		self.x_counter = math.ceil(surface_width - progress_margin -
+									self.counter_width)
+		self.y_counter = progress_margin
+		self.progress_counter_area = SubSurface(surface, {x = self.x_counter,
+									y = self.y_counter,
+									height = self.counter_height,
+									width = self.counter_width})
+		-- Render the Progress counter
+			self.progress_counter_area:clear(self.progress_counter_color)
+			local current_question = self.mult_choice_quiz.current_question
+			local quiz_length = #self.mult_choice_quiz.questions
+			local current_question = math.min(self.mult_choice_quiz.current_question,
+													quiz_length)
+			self.font:draw(self.progress_counter_area,
+										{x = 0, y = 0, height = self.counter_height,
+										width = self.counter_width},
+										tostring(current_question) .. " / " ..
+										tostring(quiz_length), "center", "middle")
+			-- Render the Progress bar
+			local bar_component_width = 45
+			local bar_component_height = 45
+			local progress_bar_margin = 10
+			local bar_component_x = self.x_counter + self.counter_width -
+									bar_component_width
+			local bar_component_y = self.y_counter + progress_bar_margin +
+									self.counter_height
+			local quiz_length = #self.progress_table
+			-- Create a progress bar and color its boxes
+			for i = 1, quiz_length do
+				local progress_bar_component = SubSurface(surface,
+											{x = bar_component_x, y = bar_component_y,
+											height = bar_component_height,
+											width = bar_component_width})
+				local bar_component_color = nil
+				-- Depending on the users success: color the boxes differently
+				if self.progress_table[i] == true then
+					bar_component_color = Color(0,255,0,255)
+				elseif self.progress_table[i] == false then
+					bar_component_color = Color(255,0,0,255)
+				else
+					bar_component_color = Color(255, 255, 255, 255)
+				end
+				progress_bar_component:clear(bar_component_color)
+				bar_component_y = bar_component_y + progress_bar_margin +
+									bar_component_height
+			end
+			self.prevent = false
 
 		self.views.grid:render(surface)
 	end
+
 	-- TODO Render all child views and copy changes to this view
 	-- Render children
 
