@@ -15,6 +15,7 @@ local Color = require("lib.draw.Color")
 local Font = require("lib.draw.Font")
 local Button = require("lib.components.Button")
 local ButtonGrid=require("lib.components.ButtonGrid")
+local ProfileManager = require("lib.profile.ProfileManager")
 
 -- Get size of Table
 -- @param a Is the table to get ther size of
@@ -115,6 +116,7 @@ function Store:__init(remote_control, surface, profile)
 
 		-- Get the current index of button that is selected
 		selected_index = button.transfer_path
+		local continue = true
 
 		-- If we have selected on of the purchasable items
 		if selected_index <= get_size(self.items) then
@@ -127,14 +129,22 @@ function Store:__init(remote_control, surface, profile)
 			self.message["message"] = self:sell_item(selected_index-get_size(self.items))
 
 		else
+
 			self:destroy()
-			self:trigger("exit_view")
+			self:trigger("exit_view", self.profile)
+			continue = false
 
 		end
+		if continue then
+			tot_items = get_size(self.items)+get_size(self.backpack_items)
+			for i = 1, tot_items+1 do
+				self.button_grid.button_list[i].button:set_transfer_path(i)
+			end
 
-		self.item_images = self:loadItemImages()
-		gfx.update()
-		self:dirty(true)
+			self.item_images = self:loadItemImages()
+			self:render(self.surface)
+			gfx.update()
+		end
 	end
 
 	-- Instance remote control and mapps it to pressing enter
@@ -154,7 +164,6 @@ function Store:loadItemImages()
 	for i = 1, numItems do
 		ret_list[i] = gfx.loadpng(self.items[i]:get_image_path())
 	end
-	print(#self.backpack_items)
 	if #self.backpack_items>0 then
 		for j = 1, get_size(self.backpack_items) do
 			ret_list[j+numItems] = gfx.loadpng(self.backpack_items[j]:get_image_path())
@@ -191,6 +200,7 @@ function Store:insert_button()
 															y = 30 + 105*(row-1-0.8*own_items) + own_items*205})
 	-- Add to button grid
 	self.button_grid:insert_button(self.item_positions[add_index], self.button_size, self.buttons[add_index],add_index)
+
 
 end
 
@@ -320,7 +330,7 @@ function Store:purchase_item(item_index)
 		-- Insert a new button
 		self:insert_button()
 
-		self:dirty(false)
+		self:trigger("dirty")
 
 		return "Item purchased"
 	end
@@ -373,7 +383,7 @@ function Store:action_made(button)
 		-- Otherwise we've exited
 	elseif button =="back" then
 
-		self:trigger("exit_view")
+		--self:trigger("exit_view")
 			--self:destroy()
 			--sys.stop()
 

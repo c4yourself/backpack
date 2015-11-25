@@ -18,7 +18,6 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 	View.__init(self)
 	event.remote_control:off("button_release") -- TODO remove this once the ViewManager is fully implemented
 	self.profile = profile
-	--print("NAME---" .. self.profile:get_city())
 	-- Flags (and similiar)
 	self.listening_initiated = false
 	self.end_flag = 0 -- To indicate if the quiz if complete
@@ -31,7 +30,7 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 	-- Associate a quiz instance with the MultipleChoiceView
 	self.mult_choice_quiz = Quiz()
 	self.quiz_size = 2
-	self.mult_choice_quiz:generate_citytour_quiz(self.profile:get_city(),self.quiz_size,1)
+	self.mult_choice_quiz:generate_citytour_quiz(self.profile:get_current_city(),self.quiz_size,1)
 	self.current_question = 1
 	self.correct_answer_number = 0
 
