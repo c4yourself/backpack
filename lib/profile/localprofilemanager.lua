@@ -41,9 +41,9 @@ end
 -- @return profile representing the instance of profile
 -- @return false representing the file path is illegal
 function localprofilemanager:load(profile_city, profile_email)
-	local profile
+	local profile_tmp
 	local name, email_address, date_of_birth
-	local sex, city, balance, experience
+	local sex, city, balance, experience, inventory
 	local path = utils.absolute_path(string.format("data/profile/%s__%s.profile",profile_city,profile_email))
 
 	--check the file exist or not
@@ -87,6 +87,13 @@ function localprofilemanager:load(profile_city, profile_email)
 				_,_,_,city = string.find(tmp[2],"([\"'])(.-)%1")
 			end
 
+			--match inventory
+			if string.match(line,"\"inventory\"") ~= nil then
+				local tmp = {}
+				tmp = utils.split(line," ")
+				_,_,_,inventory = string.find(tmp[2],"([\"'])(.-)%1")
+			end
+
 			--match balance
 			if string.match(line,"\"balance\"") ~= nil then
 				balance = tonumber(string.sub(line,string.find(line," ")+1,string.find(line,",")-1))
@@ -96,15 +103,22 @@ function localprofilemanager:load(profile_city, profile_email)
 			if string.match(line,"\"experience\"") ~= nil then
 				experience = tonumber(string.sub(line,string.find(line," ")+1,string.find(line,",")-1))
 			end
+
+			--match id
+			if string.match(line,"\"id\"") ~= nil then
+				id = tonumber(string.sub(line,string.find(line," ")+1,string.find(line,",")-1))
+			end
 		end
 
 		--generate a profile instance
-		profile = Profile(name,email_address,date_of_birth,sex,city)
-		profile:set_balance(balance)
-		profile:set_experience(experience)
+		profile_tmp = Profile(name,email_address,date_of_birth,sex,city)
+		profile_tmp:set_balance(balance)
+		profile_tmp:set_experience(experience)
+		profile_tmp:set_inventory(inventory)
+		profile_tmp:set_id(id)
 		io.close()
 
-		return profile
+		return profile_tmp
 	else
 		return false
 	end
@@ -138,6 +152,8 @@ function localprofilemanager:get_profileslist()
 			string.sub(profiles_name[i],string.find(profiles_name[i],"__") + 2,string.len(profiles_name[i])))
 			profiles_city_list[i] = string.sub(profiles_name[i],1,string.find(profiles_name[i],"__") - 1)
 			profiles_email_address_list[i] = string.sub(profiles_name[i],string.find(profiles_name[i],"__") + 2,string.len(profiles_name[i]))
+
+			print(#profiles[i]:get_inventory())
 		end
 
 		return profiles, profiles_city_list, profiles_email_address_list

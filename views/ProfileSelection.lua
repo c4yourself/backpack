@@ -71,7 +71,7 @@ end
 
 function ProfileSelection:callContinueGame()
 	cur_prof = self.profile_list[self.profile_index+1]
-	profile = Profile(cur_prof.name,cur_prof.email_address,cur_prof.date_of_birth,cur_prof.sex,cur_prof.city)
+	profile = self.profile_manager:load(cur_prof.city, cur_prof.email_address)
 	city_view = CityView(event.remote_control, profile)
 	view.view_manager:set_view(city_view)
 end

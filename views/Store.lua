@@ -56,8 +56,6 @@ function Store:__init(remote_control, surface, profile)
 
 	-- Get the items relevant for the current city
 	self.items = self.backendstore:returnItemList(self.current_city)
-	print(#self.items)
-	print(profile:get_city().name)
 
 	-- Get the profiles backpack items
 	self.backpack_items = self.backendstore:returnBackPackItems(self.profile:get_inventory())

@@ -230,12 +230,15 @@ end
 ---Set inventory from server
 -- @param inventory_string representing inventory of the profile from server database
 function Profile:set_inventory(inventory_string)
+	print(inventory_string)
 	local tmp = {}
 	tmp = utils.split(string.sub(inventory_string,string.find(inventory_string,"{") + 1,string.find(inventory_string,"}") - 1),",")
 
 	for i = 1, #tmp, 1 do
-		table.insert(self.inventory, tonumber(tmp[i]))
+		self.inventory[i] = tonumber(tmp[i])
+		--table.insert(self.inventory, tonumber(tmp[i]))
 	end
+
 	--[[
 	for i=1, #tmp, 1 do
 		table.insert(self.inventory,tonumber(string.sub(tmp[i],string.find(tmp[i]," ") + 1,string.len(tmp[i]))))
