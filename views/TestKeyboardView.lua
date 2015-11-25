@@ -25,6 +25,7 @@ function TestKeyboardView:__init(remote_control)
 	self.background_path = ""
 	input_field = InputField("Name:", {x = 700, y = 80}, true)
 	input_field2 = InputField("Mail:", {x = 700, y = 230}, false)
+	self.active_field = input_field
 
 	self.render_ticket = false
 
@@ -32,8 +33,29 @@ function TestKeyboardView:__init(remote_control)
 	self.keyboard = KeyboardComponent()
 	self.keyboard:set_active(false)
 
+	local update_string_callback = function()
+		self.active_field:set_text(self.keyboard.input_string)
+		self.active_field:render(screen)
+	end
+	self:listen_to(self.keyboard, "update", update_string_callback)
+
+	local exit_keyboard_callback = function()
+		hasActiveKeyboard = false
+		self.keyboard:set_active(false)
+		self.active_field:render(screen)
+	end
+	self:listen_to(self.keyboard, "exit", exit_keyboard_callback)
+
 	self.content_list = {input_field,input_field2}
 	self.content_pointer = 1
+
+	self.callback = utils.partial(self.load_view, self)
+	self:listen_to(
+		event.remote_control,
+		"button_release",
+		self.callback
+		--utils.partial(self.load_view, self)
+	)
 end
 
 function TestKeyboardView:render(surface)
@@ -67,13 +89,6 @@ function TestKeyboardView:render(surface)
 	-- end
 
 	--keyboard:set_active(false)
-	local callback = utils.partial(self.load_view, self)
-	self:listen_to(
-		event.remote_control,
-		"button_release",
-		callback
-		--utils.partial(self.load_view, self)
-	)
 
 
 end
@@ -84,9 +99,9 @@ function TestKeyboardView:load_view(button)
 	if self.hasActiveKeyboard == true then
 		if self.render_ticket == true then
 			self.render_ticket = false
-			self.keyboard:render(screen)
+			--self.keyboard:render(screen)
 		end
-		--self.keyboard:button_press(button)
+			self.keyboard:button_press(button)
 	else
 		if button == "down" then
 			self.content_list[self.content_pointer]:set_highlighted(false)

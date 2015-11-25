@@ -47,18 +47,9 @@ function InputField:render(surface)
   input_field_title:draw_over_surface(surface, self.name)
 
   local input_field_text = sys.new_freetype({r=23, g=155, b=23}, 40, {x=self.position["x"]+20,y=self.position["y"]+20}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+  input_field_text:draw_over_surface(surface, self.text)
 
-
-  -- local done_callback = function()
-	--
-  --   self.text = self.keyboard:get_string()
-  --   --logger:trace("Current input: " .. current_input)
-  --   input_field_text:draw_over_surface(surface, self.text)
-  --   --render shit
-  --   gfx.update()
-  -- end
-	--
-  -- self:listen_to(self.keyboard, "character_input", done_callback)
+  gfx.update()
 end
 
 
