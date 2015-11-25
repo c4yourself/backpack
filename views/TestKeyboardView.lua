@@ -11,10 +11,11 @@ local utils = require("lib.utils")
 local SubSurface = require("lib.view.SubSurface")
 local button= require("lib.components.Button")
 local button_grid	=	require("lib.components.ButtonGrid")
---local KeyboardComponent	=	require("components.KeyboardComponent")
 local InputField	=	require("components.InputField")
 local color = require("lib.draw.Color")
 local logger = require("lib.logger")
+local KeyboardComponent	=	require("components.KeyboardComponent")
+
 local TestKeyboardView = class("TestKeyboardView", View)
 
 --- Constructor for CityView
@@ -25,15 +26,24 @@ function TestKeyboardView:__init(remote_control)
 	input_field = InputField("Name:", {x = 700, y = 80}, true)
 	input_field2 = InputField("Mail:", {x = 700, y = 230}, false)
 
+	self.render_ticket = false
+
+	self.hasActiveKeyboard = false
+	self.keyboard = KeyboardComponent()
+	self.keyboard:set_active(false)
+
 	self.content_list = {input_field,input_field2}
 	self.content_pointer = 1
 end
 
 function TestKeyboardView:render(surface)
 	-- -- Resets the surface and draws the background
-	local background_color = {r=255, g=255, b=255}
+	local background_color = {r=47, g=123, b=145}
 	surface:clear(background_color)
 
+	if self.hasActiveKeyboard==true then
+		self.keyboard:render(screen)
+	end
 
 
 	input_field:render(surface)
@@ -69,27 +79,22 @@ function TestKeyboardView:render(surface)
 end
 
 function TestKeyboardView:load_view(button)
-	hasActiveKeyboard = false
-	for key,value in pairs(self.content_list) do
-		if value:is_active() then
-			hasActiveKeyboard = true
+
+	-- TODO set mappings to RC
+	if self.hasActiveKeyboard == true then
+		if self.render_ticket == true then
+			self.render_ticket = false
+			self.keyboard:render(screen)
 		end
-	end
-	-- -- TODO set mappings to RC
-	-- if (keyboard:is_active()) then
-	-- 	--keyboard:button_press(button)
-	-- else
-	-- 	logger:trace("regular bindings")
-	-- 	--regular RC bindings
-	-- end
-	if hasActiveKeyboard == false then
+		--self.keyboard:button_press(button)
+	else
 		if button == "down" then
 			self.content_list[self.content_pointer]:set_highlighted(false)
 			self.content_pointer = self.content_pointer + 1
 			self.content_list[self.content_pointer]:set_highlighted(true)
 		elseif button == "ok" then
-			--print(tostring(self.content_list[self.content_pointer]) .. "prrrrroooooooooooo-ap")
-			self.content_list[self.content_pointer]:activate_keyboard(true)
+			self.render_ticket = true
+			self.hasActiveKeyboard = true
 		end
 		self:render(screen)
 		gfx.update()

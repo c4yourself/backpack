@@ -4,7 +4,6 @@ local utils = require("lib.utils")
 local logger = require("lib.logger")
 local class = require("lib.classy")
 local View = require("lib.view.View")
-local KeyboardComponent	=	require("components.KeyboardComponent")
 local InputField = class("InputField", View)
 
 --- Constructor for InputField
@@ -18,15 +17,15 @@ function InputField:__init(name, position, highlighted)
   self.text = ""
   self.name = name
   self.position = position
-
-
-  self.keyboard = KeyboardComponent()
-	self.keyboard:set_active(false)
 end
 
 -- TODO, remove text_position
 function InputField:get_text()
 	return self.text
+end
+
+function InputField:set_text(text)
+	self.text = text
 end
 
 function InputField:is_highlighted()
@@ -35,14 +34,6 @@ end
 
 function InputField:set_highlighted(status)
 	self.highlighted = status
-end
-
-function InputField:activate_keyboard(status)
-	self.keyboard:set_active(status)
-end
-
-function InputField:is_active()
-	return self.keyboard:is_active()
 end
 
 function InputField:render(surface)
@@ -58,26 +49,16 @@ function InputField:render(surface)
   local input_field_text = sys.new_freetype({r=23, g=155, b=23}, 40, {x=self.position["x"]+20,y=self.position["y"]+20}, utils.absolute_path("data/fonts/DroidSans.ttf"))
 
 
-	-- TODO set mappings to RC
-	if (self.keyboard:is_active()) then
-		--keyboard:button_press(button)
-		self.keyboard:render(surface)
-	else
-		logger:trace("regular bindings")
-		--regular RC bindings
-	end
-
-
-  local done_callback = function()
-
-    self.text = self.keyboard:get_string()
-    --logger:trace("Current input: " .. current_input)
-    input_field_text:draw_over_surface(surface, self.text)
-    --render shit
-    gfx.update()
-  end
-
-  self:listen_to(self.keyboard, "character_input", done_callback)
+  -- local done_callback = function()
+	--
+  --   self.text = self.keyboard:get_string()
+  --   --logger:trace("Current input: " .. current_input)
+  --   input_field_text:draw_over_surface(surface, self.text)
+  --   --render shit
+  --   gfx.update()
+  -- end
+	--
+  -- self:listen_to(self.keyboard, "character_input", done_callback)
 end
 
 

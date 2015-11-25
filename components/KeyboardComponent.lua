@@ -29,12 +29,15 @@ function KeyboardComponent:__init(remote_control)
 	mx = 0
 	my = 0
 
+	self.x_pointer = 1
+	self.y_pointer = 1
+
 	self.button_size= {width=90,height=70}
 	self.button_padding = 10
 	self.nbr_of_buttons = {x=6, y=7}
 
 	self.button_start_location = {left=((screen:get_width()/2)-(self.nbr_of_buttons["x"]*(self.button_size["width"]+self.button_padding)))/2, top=100}
-	self.buttonGrid = button_grid()
+	--self.buttonGrid = button_grid()
 	for i=1, self.nbr_of_buttons["x"]*self.nbr_of_buttons["y"] do
 		local temp_button = button(
 			 button_color,
@@ -58,7 +61,7 @@ function KeyboardComponent:__init(remote_control)
 			mx = 0
 			my = my+1
 		end
-		self.buttonGrid:add_button(positions[i],self.button_size,temp_button)
+		--self.buttonGrid:add_button(positions[i],self.button_size,temp_button)
 	end
 end
 
@@ -67,7 +70,7 @@ function KeyboardComponent:render(surface)
 	self.surface = surface
 
 
-	self.buttonGrid:render(surface)
+	--self.buttonGrid:render(surface)
 
 	mx = 0
 	my = 0
@@ -86,7 +89,7 @@ function KeyboardComponent:render(surface)
 		end
 	end
 
-	self.keyboard_position = self.buttonGrid.button_indicator
+	--self.keyboard_position = self.buttonGrid.button_indicator
 
 
 end
@@ -103,47 +106,47 @@ function KeyboardComponent:button_press(button)
   --logger:trace("button: " .. button)
 	logger:trace("position: " .. self.keyboard_position)
 	if button == "down" then
-		if (self.keyboard_position+self.nbr_of_buttons["x"] <= #self.buttonGrid.button_list) then
-
-			self.buttonGrid.button_list[self.keyboard_position].button:select(false)
-			self.buttonGrid.button_list[self.keyboard_position+self.nbr_of_buttons["x"]].button:select()
-			self.keyboard_position = self.keyboard_position+self.nbr_of_buttons["x"]
-			--self.buttonGrid:render(self.surface)
-			self:render(self.surface)
-			gfx.update()
-		end
+		-- if (self.keyboard_position+self.nbr_of_buttons["x"] <= #self.buttonGrid.button_list) then
+		--
+		-- 	self.buttonGrid.button_list[self.keyboard_position].button:select(false)
+		-- 	self.buttonGrid.button_list[self.keyboard_position+self.nbr_of_buttons["x"]].button:select()
+		-- 	self.keyboard_position = self.keyboard_position+self.nbr_of_buttons["x"]
+		-- 	--self.buttonGrid:render(self.surface)
+		-- 	self:render(self.surface)
+		-- 	gfx.update()
+		-- end
 	elseif button == "up" then
-		if (self.keyboard_position-self.nbr_of_buttons["x"] >= 1) then
-			self.buttonGrid.button_list[self.keyboard_position].button:select(false)
-			self.buttonGrid.button_list[self.keyboard_position-self.nbr_of_buttons["x"]].button:select()
-			self.keyboard_position = self.keyboard_position-self.nbr_of_buttons["x"]
-			--self.buttonGrid:render(self.surface)
-			self:render(self.surface)
-			gfx.update()
-		end
+		-- if (self.keyboard_position-self.nbr_of_buttons["x"] >= 1) then
+		-- 	self.buttonGrid.button_list[self.keyboard_position].button:select(false)
+		-- 	self.buttonGrid.button_list[self.keyboard_position-self.nbr_of_buttons["x"]].button:select()
+		-- 	self.keyboard_position = self.keyboard_position-self.nbr_of_buttons["x"]
+		-- 	--self.buttonGrid:render(self.surface)
+		-- 	self:render(self.surface)
+		-- 	gfx.update()
+		-- end
 	elseif button == "right" then
-		if (self.keyboard_position%self.nbr_of_buttons["x"] ~= 0) then
-			self.buttonGrid.button_list[self.keyboard_position].button:select(false)
-			self.buttonGrid.button_list[self.keyboard_position+1].button:select()
-			self.keyboard_position = self.keyboard_position+1
-			--self.buttonGrid:render(self.surface)
-			self:render(self.surface)
-			gfx.update()
-		end
+		-- if (self.keyboard_position%self.nbr_of_buttons["x"] ~= 0) then
+		-- 	self.buttonGrid.button_list[self.keyboard_position].button:select(false)
+		-- 	self.buttonGrid.button_list[self.keyboard_position+1].button:select()
+		-- 	self.keyboard_position = self.keyboard_position+1
+		-- 	--self.buttonGrid:render(self.surface)
+		-- 	self:render(self.surface)
+		-- 	gfx.update()
+		-- end
 	elseif button == "left" then
-		if (self.keyboard_position%self.nbr_of_buttons["x"] ~= 1) then
-			self.buttonGrid.button_list[self.keyboard_position].button:select(false)
-			self.buttonGrid.button_list[self.keyboard_position-1].button:select()
-			self.keyboard_position = self.keyboard_position-1
-			--self.buttonGrid:render(self.surface)
-			self:render(self.surface)
-			gfx.update()
-		end
+		-- if (self.keyboard_position%self.nbr_of_buttons["x"] ~= 1) then
+		-- 	self.buttonGrid.button_list[self.keyboard_position].button:select(false)
+		-- 	self.buttonGrid.button_list[self.keyboard_position-1].button:select()
+		-- 	self.keyboard_position = self.keyboard_position-1
+		-- 	--self.buttonGrid:render(self.surface)
+		-- 	self:render(self.surface)
+		-- 	gfx.update()
+		-- end
 	elseif button == "ok" then
-		logger:trace("you have choosen:" .. self.letters[self.keyboard_position])
-		self.input_string = self.input_string .. self.letters[self.keyboard_position]
-		logger:trace("your string is:" .. self.input_string)
-		self:trigger("character_input")
+		-- logger:trace("you have choosen:" .. self.letters[self.keyboard_position])
+		-- self.input_string = self.input_string .. self.letters[self.keyboard_position]
+		-- logger:trace("your string is:" .. self.input_string)
+		-- self:trigger("character_input")
 
 	end
 end
@@ -151,10 +154,10 @@ end
 function KeyboardComponent:set_active(active)
 	if(active == false) then
 		logger:trace("keyboard is set: INACTIVE")
-		self.buttonGrid:blur()
+		--self.buttonGrid:blur()
 	else
 		logger:trace("keyboard is set: ACTIVE")
-		self.buttonGrid:focus()
+		--self.buttonGrid:focus()
 	end
   KeyboardComponent.active = active
 end
