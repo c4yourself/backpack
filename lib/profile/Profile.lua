@@ -230,7 +230,7 @@ end
 ---Set inventory from server
 -- @param inventory_string representing inventory of the profile from server database
 function Profile:set_inventory(inventory_string)
-	print(inventory_string)
+
 	local tmp = {}
 	tmp = utils.split(string.sub(inventory_string,string.find(inventory_string,"{") + 1,string.find(inventory_string,"}") - 1),",")
 	self.inventory = {}
@@ -259,7 +259,6 @@ function Profile:remove_item(item)
 	--print(item)
 
 	for i,j in pairs(self.inventory) do
-		print(j)
 		if j == item then
 			index = i
 		end
@@ -290,13 +289,14 @@ end
 -- @return balance
 function Profile:modify_balance(number)
 	self.balance = self.balance + number
-
+	--[[
 	Event:__init()
 	call_back = function(...)
 		ProfileManager:save(...)
 	end
 	Event:on("balance_change",call_back)
 	Event:trigger("balance_change",self)
+	]]
 	return self.balance
 end
 
