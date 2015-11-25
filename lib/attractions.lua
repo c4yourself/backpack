@@ -286,16 +286,32 @@ attractions.attraction = { paris = {
                                                   "tower opening to the public on 22 May 2012."}
                                         },
                                           {name = "Sensōji Temple",
-                                          question = "How deep is the monument?",
-                                          answers = {"45 metres", "22 metres", "10 metres", "30 metres"},
+                                          question = "What type of temple is Sensō-ji?",
+                                          answers = {"A Buddhist Temple", "A Hindu Temple", "A Christian Temple", "A Muslim Temple"},
                                           pic_url = "data/images/CityTourEiffelTower.png",
-                                          text = {""}
+                                          text = {"Sensō-ji is an ancient Buddhist temple located in Asakusa, Tokyo,",
+                                                  "Japan. It is Tokyo's one of its most significant. Sensō-ji is the",
+                                                  "focus of Tokyo's largest and most popular festival, Sanja Matsuri.",
+                                                  "This takes place over 3–4 days in late spring, and sees the",
+                                                  "surrounding streets closed to traffic from dawn until late evening.",
+                                                  "Many tourists visit Sensō-ji every year, the surrounding area has",
+                                                  "many traditional shops and eating places that feature traditional",
+                                                  "dishes (hand-made noodles, sushi, tempura, etc.). During World",
+                                                  "War II, the temple was bombed and destroyed. It was rebuilt later",
+                                                  "and is a symbol of rebirth and peace to the Japanese people."}
                                           },
+
                                           {name = "Tokyo Disneyland",
-                                          question = "Who of the following is buried here?",
-                                          answers = {"Napoleon Bonaparte", "Gustave Eiffel", "Jean Chalgrin", "Philippe Pétain"},
+                                          question = "How many themes does Tokyo Disneyland have?",
+                                          answers = {"7", "8", "9", "10"},
                                           pic_url = "data/images/CityTourEiffelTower.png",
-                                          text = {""}
+                                          text = {"Tokyo Disneyland is a 115-acre (47 ha) theme park at near Tokyo.",
+                                                  "The park has seven themed areas: the World Bazaar; the four classic",
+                                                  "Disney lands: Adventureland, Western land, Fantasyland and",
+                                                  "Tomorrowland; and two mini-lands: Critter Country and Mickey's Toon",
+                                                  "town. In 2013, Tokyo Disneyland hosted 17.2 million visitors, making",
+                                                  "it the world's second-most visited theme park behind the Magic",
+                                                  "Kingdom at Walt Disney World Resort."}
                                         }
                                       },
 
