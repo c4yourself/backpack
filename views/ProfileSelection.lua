@@ -58,7 +58,7 @@ function ProfileSelection:get_email()
 end
 
 function ProfileSelection:get_city()
-	return self.profile_list[self.profile_index+1].city
+	return self.profile_list[self.profile_index+1]:get_city().name
 end
 
 function ProfileSelection:setLeftMenu(bool)
@@ -115,7 +115,7 @@ end
 
 function ProfileSelection:upBtnPress()
 	if self.isLeftMenu then
-		if self.profile_index - 1 < 0 then
+		if self.profile_index - 1 < 1 then
 			self.profile_index = #self.profile_list-1
 		else
 			self.profile_index = self.profile_index - 1
@@ -124,7 +124,7 @@ function ProfileSelection:upBtnPress()
 		if self.menu_index - 1 < 1 then
 			self.menu_index = 4
 		else
-			self.menu_index = menu_index - 1
+			self.menu_index = self.menu_index - 1
 		end
 	end
 end
