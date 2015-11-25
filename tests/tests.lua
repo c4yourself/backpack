@@ -29,6 +29,7 @@ TestIntegrationNumerical = require("test_integration_numerical")
 TestTSV = require("test_tsvreader")
 TestProfile = require("test_profile")
 TestMemory = require("test_memory")
+TestExperienceCalculation = require("test_experiencecalculation")
 --Mocks
 TestTimerMock = require("mocks.test_mock_TimerMock")
 TestGfxMock = require("mocks.test_mock_GfxMock")
