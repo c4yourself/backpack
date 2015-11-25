@@ -1,5 +1,5 @@
 --- Connect four logics
--- @module connectfour
+-- @classmod ConnectFour
 local class = require("lib.classy")
 local logger = require("lib.logger")
 local utils = require("lib.utils")
@@ -155,7 +155,8 @@ end
 -- @param row the row where the last move was made
 -- @param column the column where the last move was made
 -- @return player string containing the player if there is a winner else nil
-function ConnectFour:find_winner(player, row, column)
+--@local
+function ConnectFour:_find_winner(player, row, column)
 
 	local count = 0
 	local current_row = row
@@ -257,7 +258,7 @@ function ConnectFour:find_winner(player, row, column)
 	return nil
 end
 
----Checks if there is a winner by calling find_winner() with the top-coin in each column as a parameter
+---Checks if there is a winner by calling _find_winner() with the top-coin in each column as a parameter
 -- @return player string containing the player if there is a winner else nil
 function ConnectFour:get_winner()
 	for i = 1, 7 do
@@ -265,7 +266,7 @@ function ConnectFour:get_winner()
 		if row ~= 6 then
 			local player = self:get(row+1, i)
 			if player ~= nil then
-				local winner = self:find_winner(player, row+1, i)
+				local winner = self:_find_winner(player, row+1, i)
 				if winner ~= nil then
 					return winner
 				end

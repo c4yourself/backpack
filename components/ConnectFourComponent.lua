@@ -1,3 +1,6 @@
+---Connect Four GUI
+--@classmod ConnectFourComponent
+
 local class = require("lib.classy")
 local ConnectFour = require("lib.connectfour.ConnectFour")
 local event = require("lib.event")
@@ -55,9 +58,10 @@ function ConnectFourComponent:press(key)
 
 
 	elseif key == "exit" then
-		local exit_popup = subsurface(surface, area(100, 100, 400, 400))
-		local color_popup = color(255, 255, 255, 255)
-		local font_popup = font("data/fonts/DroidSans.ttf", 16, color_popup)
+		--TODO pop-up
+	--	local exit_popup = subsurface(surface, area(100, 100, 400, 400))
+	--	local color_popup = color(255, 255, 255, 255)
+	--	local font_popup = font("data/fonts/DroidSans.ttf", 16, color_popup)
 	--	exit_popup:clear({r=255, g=255, b=255}, area(100, 100, 400, 400))
 	--	font_popup:draw(exit_popup, area(30,30,400,400), "Spelare X vann!")
 		self.trigger("exit_view")
@@ -178,6 +182,7 @@ function ConnectFourComponent:render(surface)
 	end
 
 	if self.connectfour:get_winner() ~= nil then
+		--TODO change to pop_up
 		local winner_popup = subsurface(surface, area(100, 100, 400, 400))
 		local color_popup = color(243, 137, 15, 255)
 		local font_popup = font("data/fonts/DroidSans.ttf", 16, color(0,0,0,255))
