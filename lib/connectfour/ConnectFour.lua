@@ -127,7 +127,7 @@ end
 -- @param column the column where the player wants to drop the coin
 -- @return boolean
 function ConnectFour:is_valid_move(player, column)
-	row = self:get_current_row(column)
+		local row = self:get_current_row(column)
 
 	if row > 0 and column >= 1 and column <= 7 and self:get_player() == player then
 		return true
@@ -283,11 +283,11 @@ end
 function ConnectFour:computer_AI(x_column)
 
 	local random_column
-	random_probability = math.random(1,10) --probability
+	local random_probability = math.random(1,10) --probability
 
 	if random_probability < 8 then
 		repeat
-			random_close = math.random(-1, 1)
+			local random_close = math.random(-1, 1)
 			random_column = x_column + random_close
 		until self:is_valid_move("O", random_column)
 	elseif random_probability >= 8 then
