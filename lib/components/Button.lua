@@ -50,7 +50,7 @@ function Button:add_icon(icon_normal, icon_selected, icon_x, icon_y, icon_width,
 	self.icon_y = icon_y
 	self.icon_width = icon_width
 	self.icon_height = icon_height
-
+end
 
 function Button:set_textdata(text, font_color, text_position, font_size,font_path)
 	self.text_available = true

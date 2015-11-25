@@ -44,9 +44,9 @@ end
 -- @see emulator.gfx.loadjpeg
 -- @zenterio
 function gfx.loadpng(path)
-	local image_data = surface()
-	image_data:loadImage(path)
-	return image_data
+	local image = surface()
+	image:_load_image(path)
+	return image
 end
 
 --- Load JPEG as a new surface
@@ -62,9 +62,9 @@ end
 -- @see emulator.gfx.loadpng
 -- @zenterio
 function gfx.loadjpeg(path)
-	local image_data = surface()
-	image_data:loadImage(path)
-	return image_data
+	local image = surface()
+	image:loadImage(path)
+	return image
 end
 
 --- Get memory usage in bytes.
