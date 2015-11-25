@@ -22,15 +22,15 @@ end
 function TestProfile:test_get_sex()
 	luaunit.assertEquals(self.profile:get_sex(),"male")
 end
-function TestProfile:test_get_city()
-	luaunit.assertEquals(self.profile:get_city(),"lodon")
-end
+--function TestProfile:test_get_city()
+--	luaunit.assertEquals(self.profile:get_city(),"lodon")
+--end
 function TestProfile:test_set_badges()
 	self.profile:set_badges("[1,3,2]")
 	luaunit.assertEquals(self.profile:get_badges(),{1,3,2})
 end
 function TestProfile:test_set_inventory()
-	self.profile:set_inventory("{\"1\": 1,\"2\": 111,\"3\": 12}")
+	self.profile:set_inventory("{1,111,12}")
 	luaunit.assertEquals(self.profile:get_inventory(),{1,111,12})
 end
 function TestProfile:test_set_balance()
