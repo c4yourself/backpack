@@ -129,6 +129,10 @@ function Store:__init(remote_control, surface, profile)
 
 			self.message["message"] = self:sell_item(selected_index-get_size(self.items))
 
+		else
+			self:destroy()
+			self:trigger("exit_view")
+
 		end
 
 		self.item_images = self:loadItemImages()
