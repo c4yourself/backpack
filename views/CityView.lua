@@ -96,8 +96,7 @@ function CityView:__init(remote_control, profile)
 		self.button_grid:stop_listening(self.button_grid.event_listener,"button_press",callback)
 		one_instance:render(subsurface)
 
-		local exit_view = function(exit_profile)
-				self.profile = exit_profile
+		local exit_view = function()
 				self.button_grid:focus()
 				one_instance:destroy()
 				self:dirty(true)
