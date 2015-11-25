@@ -1,14 +1,17 @@
 -- Global font cache to work around a bug on the set-top box
 font_cache = {}
 
-local CityView = require("views.CityView")
+--local CityView = require("views.CityView")
+local ProfileSelection = require("views.ProfileSelection")
 local event = require("lib.event")
 local logger = require("lib.logger")
 local SplashView = require("views.SplashView")
 local utils = require("lib.utils")
 local view = require("lib.view")
+
 local City = require("lib.city")
 local Profile = require("lib.profile.Profile")
+
 
 --- This function runs every time a key is pressed
 -- The current mapping for the emulator can be found in emulator/zto.lua
@@ -39,13 +42,25 @@ function onStart()
 
 	logger.trace("Started")
 
-	local profile = Profile("Tstar","Tstar@tstar.com",1975,"M", City.cities.cairo)
+	--local profile = Profile("Tstar","Tstar@tstar.com",1975,"M", City.cities.cairo)
 
-	local city_view = CityView(event.remote_control, profile)
+
+
+
+
+	--local city_view = CityView(event.remote_control, profile)
+	profile_selection = ProfileSelection()
+	--local profile = Profile("Tstar","Tstar@tstar.com",1975,"M", City.cities.cairo)
+	--profile:set_inventory("{3,5,9}")
+	--for i = 1, #profile.inventory do print(profile.inventory[i]) end
+
+	--local city_view = CityView(event.remote_control, profile)
+
+
 	local splash_screen = SplashView(
 		"data/images/logo.png", city_view, view.view_manager)
 
-	view.view_manager:set_view(city_view)
+	view.view_manager:set_view(profile_selection)
 
 	--start connectfour
 --[[local cfc = ConnectFourComponent(event.remote_control)
@@ -78,4 +93,5 @@ function onStart()
 	--local city_view_2 = CityView2(event.remote_control)
 	--view.view_manager:set_view(city_view_2)
 	--gfx.update()
+
 end

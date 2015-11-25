@@ -7,7 +7,7 @@
 		"id": 0,
 		"inventory": {}
 		"login_token": " ",
-		"name": "paris__John012@gmail.com",
+		"name": "Jason",
 		"password": "",
 		"sex": "male",
 		"city": "paris",

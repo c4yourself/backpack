@@ -11,6 +11,8 @@ local MemoryGrid = class("MemoryGrid", ButtonGrid)
 local SubSurface = require("lib.view.SubSurface")
 local utils = require("lib.utils")
 local event = require("lib.event")
+local Font = require("lib.draw.Font")
+local Color = require("lib.draw.Color")
 
 --- Constructor for MemoryGrid
 function MemoryGrid:__init(remote_control)
@@ -52,15 +54,15 @@ end
 --- Display text for each button/card on the surface
 -- @param button_index To indicate which button's text shall be displayed
 function MemoryGrid:display_text(surface, button_index)
-	local button_data = self.button_list[button_index].button
-	local text_button = sys.new_freetype(
-									button_data.font_color:to_table(),
-									button_data.font_size,
-									button_data.text_position,
-									button_data.font_path)
+		local button_data = self.button_list[button_index].button
+		local text_button = Font(
+										button_data.font_path,
+										button_data.font_size,
+										button_data.font_color)
 
-	text_button:draw_over_surface(surface, button_data.text)
-end
+		text_button:draw(surface, {x = self.button_list[button_index].x, y = self.button_list[button_index].y,
+															width = self.button_list[button_index].width, height = self.button_list[button_index].height}, button_data.text, "center", "middle")
+	end
 
 function MemoryGrid:display_next_view(transfer_path)
  	local view_import = require(transfer_path)

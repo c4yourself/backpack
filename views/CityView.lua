@@ -55,15 +55,15 @@ function CityView:__init(remote_control, profile)
 	local button_2 = Button(button_color, color_selected, color_disabled,true,false, "views.MultipleChoiceView")
 	local button_3 = Button(button_color, color_selected, color_disabled,true,false, "views.MemoryView")
 	local button_4 = Button(button_color, color_selected, color_disabled,true,false)
-	local button_5 = Button(button_color, color_selected, color_disabled,true,false)
+	local button_5 = Button(button_color, color_selected, color_disabled,true,false, "views.Store")
 	local button_6 = Button(button_color, color_selected, color_disabled,true,false)
 	local button_7 = Button(button_color, color_selected, color_disabled,true,false, "views.TravelView")
 	local button_8 = Button(button_color, color_selected, color_disabled,true,false)
 	local city_tour_button = Button(city_view_color, city_view_selected_color, color_disabled, true, false, "views.CityTourView")
 
-	button_1:set_textdata("Numerical quiz",text_color,{x=100,y=300},16,utils.absolute_path("data/fonts/DroidSans.ttf"))
-	button_2:set_textdata("Multiple choice question",text_color,{x=200,y=300},16,utils.absolute_path("data/fonts/DroidSans.ttf"))
-	button_3:set_textdata("Memory",text_color,{x=100,y=400},16,utils.absolute_path("data/fonts/DroidSans.ttf"))
+	-- button_1:set_textdata("Numerical quiz",text_color,{x=100,y=300},16,utils.absolute_path("data/fonts/DroidSans.ttf"))
+	-- button_2:set_textdata("Multiple choice question",text_color,{x=200,y=300},16,utils.absolute_path("data/fonts/DroidSans.ttf"))
+	-- button_3:set_textdata("Memory",text_color,{x=100,y=400},16,utils.absolute_path("data/fonts/DroidSans.ttf"))
 
 	-- Define each button's posotion and size
 	local button_size = {width = 4*width/45, height = 4*width/45}
@@ -92,7 +92,7 @@ function CityView:__init(remote_control, profile)
 	local button_callback = function(button)
 		local subsurface = SubSurface(screen,{width=screen:get_width()*0.9, height=(screen:get_height()-50)*0.9, x=screen:get_width()*0.05, y=screen:get_height()*0.05+50})
 		local make_instance = self.button_grid:display_next_view(button.transfer_path)
-		local one_instance = make_instance(remote_control, subsurface)
+		local one_instance = make_instance(remote_control, subsurface, self.profile)
 		self.button_grid:stop_listening(self.button_grid.event_listener,"button_press",callback)
 		one_instance:render(subsurface)
 
@@ -131,9 +131,17 @@ function CityView:__init(remote_control, profile)
 	-- Preload images for increased performance
 
 	self.images = {
-		paris = gfx.loadpng("data/images/"..self.profile.city.name..".png"),
+		paris = gfx.loadpng("data/images/"..self.profile.city..".png"),
 		coin = gfx.loadpng("data/images/coinIcon.png"),
-		paris_selected = gfx.loadpng("data/images/"..self.profile.city.name.."IconSelected.png")
+		paris_selected = gfx.loadpng("data/images/"..self.profile.city.."IconSelected.png"),
+		math_icon = gfx.loadpng("data/images/MathIcon.png"),
+		flight_icon = gfx.loadpng("data/images/FlightIcon.png"),
+		exit_icon = gfx.loadpng("data/images/ExitIcon.png"),
+		user_icon = gfx.loadpng("data/images/UserIcon.png"),
+		memory_icon = gfx.loadpng("data/images/MemoryIcon.png"),
+		store_icon = gfx.loadpng("data/images/StoreIcon.png"),
+		four_in_a_row_icon = gfx.loadpng("data/images/4inRowIcon.png"),
+		multiple_choice_icon = gfx.loadpng("data/images/MultipleChoiceIcon.png")
 	}
 
 	-- Premultiple images with transparency to make them render properly
@@ -196,7 +204,7 @@ local width = surface:get_width()
 	city_view_small_font:draw(surface, {x=200, y=15}, "Level: 3") -- Profile level
 	city_view_small_font:draw(surface, {x=440, y=15}, tostring(self.profile.experience .. "/500")) -- Profile experience
 	city_view_small_font:draw(surface, {x=width-100, y=15}, tostring(self.profile.balance)) -- Profile cash
-	city_view_large_font:draw(surface, {x=width/2, y=15}, self.profile.city.name, center) -- City name
+	city_view_large_font:draw(surface, {x=width/2, y=15}, self.profile:get_city().name, center) -- City name
 
 	surface:copyfrom(self.images.coin, nil, {x = width-145, y = 10, width = 30, height = 30}) -- Coin
 
@@ -205,8 +213,15 @@ local width = surface:get_width()
 	self.button_grid:render(surface)
 
 
-
 	surface:copyfrom(self.images.paris_selected, nil, {x = width/3, y = 0, width=width*2/3, height=height})
+	surface:copyfrom(self.images.multiple_choice_icon, nil, {x = self.button_grid.button_list[1].x, y = self.button_grid.button_list[1].y, width = self.button_grid.button_list[1].width, height = self.button_grid.button_list[1].height})
+	surface:copyfrom(self.images.math_icon, nil, {x = self.button_grid.button_list[2].x, y = self.button_grid.button_list[2].y, width = self.button_grid.button_list[1].width, height = self.button_grid.button_list[1].height})
+	surface:copyfrom(self.images.memory_icon, nil, {x = self.button_grid.button_list[3].x, y = self.button_grid.button_list[3].y, width = self.button_grid.button_list[1].width, height = self.button_grid.button_list[1].height})
+	surface:copyfrom(self.images.four_in_a_row_icon, nil, {x = self.button_grid.button_list[4].x, y = self.button_grid.button_list[4].y, width = self.button_grid.button_list[1].width, height = self.button_grid.button_list[1].height})
+	surface:copyfrom(self.images.store_icon, nil, {x = self.button_grid.button_list[5].x, y = self.button_grid.button_list[5].y, width = self.button_grid.button_list[1].width, height = self.button_grid.button_list[1].height})
+	surface:copyfrom(self.images.user_icon, nil, {x = self.button_grid.button_list[6].x, y = self.button_grid.button_list[6].y, width = self.button_grid.button_list[1].width, height = self.button_grid.button_list[1].height})
+	surface:copyfrom(self.images.flight_icon, nil, {x = self.button_grid.button_list[7].x, y = self.button_grid.button_list[7].y, width = self.button_grid.button_list[1].width, height = self.button_grid.button_list[1].height})
+	surface:copyfrom(self.images.exit_icon, nil, {x = self.button_grid.button_list[8].x, y = self.button_grid.button_list[8].y, width = self.button_grid.button_list[1].width, height = self.button_grid.button_list[1].height})
 
 
 
