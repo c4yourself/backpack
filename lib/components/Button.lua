@@ -41,7 +41,9 @@ function Button:__init(color, color_selected, color_disabled, enabled, selected,
 end
 
 
-
+function Button:set_transfer_path(path)
+	self.transfer_path = path
+end
 
 
 function Button:set_textdata(text, font_color, text_position, font_size,font_path)

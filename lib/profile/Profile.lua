@@ -292,13 +292,14 @@ end
 -- @return balance
 function Profile:modify_balance(number)
 	self.balance = self.balance + number
-
+	--[[
 	Event:__init()
 	call_back = function(...)
 		ProfileManager:save(...)
 	end
 	Event:on("balance_change",call_back)
 	Event:trigger("balance_change",self)
+	]]
 	return self.balance
 end
 
