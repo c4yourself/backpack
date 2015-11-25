@@ -152,8 +152,6 @@ function localprofilemanager:get_profileslist()
 			string.sub(profiles_name[i],string.find(profiles_name[i],"__") + 2,string.len(profiles_name[i])))
 			profiles_city_list[i] = string.sub(profiles_name[i],1,string.find(profiles_name[i],"__") - 1)
 			profiles_email_address_list[i] = string.sub(profiles_name[i],string.find(profiles_name[i],"__") + 2,string.len(profiles_name[i]))
-
-			print(#profiles[i]:get_inventory())
 		end
 
 		return profiles, profiles_city_list, profiles_email_address_list

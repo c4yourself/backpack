@@ -230,7 +230,6 @@ end
 ---Set inventory from server
 -- @param inventory_string representing inventory of the profile from server database
 function Profile:set_inventory(inventory_string)
-	print(inventory_string)
 	local tmp = {}
 	tmp = utils.split(string.sub(inventory_string,string.find(inventory_string,"{") + 1,string.find(inventory_string,"}") - 1),",")
 

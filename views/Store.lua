@@ -263,7 +263,6 @@ function Store:render(surface)
 			"Sale price: "..self.backendstore:returnOfferPrice(item, self.current_city))
 		end
 	end
-	print("i shoppen")
 	self.font:draw(surface, {x = 2.9*width/4, y = height/8+130}, self.message["message"])
 	--Draw header
 	self.header_font:draw(surface, {x=10,y=10}, "Store")
