@@ -1,5 +1,4 @@
 --A test used to try out the mock classes together
-gfx = require("lib.mocks.GfxMock")
 local class = require("lib.classy")
 local luaunit = require("luaunit")
 local SurfaceMock = require("lib.mocks.SurfaceMock")
@@ -8,7 +7,8 @@ local Color = require("lib.draw.Color")
 local CityView = require("views.CityView")
 local view = require("lib.view")
 local event = require("lib.event")
-
+local City = require("lib.city")
+local Profile = require("lib.profile.Profile")
 
 local TestMockIntegration = {}
 
@@ -39,8 +39,13 @@ function TestMockIntegration:test_subsurface()
 end
 
 function TestMockIntegration:test_something()
-	--local city_view = CityView(event.remote_control)
-	--view.view_manager:set_view(city_view)
+	--local egypt = Country(Egypt, EGY, "%.2f ج.م", {Cairo = City("cairo", "Cairo", egypt, nil)}, 1)
+
+
+	local profile = Profile("John","John001@gmail.com","1991-01-03", "male", "london")
+
+	local city_view = CityView(event.remote_control, profile)
+	view.view_manager:set_view(city_view)
 end
 
 
