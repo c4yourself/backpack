@@ -38,7 +38,9 @@ function ButtonGrid:__init(remote_control)
 
 	--
 	-- local dirtycallback = function()
-	-- 	print("I button grid")
+	--
+
+--("I button grid")
 	-- 	self:dirty(false)
 	-- 	self:dirty(true)
 	-- end
