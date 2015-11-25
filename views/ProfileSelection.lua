@@ -2,6 +2,7 @@ local class = require("lib.classy")
 local utils = require("lib.utils")
 local event = require("lib.event")
 local SubSurface = require("lib.view.SubSurface")
+local Font = require("lib.draw.Font")
 local view = require("lib.view")
 local View = require("lib.view.View")
 local Color = require("lib.draw.Color")
@@ -35,11 +36,8 @@ function ProfileSelection:__init()
 	self.listening_initiated = false
 
 	-- Graphics
-	self.font = sys.new_freetype(
-		{r = 255, g = 255, b = 255, a = 255},
-		32,
-		{x = 100, y = 300},
-		utils.absolute_path("data/fonts/DroidSans.ttf"))
+	--self.font = Font("data/fonts/DroidSans.ttf", 32, Color(255, 255, 255, 255))
+	--self.font:draw(surface, {x=100, y=300}, "Level: 3")
 
 	-- Listeners and callbacks
 	self:listen_to(
@@ -186,7 +184,9 @@ function ProfileSelection:render(surface)
 
   for key,value in pairs(self.profile_list) do --foreach Profile
 
-		local text_button = sys.new_freetype(text_color, 30, {x=120,y=(200-self.profile_index*diff_y+diff_y*counter)}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+		local text_button = Font("data/fonts/DroidSans.ttf", 30, Color(255, 255, 255, 255))
+		--sys.new_freetype(text_color, 30, {x=120,y=(200-self.profile_index*diff_y+diff_y*counter)}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+
 		self.leftMenuCurrentValue = -2
 		if counter == 1 then
 			if self.isLeftMenu then
@@ -196,7 +196,8 @@ function ProfileSelection:render(surface)
 		end
 		--text_button:draw_over_surface(surface, value[1])
 
-		text_button:draw_over_surface(surface, self.profile_list[key].name)
+		text_button:draw(surface, {x=120,y=(200-self.profile_index*diff_y+diff_y*counter)}, self.profile_list[key].name)
+		--:draw_over_surface(surface, self.profile_list[key].name)
 
 		buttons[counter]= text_button
 		counter=counter+1
@@ -206,42 +207,59 @@ function ProfileSelection:render(surface)
 	local title_bar = SubSurface(surface,{width=600, height=100, x=0, y=0})
 	title_bar:clear({r=250, g=105, b=0})
 
-	local select_profile_label = sys.new_freetype(self.menu_text_color, 40, {x=50,y=20}, utils.absolute_path("data/fonts/DroidSans.ttf"))
-	select_profile_label:draw_over_surface(surface, "Select Profile:")
+	local select_profile_label = Font("data/fonts/DroidSans.ttf", 40, Color(255,255,255,255))
+	--sys.new_freetype(self.menu_text_color, 40, {x=50,y=20}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	--select_profile_label:draw_over_surface(surface, "Select Profile:")
+	select_profile_label:draw(surface, {x=50,y=20}, "Select Profile:")
 
 
-	local spoc = sys.new_freetype(self.menu_text_color, 40, {x=700,y=40}, utils.absolute_path("data/fonts/DroidSans.ttf"))
-	spoc:draw_over_surface(surface, tostring(self:get_profile()))
 
-	local spoc2 = sys.new_freetype(self.menu_text_color, 40, {x=700,y=80}, utils.absolute_path("data/fonts/DroidSans.ttf"))
-	spoc2:draw_over_surface(surface, tostring(self:get_email()))
+	local spoc = Font("data/fonts/DroidSans.ttf", 40, Color(255,255,255,255))
+	--sys.new_freetype(self.menu_text_color, 40, {x=700,y=40}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	--spoc:draw_over_surface(surface, tostring(self:get_profile()))
+	spoc:draw(surface, {x=700,y=40}, tostring(self:get_profile()))
 
-	local spoc3 = sys.new_freetype(self.menu_text_color, 40, {x=700,y=120}, utils.absolute_path("data/fonts/DroidSans.ttf"))
-	spoc3:draw_over_surface(surface, tostring(self:get_city()))
+	local spoc2 = Font("data/fonts/DroidSans.ttf", 40, Color(255,255,255,255))
+	--local spoc2 = sys.new_freetype(self.menu_text_color, 40, {x=700,y=80}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	--spoc2:draw_over_surface(surface, tostring(self:get_email()))
+	spoc2:draw(surface, {x=700,y=80}, tostring(self:get_email()))
+
+	local spoc3 = Font("data/fonts/DroidSans.ttf", 40, Color(255,255,255,255))
+	--local spoc3 = sys.new_freetype(self.menu_text_color, 40, {x=700,y=120}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	--spoc3:draw_over_surface(surface, tostring(self:get_city()))
+	spoc3:draw(surface, {x=700,y=120}, tostring(self:get_city()))
 	-- Implements Button 1. Numerical
 
 	button_height_diff = 120
 	button_start_height = 250
 
 	--Draws button: Fetch Profile
-	local log_in_button = sys.new_freetype(self.menu_text_color, 30, {x=700+50,y=35+button_start_height+button_height_diff*0}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	local log_in_button = Font("data/fonts/DroidSans.ttf", 30, Color(255,255,255,255))
+	--sys.new_freetype(self.menu_text_color, 30, {x=700+50,y=35+button_start_height+button_height_diff*0}, utils.absolute_path("data/fonts/DroidSans.ttf"))
 	surface:fill(self:pickColor(1), {width=500, height=100, x=700, y=button_start_height+button_height_diff*0})
-	log_in_button:draw_over_surface(surface, "Fetch Profile")
+	log_in_button:draw(surface, {x=700+50,y=35+button_start_height+button_height_diff*0}, "Fetch Profile")
+	--:draw_over_surface(surface, "Fetch Profile")
 
 	--Draws button: Continue Game
-	local continue_game_button = sys.new_freetype(self.menu_text_color, 30, {x=700+50,y=35+button_start_height+button_height_diff*1}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	local continue_game_button = Font("data/fonts/DroidSans.ttf", 30, Color(255,255,255,255))
+	--sys.new_freetype(self.menu_text_color, 30, {x=700+50,y=35+button_start_height+button_height_diff*1}, utils.absolute_path("data/fonts/DroidSans.ttf"))
 	surface:fill(self:pickColor(2), {width=500, height=100, x=700, y=button_start_height+button_height_diff*1})
-	continue_game_button:draw_over_surface(surface, "Continue Game")
+	continue_game_button:draw(surface, {x=700+50,y=35+button_start_height+button_height_diff*1}, "Continue Game")
+	--:draw_over_surface(surface, "Continue Game")
 
 	--Draws button: Create New Profile
-	local create_profile_button = sys.new_freetype(self.menu_text_color, 30, {x=700+50,y=35+button_start_height+button_height_diff*2}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	local create_profile_button = Font("data/fonts/DroidSans.ttf", 30, Color(255,255,255,255))
+	--sys.new_freetype(self.menu_text_color, 30, {x=700+50,y=35+button_start_height+button_height_diff*2}, utils.absolute_path("data/fonts/DroidSans.ttf"))
 	surface:fill(self:pickColor(3), {width=500, height=100, x=700, y=button_start_height+button_height_diff*2})
-	create_profile_button:draw_over_surface(surface, "Create New Profile")
+	create_profile_button:draw(surface, {x=700+50,y=35+button_start_height+button_height_diff*2}, "Create New Profile")
+	--:draw_over_surface(surface, "Create New Profile")
 
 	--Draws button: Quit
-	local quit_button = sys.new_freetype(self.menu_text_color, 30, {x=700+50,y=35+button_start_height+button_height_diff*3}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	local quit_button = Font("data/fonts/DroidSans.ttf", 30, Color(255,255,255,255))
+	--sys.new_freetype(self.menu_text_color, 30, {x=700+50,y=35+button_start_height+button_height_diff*3}, utils.absolute_path("data/fonts/DroidSans.ttf"))
 	surface:fill(self:pickColor(4), {width=500, height=100, x=700, y=button_start_height+button_height_diff*3})
-	quit_button:draw_over_surface(surface, "Quit")
+	quit_button:draw(surface, {x=700+50,y=35+button_start_height+button_height_diff*3}, "Quit")
+	--:draw_over_surface(surface, "Quit")
 
 	-- Instance remote control and mapps it to the buttons
 	--event.remote_control:on("button_release", ProfileSelection.load_view)
