@@ -20,12 +20,20 @@ end
 function MultipleChoiceGrid:toggle(button_indicator)
 	if self.button_list[button_indicator].toggled == true then
 		self.button_list[button_indicator].button:toggle()
-		self.input[button_indicator-3] = button_indicator - 3
-	else
-		print("Button is now toggled")
-		self.button_list[button_indicator].button:toggle()
 		self.input[button_indicator-3] = nil
+	else
+		print("Button " .. tostring(button_indicator) .. "is toggled")
+		self.button_list[button_indicator].button:toggle()
+		self.input[button_indicator-3] = button_indicator - 3
 	end
+end
+
+function MultipleChoiceGrid:_untoggle_all()
+	self.button_list[4].button.toggled = false
+	self.button_list[5].button.toggled = false
+	self.button_list[6].button.toggled = false
+	self.button_list[7].button.toggled = false
+	self.input = {}
 end
 
 function MultipleChoiceGrid:release(button)
@@ -36,9 +44,9 @@ function MultipleChoiceGrid:release(button)
 		elseif self.button_indicator == self.back_button then
 			self:trigger("back")
 		elseif self.button_indicator == self.next_button then
+			self:_untoggle_all()
 			self:trigger("next")
 		else
-			print("TOGGLING!!!!!!!")
 			self:toggle(self.button_indicator)
 		end
 	end

@@ -36,7 +36,7 @@ function MultipleChoiceView:__init()
 	-- Logic
 	-- Associate a quiz instance with the MultipleChoiceView
 	self.mult_choice_quiz = Quiz()
-	self.quiz_size = 4
+	self.quiz_size = 2
 	self.mult_choice_quiz:generate_multiplechoice_quiz("paris",self.quiz_size)
 	self.current_question = 1
 	self.correct_answer_number = 0
@@ -166,16 +166,21 @@ function MultipleChoiceView:_submit()
 	if self.last_check == self.current_question and self.quiz_state ~= "DONE" then
 		self.user_input = self.views.grid.input
 		for j = 1, #self.user_input, 1 do
-			self.answer[j] = tonumber(string.sub(self.user_input,j,j))
+			print("looping")
+			if self.user_input[j] ~= nil then
+				self.answer[j] = self.user_input[j]
+				print("Answer j : " .. tostring(self.answer[j]))
+			end
+			--self.answer[j] = tonumber(string.sub(self.user_input,j,j))
 		end
 		if self.mult_choice_quiz.questions[self.current_question]:is_correct(self.answer) == true then
 			self.correct_answer_number = self.correct_answer_number + 1
 			self.result_string = "Right. You've answered "
-			.. self.correct_answer_number .. " questions correctly."
+			.. self.correct_answer_number .. " questions correctly this far."
 			self.last_check = self.last_check + 1
 		else
 			self.result_string = "Wrong. You've answered "
-			.. self.correct_answer_number .. " questions correctly."
+			.. self.correct_answer_number .. " questions correctly this far."
 			self.last_check=self.last_check + 1
 		end
 		self.quiz_state = "DISPLAY_RESULT"
@@ -375,12 +380,13 @@ function MultipleChoiceView:render(surface)
 			-- Display the result from the whole quiz
 			self.mult_choice_quiz:calculate_score(self.correct_answer_number)
 			local quiz_result = "You answered " .. self.correct_answer_number ..
-								" questions correctly and your score is " ..
+								" questions correctly and " .. "\n" ..
+								" your final score is " ..
 								self.mult_choice_quiz:get_score() .. "."
 			self.font:draw(self.question_area,
 				{x = 0, y = 0, height = self.question_area_height,
 				width = self.question_area_width},
-				result, "center", "middle")
+				quiz_result, "center", "middle")
 			--[[self.font:draw(screen,Rectangle(100,300,200,200):to_table(),"You answered "
 			.. self.correct_answer_number .. " questions correctly and your score is "
 			.. self.mult_choice_quiz:get_score() .. ".")]]
