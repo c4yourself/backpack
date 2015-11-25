@@ -8,11 +8,14 @@ local class = require("lib.classy")
 local Question = class("Question")
 local utils = require("lib.utils")
 
-
 Question.image_path = ""
 Question.question = ""
 Question.correct_answers = {}
 
+---Constructor for Question
+-- @param image_path string
+-- @param question string representing question
+-- @param correct_answers table representing the correct answers
 function Question:__init(image_path,question,correct_answers)
 	if image_path ~= nil then
 		self.image_path = image_path
@@ -25,10 +28,14 @@ function Question:__init(image_path,question,correct_answers)
 	end
 end
 
+---Show question
+-- @param font
+-- @param textColor
+-- @param surface
 function Question: show(font,textColor,surface)
 	local something = sys.new_freetype({r = textColor[1],g = textColor[2],b = textColor[3]}, 30, {x = 200,y = 80}, utils.absolute_path("data/fonts/"..font..".ttf"))
 	something : draw_over_surface(surface,self.question)
 end
-function Question:is_correct(answer)
-end
+--function Question:is_correct(answer)
+--end
 return Question

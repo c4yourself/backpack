@@ -7,14 +7,14 @@ local Question = require("lib.quiz.Question")
 
 local MultipleChoiceQuestion = class("MultipleChoiceQuestion", Question)
 
-MultipleChoiceQuestion.category = ""
-MultipleChoiceQuestion.correct_answers_number = 0
-MultipleChoiceQuestion.wrong_answers_number = 0
-MultipleChoiceQuestion.credit = 0
-
 MultipleChoiceQuestion.correct_answers = {}
 MultipleChoiceQuestion.Choices = {}
 
+---Constructor for MultipleQuestion
+-- @param image_path string
+-- @param question string representing question
+-- @param correct_answers table representing the correct answers
+-- @param choices table representing the choices of the question
 function MultipleChoiceQuestion:__init(image_path,question,correct_answers,choices)
 	table.sort(correct_answers)
 	self.image_path = image_path
@@ -23,39 +23,36 @@ function MultipleChoiceQuestion:__init(image_path,question,correct_answers,choic
 	self.Choices = choices
 	--Question.__init(self,image_path,question,correct_answers)
 end
+
+---Get image_path of the question
+-- @return image_path
 function MultipleChoiceQuestion:get_image_path()
 	return self.image_path
 end
+
+---Set choice of the question
+-- @param choice
 function MultipleChoiceQuestion:set_choices(choice)
 	for i = 1, 4, 1 do
 		self.Choices[i] = choice[i]
 	end
 end
+
+---Get Choices of the question
+-- @return Choices
 function MultipleChoiceQuestion:get_choices()
 	return self.Choices
 end
-function MultipleChoiceQuestion:get_correct_answers_number()
-	return self.correct_answers_number
-end
-function MultipleChoiceQuestion:get_wrong_answers_number()
-	return self.wrong_answers_number
-end
-function MultipleChoiceQuestion:calculate_credit()
 
-end
-function MultipleChoiceQuestion:get_credit()
-	return self.credit
-end
-function MultipleChoiceQuestion:set_category(category)
-	self.category = category
-end
-function MultipleChoiceQuestion:get_category()
-	return self.category
-end
+---Check the answer is right or not
+-- @param answer table representing the answer from user
+-- @return true right answer
+-- @return false wrong answer
 function MultipleChoiceQuestion:is_correct(answer)
 	table.sort(answer)
 	table.sort(self.correct_answers)
 	result_flag = 0
+
 	if #answer ~= #self.correct_answers then
 		return false
 	else
@@ -72,4 +69,5 @@ function MultipleChoiceQuestion:is_correct(answer)
 		return true
 	end
 end
+
 return MultipleChoiceQuestion
