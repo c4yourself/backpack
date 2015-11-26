@@ -37,9 +37,12 @@ function CityTourView:__init(remote_control, surface, profile)
 
 	-- Create the tour images
 	self.tour_attraction_images = {}
+
 	for k,v in pairs(attractions.attraction[self.city.code]) do
 		table.insert(self.tour_attraction_images, gfx.loadpng(attractions.attraction[self.city.code][k].pic_url))
 	end
+
+
 	-- = {gfx.loadpng(attractions.attraction[self.city.code][1].pic_url),
 	-- 															gfx.loadpng(attractions.attraction[self.city.code][2].pic_url]),
 	-- 															gfx.loadpng(attractions.attraction[self.city.code][3])
