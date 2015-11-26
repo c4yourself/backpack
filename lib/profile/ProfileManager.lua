@@ -1,7 +1,6 @@
 ---ProfileManager
 
 local utils = require("lib.utils")
-local lfs = require("lfs")
 local class = require("lib.classy")
 --local profile = require("lib.profile.Profile")
 ProfileManager = class("ProfileManager")

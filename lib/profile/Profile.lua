@@ -12,11 +12,11 @@
 -- @field inventory
 -- @field login_token
 
+local city = require("lib.city")
 local class = require("lib.classy")
 local utils = require("lib.utils")
 local Profile = class("Profile")
 local Event = require("lib.event.Event")
-local City = require("lib.city")
 
 Profile.name = ""
 Profile.email_address = ""
@@ -42,7 +42,7 @@ function Profile:__init(name,email_address,date_of_birth,sex,city)
 	self.email_address = email_address
 	self.date_of_birth = date_of_birth
 	self.sex = sex
-	self.city = city
+	self.city = city.code
 end
 
 ---Get name of the user
@@ -78,7 +78,7 @@ end
 ---Get city of the user
 -- @return city
 function Profile:get_city()
-	return City.cities[self.city]
+	return city.cities[self.city]
 end
 
 ---Get  current city of the user

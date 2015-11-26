@@ -15,7 +15,7 @@ function CityTourView:__init(remote_control, surface, profile)
 	View.__init(self)
 	self.buttonGrid = button_grid(remote_control)
 	self.city = profile:get_city()
-print(self.city)
+
 	local width = screen:get_width()*0.9
 	local height = (screen:get_height()-50)*0.9
 

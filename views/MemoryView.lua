@@ -6,7 +6,6 @@ local View = require("lib.view.View")
 local view = require("lib.view")
 local event = require("lib.event")
 local MemoryGame = require("lib.memory.Memory")
-local Surface = require("emulator.surface")
 local utils = require("lib.utils")
 local MemoryView = class("MemoryView", View)
 local card= require("lib.components.MemoryCardComponent")
@@ -19,7 +18,7 @@ local CardComponent = require("components.CardComponent")
 local Profile = require("lib.profile.Profile")
 local Font = require("lib.draw.Font")
 
-function MemoryView:__init()
+function MemoryView:__init(remote_control, surface, profile)
     View.__init(self)
 	event.remote_control:off("button_release") -- TODO remove this once the ViewManager is fully implemented
 
@@ -32,7 +31,9 @@ function MemoryView:__init()
     self.cards = {}
     self.positions = {}
     self.button_grid = MemoryGrid()
-    self.profile = Profile("Lisa", "lisa@lisa.se", "04-08-1992", "female", "paris")
+    --self.profile = Profile("Lisa", "lisa@lisa.se", "04-08-1992", "female", "paris")
+    self.profile = profile
+    --self.remote_control = remote_control
     self:_set_pairs()
     --self.pairs = 3 -- TODO For quicker manual testing, remove once done coding
     self.memory = MemoryGame(self.pairs, self.profile)
@@ -232,7 +233,6 @@ function MemoryView:render(surface)
     -- Render child components
     self.button_grid:render(surface)
     --self.button_1:render(surface)
-
 end
 
 function MemoryView:back_to_city()

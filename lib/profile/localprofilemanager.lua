@@ -2,7 +2,7 @@
 -- @classmod localprofilemanager
 
 local class = require("lib.classy")
-local lfs = require("lfs")
+--local lfs = require("lfs")
 local utils = require("lib.utils")
 local Profile = require("lib.profile.Profile")
 local localprofilemanager = class("localprofilemanager")
