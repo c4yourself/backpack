@@ -110,15 +110,19 @@ function Memory:match()
 end
 
 function Memory:is_finished()
+	local count = 0
 	for i = 1, #self.state do
 		if self.state[i] == false then
 			self.finished = false
 			break
-		else
-			self.finished = true
-			self.coins, self.experience = self:_calculate_reward()
-			self.profile:modify_balance(self.coins)
-			self.profile:modify_experience(self.experience)
+		elseif self.state[i] == true then
+			count = count + 1
+				if count == #self.state then
+					self.finished = true
+					self.coins, self.experience = self:_calculate_reward()
+					self.profile:modify_balance(self.coins)
+					self.profile:modify_experience(self.experience)
+				end
 		end
 	end
 	return self.finished
