@@ -18,10 +18,13 @@ local MemoryGrid = require("lib.components.MemoryGrid")
 local CardComponent = require("components.CardComponent")
 local Profile = require("lib.profile.Profile")
 local Font = require("lib.draw.Font")
+local PopUpView = require("views.PopUpView")
+local SubSurface = require("lib.view.SubSurface")
 
-function MemoryView:__init()
+function MemoryView:__init(remote_control, surface, profile)
     View.__init(self)
 	event.remote_control:off("button_release") -- TODO remove this once the ViewManager is fully implemented
+  self.surface = Surface
 
     -- Flags to determine whether a player has moved or pressed submit
 	self.player_moved = false
@@ -31,7 +34,7 @@ function MemoryView:__init()
     -- Logic
     self.cards = {}
     self.positions = {}
-    self.button_grid = MemoryGrid()
+    self.views.button_grid = MemoryGrid(remote_control)
     self.profile = Profile("Lisa", "lisa@lisa.se", "04-08-1992", "female", "paris")
     self:_set_pairs()
     --self.pairs = 3 -- TODO For quicker manual testing, remove once done coding
@@ -59,7 +62,7 @@ function MemoryView:__init()
     local height = screen:get_height()
     local button_size_big = {width = 300, height = 100}
     self.button_1 = button(self.button_color, self.color_selected,
-        self.color_disabled, true, false)
+        self.color_disabled, true, false, "views.PopUpView")
     self.positions["exit"] = {x = 100, y = 450}
     self.button_1:set_textdata("Back to City", self.text_color,
         {x = 100 + 65, y = 450 + 50 - 16}, 30,
@@ -117,14 +120,14 @@ function MemoryView:__init()
         --self.cards[i]:set_textdata(card_text, self.text_color, text_position,
         --                            font_size, font_path)
 
-        self.button_grid:add_button(self.positions[i],
+        self.views.button_grid:add_button(self.positions[i],
                                     self.button_size,
                                     self.cards[i])
     end
 
     -- Add other buttons to the grid
     -- (has to be done after the memory cards has been added)
-    self.button_grid:add_button(self.positions["exit"], button_size_big,
+    self.views.button_grid:add_button(self.positions["exit"], button_size_big,
                                    self.button_1)
 
     -- Listeners and callbacks
@@ -135,16 +138,38 @@ function MemoryView:__init()
     )
 
     self:listen_to(
-        self.button_grid,
+        self.views.button_grid,
         "submit",
         utils.partial(self._determine_new_state, self)
     )
 
     self:listen_to(
-        self.button_grid,
+        self.views.button_grid,
         "navigation",
         utils.partial(self._check_match, self)
     )
+
+    local button_callback = function(button)
+      local subsurface = SubSurface(screen,{width=screen:get_width()*0.9, height=(screen:get_height()-50)*0.9, x=screen:get_width()*0.05, y=screen:get_height()*0.05+50})
+      local make_instance = self.views.button_grid:display_next_view(button.transfer_path)
+      local one_instance = make_instance(remote_control, subsurface, self.profile)
+      self.views.button_grid:stop_listening(self.views.button_grid.event_listener,"button_press",callback)
+      --one_instance:render(subsurface)
+
+      local exit_view = function()
+          self.views.button_grid:focus()
+          one_instance:destroy()
+          self:dirty(true)
+      end
+
+      self:listen_to_once(one_instance,"exit_view", exit_view)
+      -- local CT = CityTourView(remote_control, city_tour_view)
+      -- self.views.button_grid:stop_listening(self.buttonGrid.event_listener,
+      --  													"button_press",
+      -- 													callback)
+      -- CT:render(city_tour_view)
+      gfx.update()
+    end
 
 end
 
@@ -159,13 +184,13 @@ end
 -- purpose is to connect the GUI with the backend logic (i.e. check win conditions,
 -- increment turn counter, check if two cards are identical or not) and make
 -- sure the data modell is changed when the game progresses
---  local card_index = self.button_grid.last_selection
---  self.button_grid:set_card_status(card_index, "FACING_UP")
+--  local card_index = self.views.button_grid.last_selection
+--  self.views.button_grid:set_card_status(card_index, "FACING_UP")
 -- Uses the last_selection variable as an index of the state in memory. checks if
 -- the game is finished when opening the second card.
 function MemoryView:_determine_new_state()
-    local card_index = self.button_grid.last_selection
-    if self.button_grid.button_list[card_index].button.status == nil
+    local card_index = self.views.button_grid.last_selection
+    if self.views.button_grid.button_list[card_index].button.status == nil
     or card_index > self.pairs * 2 then
         self:back_to_city()
         return
@@ -175,12 +200,12 @@ function MemoryView:_determine_new_state()
     if self.memory.first_card == nil then
         if is_open ~= true then
             self.memory:open(card_index)
-            self.button_grid:set_card_status(card_index, "FACING_UP")
+            self.views.button_grid:set_card_status(card_index, "FACING_UP")
         end
     elseif self.memory.second_card == nil then
         if is_open ~= true then
             self.memory:open(card_index)
-            self.button_grid:set_card_status(card_index, "FACING_UP")
+            self.views.button_grid:set_card_status(card_index, "FACING_UP")
             self.memory:is_finished()
             self:dirty(true)
         end
@@ -196,7 +221,7 @@ function MemoryView:_check_match()
         local is_matching = self.memory:match()
         if not is_matching then
             local state_map = self.memory.state
-            self.button_grid:set_multiple_status(state_map)
+            self.views.button_grid:set_multiple_status(state_map)
         else
         end
     end
@@ -206,10 +231,10 @@ end
 -- Renders MemoryView and all of its child views
 function MemoryView:render(surface)
     if not self.listening_initiated then
-        local grid_callback = utils.partial(self.button_grid.render,
-            self.button_grid, surface)
+        local grid_callback = utils.partial(self.views.button_grid.render,
+            self.views.button_grid, surface)
         self:listen_to(
-            self.button_grid,
+            self.views.button_grid,
             "dirty",
             grid_callback)
         self.listening_initiated = true
@@ -230,7 +255,7 @@ function MemoryView:render(surface)
       end
     self:dirty(false)
     -- Render child components
-    self.button_grid:render(surface)
+    self.views.button_grid:render(surface)
     --self.button_1:render(surface)
 
 end
@@ -240,7 +265,38 @@ function MemoryView:back_to_city()
     -- TODO Implement/connect pop-up for quit game
     -- Appendix 2 in UX design document
     -- Trigger exit event
-    self:trigger("exit_view")
+    local type = "confirmation"
+    --local message = {"Hej hopp"}
+    local message =  {"Are you sure you want to exit?","really sure?"}
+
+    local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
+    local pop_instance = self.views.button_grid:display_next_view(self.button_1.transfer_path)
+    local popup_view = pop_instance(remote_control,subsurface, type, {"hej"})
+    --local popup_view = PopUpView(remote_control,subsurface,type,message)
+
+
+  --  local popup_view = SubSurface(screen,{width=screen:get_width()*0.5, height=screen:get_height()*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25})
+    --local pop = PopUpView(remote_control, popup_view, type, message)
+    self.views.button_grid:blur()
+    --self.views.button_grid:stop_listening(self.views.button_grid.event_listener,
+                        --      "button_press",
+                          --    callback)
+    local exit_view_func = function()
+      --Exit View
+      self:trigger("exit_view")
+    end
+
+    local destroy_pop = function()
+      self.views.button_grid:focus()
+      popup_view:destroy()
+      self:dirty(true)
+    end
+
+    self:listen_to_once(popup_view,"exit_view",exit_view_func)
+    self:listen_to_once(popup_view, "destroy", destroy_pop)
+    popup_view:render(subsurface)
+    gfx.update()
+  --  self:trigger("exit_view")
 end
 
 -- Function to set pairs accoriding to profile experience

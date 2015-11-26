@@ -13,6 +13,7 @@ local utils = require("lib.utils")
 local event = require("lib.event")
 local Font = require("lib.draw.Font")
 local Color = require("lib.draw.Color")
+local view = require("lib.view")
 
 --- Constructor for MemoryGrid
 function MemoryGrid:__init(remote_control)
@@ -385,6 +386,9 @@ function MemoryGrid:render(surface)
 		}
 
 		local sub_surface = SubSurface(surface,area)
+		print("\n" .. "\n" .. "\n" .. "\n" .. "\n")
+		print("subSurface print")
+		print(sub_surface)
 			button_data.button:render(sub_surface)
 			if button_data.button.text_available then
 				self:display_text(surface, i)
