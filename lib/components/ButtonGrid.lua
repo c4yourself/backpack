@@ -77,13 +77,8 @@ function ButtonGrid:add_button(position, button_size, button)
 		 and position.y >= 0 and button_size.height >= 0
 		 and position.y + button_size.height < 720	then
 -- if ok, insert each button to the button_list
-	 table.insert(self.button_list,
-	 {button = button,
-	 x = position.x,
-	 y = position.y,
-	 width = button_size.width,
-	 height = button_size.height
-	 })
+	self:add_view(button)
+	table.insert(self.button_list, {button = button, x = position.x, y = position.y, width = button_size.width, height = button_size.height })
 
 	else
 		error("screen boundary error")
@@ -102,6 +97,7 @@ function ButtonGrid:insert_button(position, button_size, button, index)
 		 and position.x + button_size.width < 1280
 		 and position.y >= 0 and button_size.height >= 0
 		 and position.y + button_size.height < 720	then
+			 self:add_view(button)
 			 table.insert(self.button_list, index,
 			 {button = button,
 			 x = position.x,

@@ -34,6 +34,7 @@ function MemoryGrid:add_button(position, button_size, button)
 		 and position.y >= 0 and button_size.height >= 0
 		 and position.y + button_size.height < 720	then
 	-- if ok, insert button to the button_list
+		self:add_view(button)
 		table.insert(self.button_list,
 			{button = button,
 			x = position.x,
@@ -52,6 +53,18 @@ function MemoryGrid:add_button(position, button_size, button)
 	end
 end
 
+function ButtonGrid:focus()
+	self:listen_to(
+	self.event_listener,
+	"button_press",
+	self.callback
+	)
+end
+
+function ButtonGrid:blur()
+	self:stop_listening()
+end
+
 --- Display text for each button/card on the surface
 -- @param button_index To indicate which button's text shall be displayed
 function MemoryGrid:display_text(surface, button_index)
@@ -65,11 +78,11 @@ function MemoryGrid:display_text(surface, button_index)
 															width = self.button_list[button_index].width, height = self.button_list[button_index].height}, button_data.text, "center", "middle")
 	end
 
-function MemoryGrid:display_next_view(transfer_path)
- 	local view_import = require(transfer_path)
- 	local view_instance = view_import()
- 	view.view_manager:set_view(view_instance)
-end
+-- function MemoryGrid:display_next_view(transfer_path)
+--  	local view_import = require(transfer_path)
+--  	local view_instance = view_import()
+--  	view.view_manager:set_view(view_instance)
+-- end
 
 --- When "down" is pressed, the indicator shall follow the down-direction
 -- @param button_indicator The current indicator that points to the selected button
