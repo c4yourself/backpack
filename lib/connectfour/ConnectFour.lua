@@ -101,7 +101,6 @@ end
 function ConnectFour:get_current_row(column)
 
 	local row = 7
-
 	repeat
 		row = row - 1
 		if row < 1 then
@@ -277,13 +276,77 @@ function ConnectFour:get_winner()
 return nil
 end
 
+function ConnectFour:_check_three_in_a_column(row, column)
+	--column
+	if row<4 then
+		if self:get(row+2, column) == self:get(row+1, column) then
+			if self:get(row+1, column)== self:get(row+3, column) then
+			return true
+			end
+		end
+	end
+	return false
+end
+
+function ConnectFour: _check_three_in_a_row()
+	--row
+	print("check row")
+	local count = 1
+
+	for row1 = 1, 6 do
+		for column = 2, 7 do
+			if self:get(7-row1, column) ~=nil and self:get(7-row1, column) == self:get(7-row1, column-1) then
+				count = count + 1
+				print("count +1 : " .. count)
+				if count == 3 and row1~=1 and self:get(7-row1, column+1) == nil and self:get(7-row1-1, column+1) ~= nil then
+					print("count = 3")
+					return column+1
+				end
+				if count == 3 and row1==1 and self:get(7-row1, column+1) == nil then
+					print("count = 3")
+					return column+1
+				end
+			else
+				count = 1
+			end
+		end
+	end
+
+	return nil
+
+
+
+end
+
 --- Decides which column the computer should choose during next move
 -- @param x_column , column for the last put coin by the player
 -- @return random_column, number choosen column
 function ConnectFour:computer_AI(x_column)
 
-	local random_column
-	local random_probability = math.random(1,10) --probability
+	local random_column -- = math.random(1,7)
+	local random_probability = math.random(8,10) --probability
+
+	--check if there's three in a row
+--[[	for i = 1, 7 do
+		local row = self:get_current_row(i)
+		print("before check three " .. i .. row)
+
+		if row > 0 then
+		local make_move = self:_check_three_in_a_column(row, i)
+			if make_move == true then
+				print("column from check_three")
+				return i
+			end
+		end
+	end ]]--
+
+
+--[[	local make_move2 = self:_check_three_in_a_row(row)
+	if make_move2 ~= nil then
+		print("tre i rad")
+		return make_move2
+	end ]]--
+
 
 	if random_probability < 8 then
 		repeat
@@ -292,7 +355,7 @@ function ConnectFour:computer_AI(x_column)
 		until self:is_valid_move("O", random_column)
 	elseif random_probability >= 8 then
 		random_column = math.random(1,7)
-	end
+	end 
 
 	return random_column
 
