@@ -20,10 +20,9 @@ attractions.attraction = { paris = {
                                             "over 300 steps."}
                                   },
                                     {name = "Arc de Triomphe",
-                                    pic_url = "data/images/CityTourArchDeTriomphe.png",
-                                    question = "when was Arc de Triomphe finished?",
+                                    question = "When was Arc de Triomphe finished?",
                                     answers = {"1836", "2001", "1993", "700"},
-                                    pic_url = "data/images/CityTourEiffelTower.png",
+                                    pic_url = "data/images/CityTourArchDeTriomphe.png",
                                     text = {"One of the most famous monuments in Paris is called Arc de",
                                             "Triomphe. It was designed by Jean Chalgrin and built between 1806",
                                             "and 1836. Visitors can admire its delicate design and engravings.",
@@ -36,10 +35,9 @@ attractions.attraction = { paris = {
                                             "Revolution and Empire are engraved."}
                                     },
                                     {name = "Les Invalides",
-                                    pic_url = "data/images/CityTourLesInvalides.png",
                                     question = "Who of the following is buried here?",
                                     answers = {"Napoleon Bonaparte", "Gustave Eiffel", "Jean Chalgrin", "Philippe Pétain"},
-                                    pic_url = "data/images/CityTourEiffelTower.png",
+                                    pic_url = "data/images/CityTourLesInvalides.png",
                                     text = {"Les Invalides is officially known as L'Hôtel national des Invalides",
                                             "(The National Residence of the Invalids). It is a complex of buildings",
                                             "in the 7th arrondissement of Paris, France containing museums and",
@@ -148,6 +146,8 @@ attractions.attraction = { paris = {
                                     {name = "Les Invalides",
                                     pic_url = "data/images/CityTourEiffelTower.png",
                                     text = {"Les Invalides is officially known as L'Hôtel national des Invalides (The National Residence of the Invalids). It is a complex of buildings in the 7th arrondissement of Paris, France containing museums and monuments, all relating to the military history of France. It also contains a hospital and a retirement home for war veterans. The buildings house the Musée de l'Armée, the military museum of the Army of France, the Musée des Plans-Reliefs, and the Musée d'Histoire Contemporaine, as well as the Dôme des Invalides, a large church with the burial site for some of France's war heroes, most notably Napoleon Bonaparte. The architect of Les Invalides was Libéral Bruant. The project was initiated by Louise XIV in an order dated 24 November 1670, as a home and hospital for aged and unwell soldiers."},
+                                  }
+                                },
 
                                     mumbai = {
                                           {name = "Gateway of India",
@@ -211,7 +211,7 @@ attractions.attraction = { paris = {
                                         },
                                           {name = "Taj Mahal Palace & Tower",
                                           pic_url = "data/images/CityTourEiffelTower.png",
-                                          text = {"The Taj Mahal Palace Hotel is a five-star hotel located in the Colaba";
+                                          text = {"The Taj Mahal Palace Hotel is a five-star hotel located in the Colaba",
                                                   "region of Mumbai, Maharashtra,India, next to the Gateway of",
                                                   "India. The hotel's original building first opened its doors to guests",
                                                   "on 16 December 1903. Part of the Taj Hotels, Resorts and Palaces,",
@@ -462,9 +462,7 @@ attractions.attraction = { paris = {
                                                 }
                                           }
                                   }
-                                },
+                                }
 
-}
-}
 
 return attractions
