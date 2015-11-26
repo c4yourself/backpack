@@ -133,7 +133,7 @@ function TravelView:_travel(button)
 		local city_view_copy = require("views.CityViewCopy")
 		cvc = city_view_copy(event.remote_control)
 
-		local wm = WorldMap()
+		--local wm = WorldMap()
 		local index
 
 		for i = 1, #self.list_comp.item_list, 1 do
@@ -154,7 +154,7 @@ function TravelView:_travel(button)
 			transportation = "train"
 		end
 
-		wm:render(screen, "paris", dest, transportation, cvc)
+		--wm:render(screen, "paris", dest, transportation, cvc)
 
 	elseif button == "4" then
 		self:stop_listening(event.remote_control)

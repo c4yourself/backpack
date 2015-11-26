@@ -12,11 +12,11 @@
 -- @field inventory
 -- @field login_token
 
+local city = require("lib.city")
 local class = require("lib.classy")
 local utils = require("lib.utils")
 local Profile = class("Profile")
 local Event = require("lib.event.Event")
-local City = require("lib.city")
 
 Profile.name = ""
 Profile.email_address = ""
@@ -42,7 +42,7 @@ function Profile:__init(name,email_address,date_of_birth,sex,city)
 	self.email_address = email_address
 	self.date_of_birth = date_of_birth
 	self.sex = sex
-	self.city = city
+	self.city = city.code
 end
 
 ---Get name of the user
@@ -78,9 +78,14 @@ end
 ---Get city of the user
 -- @return city
 function Profile:get_city()
-	return City.cities[self.city]
+	return city.cities[self.city]
 end
 
+---Get  current city of the user
+-- @return city
+function Profile:get_current_city()
+	return self.city
+end
 ---Get balance of the user
 -- @return balance
 function Profile:get_balance()
@@ -232,10 +237,12 @@ end
 function Profile:set_inventory(inventory_string)
 	local tmp = {}
 	tmp = utils.split(string.sub(inventory_string,string.find(inventory_string,"{") + 1,string.find(inventory_string,"}") - 1),",")
-
+	self.inventory = {}
 	for i = 1, #tmp, 1 do
+		--self.inventory[i] = tonumber(tmp[i])
 		table.insert(self.inventory, tonumber(tmp[i]))
 	end
+
 	--[[
 	for i=1, #tmp, 1 do
 		table.insert(self.inventory,tonumber(string.sub(tmp[i],string.find(tmp[i]," ") + 1,string.len(tmp[i]))))
@@ -253,10 +260,8 @@ end
 -- @param item representing the id of the item
 function Profile:remove_item(item)
 	local index = 0
-	--print(item)
 
 	for i,j in pairs(self.inventory) do
-		print(j)
 		if j == item then
 			index = i
 		end
@@ -287,13 +292,14 @@ end
 -- @return balance
 function Profile:modify_balance(number)
 	self.balance = self.balance + number
-
+	--[[
 	Event:__init()
 	call_back = function(...)
 		ProfileManager:save(...)
 	end
 	Event:on("balance_change",call_back)
 	Event:trigger("balance_change",self)
+	]]
 	return self.balance
 end
 

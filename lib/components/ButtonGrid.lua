@@ -38,7 +38,9 @@ function ButtonGrid:__init(remote_control)
 
 	--
 	-- local dirtycallback = function()
-	-- 	print("I button grid")
+	--
+
+--("I button grid")
 	-- 	self:dirty(false)
 	-- 	self:dirty(true)
 	-- end
@@ -180,12 +182,10 @@ function ButtonGrid:press(button)
 				-- else
 					self:trigger("button_click", self.button_list[i].button)
 					break
+				end
 			end
 		end
-		end
-
-
-end
+	end
 end
 
 --- Providing a subsurface to each button,

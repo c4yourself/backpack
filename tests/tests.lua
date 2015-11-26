@@ -11,6 +11,16 @@ freetype = require("lib.mocks.FreetypeMock")
 sys = require("lib.mocks.SysMock")
 screen = surface(1280, 720)
 
+-- Replace require
+local _require = require
+function require(module)
+	if module == "lib.draw.Font" then
+		return _require("lib.mocks.FontMock")
+	else
+		return _require(module)
+	end
+end
+
 -- Make sure logging is disabled since it can interfere with the tests
 local config = require("config")
 config.logging.mode = "DISABLED"
@@ -29,6 +39,7 @@ TestIntegrationNumerical = require("test_integration_numerical")
 TestTSV = require("test_tsvreader")
 TestProfile = require("test_profile")
 TestMemory = require("test_memory")
+TestExperienceCalculation = require("test_experiencecalculation")
 --Mocks
 TestTimerMock = require("mocks.test_mock_TimerMock")
 TestGfxMock = require("mocks.test_mock_GfxMock")

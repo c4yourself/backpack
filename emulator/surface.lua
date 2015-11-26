@@ -238,6 +238,7 @@ end
 -- @local
 function surface:__init(width, height)
 	if width == nil and height == nil then
+		-- Used when working with images
 		logger.trace("New empty surface")
 		self.image_data = nil
 	else
@@ -250,7 +251,11 @@ end
 -- Not part of Zenterio's Lua API!
 -- @param path Path to the image
 -- @local
-function surface:loadImage(path)
+function surface:_load_image(path)
+	if not love.filesystem.isFile(path) then
+		error("No such image: " .. tostring(path))
+	end
+
 	local tempFile = io.open(path,"rb")
 	if tempFile then
 		local imageStream = tempFile:read("*a")

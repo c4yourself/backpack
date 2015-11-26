@@ -73,7 +73,6 @@ local function create_existing_profile(data)
 	new_profile:set_id(data.id)
 	new_profile:set_experience(data.experience)
 	new_profile:set_login_token(data.profile_token)
-	print(data.inventory)
 	new_profile:set_inventory(data.inventory)
 	return new_profile
 end

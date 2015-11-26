@@ -6,8 +6,8 @@ local SurfaceMock = class("SurfaceMock")
 
 --- Constructor for SurfaceMock.
 function SurfaceMock:__init(width, height)
-	self.width = width
-	self.height = height
+	self.width = math.floor(width)
+	self.height = math.floor(height)
 
 	local default_color = Color(0, 0, 0, 0)
 	self.pixels = {}
@@ -40,10 +40,12 @@ function SurfaceMock:fill(color, rectangle)
 	local c = Color.from_table(color)
 	local rect = self:_get_rectangle(rectangle)
 
-	local w = rect.x + rect.width - 1
-	local h = rect.y + rect.height - 1
+	local w = math.floor(rect.x + rect.width - 1)
+	local h = math.floor(rect.y + rect.height - 1)
 	for i = rect.x, w do
 		for j = rect.y, h do
+			--print("this is i: " .. i)
+			--print("this is j: " .. j)
 			self.pixels[i][j] = self.pixels[i][j]:blend(c)
 		end
 	end
@@ -115,8 +117,8 @@ function SurfaceMock:_get_rectangle(rectangle)
 	}
 
 	if rectangle ~= nil then
-		rect.x = (rectangle.x or 0)
-		rect.y = (rectangle.y or 0)
+		rect.x = math.floor(rectangle.x or 0)
+		rect.y = math.floor(rectangle.y or 0)
 
 		if rect.x + (rectangle.width or rectangle.w) <= rect.width then
 			rect.width = (rectangle.width or rectangle.w)
