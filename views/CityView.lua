@@ -110,6 +110,12 @@ function CityView:__init(profile, remote_control)
 		)
 
 		self:listen_to_once(one_instance,"exit_view", exit_view)
+
+			self:listen_to(
+				one_instance,
+				"dirty",
+				utils.partial(one_instance.render, one_instance, subsurface)
+			)
 		-- local CT = CityTourView(remote_control, city_tour_view)
 		-- self.button_grid:stop_listening(self.buttonGrid.event_listener,
 		--  													"button_press",
