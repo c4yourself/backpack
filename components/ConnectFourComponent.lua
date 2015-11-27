@@ -25,7 +25,7 @@ function ConnectFourComponent:__init(remote_control)
 
 	self:listen_to(
 	event.remote_control,
-	"button_press",
+	"button_release",
 	utils.partial(self.press, self)
 	)
 end
@@ -33,7 +33,6 @@ end
 --- Responds differently depending on which key pressed on the remote control
 -- @param key, the key pressed on the remote control
 function ConnectFourComponent:press(key)
-	print("trycka knapp")
 	if key == "right" then
 		repeat
 			if self.current_column == 7 then
@@ -42,7 +41,7 @@ function ConnectFourComponent:press(key)
 				self.current_column = self.current_column + 1
 			end
 		until self.connectfour:get_current_row(self.current_column) ~= 0
-		self:dirty()
+
 	elseif key == "left" then
 		repeat
 			if self.current_column == 1 then
@@ -51,13 +50,14 @@ function ConnectFourComponent:press(key)
 				self.current_column = self.current_column - 1
 			end
 		until self.connectfour:get_current_row(self.current_column) ~= 0
-		self:dirty()
+
 	elseif key == "ok" then
 		print("ok, move")
 		self.connectfour:move(self.connectfour:get_player(), self.current_column)
 
 		self:stop_listening(event.remote_control)
-		self:dirty()
+
+
 	elseif key == "exit" then
 		--TODO pop-up
 	--	local exit_popup = subsurface(surface, area(100, 100, 400, 400))
@@ -67,7 +67,9 @@ function ConnectFourComponent:press(key)
 	--	font_popup:draw(exit_popup, area(30,30,400,400), "Spelare X vann!")
 		self.trigger("exit_view")
 	end
-	gfx.update()
+
+	self:dirty(false)
+	self:dirty(true)
 end
 
 ---Prints out the top row
@@ -104,7 +106,8 @@ end
 --- Prints the surface connected with ConnectFour
 -- @param surface
 function ConnectFourComponent:render(surface)
-	surface:fill({r = 0, g = 0, b = 0, a = 255})
+
+	self:dirty(false)
 	--btn
 --[[	local button_color = color(0, 128, 225, 255)
 	local text_color = color(55, 55, 55, 255)
@@ -149,7 +152,7 @@ function ConnectFourComponent:render(surface)
 	--Back to city button
 	local f = font("data/fonts/DroidSans.ttf", 16, color(255, 128, 0, 255))
 	local target1 = area(0.05*surface:get_width(),0.9*surface:get_height()-1.5*height_coinbox, 200, 60)
-	surface:clear(color(255, 255, 255, 255):to_table(), target1:to_table())
+	surface:clear(color(255, 255, 255, 255), target1:to_table())
 	f:draw(surface, target1:to_table(), "Back to the city", "center", "middle")
 
 	--heading
@@ -170,8 +173,8 @@ function ConnectFourComponent:render(surface)
 	surface:clear(coin_color_computer, {x=0.1*surface:get_width(), y=0.5*surface:get_height()+0.5*height_coinbox, width = width_coinbox, height = height_coinbox})
 
 	--insert picture over board
-	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect4board.png")),nil,{x=posx_constant, y=posy_constant, width = 7*width_coinbox, height = 6*height_coinbox})
-	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect4toprow.png")),nil,{x=posx_constant, y=0.1*surface:get_height() - 0.5*height_coinbox, width = 7*width_coinbox, height = height_coinbox})
+	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect4board.png")),nil,{x=posx_constant, y=posy_constant})
+	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect4toprow.png")),nil,{x=posx_constant, y=0.1*surface:get_height() - 0.5*height_coinbox})
 
 	--delays if it's the computers turn
 	if self.connectfour:get_player() == "O" then
@@ -209,9 +212,6 @@ function ConnectFourComponent:render(surface)
 					local callback = utils.partial(self.delay2, self, surface)
 					self.stop_timer = sys.new_timer(5000, callback)
 	end
-
-	self:dirty(false)
-	gfx.update()
 end
 
 ---Puts a delay on computers move to slow down the process
@@ -241,7 +241,7 @@ function ConnectFourComponent:delay(surface)
 
 	self:listen_to(
 	event.remote_control,
-	"button_release",
+	"button_press",
 	utils.partial(self.press, self)
 	)
 
