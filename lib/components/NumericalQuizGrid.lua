@@ -1,8 +1,5 @@
 --- NumericalQuizGrid class.
--- This class builds on the ButtonGrid class and represents a set of memory cards
--- and buttons in the MemoryView. Memory cards are represented by the
--- CardComponent class
--- @classmod ButtonGrid
+-- @classmod NumericalQuizGrid
 
 local class = require("lib.classy")
 local button = require("lib.components.Button")
@@ -59,7 +56,7 @@ end
 
 
 function NumericalQuizGrid:press(button)
-	if not self.paused then
+	--if not self.paused then
     	if button == "down" then
 			self:indicate_downward(self.button_indicator)
 			self:_check_for_input_component(self.button_indicator)
@@ -85,7 +82,9 @@ function NumericalQuizGrid:press(button)
 				self:trigger("next")
 			end
 		end
-	end
+		print("indicator: " .. self.button_indicator)
+		print("\n" .. "\n" .. "\n" .. "\n" .. "\n" .. "\n")
+	--end
 end
 
 --- Makes sure to focus the input component if the user has moved the indicator
@@ -110,7 +109,6 @@ function NumericalQuizGrid:render(surface)
 -- If no button is selected when this button_grid is created,
 -- then the first button in the list will be selected.
 -- The indicator always points to the selected button
-	self:dirty(false)
 	if self.start_indicator == true then
 		for k = 1 , #self.button_list do
 			if not (self:_check_for_input_component(k)
@@ -149,6 +147,7 @@ function NumericalQuizGrid:render(surface)
 			button_data.button:render(sub_surface)
 		end
    end
+   gfx.update()
 end
 
 return NumericalQuizGrid

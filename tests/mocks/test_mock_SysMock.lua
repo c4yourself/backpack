@@ -2,7 +2,6 @@ local class = require("lib.classy")
 local FreetypeMock = require("lib.mocks.FreetypeMock")
 local luaunit = require("luaunit")
 local SysMock = require("lib.mocks.SysMock")
-<<<<<<< HEAD
 
 local TestSysMock = {}
 --TODO write tests
@@ -22,6 +21,7 @@ function TestSysMock:test_new_freetype()
 	--luaunit.assertEquals(type(GfxMock.loadpng()), type(surface))
 	--local freetype1 = SysMock.new_freetype(c, 5, {x=40, y=50}, "text")
 	--luaunit.assertEquals(type(SysMock.new_freetype(c, 5, {x=40, y=50}, "text")), type(freetype))]]
+end
 
 local PlayerMock = require("lib.mocks.PlayerMock")
 local TimerMock = require("lib.mocks.TimerMock")

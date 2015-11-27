@@ -279,6 +279,9 @@ function CityView:load_view(button)
 		local mult_quiz_view = MultipleChoiceView()
 		--Stop listening to everything
 		self:stop_listening(event.remote_control)
+		--self.button_grid:stop_listening(self.button_grid.event_listener,
+		 --													"button_press",
+		--													callback)
 		self.button_grid:stop_listening() -- TODO Use button_grid:blur instead
 		-- Start listening to the exit event, which is called when the user
 		-- exits a quiz

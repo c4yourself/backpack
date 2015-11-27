@@ -159,30 +159,24 @@ function ButtonGrid:display_next_view(transfer_path)
 end
 
 function ButtonGrid:press(button)
-	if not self.paused then
+	--if not self.paused then
     if button == "down" then
-			self:indicate_downward(self.button_indicator)
-			self:trigger("dirty")
-		elseif button == "up" then
-			self:indicate_upward(self.button_indicator)
-			self:trigger("dirty")
-		elseif button == "right" then
-			self:indicate_rightward(self.button_indicator)
-			self:trigger("dirty")
-		elseif button == "left" then
-			self:indicate_leftward(self.button_indicator, "left")
-			self:trigger("dirty")
-		elseif button == "ok" then
-			for i=1, #self.button_list do
-				if self.button_list[i].button:is_selected() == true then
-
-					--self:display_next_view(self.button_list[i].button.transfer_path)
-				--	gfx.update()
-				--	break
-				-- else
-					self:trigger("button_click", self.button_list[i].button)
-					break
-				end
+		self:indicate_downward(self.button_indicator)
+		self:trigger("dirty")
+	elseif button == "up" then
+		self:indicate_upward(self.button_indicator)
+		self:trigger("dirty")
+	elseif button == "right" then
+		self:indicate_rightward(self.button_indicator)
+		self:trigger("dirty")
+	elseif button == "left" then
+		self:indicate_leftward(self.button_indicator, "left")
+		self:trigger("dirty")
+	elseif button == "ok" then
+		for i=1, #self.button_list do
+			if self.button_list[i].button:is_selected() == true then
+				self:trigger("button_click", self.button_list[i].button)
+				break
 			end
 		end
 	end
@@ -195,7 +189,6 @@ function ButtonGrid:render(surface)
 -- If no button is selected when this button_grid is created,
 -- then the first button in the list will be selected.
 -- The indicator always points to the selected button
-
 	self:dirty(false)
 
 	if self.start_indicator == true then
