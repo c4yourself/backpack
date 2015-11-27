@@ -25,7 +25,7 @@ function ConnectFourComponent:__init(remote_control)
 
 	self:listen_to(
 	event.remote_control,
-	"button_release",
+	"button_press",
 	utils.partial(self.press, self)
 	)
 end
@@ -42,7 +42,7 @@ function ConnectFourComponent:press(key)
 				self.current_column = self.current_column + 1
 			end
 		until self.connectfour:get_current_row(self.current_column) ~= 0
-
+		self:dirty()
 	elseif key == "left" then
 		repeat
 			if self.current_column == 1 then
@@ -51,14 +51,13 @@ function ConnectFourComponent:press(key)
 				self.current_column = self.current_column - 1
 			end
 		until self.connectfour:get_current_row(self.current_column) ~= 0
-
+		self:dirty()
 	elseif key == "ok" then
 		print("ok, move")
 		self.connectfour:move(self.connectfour:get_player(), self.current_column)
 
 		self:stop_listening(event.remote_control)
-
-
+		self:dirty()
 	elseif key == "exit" then
 		--TODO pop-up
 	--	local exit_popup = subsurface(surface, area(100, 100, 400, 400))
@@ -68,8 +67,7 @@ function ConnectFourComponent:press(key)
 	--	font_popup:draw(exit_popup, area(30,30,400,400), "Spelare X vann!")
 		self.trigger("exit_view")
 	end
-
-	self:dirty(true)
+	gfx.update()
 end
 
 ---Prints out the top row
@@ -106,8 +104,6 @@ end
 --- Prints the surface connected with ConnectFour
 -- @param surface
 function ConnectFourComponent:render(surface)
-
-	self:dirty(false)
 	surface:fill({r = 0, g = 0, b = 0, a = 255})
 	--btn
 --[[	local button_color = color(0, 128, 225, 255)
@@ -213,6 +209,9 @@ function ConnectFourComponent:render(surface)
 					local callback = utils.partial(self.delay2, self, surface)
 					self.stop_timer = sys.new_timer(5000, callback)
 	end
+
+	self:dirty(false)
+	gfx.update()
 end
 
 ---Puts a delay on computers move to slow down the process
