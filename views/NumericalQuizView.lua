@@ -152,7 +152,7 @@ function NumericQuizView:render(surface)
 			self.areas_defined = true
 		end
 		-- Question area
-		self.question_area:clear(self.question_area_color)
+		self.question_area:clear(self.question_area_color:to_table())
 
 		--Determine what should be shown in the Question area
 		if self.answer_flag then
@@ -200,7 +200,7 @@ function NumericQuizView:render(surface)
 			end
 		end
 		-- Render the Progress counter
-		self.progress_counter_area:clear(self.progress_counter_color)
+		self.progress_counter_area:clear(self.progress_counter_color:to_table())
 		local current_question = self.num_quiz.current_question
 		local quiz_length = #self.num_quiz.questions
 		local current_question = math.min(self.num_quiz.current_question,
@@ -234,7 +234,7 @@ function NumericQuizView:render(surface)
 			else
 				bar_component_color = Color(255, 255, 255, 255)
 			end
-			progress_bar_component:clear(bar_component_color)
+			progress_bar_component:clear(bar_component_color:to_table())
 			bar_component_y = bar_component_y + progress_bar_margin +
 								bar_component_height
 		end

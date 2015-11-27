@@ -195,15 +195,15 @@ function CityView:render(surface)
 	local experience_bar_color = Color(100, 100, 100, 255)
 
 	-- Shows menu bar
-	surface:fill(menu_bar_color, {width=width/3, height=height-50, x=0, y=50})
+	surface:fill(menu_bar_color:to_table(), {width=width/3, height=height-50, x=0, y=50})
 	city_view_large_font:draw(surface, {x=width/6-65, y=60}, "Mini Games")
 	city_view_large_font:draw(surface, {x=width/6-45, y=(height-50)/2+60}, "Options")
 
 	-- Implement status bar
-	surface:fill(status_bar_color, {width=width, height=50, x=0, y=0})
-	surface:fill(score_text_color, {width=150, height=30, x=285,y=10})
+	surface:fill(status_bar_color:to_table(), {width=width, height=50, x=0, y=0})
+	surface:fill(score_text_color:to_table(), {width=150, height=30, x=285,y=10})
 	if self.profile.experience / 500 ~= 1 then
-		surface:fill(experience_bar_color, {width=math.ceil(148*(1-self.profile.experience/500)), height=28, x=434-148*(1-self.profile.experience/500), y=11})
+		surface:fill(experience_bar_color:to_table(), {width=math.ceil(148*(1-self.profile.experience/500)), height=28, x=434-148*(1-self.profile.experience/500), y=11})
 	end
 
 	-- Add info to statusbar

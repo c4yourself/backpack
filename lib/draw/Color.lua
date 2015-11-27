@@ -19,6 +19,24 @@ Color.default_alpha = 255
 -- @param blue Amount of blue (0-255)
 -- @param alpha Amount of alpha (0-255)
 function Color:__init(red, green, blue, alpha)
+	-- Perform sanity checks for all given values
+	if red ~= nil and type(red) ~= "number" then
+		error("Invalid format for red, expected number or nil got " .. type(red))
+	end
+
+	if green ~= nil and type(green) ~= "number" then
+		error("Invalid format for green, expected number or nil got " .. type(green))
+	end
+
+	if blue ~= nil and type(blue) ~= "number" then
+		error("Invalid format for blue, expected number or nil got " .. type(blue))
+	end
+
+	if alpha ~= nil and type(alpha) ~= "number" then
+		error("Invalid format for alpha, expected number or nil got " .. type(alpha))
+	end
+
+	--
 	self.red = red or self.default_red
 	self.green = green or self.default_green
 	self.blue = blue or self.default_blue
@@ -152,6 +170,14 @@ function Color.from_table(color)
 	-- Check that it is actually possible provided color is a table
 	if type(color) ~= "table" and color ~= nil then
 		error("Expected table or nil, got " .. type(color))
+	end
+
+	-- Check that color is not a Color instance, since this will not work on the
+	-- set-top box.
+	if class.is_a(color, Color) then
+		error(
+			"Provided color is a Color instance. This is not a valid table " ..
+			"format, use :to_table() to convert it.")
 	end
 
 	if color == nil or next(color) == nil then

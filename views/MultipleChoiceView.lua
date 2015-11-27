@@ -266,7 +266,7 @@ function MultipleChoiceView:render(surface)
 
 			self.areas_defined = true
 		end
-		self.question_area:clear(self.question_area_color)
+		self.question_area:clear(self.question_area_color:to_table())
 
 		-- If the view is marked as dirty, re-render it
 		if self.quiz_state == "IDLE" then
@@ -331,7 +331,7 @@ function MultipleChoiceView:render(surface)
 									height = self.counter_height,
 									width = self.counter_width})
 		-- Render the Progress counter
-			self.progress_counter_area:clear(self.progress_counter_color)
+			self.progress_counter_area:clear(self.progress_counter_color:to_table())
 			local current_question = self.mult_choice_quiz.current_question
 			local quiz_length = #self.mult_choice_quiz.questions
 			local current_question = math.min(self.mult_choice_quiz.current_question,
@@ -365,7 +365,7 @@ function MultipleChoiceView:render(surface)
 				else
 					bar_component_color = Color(255, 255, 255, 255)
 				end
-				progress_bar_component:clear(bar_component_color)
+				progress_bar_component:clear(bar_component_color:to_table())
 				bar_component_y = bar_component_y + progress_bar_margin +
 									bar_component_height
 			end

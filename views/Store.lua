@@ -46,9 +46,9 @@ function Store:__init(remote_control, surface, profile)
 
 
 	-- Some colors
-	self.background_color = Color{255, 255, 204, 255}
-	self.button_active = Color{255, 51, 51, 255}
-	self.button_inactive = Color{255, 153, 153, 255}
+	self.background_color = Color(255, 255, 204, 255)
+	self.button_active = Color(255, 51, 51, 255)
+	self.button_inactive = Color(255, 153, 153, 255)
 
 	-- Creates local variables for height and width
 	local height = self.surface:get_height()
@@ -230,7 +230,7 @@ function Store:render(surface)
 	local width = self.surface:get_width()
 
 		-- Resets the surface and draws the background
-	surface:clear(self.background_color)
+	surface:clear(self.background_color:to_table())
 	surface:copyfrom(self.cashier, nil, {x = 0, y = 100}, true)
 	surface:copyfrom(self.shelf, nil, {x=width/2-250,y=20}, true)
 	surface:copyfrom(self.backpack, nil, {x=width/2-100, y = 350}, true)
