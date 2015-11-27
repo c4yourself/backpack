@@ -15,6 +15,7 @@ local utils = require("lib.utils")
 local event = require("lib.event")
 local Font = require("lib.draw.Font")
 local Color = require("lib.draw.Color")
+local logger = require("lib.logger")
 
 --- Constructor for ButtonGrid
 function ButtonGrid:__init(remote_control)
@@ -53,6 +54,7 @@ end
 
 -- Starts the buttongrids listener
 function ButtonGrid:focus()
+	logger.debug(string.format("i focus"))
 	self:listen_to(
 	self.event_listener,
 	"button_press",
@@ -62,6 +64,7 @@ end
 
 -- Stops the buttongrids listener
 function ButtonGrid:blur()
+	logger.debug(string.format("i blur"))
 	self:stop_listening()
 end
 

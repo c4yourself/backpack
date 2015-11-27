@@ -202,6 +202,7 @@ function MemoryView:_determine_new_state()
         if is_open ~= true then
             self.memory:open(card_index)
             self.button_grid:set_card_status(card_index, "FACING_UP")
+            self:dirty(true)
         end
     elseif self.memory.second_card == nil then
         if is_open ~= true then

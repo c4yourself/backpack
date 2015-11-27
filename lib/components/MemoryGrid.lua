@@ -15,6 +15,8 @@ local Font = require("lib.draw.Font")
 local Color = require("lib.draw.Color")
 local view = require("lib.view")
 
+local logger = require("lib.logger")
+
 --- Constructor for MemoryGrid
 function MemoryGrid:__init(remote_control)
 	ButtonGrid.__init(self, remote_control)
@@ -42,31 +44,17 @@ function MemoryGrid:add_button(position, button_size, button)
 	 		width = button_size.width,
 	 		height = button_size.height
 	 		})
-		local callback = utils.partial(self.trigger, self, "dirty")
+		local button_callback = utils.partial(self.trigger, self, "dirty")
 	 	self:listen_to(
 	 		button,
 			"dirty",
-			callback
+			button_callback
 	 	)
 	else
 		error("screen boundary error")
 	end
 end
 
-function MemoryGrid:focus()
-	print("i focus")
-	self:listen_to(
-	self.event_listener,
-	"button_press",
-	self.callback
-	)
-	
-end
-
-function MemoryGrid:blur()
-	print("i blur")
-	self:stop_listening()
-end
 
 --- Display text for each button/card on the surface
 -- @param button_index To indicate which button's text shall be displayed
@@ -346,20 +334,21 @@ end
 
 function MemoryGrid:press(button)
 	if button == "down" then
+		logger.debug(string.format("i press"))
 		self:indicate_downward(self.button_indicator)
-		--self:trigger("dirty")
+		self:dirty(true)
 		self:trigger("navigation")
 	elseif button == "up" then
 		self:indicate_upward(self.button_indicator)
-		--self:trigger("dirty")
+		self:dirty(true)
 		self:trigger("navigation")
 	elseif button == "right" then
 		self:indicate_rightward(self.button_indicator)
-		--self:trigger("dirty")
+		self:dirty(true)
 		self:trigger("navigation")
 	elseif button == "left" then
 		self:indicate_leftward(self.button_indicator, "left")
-		--self:trigger("dirty")
+		self:dirty(true)
 		self:trigger("navigation")
 	end
 
@@ -402,9 +391,7 @@ function MemoryGrid:render(surface)
 		}
 
 		local sub_surface = SubSurface(surface,area)
-		print("\n" .. "\n" .. "\n" .. "\n" .. "\n")
-		print("subSurface print")
-		print(sub_surface)
+
 			button_data.button:render(sub_surface)
 			if button_data.button.text_available then
 				self:display_text(surface, i)
