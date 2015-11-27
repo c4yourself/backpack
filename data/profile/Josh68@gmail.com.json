@@ -10,5 +10,5 @@
 		"name": "Josh",
 		"password": "",
 		"sex": "male",
-		"city": "Sydney",
+		"city": "sydney",
 }

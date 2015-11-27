@@ -1,3 +1,6 @@
+---Connect Four GUI
+--@classmod ConnectFourComponent
+
 local class = require("lib.classy")
 local ConnectFour = require("lib.connectfour.ConnectFour")
 local event = require("lib.event")
@@ -30,6 +33,7 @@ end
 --- Responds differently depending on which key pressed on the remote control
 -- @param key, the key pressed on the remote control
 function ConnectFourComponent:press(key)
+	print("trycka knapp")
 	if key == "right" then
 		repeat
 			if self.current_column == 7 then
@@ -49,21 +53,22 @@ function ConnectFourComponent:press(key)
 		until self.connectfour:get_current_row(self.current_column) ~= 0
 
 	elseif key == "ok" then
+		print("ok, move")
 		self.connectfour:move(self.connectfour:get_player(), self.current_column)
 
 		self:stop_listening(event.remote_control)
 
 
 	elseif key == "exit" then
-		local exit_popup = subsurface(surface, area(100, 100, 400, 400))
-		local color_popup = color(255, 255, 255, 255)
-		local font_popup = font("data/fonts/DroidSans.ttf", 16, color_popup)
+		--TODO pop-up
+	--	local exit_popup = subsurface(surface, area(100, 100, 400, 400))
+	--	local color_popup = color(255, 255, 255, 255)
+	--	local font_popup = font("data/fonts/DroidSans.ttf", 16, color_popup)
 	--	exit_popup:clear({r=255, g=255, b=255}, area(100, 100, 400, 400))
 	--	font_popup:draw(exit_popup, area(30,30,400,400), "Spelare X vann!")
 		self.trigger("exit_view")
 	end
 
-	self:dirty(false)
 	self:dirty(true)
 end
 
@@ -103,6 +108,7 @@ end
 function ConnectFourComponent:render(surface)
 
 	self:dirty(false)
+	surface:fill({r = 0, g = 0, b = 0, a = 255})
 	--btn
 --[[	local button_color = color(0, 128, 225, 255)
 	local text_color = color(55, 55, 55, 255)
@@ -147,7 +153,7 @@ function ConnectFourComponent:render(surface)
 	--Back to city button
 	local f = font("data/fonts/DroidSans.ttf", 16, color(255, 128, 0, 255))
 	local target1 = area(0.05*surface:get_width(),0.9*surface:get_height()-1.5*height_coinbox, 200, 60)
-	surface:clear(color(255, 255, 255, 255), target1:to_table())
+	surface:clear(color(255, 255, 255, 255):to_table(), target1:to_table())
 	f:draw(surface, target1:to_table(), "Back to the city", "center", "middle")
 
 	--heading
@@ -168,8 +174,8 @@ function ConnectFourComponent:render(surface)
 	surface:clear(coin_color_computer, {x=0.1*surface:get_width(), y=0.5*surface:get_height()+0.5*height_coinbox, width = width_coinbox, height = height_coinbox})
 
 	--insert picture over board
-	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect4board.png")),nil,{x=posx_constant, y=posy_constant})
-	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect4toprow.png")),nil,{x=posx_constant, y=0.1*surface:get_height() - 0.5*height_coinbox})
+	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect4board.png")),nil,{x=posx_constant, y=posy_constant, width = 7*width_coinbox, height = 6*height_coinbox})
+	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect4toprow.png")),nil,{x=posx_constant, y=0.1*surface:get_height() - 0.5*height_coinbox, width = 7*width_coinbox, height = height_coinbox})
 
 	--delays if it's the computers turn
 	if self.connectfour:get_player() == "O" then
@@ -178,6 +184,7 @@ function ConnectFourComponent:render(surface)
 	end
 
 	if self.connectfour:get_winner() ~= nil then
+		--TODO change to pop_up
 		local winner_popup = subsurface(surface, area(100, 100, 400, 400))
 		local color_popup = color(243, 137, 15, 255)
 		local font_popup = font("data/fonts/DroidSans.ttf", 16, color(0,0,0,255))
@@ -194,6 +201,18 @@ function ConnectFourComponent:render(surface)
 		local callback = utils.partial(self.delay2, self, surface)
 		self.stop_timer = sys.new_timer(5000, callback)
 	end
+
+	if self.connectfour:get_player() == nil then
+
+					local no_winner_popup = subsurface(surface, area(100, 100, 400, 400))
+					local color_popup = color(243, 137, 15, 255)
+					local font_popup = font("data/fonts/DroidSans.ttf", 16, color(0,0,0,255))
+					no_winner_popup:clear(color_popup)
+
+					font_popup:draw(no_winner_popup, area(30,30,400,400), "The board is full no one won")
+					local callback = utils.partial(self.delay2, self, surface)
+					self.stop_timer = sys.new_timer(5000, callback)
+	end
 end
 
 ---Puts a delay on computers move to slow down the process
@@ -203,9 +222,15 @@ function ConnectFourComponent:delay(surface)
 	self.stop_timer:stop()
 
 	local AI_column = self.connectfour:computer_AI(self.current_column)
+	print("AI column component: " .. AI_column)
 	self.connectfour:move("O", AI_column)
+	print("made move AI")
 
 	repeat
+		if self.connectfour:get_player() == nil then
+			break
+
+		end
 		if self.connectfour:get_current_row(self.current_column) == 0 then
 			if self.current_column == 7 then
 				self.current_column = 1

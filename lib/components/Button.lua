@@ -9,7 +9,7 @@ local Button = class("Button", View)
 --@param color The color of button which is neither disabled nor selected
 --@param color_selected The color for a selected button
 --@param color_disabled The color for a disabled button
---@param enaled The button is enabled or not when instantiating
+--@param enabled The button is enabled or not when instantiating
 --@param selected The button is selected or not when instantiating
 --@param transfer_path The path for the view after the button is clicked
 -- function Button:__init(color, color_selected, color_disabled, enabled, selected, transfer_path)
@@ -34,15 +34,23 @@ function Button:__init(color, color_selected, color_disabled, enabled, selected,
 	self._enabled = enabled or true
 	self._selected = selected or false
 	self.text_available = false
+	self._iconed = false
 
 	if transfer_path ~= nil then
 		self.transfer_path = transfer_path
 	end
 end
 
+function Button:add_icon(icon_normal, icon_selected, icon_x, icon_y, icon_width, icon_height)
+	self._iconed = true
 
-
-
+	self.icon_selected =  gfx.loadpng(icon_selected)
+	self.icon_normal = gfx.loadpng(icon_normal)
+	self.icon_x = icon_x
+	self.icon_y = icon_y
+	self.icon_width = icon_width
+	self.icon_height = icon_height
+end
 
 function Button:set_textdata(text, font_color, text_position, font_size,font_path)
 	self.text_available = true
@@ -93,8 +101,16 @@ function Button:render(surface)
 		surface:fill(self.color_disabled:to_table())
 	elseif self:is_selected() then
 		surface:fill(self.color_selected:to_table())
+		if self._iconed then
+			self.icon_selected:premultiply()
+			surface:copyfrom(self.icon_selected, nil, {x = self.icon_x, y = self.icon_y, width=self.icon_width, height=self.icon_height})
+		end
 	else
 		surface:fill(self.color:to_table())
+		if self._iconed then
+			self.icon_normal:premultiply()
+			surface:copyfrom(self.icon_normal, nil, {x = self.icon_x, y = self.icon_y, width=self.icon_width, height=self.icon_height})
+		end
 	end
 
 end

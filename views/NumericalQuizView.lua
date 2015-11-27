@@ -4,7 +4,6 @@ local NumericalInputComponent = require("components.NumericalInputComponent")
 local class = require("lib.classy")
 local View = require("lib.view.View")
 local NumericQuizView = class("NumericQuizView", View)
-local Surface = require("emulator.surface")
 local utils = require("lib.utils")
 local event = require("lib.event")
 local view = require("lib.view")
@@ -19,7 +18,7 @@ local Button = require("lib.components.Button")
 --- Constructor for NumericQuizView
 function NumericQuizView:__init()
 	View.__init(self)
-	event.remote_control:off("button_release") -- TODO remove this once the ViewManager is fully implemented
+	--event.remote_control:off("button_release") -- TODO remove this once the ViewManager is fully implemented
 
 	-- Flags
 	--Flags to determine whether a quiz or a question is answered
@@ -31,7 +30,7 @@ function NumericQuizView:__init()
 	self.prevent = false -- This flag is used for avoiding bug where render is
 						-- called twice upon a submit.
 	--Components
-	self.grid = NumericalQuizGrid(remote_control)
+	self.views.grid = NumericalQuizGrid(remote_control)
 	--Instanciate a numerical input component and make the quiz listen for changes
 	self.views.num_input_comp = NumericalInputComponent()
 
@@ -47,26 +46,26 @@ function NumericQuizView:__init()
 	-- Add exit button
 	local button_exit = Button(button_color, color_selected, color_disabled,
 								true, true, "views.CityView")
-	local exit_position = {x = 42, y = 500}
+	local exit_position = {x = 42, y = 450}
 	button_exit:set_textdata("Back to city", Color(255,255,255,255),
 							{x = 0, y = 0}, 32,"data/fonts/DroidSans.ttf")
-	self.grid:add_button(exit_position,
+	self.views.grid:add_button(exit_position,
 						button_size,
 						button_exit)
-	local exit_index = self.grid:get_last_index()
-	self.grid:mark_as_back_button(exit_index)
+	local exit_index = self.views.grid:get_last_index()
+	self.views.grid:mark_as_back_button(exit_index)
 	-- Add next button
 	local button_next = Button(button_color, color_selected, color_disabled,
 								true, false, "")
-	local next_position = {x = width - exit_position.x - button_size.width,
+	local next_position = {x = 0.9 * width - exit_position.x - button_size.width,
 							y = exit_position.y}
 	button_next:set_textdata("Next question", Color(255,255,255,255),
 							{x = 0, y = 0}, 32,"data/fonts/DroidSans.ttf")
-	self.grid:add_button(next_position,
+	self.views.grid:add_button(next_position,
 						button_size,
 						button_next)
-	local next_index = self.grid:get_last_index()
-	self.grid:mark_as_next_button(next_index)
+	local next_index = self.views.grid:get_last_index()
+	self.views.grid:mark_as_next_button(next_index)
 
 	-- Logic
 	-- Associate a quiz instance with the View
@@ -94,18 +93,8 @@ end
 ---Responds to a button press when the View is active
 -- @param key Key that was pressed
 function NumericQuizView:press(key)
-
-	if key == "right" then
-		-- Navigate to the next question if the user already submitted an answer
-		if self.answer_flag then
-			self.answer_flag = false
-			self:dirty(false)
-			self:dirty(true) -- To make sure dirty event is triggered
-		end
-	elseif key == "back" then
-		self:trigger("exit_view")
-
-
+ 	if key == "back" then
+		self:back_to_city()
 	end
 end
 
@@ -124,11 +113,11 @@ function NumericQuizView:render(surface)
 		self.input_area = SubSurface(surface, {x = input_x, y = input_y,
 									height = input_height,
 									width = input_width})
-		self.grid:add_button({x = input_x, y = input_y},
+		self.views.grid:add_button({x = input_x, y = input_y},
 							{height = input_height , width = input_width},
 							self.views.num_input_comp)
-		local input_index = self.grid:get_last_index()
-		self.grid:mark_as_input_comp(input_index)
+		local input_index = self.views.grid:get_last_index()
+		self.views.grid:mark_as_input_comp(input_index)
 	end
 
 	-- Render the view as long as it isn't clean already
@@ -163,7 +152,7 @@ function NumericQuizView:render(surface)
 			self.areas_defined = true
 		end
 		-- Question area
-		self.question_area:clear(self.question_area_color)
+		self.question_area:clear(self.question_area_color:to_table())
 
 		--Determine what should be shown in the Question area
 		if self.answer_flag then
@@ -211,7 +200,7 @@ function NumericQuizView:render(surface)
 			end
 		end
 		-- Render the Progress counter
-		self.progress_counter_area:clear(self.progress_counter_color)
+		self.progress_counter_area:clear(self.progress_counter_color:to_table())
 		local current_question = self.num_quiz.current_question
 		local quiz_length = #self.num_quiz.questions
 		local current_question = math.min(self.num_quiz.current_question,
@@ -245,7 +234,7 @@ function NumericQuizView:render(surface)
 			else
 				bar_component_color = Color(255, 255, 255, 255)
 			end
-			progress_bar_component:clear(bar_component_color)
+			progress_bar_component:clear(bar_component_color:to_table())
 			bar_component_y = bar_component_y + progress_bar_margin +
 								bar_component_height
 		end
@@ -266,9 +255,9 @@ function NumericQuizView:render(surface)
 
 		-- Triggered when the user selects a new button/field
 		self:listen_to(
-			self.grid,
+			self.views.grid,
 			"dirty",
-			utils.partial(self.grid.render, self.grid, surface)
+			utils.partial(self.views.grid.render, self.views.grid, surface)
 		)
 
 		-- Triggered when the user submits an answer
@@ -280,23 +269,23 @@ function NumericQuizView:render(surface)
 
 		-- Triggered when the next button is pressed
 		self:listen_to(
-			self.grid,
+			self.views.grid,
 			"next",
 			utils.partial(self.next_question, self)
 		)
 
 		-- Triggered when the exit button is pressed
 		self:listen_to(
-			self.grid,
+			self.views.grid,
 			"back",
-			utils.partial(self.trigger, self, "exit")
+			utils.partial(self.back_to_city, self)
 		)
 
 		self.listening_initiated = true
 	end
 
 	self:dirty(false)
-	self.grid:render(surface)
+	self.views.grid:render(surface)
 	gfx.update()
 end
 
@@ -323,6 +312,12 @@ function NumericQuizView:next_question()
 	self.views.num_input_comp:set_text(nil)
 	self:dirty(false)
 	self:dirty(true)
+end
+
+function NumericQuizView:back_to_city()
+	--TODO Add pop-up
+	self:trigger("exit_view")
+	self:destroy()
 end
 
 return NumericQuizView

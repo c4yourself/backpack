@@ -6,7 +6,6 @@ local View = require("lib.view.View")
 local view = require("lib.view")
 local event = require("lib.event")
 local MemoryGame = require("lib.memory.Memory")
-local Surface = require("emulator.surface")
 local utils = require("lib.utils")
 local MemoryView = class("MemoryView", View)
 local card= require("lib.components.MemoryCardComponent")
@@ -19,7 +18,7 @@ local CardComponent = require("components.CardComponent")
 local Profile = require("lib.profile.Profile")
 local Font = require("lib.draw.Font")
 
-function MemoryView:__init()
+function MemoryView:__init(remote_control, surface, profile)
     View.__init(self)
 	event.remote_control:off("button_release") -- TODO remove this once the ViewManager is fully implemented
 
@@ -32,7 +31,9 @@ function MemoryView:__init()
     self.cards = {}
     self.positions = {}
     self.button_grid = MemoryGrid()
-    self.profile = Profile("Lisa", "lisa@lisa.se", "04-08-1992", "female", "paris")
+    --self.profile = Profile("Lisa", "lisa@lisa.se", "04-08-1992", "female", "paris")
+    self.profile = profile
+    --self.remote_control = remote_control
     self:_set_pairs()
     --self.pairs = 3 -- TODO For quicker manual testing, remove once done coding
     self.memory = MemoryGame(self.pairs, self.profile)
@@ -216,7 +217,7 @@ function MemoryView:render(surface)
     end
 --At this point, we should check the memory states and keep the card that are true in memory.states open
     if self:is_dirty() then
-        surface:clear(color)
+        surface:clear(color(0, 0, 0, 255):to_table())
         -- Add the number of turns
         local turns_text = Font("data/fonts/DroidSans.ttf", 30, self.text_color)
         local turns = Font("data/fonts/DroidSans.ttf", 30, self.text_color)
@@ -232,7 +233,6 @@ function MemoryView:render(surface)
     -- Render child components
     self.button_grid:render(surface)
     --self.button_1:render(surface)
-
 end
 
 function MemoryView:back_to_city()

@@ -15,6 +15,7 @@ local Color = require("lib.draw.Color")
 local Font = require("lib.draw.Font")
 local Button = require("lib.components.Button")
 local ButtonGrid=require("lib.components.ButtonGrid")
+local ProfileManager = require("lib.profile.ProfileManager")
 
 -- Get size of Table
 -- @param a Is the table to get ther size of
@@ -32,7 +33,6 @@ function Store:__init(remote_control, surface, profile)
 	self.surface = surface
 	self.background_path = ""
 	self.current_city = profile:get_city().name
-	print(self.current_city)
 	self.button_grid = ButtonGrid(remote_control)
 	self.cashier = gfx.loadpng("data/images/cashier.png")
 	self.shelf = gfx.loadpng("data/images/shelf.png")
@@ -46,9 +46,9 @@ function Store:__init(remote_control, surface, profile)
 
 
 	-- Some colors
-	self.background_color = Color{255, 255, 204, 255}
-	self.button_active = Color{255, 51, 51, 255}
-	self.button_inactive = Color{255, 153, 153, 255}
+	self.background_color = Color(255, 255, 204, 255)
+	self.button_active = Color(255, 51, 51, 255)
+	self.button_inactive = Color(255, 153, 153, 255)
 
 	-- Creates local variables for height and width
 	local height = self.surface:get_height()
@@ -116,6 +116,7 @@ function Store:__init(remote_control, surface, profile)
 
 		-- Get the current index of button that is selected
 		selected_index = button.transfer_path
+		local continue = true
 
 		-- If we have selected on of the purchasable items
 		if selected_index <= get_size(self.items) then
@@ -128,14 +129,22 @@ function Store:__init(remote_control, surface, profile)
 			self.message["message"] = self:sell_item(selected_index-get_size(self.items))
 
 		else
+
 			self:destroy()
-			self:trigger("exit_view")
+			self:trigger("exit_view", self.profile)
+			continue = false
 
 		end
+		if continue then
+			tot_items = get_size(self.items)+get_size(self.backpack_items)
+			for i = 1, tot_items+1 do
+				self.button_grid.button_list[i].button:set_transfer_path(i)
+			end
 
-		self.item_images = self:loadItemImages()
-		gfx.update()
-		self:dirty(true)
+			self.item_images = self:loadItemImages()
+			self:render(self.surface)
+			gfx.update()
+		end
 	end
 
 	-- Instance remote control and mapps it to pressing enter
@@ -155,9 +164,10 @@ function Store:loadItemImages()
 	for i = 1, numItems do
 		ret_list[i] = gfx.loadpng(self.items[i]:get_image_path())
 	end
-
-	for j = 1, get_size(self.backpack_items) do
-		ret_list[j+numItems] = gfx.loadpng(self.backpack_items[j]:get_image_path())
+	if #self.backpack_items>0 then
+		for j = 1, get_size(self.backpack_items) do
+			ret_list[j+numItems] = gfx.loadpng(self.backpack_items[j]:get_image_path())
+		end
 	end
 	return ret_list
 end
@@ -191,6 +201,7 @@ function Store:insert_button()
 	-- Add to button grid
 	self.button_grid:insert_button(self.item_positions[add_index], self.button_size, self.buttons[add_index],add_index)
 
+
 end
 
 -- Function to remove a button, as an item has been sold
@@ -219,7 +230,7 @@ function Store:render(surface)
 	local width = self.surface:get_width()
 
 		-- Resets the surface and draws the background
-	surface:clear(self.background_color)
+	surface:clear(self.background_color:to_table())
 	surface:copyfrom(self.cashier, nil, {x = 0, y = 100}, true)
 	surface:copyfrom(self.shelf, nil, {x=width/2-250,y=20}, true)
 	surface:copyfrom(self.backpack, nil, {x=width/2-100, y = 350}, true)
@@ -319,7 +330,7 @@ function Store:purchase_item(item_index)
 		-- Insert a new button
 		self:insert_button()
 
-		self:dirty(false)
+		self:trigger("dirty")
 
 		return "Item purchased"
 	end
@@ -372,7 +383,7 @@ function Store:action_made(button)
 		-- Otherwise we've exited
 	elseif button =="back" then
 
-		self:trigger("exit_view")
+		--self:trigger("exit_view")
 			--self:destroy()
 			--sys.stop()
 
