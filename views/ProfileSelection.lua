@@ -8,7 +8,7 @@ local View = require("lib.view.View")
 local Color = require("lib.draw.Color")
 local Profile = require("lib.profile.Profile")
 local ProfileManager = require("lib.profile.ProfileManager")
-local CityView = require("views.CityView")
+local CreateProfileView = require("views.CreateProfileView")
 local ProfileSelection = class("ProfileSelection", View)
 --local ProfileSelection = {}
 
@@ -75,7 +75,8 @@ function ProfileSelection:callContinueGame()
 end
 
 function ProfileSelection:callCreateProfile()
-	---TODO: Starts the create profile view.
+	create_profile = CreateProfileView(event.remote_control)
+	view.view_manager:set_view(create_profile)
 end
 
 function ProfileSelection:okBtnPress()

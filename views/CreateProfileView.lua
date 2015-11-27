@@ -1,7 +1,7 @@
---- Base class for TestKeyboardView
+--- Base class for CreateProfileView
 -- A CityView is the input field in a numerical quiz. It responds
 -- to numerical input on the remote.
--- @classmod TestKeyboardView
+-- @classmod CreateProfileView
 
 local class = require("lib.classy")
 local View = require("lib.view.View")
@@ -17,11 +17,11 @@ local color = require("lib.draw.Color")
 local logger = require("lib.logger")
 local KeyboardComponent	=	require("components.KeyboardComponent")
 
-local TestKeyboardView = class("TestKeyboardView", View)
+local CreateProfileView = class("CreateProfileView", View)
 
 --- Constructor for CityView
 -- @param event_listener Remote control to listen to
-function TestKeyboardView:__init(remote_control)
+function CreateProfileView:__init(remote_control)
 	View.__init(self)
 	self.background_path = ""
 	input_field = InputField("Name:", {x = 700, y = 80}, true)
@@ -66,7 +66,7 @@ function TestKeyboardView:__init(remote_control)
 	)
 end
 
-function TestKeyboardView:render(surface)
+function CreateProfileView:render(surface)
 	-- -- Resets the surface and draws the background
 
 	surface:clear(self.background_color)
@@ -103,7 +103,7 @@ function TestKeyboardView:render(surface)
 
 end
 
-function TestKeyboardView:load_view(button)
+function CreateProfileView:load_view(button)
 
 	-- TODO set mappings to RC
 	if self.hasActiveKeyboard == true then
@@ -136,4 +136,4 @@ function TestKeyboardView:load_view(button)
 	end
 end
 
-return TestKeyboardView
+return CreateProfileView
