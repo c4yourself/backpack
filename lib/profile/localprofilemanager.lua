@@ -2,7 +2,7 @@
 -- @classmod localprofilemanager
 
 local class = require("lib.classy")
-local lfs = require("lfs")
+--local lfs = require("lfs")
 local utils = require("lib.utils")
 local Profile = require("lib.profile.Profile")
 local localprofilemanager = class("localprofilemanager")
@@ -12,7 +12,7 @@ local localprofilemanager = class("localprofilemanager")
 -- @return profile representing the instance of profile
 function localprofilemanager:save(profile)
 	local path = utils.absolute_path(
-	string.format("data/profile/%s__%s.profile",profile:get_city(),profile:get_email_address()))
+	string.format("data/profile/%s.json",profile:get_email_address()))
 	local file = io.open(path,"w");
 
 	--generate a file and write date into it
@@ -25,7 +25,7 @@ function localprofilemanager:save(profile)
 	file:write("\t\t\"id\": " .. profile:get_id() .. ",\n")
 	file:write("\t\t\"inventory\": " .. profile:get_inventory_string() .. ",\n")
 	file:write("\t\t\"login_token\": \" \",\n")
-	file:write("\t\t\"name\": \"" .. profile:get_profile_name() .. "\",\n")
+	file:write("\t\t\"name\": \"" .. profile:get_name() .. "\",\n")
 	file:write("\t\t\"password\": \"" .. profile:get_password() .. "\",\n")
 	file:write("\t\t\"sex\": \"" .. profile:get_sex() .. "\",\n")
 	file:write("\t\t\"city\": \"" .. profile:get_city() .. "\",\n")
@@ -36,15 +36,14 @@ function localprofilemanager:save(profile)
 end
 
 ---Load a local profile
--- @param profile representing a nil table to generate a profile instance
--- @param filename representing the unique identifier of a profile
+-- @param profile_email
 -- @return profile representing the instance of profile
 -- @return false representing the file path is illegal
-function localprofilemanager:load(profile_city, profile_email)
-	local profile
+function localprofilemanager:load(profile_email)
+	local profile_tmp = {}
 	local name, email_address, date_of_birth
-	local sex, city, balance, experience
-	local path = utils.absolute_path(string.format("data/profile/%s__%s.profile",profile_city,profile_email))
+	local sex, city, balance, experience, inventory
+	local path = utils.absolute_path(string.format("data/profile/%s.json",profile_email))
 
 	--check the file exist or not
 	if(lfs.attributes(path, "mode") == "file") then
@@ -87,6 +86,13 @@ function localprofilemanager:load(profile_city, profile_email)
 				_,_,_,city = string.find(tmp[2],"([\"'])(.-)%1")
 			end
 
+			--match inventory
+			if string.match(line,"\"inventory\"") ~= nil then
+				local tmp = {}
+				tmp = utils.split(line," ")
+				_,_,_,inventory = string.find(tmp[2],"([\"'])(.-)%1")
+			end
+
 			--match balance
 			if string.match(line,"\"balance\"") ~= nil then
 				balance = tonumber(string.sub(line,string.find(line," ")+1,string.find(line,",")-1))
@@ -96,15 +102,22 @@ function localprofilemanager:load(profile_city, profile_email)
 			if string.match(line,"\"experience\"") ~= nil then
 				experience = tonumber(string.sub(line,string.find(line," ")+1,string.find(line,",")-1))
 			end
+
+			--match id
+			if string.match(line,"\"id\"") ~= nil then
+				id = tonumber(string.sub(line,string.find(line," ")+1,string.find(line,",")-1))
+			end
 		end
 
 		--generate a profile instance
-		profile = Profile(name,email_address,date_of_birth,sex,city)
-		profile:set_balance(balance)
-		profile:set_experience(experience)
+		profile_tmp = Profile(name,email_address,date_of_birth,sex,city)
+		profile_tmp:set_balance(balance)
+		profile_tmp:set_experience(experience)
+		profile_tmp:set_inventory(inventory)
+		profile_tmp:set_id(id)
 		io.close()
 
-		return profile
+		return profile_tmp
 	else
 		return false
 	end
@@ -121,26 +134,23 @@ function localprofilemanager:get_profileslist()
 	if(lfs.attributes(path, "mode") == "directory") then
 		for file in lfs.dir(path) do
 
-			--match the .profile file and get all the files' filename in the directory
-			if string.match(file,".profile") ~= nil then
-				table.insert(profiles_name, string.sub(file,1,string.find(file,".profile")-1))
+			--match the .json file and get all the files' filename in the directory
+			if string.match(file,".json") ~= nil then
+				table.insert(profiles_name, string.sub(file,1,string.find(file,".json")-1))
 			end
 		end
 
 		local profiles = {}
-		local profiles_city_list = {}
 		local profiles_email_address_list = {}
 
 		--seperate the filename to get the city list and email_address list and the filename list
 		for i = 1, #profiles_name, 1 do
-			profiles[i] = localprofilemanager:load(
-			string.sub(profiles_name[i],1,string.find(profiles_name[i],"__") - 1),
-			string.sub(profiles_name[i],string.find(profiles_name[i],"__") + 2,string.len(profiles_name[i])))
-			profiles_city_list[i] = string.sub(profiles_name[i],1,string.find(profiles_name[i],"__") - 1)
-			profiles_email_address_list[i] = string.sub(profiles_name[i],string.find(profiles_name[i],"__") + 2,string.len(profiles_name[i]))
+			profiles[i] = localprofilemanager:load(profiles_name[i])
+			--profiles_city_list[i] = string.sub(profiles_name[i],1,string.find(profiles_name[i],"__") - 1)
+			--profiles_email_address_list[i] = string.sub(profiles_name[i],string.find(profiles_name[i],"__") + 2,string.len(profiles_name[i]))
 		end
 
-		return profiles, profiles_city_list, profiles_email_address_list
+		return profiles ,profiles_name
 	else
 		return false
 	end
@@ -155,8 +165,8 @@ function localprofilemanager:delete(profile)
 
 	--traverse the dir of the data/profile to match the profile filename
 	for file in lfs.dir(path) do
-		if string.match(file,string.format("%s__%s",profile:get_city(),profile:get_email_address())) ~= nil then
-			local thefile = utils.absolute_path(string.format("data/profile/%s__%s.profile", profile:get_city(),profile:get_email_address()))
+		if string.match(file,string.format("%s",profile:get_email_address())) ~= nil then
+			local thefile = utils.absolute_path(string.format("data/profile/%s.json",profile:get_email_address()))
 
 			--check the file in the folder
 			if(lfs.attributes(thefile, "mode") ~= "directory") then

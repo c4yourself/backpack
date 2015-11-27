@@ -6,7 +6,6 @@ local View = require("lib.view.View")
 local view = require("lib.view")
 local event = require("lib.event")
 local MemoryGame = require("lib.memory.Memory")
-local Surface = require("emulator.surface")
 local utils = require("lib.utils")
 local MemoryView = class("MemoryView", View)
 local card= require("lib.components.MemoryCardComponent")
@@ -34,8 +33,10 @@ function MemoryView:__init(remote_control, surface, profile)
     -- Logic
     self.cards = {}
     self.positions = {}
+
     self.button_grid = MemoryGrid(remote_control)
     self.profile = profile
+
     self:_set_pairs()
     --self.pairs = 3 -- TODO For quicker manual testing, remove once done coding
     self.memory = MemoryGame(self.pairs, self.profile)
@@ -258,7 +259,6 @@ function MemoryView:render(surface)
     -- Render child components
     self.button_grid:render(surface)
     --self.button_1:render(surface)
-
 end
 
 function MemoryView:back_to_city()

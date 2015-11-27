@@ -7,7 +7,6 @@ local View = require("lib.view.View")
 local NumericalInputComponent = class("NumericalInputComponent", View)
 local event = require("lib.event")
 local utils = require("lib.utils")
-local sys = require("emulator.sys")
 local Color = require("lib.draw.Color")
 local Font = require("lib.draw.Font")
 

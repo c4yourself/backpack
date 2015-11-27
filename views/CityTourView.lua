@@ -15,7 +15,7 @@ function CityTourView:__init(remote_control, surface, profile)
 	View.__init(self)
 	self.buttonGrid = button_grid(remote_control)
 	self.city = profile:get_city()
-print(self.city)
+
 	local width = screen:get_width()*0.9
 	local height = (screen:get_height()-50)*0.9
 
@@ -35,18 +35,19 @@ print(self.city)
 	local color_selected = Color(255, 153, 0, 255)
 	local button_text_color = Color(0, 0, 0, 255)
 
---	local color_disabled = color(111, 222, 111, 255) --have not been used yet
-	self.attraction = {question = "How tall is the Eiffel Tower?",
-										answers = {"324 metres", "564 metres", "137 metres", "401 metres"}}
-
 	-- Create the tour images
 	self.tour_attraction_images = {}
+
 	for k,v in pairs(attractions.attraction[self.city.code]) do
 		table.insert(self.tour_attraction_images, gfx.loadpng(attractions.attraction[self.city.code][k].pic_url))
 	end
+
+
 	-- = {gfx.loadpng(attractions.attraction[self.city.code][1].pic_url),
 	-- 															gfx.loadpng(attractions.attraction[self.city.code][2].pic_url]),
 	-- 															gfx.loadpng(attractions.attraction[self.city.code][3])
+	-- Create the tour image
+--	self.tour_attraction_image = gfx.loadpng(attractions.attraction.paris[1].pic_url)
 
 	-- Create answer buttons
 	local button_1 = button(button_color, color_selected, color_disabled,true, true, "Correct")
@@ -56,10 +57,10 @@ print(self.city)
 
 	-- Create text on buttons
 	-- X and y values are not used!
-	button_1:set_textdata(self.attraction.answers[1], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
-	button_2:set_textdata(self.attraction.answers[2], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
-	button_3:set_textdata(self.attraction.answers[3], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
-	button_4:set_textdata(self.attraction.answers[4], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	button_1:set_textdata(attractions.attraction[self.city.code][attractionpoint].answers[1], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	button_2:set_textdata(attractions.attraction[self.city.code][attractionpoint].answers[2], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	button_3:set_textdata(attractions.attraction[self.city.code][attractionpoint].answers[3], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	button_4:set_textdata(attractions.attraction[self.city.code][attractionpoint].answers[4], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
 
 	local text_height = 75+25*table.getn(attractions.attraction[self.city.code][attractionpoint].text)
 	local indent = 55
@@ -92,6 +93,10 @@ print(self.city)
 			self:trigger("exit_view")
 		else
 			attractionpoint = attractionpoint + 1
+			button_1:set_textdata(attractions.attraction[self.city.code][attractionpoint].answers[1], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
+			button_2:set_textdata(attractions.attraction[self.city.code][attractionpoint].answers[2], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
+			button_3:set_textdata(attractions.attraction[self.city.code][attractionpoint].answers[3], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
+			button_4:set_textdata(attractions.attraction[self.city.code][attractionpoint].answers[4], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
 			self:render(surface)
 			gfx.update()
 		end
@@ -136,7 +141,7 @@ function CityTourView:render(surface)
 	end
 
 	-- Tour question
-	city_tour_text:draw(surface, {x = width/3+text_indent, y = (height+50+25*table.getn(attractions.attraction[self.city.code][attractionpoint].text))/2, width = 50, height = 50}, self.attraction.question)
+	city_tour_text:draw(surface, {x = width/3+text_indent, y = (height+50+25*table.getn(attractions.attraction[self.city.code][attractionpoint].text))/2, width = 50, height = 50}, attractions.attraction[self.city.code][attractionpoint].question)
 
 	--Render buttons
 	self.buttonGrid:render(surface)
