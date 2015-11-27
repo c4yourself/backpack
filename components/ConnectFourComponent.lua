@@ -33,6 +33,7 @@ end
 --- Responds differently depending on which key pressed on the remote control
 -- @param key, the key pressed on the remote control
 function ConnectFourComponent:press(key)
+	print("trycka knapp")
 	if key == "right" then
 		repeat
 			if self.current_column == 7 then
@@ -68,7 +69,6 @@ function ConnectFourComponent:press(key)
 		self.trigger("exit_view")
 	end
 
-	self:dirty(false)
 	self:dirty(true)
 end
 
@@ -108,6 +108,7 @@ end
 function ConnectFourComponent:render(surface)
 
 	self:dirty(false)
+	surface:fill({r = 0, g = 0, b = 0, a = 255})
 	--btn
 --[[	local button_color = color(0, 128, 225, 255)
 	local text_color = color(55, 55, 55, 255)
@@ -173,8 +174,8 @@ function ConnectFourComponent:render(surface)
 	surface:clear(coin_color_computer, {x=0.1*surface:get_width(), y=0.5*surface:get_height()+0.5*height_coinbox, width = width_coinbox, height = height_coinbox})
 
 	--insert picture over board
-	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect4board.png")),nil,{x=posx_constant, y=posy_constant})
-	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect4toprow.png")),nil,{x=posx_constant, y=0.1*surface:get_height() - 0.5*height_coinbox})
+	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect4board.png")),nil,{x=posx_constant, y=posy_constant, width = 7*width_coinbox, height = 6*height_coinbox})
+	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect4toprow.png")),nil,{x=posx_constant, y=0.1*surface:get_height() - 0.5*height_coinbox, width = 7*width_coinbox, height = height_coinbox})
 
 	--delays if it's the computers turn
 	if self.connectfour:get_player() == "O" then
