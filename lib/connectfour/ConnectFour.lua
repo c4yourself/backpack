@@ -10,11 +10,13 @@ local ConnectFour = class("ConnectFour")
 function ConnectFour:__init()
 
 	self.board = {{},{},{},{},{},{}}
+	--{{},{"X", "O", "X", "O", "X", "O"}, {"O", "X", "O","X", "O", "X", "O"},{"O", "X", "O", "X", "O", "X", "O"},{"X", "O", "X", "O", "X", "O", "X"},{"X", "O", "X", "O", "X", "O", "X"}}
 	self.player = "X"
 end
 
 --- Converts the board to a string
 -- @return output a string containing the board
+
 function ConnectFour:serialize()
 
 	local output = ""
@@ -347,15 +349,18 @@ function ConnectFour:computer_AI(x_column)
 		return make_move2
 	end ]]--
 
-
+repeat
 	if random_probability < 8 then
-		repeat
+
 			local random_close = math.random(-1, 1)
 			random_column = x_column + random_close
-		until self:is_valid_move("O", random_column)
+			print("random close column: " .. random_column)
+
 	elseif random_probability >= 8 then
 		random_column = math.random(1,7)
-	end 
+		print("random anywhere column: " .. random_column)
+	end
+	until self:is_valid_move("O", random_column)
 
 	return random_column
 

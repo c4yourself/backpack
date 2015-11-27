@@ -52,6 +52,7 @@ function ConnectFourComponent:press(key)
 		until self.connectfour:get_current_row(self.current_column) ~= 0
 
 	elseif key == "ok" then
+		print("ok, move")
 		self.connectfour:move(self.connectfour:get_player(), self.current_column)
 
 		self:stop_listening(event.remote_control)
@@ -199,6 +200,18 @@ function ConnectFourComponent:render(surface)
 		local callback = utils.partial(self.delay2, self, surface)
 		self.stop_timer = sys.new_timer(5000, callback)
 	end
+
+	if self.connectfour:get_player() == nil then
+
+					local no_winner_popup = subsurface(surface, area(100, 100, 400, 400))
+					local color_popup = color(243, 137, 15, 255)
+					local font_popup = font("data/fonts/DroidSans.ttf", 16, color(0,0,0,255))
+					no_winner_popup:clear(color_popup)
+
+					font_popup:draw(no_winner_popup, area(30,30,400,400), "The board is full no one won")
+					local callback = utils.partial(self.delay2, self, surface)
+					self.stop_timer = sys.new_timer(5000, callback)
+	end
 end
 
 ---Puts a delay on computers move to slow down the process
@@ -208,9 +221,15 @@ function ConnectFourComponent:delay(surface)
 	self.stop_timer:stop()
 
 	local AI_column = self.connectfour:computer_AI(self.current_column)
+	print("AI column component: " .. AI_column)
 	self.connectfour:move("O", AI_column)
+	print("made move AI")
 
 	repeat
+		if self.connectfour:get_player() == nil then
+			break
+
+		end
 		if self.connectfour:get_current_row(self.current_column) == 0 then
 			if self.current_column == 7 then
 				self.current_column = 1
