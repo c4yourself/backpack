@@ -12,6 +12,7 @@ local SubSurface = require("lib.view.SubSurface")
 local button= require("lib.components.Button")
 local button_grid	=	require("lib.components.ButtonGrid")
 local InputField	=	require("components.InputField")
+local BinaryButton	=	require("components.BinaryButton")
 local color = require("lib.draw.Color")
 local logger = require("lib.logger")
 local KeyboardComponent	=	require("components.KeyboardComponent")
@@ -25,7 +26,11 @@ function TestKeyboardView:__init(remote_control)
 	self.background_path = ""
 	input_field = InputField("Name:", {x = 700, y = 80}, true)
 	input_field2 = InputField("Mail:", {x = 700, y = 230}, false)
+	input_field3 = InputField("Age:", {x = 700, y = 380}, false)
+	binary_button = BinaryButton("Sex:", "female", "male", {x = 700, y = 530}, false)
 	self.active_field = input_field
+
+	self.background_color = {r=30, g=35, b=35}
 
 	self.render_ticket = false
 
@@ -49,7 +54,7 @@ function TestKeyboardView:__init(remote_control)
 	end
 	self:listen_to(self.keyboard, "exit", exit_keyboard_callback)
 
-	self.content_list = {input_field,input_field2}
+	self.content_list = {input_field,input_field2, input_field3, binary_button}
 	self.content_pointer = 1
 
 	self.callback = utils.partial(self.load_view, self)
@@ -63,8 +68,8 @@ end
 
 function TestKeyboardView:render(surface)
 	-- -- Resets the surface and draws the background
-	local background_color = {r=30, g=35, b=35}
-	surface:clear(background_color)
+
+	surface:clear(self.background_color)
 
 	if self.hasActiveKeyboard==true then
 		self.keyboard:render(screen)
@@ -73,6 +78,8 @@ function TestKeyboardView:render(surface)
 
 	input_field:render(surface)
 	input_field2:render(surface)
+	input_field3:render(surface)
+	binary_button:render(surface)
 	-- --surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/paris.png")))
 	--
 	-- local log_in_button = sys.new_freetype({r=23, g=155, b=23}, 30, {x=700+50,y=35}, utils.absolute_path("data/fonts/DroidSans.ttf"))
@@ -115,10 +122,14 @@ function TestKeyboardView:load_view(button)
 			end
 			self.content_list[self.content_pointer]:set_highlighted(true)
 		elseif button == "ok" then
-			self.render_ticket = true
-			self.active_field = self.content_list[self.content_pointer]
-			self.keyboard:new_input(self.active_field.text)
-			self.hasActiveKeyboard = true
+			if self.content_pointer == 1 or self.content_pointer == 2 or self.content_pointer == 3 then
+				self.render_ticket = true
+				self.active_field = self.content_list[self.content_pointer]
+				self.keyboard:new_input(self.active_field.text)
+				self.hasActiveKeyboard = true
+			elseif self.content_pointer == 4 then
+				self.content_list[self.content_pointer]:swap_value()
+			end
 		end
 		self:render(screen)
 		gfx.update()
