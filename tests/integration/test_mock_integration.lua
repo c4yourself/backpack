@@ -33,15 +33,13 @@ function TestMockIntegration:test_subsurface()
 
 
 	sub = SubSurface(surface, rect)
-	sub:clear(black, rect2)
+	sub:clear(black:to_table(), rect2)
 	luaunit.assertEquals(sub:get_width(), 200)
 	luaunit.assertEquals(sub:get_height(), 300)
 end
 
 function TestMockIntegration:test_something()
 	--local egypt = Country(Egypt, EGY, "%.2f ج.م", {Cairo = City("cairo", "Cairo", egypt, nil)}, 1)
-
-
 	local profile = Profile("John","John001@gmail.com","1991-01-03", "male", "london")
 
 	local city_view = CityView(event.remote_control, profile)

@@ -217,7 +217,7 @@ function MemoryView:render(surface)
     end
 --At this point, we should check the memory states and keep the card that are true in memory.states open
     if self:is_dirty() then
-        surface:clear(color)
+        surface:clear(color(0, 0, 0, 255):to_table())
         -- Add the number of turns
         local turns_text = Font("data/fonts/DroidSans.ttf", 30, self.text_color)
         local turns = Font("data/fonts/DroidSans.ttf", 30, self.text_color)

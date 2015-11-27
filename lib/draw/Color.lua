@@ -6,6 +6,10 @@ local utils = require("lib.utils")
 
 local bitlib = require("lib.bit")
 
+local function is_integer(number)
+	return number == math.floor(number)
+end
+
 local Color = class("Color")
 
 Color.default_red = 0
@@ -19,7 +23,8 @@ Color.default_alpha = 255
 -- @param blue Amount of blue (0-255)
 -- @param alpha Amount of alpha (0-255)
 function Color:__init(red, green, blue, alpha)
-	-- Perform sanity checks for all given values
+	-- Perform sanity checks for all given values. This is done before merging
+	-- with default values to prevent boolean false from being accepted as nil
 	if red ~= nil and type(red) ~= "number" then
 		error("Invalid format for red, expected number or nil got " .. type(red))
 	end
@@ -36,11 +41,35 @@ function Color:__init(red, green, blue, alpha)
 		error("Invalid format for alpha, expected number or nil got " .. type(alpha))
 	end
 
-	--
-	self.red = red or self.default_red
-	self.green = green or self.default_green
-	self.blue = blue or self.default_blue
-	self.alpha = alpha or self.default_alpha
+	-- Add default values
+	red = red or self.default_red
+	green = green or self.default_green
+	blue = blue or self.default_blue
+	alpha = alpha or self.default_alpha
+
+	-- Verify that provided colors are with range and integers
+	if red < 0 or red > 255 or not is_integer(red) then
+		error("Red is not an integer between 0 and 255")
+	end
+
+	if green < 0 or green > 255 or not is_integer(green) then
+		error("Red is not an integer between 0 and 255")
+	end
+
+	if blue < 0 or blue > 255 or not is_integer(blue) then
+		error("Blue is not an integer between 0 and 255")
+	end
+
+	if alpha < 0 or alpha > 255 or not is_integer(alpha) then
+		error("Alpha is not an integer between 0 and 255")
+	end
+
+	-- Add colors to self after validation to prevent being in an invalid state
+	self.red = red
+	self.green = green
+	self.blue = blue
+	self.alpha = alpha
+
 end
 
 function Color:__eq(other)
