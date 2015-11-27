@@ -18,7 +18,7 @@ local cities = {
 		name = "New York",
 		position = {x = 349/1280, y = 194/720}
 	},
-	rio = {
+	rio_de_janeiro = {
 		name = "Rio de Janeiro",
 		position = {x = 477/1280, y = 403/720}
 	},
@@ -71,7 +71,7 @@ function WorldMap:__init(origin, destination, method, view_manager)
 			"data/images/" .. self.method .. ({left = "1", right = "2"})[direction] .. ".png")
 	}
 
-	self._step_count = 13
+	self._step_count = 50
 	self._step_index = 0
 end
 
@@ -83,8 +83,8 @@ function WorldMap:start()
 			self.timer:stop()
 
 			-- TODO: Fix this to use profile instead
-			self.view_manager:set_view(
-				CityView(event.remote_control, Profile("Andreas", nil, nil, nil, self.destination.code)))
+			--self.view_manager:set_view(
+			--	CityView(event.remote_control, Profile("Andreas", nil, nil, nil, self.destination.code)))
 		end
 
 		self:dirty()

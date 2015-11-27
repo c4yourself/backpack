@@ -15,6 +15,7 @@ local utils = require("lib.utils")
 local event = require("lib.event")
 local Font = require("lib.draw.Font")
 local Color = require("lib.draw.Color")
+local logger = require("lib.logger")
 
 --- Constructor for ButtonGrid
 function ButtonGrid:__init(remote_control)
@@ -53,6 +54,7 @@ end
 
 -- Starts the buttongrids listener
 function ButtonGrid:focus()
+	logger.debug(string.format("i focus"))
 	self:listen_to(
 	self.event_listener,
 	"button_press",
@@ -62,6 +64,7 @@ end
 
 -- Stops the buttongrids listener
 function ButtonGrid:blur()
+	logger.debug(string.format("i blur"))
 	self:stop_listening()
 end
 
@@ -79,13 +82,8 @@ function ButtonGrid:add_button(position, button_size, button)
 		 and position.y >= 0 and button_size.height >= 0
 		 and position.y + button_size.height < 720	then
 -- if ok, insert each button to the button_list
-	 table.insert(self.button_list,
-	 {button = button,
-	 x = position.x,
-	 y = position.y,
-	 width = button_size.width,
-	 height = button_size.height
-	 })
+	self:add_view(button)
+	table.insert(self.button_list, {button = button, x = position.x, y = position.y, width = button_size.width, height = button_size.height })
 
 	else
 		error("screen boundary error")
@@ -104,6 +102,7 @@ function ButtonGrid:insert_button(position, button_size, button, index)
 		 and position.x + button_size.width < 1280
 		 and position.y >= 0 and button_size.height >= 0
 		 and position.y + button_size.height < 720	then
+			 self:add_view(button)
 			 table.insert(self.button_list, index,
 			 {button = button,
 			 x = position.x,

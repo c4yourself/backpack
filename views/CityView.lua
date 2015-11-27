@@ -48,23 +48,15 @@ function CityView:__init(profile, remote_control)
 	local button_1 = Button(button_color, color_selected, color_disabled,true,true,"views.MultipleChoiceView")
 	local button_2 = Button(button_color, color_selected, color_disabled,true,false, "views.NumericalQuizView")
 	local button_3 = Button(button_color, color_selected, color_disabled,true,false, "views.MemoryView")
-	local button_4 = Button(button_color, color_selected, color_disabled,true,false)
+	local button_4 = Button(button_color, color_selected, color_disabled,true,false, "components.ConnectFourComponent")
 	local button_5 = Button(button_color, color_selected, color_disabled,true,false, "views.Store")
 	local button_6 = Button(button_color, color_selected, color_disabled,true,false)
 	local button_7 = Button(button_color, color_selected, color_disabled,true,false, "views.TravelView")
 	local button_8 = Button(button_color, color_selected, color_disabled,true,false)
 	local city_tour_button = Button(city_view_color, city_view_selected_color, color_disabled, true, false, "views.CityTourView")
 
-	city_tour_button:add_icon(
-		"data/images/"..self.profile.city .. "Icon.png",
-		"data/images/"..self.profile.city.."IconSelected.png",
-		0, 0, width * 2 / 3, height * 0.85)
 
-	--button_1:set_textdata("Numerical quiz",text_color,{x=100,y=300},16,utils.absolute_path("data/fonts/DroidSans.ttf"))
-	--button_2:set_textdata("Multiple choice question",text_color,{x=200,y=300},16,utils.absolute_path("data/fonts/DroidSans.ttf"))
-	-- button_1:set_textdata("Numerical quiz",text_color,{x=100,y=300},16,utils.absolute_path("data/fonts/DroidSans.ttf"))
-	-- button_2:set_textdata("Multiple choice question",text_color,{x=200,y=300},16,utils.absolute_path("data/fonts/DroidSans.ttf"))
-	-- button_3:set_textdata("Memory",text_color,{x=100,y=400},16,utils.absolute_path("data/fonts/DroidSans.ttf"))
+
 
 	-- Define each button's posotion and size
 	local button_size = {width = 4*width/45, height = 4*width/45}
@@ -78,6 +70,13 @@ function CityView:__init(profile, remote_control)
 	local position_8 = {x = 8*width/45, y = 5*width/45+(height-50)/2+100}
 	local city_tour_position = {x = width/3, y = 50}
 	local city_tour_size = {width = 2*width/3-1, height = height-51}
+
+	-- Add icon for city tour button
+	city_tour_button:add_icon(
+		"data/images/"..self.profile.city .. "Icon.png",
+		"data/images/"..self.profile.city.."IconSelected.png",
+		0, 0, city_tour_size.width, city_tour_size.height)
+
 
 	-- Using the button grid to create buttons
 	self.button_grid:add_button(position_1, button_size, button_1)
@@ -111,6 +110,12 @@ function CityView:__init(profile, remote_control)
 		)
 
 		self:listen_to_once(one_instance,"exit_view", exit_view)
+
+			self:listen_to(
+				one_instance,
+				"dirty",
+				utils.partial(one_instance.render, one_instance, subsurface)
+			)
 		-- local CT = CityTourView(remote_control, city_tour_view)
 		-- self.button_grid:stop_listening(self.buttonGrid.event_listener,
 		--  													"button_press",
@@ -137,10 +142,9 @@ function CityView:__init(profile, remote_control)
 
 	-- Preload images for increased performance
 	self.images = {
-		paris = gfx.loadpng("data/images/"..self.profile.city..".png"),
+		background = gfx.loadpng("data/images/"..self.profile.city..".png"),
 		coin = gfx.loadpng("data/images/coinIcon.png"),
 
-		paris_selected = gfx.loadpng("data/images/"..self.profile.city.."IconSelected.png"),
 		math_icon = gfx.loadpng("data/images/MathIcon.png"),
 		flight_icon = gfx.loadpng("data/images/FlightIcon.png"),
 		exit_icon = gfx.loadpng("data/images/ExitIcon.png"),
@@ -153,7 +157,6 @@ function CityView:__init(profile, remote_control)
 
 	-- Premultiple images with transparency to make them render properly
 	self.images.coin:premultiply()
-	self.images.paris_selected:premultiply()
 	self.images.math_icon:premultiply()
 	self.images.flight_icon:premultiply()
 	self.images.flight_icon:premultiply()
@@ -187,7 +190,7 @@ function CityView:render(surface)
 
 	surface:clear(background_color)
 
-	surface:copyfrom(self.images.paris, nil, nil, false)
+	surface:copyfrom(self.images.background, nil, {x = 0, y = 50, width = width, height = height-51}, false)
 
 	--creates some colors
 	local text_color = Color(0, 0, 0,255)
@@ -198,15 +201,15 @@ function CityView:render(surface)
 	local experience_bar_color = Color(100, 100, 100, 255)
 
 	-- Shows menu bar
-	surface:fill(menu_bar_color, {width=width/3, height=height-50, x=0, y=50})
+	surface:fill(menu_bar_color:to_table(), {width=width/3, height=height-50, x=0, y=50})
 	city_view_large_font:draw(surface, {x=width/6-65, y=60}, "Mini Games")
 	city_view_large_font:draw(surface, {x=width/6-45, y=(height-50)/2+60}, "Options")
 
 	-- Implement status bar
-	surface:fill(status_bar_color, {width=width, height=50, x=0, y=0})
-	surface:fill(score_text_color, {width=150, height=30, x=285,y=10})
+	surface:fill(status_bar_color:to_table(), {width=width, height=50, x=0, y=0})
+	surface:fill(score_text_color:to_table(), {width=150, height=30, x=285,y=10})
 	if self.profile.experience / 500 ~= 1 then
-		surface:fill(experience_bar_color, {width=math.ceil(148*(1-self.profile.experience/500)), height=28, x=434-148*(1-self.profile.experience/500), y=11})
+		surface:fill(experience_bar_color:to_table(), {width=math.ceil(148*(1-self.profile.experience/500)), height=28, x=434-148*(1-self.profile.experience/500), y=11})
 	end
 
 	-- Add info to statusbar
@@ -214,7 +217,7 @@ function CityView:render(surface)
 	city_view_small_font:draw(surface, {x=200, y=15}, "Level: 3") -- Profile level
 	city_view_small_font:draw(surface, {x=440, y=15}, tostring(self.profile.experience .. "/500")) -- Profile experience
 	city_view_small_font:draw(surface, {x=width-100, y=15}, city.country:format_balance(
-		city.country:universal_to_local_currency(self.profile.balance))) -- Profile cash
+	city.country:universal_to_local_currency(self.profile.balance))) -- Profile cash
 	city_view_large_font:draw(surface, {x=width/2, y=15}, self.profile:get_city().name, center) -- City name
 
 	surface:copyfrom(self.images.coin, nil, {x = width-145, y = 10, width = 30, height = 30}) -- Coin
@@ -223,14 +226,15 @@ function CityView:render(surface)
 	self.button_grid:render(surface)
 
 	--surface:copyfrom(self.images.paris_selected, nil, {x = width/3, y = 0, width=width*2/3, height=height})
-	surface:copyfrom(self.images.multiple_choice_icon, nil, {x = self.button_grid.button_list[1].x, y = self.button_grid.button_list[1].y, width = self.button_grid.button_list[1].width, height = self.button_grid.button_list[1].height})
-	surface:copyfrom(self.images.math_icon, nil, {x = self.button_grid.button_list[2].x, y = self.button_grid.button_list[2].y, width = self.button_grid.button_list[1].width, height = self.button_grid.button_list[1].height})
-	surface:copyfrom(self.images.memory_icon, nil, {x = self.button_grid.button_list[3].x, y = self.button_grid.button_list[3].y, width = self.button_grid.button_list[1].width, height = self.button_grid.button_list[1].height})
-	surface:copyfrom(self.images.four_in_a_row_icon, nil, {x = self.button_grid.button_list[4].x, y = self.button_grid.button_list[4].y, width = self.button_grid.button_list[1].width, height = self.button_grid.button_list[1].height})
-	surface:copyfrom(self.images.store_icon, nil, {x = self.button_grid.button_list[5].x, y = self.button_grid.button_list[5].y, width = self.button_grid.button_list[1].width, height = self.button_grid.button_list[1].height})
-	surface:copyfrom(self.images.user_icon, nil, {x = self.button_grid.button_list[6].x, y = self.button_grid.button_list[6].y, width = self.button_grid.button_list[1].width, height = self.button_grid.button_list[1].height})
-	surface:copyfrom(self.images.flight_icon, nil, {x = self.button_grid.button_list[7].x, y = self.button_grid.button_list[7].y, width = self.button_grid.button_list[1].width, height = self.button_grid.button_list[1].height})
-	surface:copyfrom(self.images.exit_icon, nil, {x = self.button_grid.button_list[8].x, y = self.button_grid.button_list[8].y, width = self.button_grid.button_list[1].width, height = self.button_grid.button_list[1].height})
+	local icon_indent = 3
+	surface:copyfrom(self.images.multiple_choice_icon, nil, {x = self.button_grid.button_list[1].x + icon_indent, y = self.button_grid.button_list[1].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent})
+	surface:copyfrom(self.images.math_icon, nil, {x = self.button_grid.button_list[2].x + icon_indent, y = self.button_grid.button_list[2].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent})
+	surface:copyfrom(self.images.memory_icon, nil, {x = self.button_grid.button_list[3].x + icon_indent, y = self.button_grid.button_list[3].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent})
+	surface:copyfrom(self.images.four_in_a_row_icon, nil, {x = self.button_grid.button_list[4].x + icon_indent, y = self.button_grid.button_list[4].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent})
+	surface:copyfrom(self.images.store_icon, nil, {x = self.button_grid.button_list[5].x + icon_indent, y = self.button_grid.button_list[5].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent})
+	surface:copyfrom(self.images.user_icon, nil, {x = self.button_grid.button_list[6].x + icon_indent, y = self.button_grid.button_list[6].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent})
+	surface:copyfrom(self.images.flight_icon, nil, {x = self.button_grid.button_list[7].x + icon_indent, y = self.button_grid.button_list[7].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent})
+	surface:copyfrom(self.images.exit_icon, nil, {x = self.button_grid.button_list[8].x + icon_indent, y = self.button_grid.button_list[8].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent})
 
 	self:dirty(false)
 end
