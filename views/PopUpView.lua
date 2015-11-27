@@ -1,9 +1,7 @@
-
 local class = require("lib.classy")
 local View = require("lib.view.View")
 local view = require("lib.view")
 local event = require("lib.event")
-local surface = require("emulator.surface")
 local SubSurface = require("lib.view.SubSurface")
 local utils = require("lib.utils")
 local button_grid	=	require("lib.components.ButtonGrid")
@@ -18,6 +16,7 @@ local PopUp = class("PopUp",View)
 function PopUp:__init(remote_control,surface, type, message)
 	View:__init(self)
 	self.popup_button_grid = button_grid(remote_control)
+	self:add_view(self.popup_button_grid)
 
 	self.width = screen:get_width() * 0.5
 	self.height = screen:get_height() * 0.5
@@ -58,25 +57,41 @@ function PopUp:__init(remote_control,surface, type, message)
 		gfx.update()
 	end
 
+	local button_click = function(button)
+		if button.transfer_path == "button_confirmation" then
+			self:trigger("exit_view")
+		else
+			self:trigger("destroy")
+		end
+
+
+	end
+
 	--might be a problem with this?
 	self:listen_to(
 		self.popup_button_grid,
 		"dirty",
 		button_callback
 		)
+
+	self:listen_to(
+			self.popup_button_grid,
+			"button_click",
+			button_click
+	)
 end
 
 
 function PopUp:_create_message_buttons()
-	button_ok = Button(self.button_color,self.color_selected,self.color_disabled,true,true)
+	button_ok = Button(self.button_color,self.color_selected,self.color_disabled,true,true, "button_ok")
 	button_ok:set_textdata("Ok",self.color_selected, {x=200, y=200},16, utils.absolute_path("data/fonts/DroidSans.ttf"))
 	self.popup_button_grid:add_button({x = self.width*0.4, y = self.height*0.7}, self.button_size, button_ok)
 end
 
 
 function PopUp:_create_confirmation_buttons()
-	local button_confirmation = Button(self.button_color,self.color_selected,self.color_disabled,true,true)
-	local button_cancel = Button(self.button_color,self.color_selected,self.color_disabled,true,false)
+	local button_confirmation = Button(self.button_color,self.color_selected,self.color_disabled,true,true, "button_confirmation")
+	local button_cancel = Button(self.button_color,self.color_selected,self.color_disabled,true,false, "button_cancel")
 	button_confirmation:set_textdata("Confirm",self.color_selected, {x=200, y=200},16, utils.absolute_path("data/fonts/DroidSans.ttf"))
 	button_cancel:set_textdata("Cancel",self.color_selected, {x=200, y=200},16, utils.absolute_path("data/fonts/DroidSans.ttf"))
 
@@ -132,7 +147,7 @@ end
 
 function PopUp:load_view(button)
 
-	if button == 4 then
+	if button == "back" then
 	self:trigger("exit_view")
 		--Stop listening to everything
 		-- TODO
@@ -140,5 +155,10 @@ function PopUp:load_view(button)
 
 	end
 end
+
+-- function PopUp:destroy()
+-- 	view.View.destroy(self)
+-- 	--self.tour_attraction_image:destroy()
+-- end
 
 return PopUp
