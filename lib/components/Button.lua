@@ -9,7 +9,7 @@ local Button = class("Button", View)
 --@param color The color of button which is neither disabled nor selected
 --@param color_selected The color for a selected button
 --@param color_disabled The color for a disabled button
---@param enaled The button is enabled or not when instantiating
+--@param enabled The button is enabled or not when instantiating
 --@param selected The button is selected or not when instantiating
 --@param transfer_path The path for the view after the button is clicked
 -- function Button:__init(color, color_selected, color_disabled, enabled, selected, transfer_path)
