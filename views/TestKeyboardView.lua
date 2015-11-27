@@ -40,9 +40,12 @@ function TestKeyboardView:__init(remote_control)
 	self:listen_to(self.keyboard, "update", update_string_callback)
 
 	local exit_keyboard_callback = function()
-		hasActiveKeyboard = false
+		self.hasActiveKeyboard = false
 		self.keyboard:set_active(false)
-		self.active_field:render(screen)
+		surface:destroy(self.keyboard)
+		--self.active_field:render(screen)
+		self:render(screen)
+		gfx.update()
 	end
 	self:listen_to(self.keyboard, "exit", exit_keyboard_callback)
 
@@ -105,10 +108,16 @@ function TestKeyboardView:load_view(button)
 	else
 		if button == "down" then
 			self.content_list[self.content_pointer]:set_highlighted(false)
-			self.content_pointer = self.content_pointer + 1
+			if self.content_pointer + 1 > #self.content_list then
+				self.content_pointer = 1
+			else
+				self.content_pointer = self.content_pointer + 1
+			end
 			self.content_list[self.content_pointer]:set_highlighted(true)
 		elseif button == "ok" then
 			self.render_ticket = true
+			self.active_field = self.content_list[self.content_pointer]
+			self.keyboard:new_input(self.active_field.text)
 			self.hasActiveKeyboard = true
 		end
 		self:render(screen)

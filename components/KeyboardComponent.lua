@@ -110,8 +110,8 @@ function KeyboardComponent:get_string()
 	return self.input_string
 end
 
-function KeyboardComponent:new_input()
-	self.input_string = ""
+function KeyboardComponent:new_input(text)
+	self.input_string = text
 end
 
 function KeyboardComponent:button_press(button)
@@ -153,7 +153,18 @@ function KeyboardComponent:button_press(button)
 		gfx.update()
 	elseif button == "ok" then
 		logger:trace("you have choosen:" .. self:get_marked_letter())
-		self.input_string = self.input_string .. self:get_marked_letter()
+		if self:get_marked_letter()=="OK" then
+			--Return to prev. No keyboard active
+			self:trigger("exit")
+		elseif self:get_marked_letter() == "<-" then
+			--Remove latest
+			self.input_string = string.sub(self.input_string, 1, #self.input_string-1)
+		elseif self:get_marked_letter() == "[X]" then
+			self.input_string = ""
+		else
+			self.input_string = self.input_string .. self:get_marked_letter()
+		end
+
 		self:trigger("update")
 		-- logger:trace("your string is:" .. self.input_string)
 		-- self:trigger("character_input")
