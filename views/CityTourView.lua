@@ -149,7 +149,10 @@ end
 
 function CityTourView:destroy()
 	view.View.destroy(self)
-	self.tour_attraction_image:destroy()
+	
+	for k,v in pairs(self.tour_attraction_images) do
+		self.tour_attraction_images[k]:destroy()
+		end
 end
 
 function CityTourView:load_view(button)

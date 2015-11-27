@@ -13,6 +13,9 @@ local utils = require("lib.utils")
 local event = require("lib.event")
 local Font = require("lib.draw.Font")
 local Color = require("lib.draw.Color")
+local view = require("lib.view")
+
+local logger = require("lib.logger")
 
 --- Constructor for MemoryGrid
 function MemoryGrid:__init(remote_control)
@@ -33,6 +36,7 @@ function MemoryGrid:add_button(position, button_size, button)
 		 and position.y >= 0 and button_size.height >= 0
 		 and position.y + button_size.height < 720	then
 	-- if ok, insert button to the button_list
+		self:add_view(button)
 		table.insert(self.button_list,
 			{button = button,
 			x = position.x,
@@ -40,16 +44,17 @@ function MemoryGrid:add_button(position, button_size, button)
 	 		width = button_size.width,
 	 		height = button_size.height
 	 		})
-		local callback = utils.partial(self.trigger, self, "dirty")
+		local button_callback = utils.partial(self.trigger, self, "dirty")
 	 	self:listen_to(
 	 		button,
 			"dirty",
-			callback
+			button_callback
 	 	)
 	else
 		error("screen boundary error")
 	end
 end
+
 
 --- Display text for each button/card on the surface
 -- @param button_index To indicate which button's text shall be displayed
@@ -64,11 +69,11 @@ function MemoryGrid:display_text(surface, button_index)
 															width = self.button_list[button_index].width, height = self.button_list[button_index].height}, button_data.text, "center", "middle")
 	end
 
-function MemoryGrid:display_next_view(transfer_path)
- 	local view_import = require(transfer_path)
- 	local view_instance = view_import()
- 	view.view_manager:set_view(view_instance)
-end
+-- function MemoryGrid:display_next_view(transfer_path)
+--  	local view_import = require(transfer_path)
+--  	local view_instance = view_import()
+--  	view.view_manager:set_view(view_instance)
+-- end
 
 --- When "down" is pressed, the indicator shall follow the down-direction
 -- @param button_indicator The current indicator that points to the selected button
@@ -329,20 +334,21 @@ end
 
 function MemoryGrid:press(button)
 	if button == "down" then
+		logger.debug(string.format("i press"))
 		self:indicate_downward(self.button_indicator)
-		--self:trigger("dirty")
+		self:dirty(true)
 		self:trigger("navigation")
 	elseif button == "up" then
 		self:indicate_upward(self.button_indicator)
-		--self:trigger("dirty")
+		self:dirty(true)
 		self:trigger("navigation")
 	elseif button == "right" then
 		self:indicate_rightward(self.button_indicator)
-		--self:trigger("dirty")
+		self:dirty(true)
 		self:trigger("navigation")
 	elseif button == "left" then
 		self:indicate_leftward(self.button_indicator, "left")
-		--self:trigger("dirty")
+		self:dirty(true)
 		self:trigger("navigation")
 	end
 
@@ -385,6 +391,7 @@ function MemoryGrid:render(surface)
 		}
 
 		local sub_surface = SubSurface(surface,area)
+
 			button_data.button:render(sub_surface)
 			if button_data.button.text_available then
 				self:display_text(surface, i)
