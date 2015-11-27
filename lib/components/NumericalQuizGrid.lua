@@ -19,12 +19,12 @@ function NumericalQuizGrid:__init(remote_control)
 	self.back_button = nil
 	self.next_button = nil
 
-	local callback = utils.partial(self.release, self)
+	--[[local callback = utils.partial(self.press, self)
 	self:listen_to(
 	self.event_listener,
-	"button_release",
+	"button_press",
 	callback
-	)
+	)]]
 
 end
 
@@ -76,6 +76,14 @@ function NumericalQuizGrid:press(button)
 			self:indicate_leftward(self.button_indicator, "left")
 			self:_check_for_input_component(self.button_indicator)
 			self:trigger("dirty")
+		elseif button == "ok" then
+			if self.button_indicator == self.num_input_comp then
+				self:trigger("submit")
+			elseif self.button_indicator == self.back_button then
+				self:trigger("back")
+			elseif self.button_indicator == self.next_button then
+				self:trigger("next")
+			end
 		end
 	end
 end

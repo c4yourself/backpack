@@ -45,8 +45,8 @@ function CityView:__init(profile, remote_control)
 	local width = screen:get_width()
 
 	-- Add buttons
-	local button_1 = Button(button_color, color_selected, color_disabled,true,true,"views.NumericalQuizView")
-	local button_2 = Button(button_color, color_selected, color_disabled,true,false, "views.MultipleChoiceView")
+	local button_1 = Button(button_color, color_selected, color_disabled,true,true,"views.MultipleChoiceView")
+	local button_2 = Button(button_color, color_selected, color_disabled,true,false, "views.NumericalQuizView")
 	local button_3 = Button(button_color, color_selected, color_disabled,true,false, "views.MemoryView")
 	local button_4 = Button(button_color, color_selected, color_disabled,true,false)
 	local button_5 = Button(button_color, color_selected, color_disabled,true,false, "views.Store")
@@ -95,6 +95,7 @@ function CityView:__init(profile, remote_control)
 		local make_instance = self.button_grid:display_next_view(button.transfer_path)
 		local one_instance = make_instance(remote_control, subsurface, self.profile)
 		self.button_grid:stop_listening(self.button_grid.event_listener,"button_press",callback)
+		self.button_grid:blur()
 		one_instance:render(subsurface)
 
 		local exit_view = function()
@@ -102,6 +103,12 @@ function CityView:__init(profile, remote_control)
 				one_instance:destroy()
 				self:dirty(true)
 		end
+
+		self:listen_to(
+			one_instance,
+			"dirty",
+			utils.partial(one_instance.render, one_instance, subsurface)
+		)
 
 		self:listen_to_once(one_instance,"exit_view", exit_view)
 		-- local CT = CityTourView(remote_control, city_tour_view)
@@ -237,7 +244,7 @@ function CityView:destroy()
 end
 
 function CityView:load_view(button)
-	if button == "1" then
+	--[[if button == "1" then
 		--Instanciate a numerical quiz
 		local numerical_quiz_view = NumericalQuizView()
 		--Stop listening to everything
@@ -316,7 +323,7 @@ function CityView:load_view(button)
 		end
 
 		self:listen_to_once(CT,"exit_view", exit_view)
-	end
+	end]]
 end
 
 return CityView
