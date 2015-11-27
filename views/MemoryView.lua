@@ -289,12 +289,10 @@ function MemoryView:back_to_city()
     end
 
     local destroy_pop = function()
-      self.button_grid:focus()
       popup_view:destroy()
+      self.button_grid:focus()
       self:dirty(true)
-      --self:render(self.surface)
       gfx.update()
-      print("I destory pop")
     end
 
     self:listen_to_once(popup_view,"exit_view",exit_view_func)

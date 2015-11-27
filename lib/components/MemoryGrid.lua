@@ -53,15 +53,18 @@ function MemoryGrid:add_button(position, button_size, button)
 	end
 end
 
-function ButtonGrid:focus()
+function MemoryGrid:focus()
+	print("i focus")
 	self:listen_to(
 	self.event_listener,
 	"button_press",
 	self.callback
 	)
+	
 end
 
-function ButtonGrid:blur()
+function MemoryGrid:blur()
+	print("i blur")
 	self:stop_listening()
 end
 
