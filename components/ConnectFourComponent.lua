@@ -1,5 +1,6 @@
 ---Connect Four GUI
 --@classmod ConnectFourComponent
+--Remove prints from this file
 
 local class = require("lib.classy")
 local ConnectFour = require("lib.connectfour.ConnectFour")
