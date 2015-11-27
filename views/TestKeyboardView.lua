@@ -63,7 +63,7 @@ end
 
 function TestKeyboardView:render(surface)
 	-- -- Resets the surface and draws the background
-	local background_color = {r=47, g=123, b=145}
+	local background_color = {r=30, g=35, b=35}
 	surface:clear(background_color)
 
 	if self.hasActiveKeyboard==true then

@@ -2,6 +2,7 @@ local utils = require("lib.utils")
 local event = require("lib.event")
 local class = require("lib.classy")
 local View = require("lib.view.View")
+local Font = require("lib.draw.Font")
 local view = require("lib.view")
 local logger = require("lib.logger")
 local button = require("lib.components.Button")
@@ -26,22 +27,25 @@ function KeyboardComponent:__init(remote_control)
   --"www.jochentopf.com/email/chars.html"
 
 	self.input_string = ""
-	self.letters={"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","x","y","z","@","-","_",".","1","2","3","4","5","6","7","8","9","0","<-","[X]","OK"}
+	self.lower_case={"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","x","y","z","@","-","_",".","1","2","3","4","5","6","7","8","9","0","<-","ABC","OK"}
+	self.upper_case={"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","X","Y","Z","@","-","_",".","1","2","3","4","5","6","7","8","9","0","<-","abc","OK"}
+
+	self.letters =self.lower_case
+
 	mx = 0
 	my = 0
 
 	self.x_pointer = 0
 	self.y_pointer = 0
 
+	self.font_key = Font("data/fonts/DroidSans.ttf", 32, color(255, 255, 255, 255))
+
 	self.button_size= {width=90,height=70}
 	self.button_padding = 10
 	self.nbr_of_buttons = {x=6, y=7}
 
 	self.button_start_location = {left=((screen:get_width()/2)-(self.nbr_of_buttons["x"]*(self.button_size["width"]+self.button_padding)))/2, top=100}
-	self.marker = SubSurface(surface,{width=600,
-																		height=100,
-																		x=(self.button_start_location["left"]+((self.button_size["width"]+self.button_padding)*mx)),
-																		y=(self.button_start_location["top"]+((self.button_size["height"]+self.button_padding)*my))})
+
 
 	--self.buttonGrid = button_grid()
 	for i=1, self.nbr_of_buttons["x"]*self.nbr_of_buttons["y"] do
@@ -78,10 +82,10 @@ function KeyboardComponent:render(surface)
 	my = 0
 
 	for i=1, self.nbr_of_buttons["x"]*self.nbr_of_buttons["y"] do
-		local spoc = sys.new_freetype({r=255, g=255, b=255}, 32,
-		{x=(self.button_start_location["left"]+((self.button_size["width"]+self.button_padding)*mx))+self.button_size["height"]/2,
-		y=(self.button_start_location["top"]+((self.button_size["height"]+self.button_padding)*my))+self.button_size["height"]/4},
-		utils.absolute_path("data/fonts/DroidSans.ttf"))
+		-- local spoc = sys.new_freetype({r=255, g=255, b=255}, 32,
+		-- {x=(self.button_start_location["left"]+((self.button_size["width"]+self.button_padding)*mx))+self.button_size["height"]/2,
+		-- y=(self.button_start_location["top"]+((self.button_size["height"]+self.button_padding)*my))+self.button_size["height"]/4},
+		-- utils.absolute_path("data/fonts/DroidSans.ttf"))
 
 		if self.x_pointer==mx and self.y_pointer==my then
 			self.marker = SubSurface(surface,{width=self.button_size["width"],
@@ -91,8 +95,10 @@ function KeyboardComponent:render(surface)
 		self.marker:clear({r=250, g=105, b=0})
 		end
 
+		--spoc:draw_over_surface(screen, tostring(self.letters[i]))
+		self.font_key:draw(surface, {x=(self.button_start_location["left"]+((self.button_size["width"]+self.button_padding)*mx+35)),
+		y=(self.button_start_location["top"]+((self.button_size["height"]+self.button_padding)*my+16))}, self.letters[i])
 
-		spoc:draw_over_surface(screen, tostring(self.letters[i]))
 
 		mx = mx+1
 		if (i%self.nbr_of_buttons["x"]==0) then
@@ -111,6 +117,8 @@ function KeyboardComponent:get_string()
 end
 
 function KeyboardComponent:new_input(text)
+	self.x_pointer = 0
+	self.y_pointer = 0
 	self.input_string = text
 end
 
@@ -159,8 +167,14 @@ function KeyboardComponent:button_press(button)
 		elseif self:get_marked_letter() == "<-" then
 			--Remove latest
 			self.input_string = string.sub(self.input_string, 1, #self.input_string-1)
-		elseif self:get_marked_letter() == "[X]" then
-			self.input_string = ""
+		elseif self:get_marked_letter() == "ABC" then
+			self.letters= self.upper_case
+			self:render(self.surface)
+			gfx.update()
+		elseif self:get_marked_letter() == "abc" then
+			self.letters= self.lower_case
+			self:render(self.surface)
+			gfx.update()
 		else
 			self.input_string = self.input_string .. self:get_marked_letter()
 		end
