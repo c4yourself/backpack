@@ -22,6 +22,7 @@ function InputField:__init(name, position, highlighted)
   self.text = ""
   self.name = name
   self.position = position
+	self.private = false
 end
 
 -- TODO, remove text_position
@@ -41,6 +42,10 @@ function InputField:set_highlighted(status)
 	self.highlighted = status
 end
 
+function InputField:set_private(status)
+	self.private = status
+end
+
 function InputField:render(surface)
 	self:dirty(false)
 	--= sys.new_freetype({r=255, g=255, b=255}, 30, {x=self.position["x"],y=self.position["y"]-40}, utils.absolute_path("data/fonts/DroidSans.ttf"))
@@ -54,7 +59,16 @@ function InputField:render(surface)
 
   --local input_field_text = sys.new_freetype({r=23, g=155, b=23}, 40, {x=self.position["x"]+20,y=self.position["y"]+20}, utils.absolute_path("data/fonts/DroidSans.ttf"))
   --input_field_text:draw_over_surface(surface, self.text)
-	self.font_text:draw(surface, {x=self.position["x"]+20,y=self.position["y"]+20}, self.text)
+	if not self.private then
+		self.font_text:draw(surface, {x=self.position["x"]+20,y=self.position["y"]+20}, self.text)
+	else
+		password_dummie = ""
+		for i=1,#self.text do
+			password_dummie = password_dummie .. "-"
+		end
+		self.font_text:draw(surface, {x=self.position["x"]+20,y=self.position["y"]+20}, password_dummie)
+		logger:trace(self.text)
+	end
   gfx.update()
 end
 
