@@ -42,6 +42,17 @@ function ProfileView:__init(remote_control, surface, profile)
 	self.item_images = {}
 	self.message = {["message"] = "Select item to purchase or sell"}
 
+	-- Get correct profile picture
+	if profile:get_sex() == "male" or profile:get_sex() == "Male" or
+		 profile:get_sex() == "m" or profile:get_sex() == "M" then
+		self.profile_picture = gfx.loadpng("data/images/male_player.png")
+	elseif profile:get_sex() == "female" or profile:get_sex() == "Female" or
+		 profile:get_sex() == "f" or profile:get_sex() == "F" then
+		self.profile_picture = gfx.loadpng("data/images/female_player.png")
+	else
+		self.profile_picture = gfx.loadpng("data/images/female_player.png")
+	end
+
 	-- Some colors
 	self.background_color = Color(255, 255, 255, 255)
 	self.button_active = Color(255, 51, 51, 255)
@@ -53,6 +64,7 @@ function ProfileView:__init(remote_control, surface, profile)
 
 	-- Get the profiles backpack items
 	self.backpack_items = self.backendstore:returnBackPackItems(self.profile:get_inventory())
+
 
 	-- Create the number of buttons that correspond to items in backpack
 	self.button_size = {width = 2.5*width/45, height = 2.5*width/45}
@@ -79,13 +91,10 @@ function ProfileView:__init(remote_control, surface, profile)
 	j = 1
 	own_items = 0
 	while j <= get_size(self.backpack_items) do
-		self.item_positions[j+1] = {x = width/2-100+((j-1)-2*(row-1))*130+own_items*185,
-																y = 30 + 105*(row-1-0.8*own_items) + own_items*205}
+		self.item_positions[j+1] = {x = width/2+20+((j-1)-2*(row-1))*130,
+																y = 280}
 		self.button_grid:add_button(self.item_positions[j+1], self.button_size, self.buttons[j+1])
 		j = j+1
-		if (j-1) % 2 == 0 then
-			row = row + 1
-		end
 	end
 
 	-- Create list of item images
@@ -94,8 +103,6 @@ function ProfileView:__init(remote_control, surface, profile)
 	-- Add to view
 	self.add_view(self.button_grid, false)
 
-	-- Some fix for movement
-	--self:listen_to(event.remote_control, "button_release", function() self:dirty() end)
 	local button_render = function()
 		self:render(self.surface)
 		gfx.update()
@@ -124,6 +131,7 @@ function ProfileView:__init(remote_control, surface, profile)
 
 	-- Instance remote control and mapps it to pressing enter
 	self:listen_to(self.button_grid,"button_click",	button_callback)
+	self.item_images = self:loadItemImages()
 
 end
 
@@ -138,7 +146,7 @@ function ProfileView:loadItemImages()
 		end
 	end
 
-
+	print(j)
 	return ret_list
 
 end
@@ -155,13 +163,12 @@ function ProfileView:render(surface)
 		-- Resets the surface and draws the background
 	surface:clear(self.background_color:to_table())
 
-	--surface:copyfrom(self.backpack, nil, {x=3*width/4, y = 50}, true)
+	surface:copyfrom(self.backpack, nil, {x=2*width/3, y = 50}, true)
 
 	-- Print the buttons
-	--self.button_grid:render(surface)
+	self.button_grid:render(surface)
 
 	-- Print the items
-	--[[
 	for i = 1, #self.item_images do
 		surface:copyfrom(self.item_images[i], nil, self.item_positions[i+1], true)
 	end
@@ -169,9 +176,30 @@ function ProfileView:render(surface)
 	--Draw header
 	self.header_font:draw(surface, {x=10,y=10}, "Your profile")
 
-	self.font:draw(surface, {x=10,y=40}, "Name: ")
-	self.font:draw(surface, {x=50, y = 40}, self.profile:get_name())
-	]]
+	-- Draw the profile picture
+	surface:copyfrom(self.profile_picture, nil, {x = 10, y = 64}, true)
+
+	-- Draw profile info
+	self.font:draw(surface, {x=10,y=350}, "Name: ")
+	self.font:draw(surface, {x=180, y = 350}, self.profile:get_name())
+	self.font:draw(surface, {x=10,y=400}, "Birthday: ")
+	self.font:draw(surface, {x=180, y = 400}, tostring(self.profile:get_date_of_birth()))
+	self.font:draw(surface, {x=10,y=450}, "Experience: ")
+	self.font:draw(surface, {x=180, y = 450}, tostring(self.profile:get_experience()))
+
+	--Draw Inventory header
+	self.header_font:draw(surface, {x=2*width/3-200,y = 200}, "Inventory")
+
+	-- Draw the info of the selected item
+	local sel_index = self.button_grid:get_selected()
+	if sel_index == 1 then
+
+	else
+		local item_selected = self.backpack_items[sel_index-1]
+		self.font:draw(surface, {x = width/2+20, y = 400}, "Item name: ")
+		self.font:draw(surface, {x = width/2+210, y = 400}, item_selected:get_name())
+	end
+
 end
 
 
