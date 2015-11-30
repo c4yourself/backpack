@@ -1,6 +1,6 @@
 ---Connect Four GUI
 --@classmod ConnectFourComponent
---Remove prints from this file
+
 
 local class = require("lib.classy")
 local ConnectFour = require("lib.connectfour.ConnectFour")
@@ -14,6 +14,7 @@ local color = require("lib.draw.Color")
 local button = require("lib.components.Button")
 local button_grid	=	require("lib.components.ButtonGrid")
 local PopUpView = require("views.PopUpView")
+local ExpCalc = require("lib.scores.experiencecalculation")
 
 
 local ConnectFourComponent = class("ConnectFourComponent", View)
@@ -36,7 +37,7 @@ end
 --- Responds differently depending on which key pressed on the remote control
 -- @param key, the key pressed on the remote control
 function ConnectFourComponent:press(key)
-	print("trycka knapp")
+
 	if key == "right" then
 		repeat
 			if self.current_column == 7 then
@@ -56,7 +57,7 @@ function ConnectFourComponent:press(key)
 		until self.connectfour:get_current_row(self.current_column) ~= 0
 		self:dirty()
 	elseif key == "ok" then
-		print("ok, move")
+
 		self.connectfour:move(self.connectfour:get_player(), self.current_column)
 
 		self:stop_listening(event.remote_control)
@@ -191,9 +192,9 @@ function ConnectFourComponent:render(surface)
 
 	--Back to city button
 	local f = font("data/fonts/DroidSans.ttf", 16, color(255, 128, 0, 255))
-	local target1 = area(0.05*surface:get_width(),0.9*surface:get_height()-1.5*height_coinbox, 200, 60)
+	local target1 = area(0.05*surface:get_width(),0.9*surface:get_height()-1.5*height_coinbox, 300, 60)
 	surface:clear(color(255, 255, 255, 255):to_table(), target1:to_table())
-	f:draw(surface, target1:to_table(), "Back to the city", "center", "middle")
+	f:draw(surface, target1:to_table(), "Back to City View, press Return", "center", "middle")
 
 	--heading
 	local heading = font("data/fonts/DroidSans.ttf", 32, color(255, 128, 0, 255))
@@ -204,13 +205,13 @@ function ConnectFourComponent:render(surface)
 	local text_player = font("data/fonts/DroidSans.ttf", 22, color(255, 255, 51, 255))
 	local target3 = area(0.05*surface:get_width(),0.5*surface:get_height()-2*height_coinbox, 200, 60)
 	text_player:draw(surface, target3:to_table(), "Player")
-		surface:clear(coin_color_player, {x=0.1*surface:get_width(), y=0.5*surface:get_height()-1.5*height_coinbox, width = width_coinbox, height = height_coinbox})
+		surface:clear(coin_color_player, {x=0.055*surface:get_width(), y=0.5*surface:get_height()-1.5*height_coinbox, width = width_coinbox, height = height_coinbox})
 
 	--text compunter + red box
 	local text_computer = font("data/fonts/DroidSans.ttf", 22, color(255, 0, 0, 255))
 	local target4 = area(0.05*surface:get_width(),0.5*surface:get_height()+0.1*height_coinbox, 200, 60)
 	text_computer:draw(surface, target4:to_table(), "Computer")
-	surface:clear(coin_color_computer, {x=0.1*surface:get_width(), y=0.5*surface:get_height()+0.5*height_coinbox, width = width_coinbox, height = height_coinbox})
+	surface:clear(coin_color_computer, {x=0.055*surface:get_width(), y=0.5*surface:get_height()+0.5*height_coinbox+8, width = width_coinbox, height = height_coinbox})
 
 	--insert picture over board
 	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect4board.png")),nil,{x=posx_constant, y=posy_constant, width = 7*width_coinbox, height = 6*height_coinbox})
@@ -226,8 +227,23 @@ function ConnectFourComponent:render(surface)
 
 
 	if self.connectfour:get_winner() ~= nil then
+		self.winner_delay = sys.new_timer(2500, function()
+			local winner = self.connectfour:get_winner()
+			if winner == "X" then
+				winner_message = "Congratulations, you won!"
+				local count_x = self.connectfour:get_number_of_coins()
+				ExpCalc.Calculation(count_x, "Connectfour")
+
+			elseif winner == "O" then
+				winner_message = "Sorry, you lost!"
+			end
+
+			self:delay2(confirmation, winner_message)
+			self.computer_delay:stop()
+		end)
+		self.winner_delay:start()
 		--TODO change to pop_up
-		local winner_popup = subsurface(surface, area(100, 100, 400, 400))
+	--[[	local winner_popup = subsurface(surface, area(100, 100, 400, 400))
 		local color_popup = color(243, 137, 15, 255)
 		local font_popup = font("data/fonts/DroidSans.ttf", 16, color(0,0,0,255))
 		local winner = self.connectfour:get_winner()
@@ -241,19 +257,24 @@ function ConnectFourComponent:render(surface)
 		font_popup:draw(winner_popup, area(30,30,400,400), winner_message)
 
 		local callback = utils.partial(self.delay2, self, surface)
-		self.stop_timer = sys.new_timer(5000, callback)
+		self.stop_timer = sys.new_timer(5000, callback) ]]--
 	end
 
 	if self.connectfour:get_player() == nil then
+		self.no_winner_delay = sys.new_timer(2500, function()
+			self:delay2(confirmation, "The board is full, no one won. Return to city view")
+			self.computer_delay:stop()
+		end)
+		self.no_winner_delay:start()
 
-					local no_winner_popup = subsurface(surface, area(100, 100, 400, 400))
+			--[[		local no_winner_popup = subsurface(surface, area(100, 100, 400, 400))
 					local color_popup = color(243, 137, 15, 255)
 					local font_popup = font("data/fonts/DroidSans.ttf", 16, color(0,0,0,255))
 					no_winner_popup:clear(color_popup)
 
 					font_popup:draw(no_winner_popup, area(30,30,400,400), "The board is full no one won")
 					local callback = utils.partial(self.delay2, self, surface)
-					self.stop_timer = sys.new_timer(5000, callback)
+					self.stop_timer = sys.new_timer(5000, callback) ]]--
 	end
 
 	self:dirty(false)
@@ -266,9 +287,9 @@ function ConnectFourComponent:delay()
 --	self.stop_timer:stop()
 
 	local AI_column = self.connectfour:computer_AI(self.current_column)
-	print("AI column component: " .. AI_column)
+
 	self.connectfour:move("O", AI_column)
-	print("made move AI")
+
 
 	repeat
 		if self.connectfour:get_player() == nil then
@@ -295,9 +316,9 @@ end
 
 ---Delays the winner pop-up after the game have finished
 -- @param surface
-function ConnectFourComponent:delay2(surface)
-	self.stop_timer:stop()
-	self.trigger("exit_view")
+function ConnectFourComponent:delay2(type, message)
+	--self.stop_timer:stop()
+	self:trigger("exit_view")
 end
 
 --[[	repeat
