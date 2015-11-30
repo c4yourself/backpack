@@ -35,6 +35,7 @@ function ProfileView:__init(remote_control, surface, profile)
 	self.current_city = profile:get_city().name
 	self.button_grid = ButtonGrid(remote_control)
 	self.backpack = gfx.loadpng("data/images/backpack.png")
+	self.room = gfx.loadpng("data/images/hotel_room.png")
 	self.backendstore = BackEndStore()
 	self.profile = profile
 	self.remote_control = remote_control
@@ -56,11 +57,14 @@ function ProfileView:__init(remote_control, surface, profile)
 	-- Some colors
 	self.background_color = Color(255, 255, 255, 255)
 	self.button_active = Color(255, 51, 51, 255)
-	self.button_inactive = Color(255, 153, 153, 255)
+	self.button_inactive = Color(255,255,255,0)
+	self.exit_inactive = Color(255, 153, 153, 255)
 
 	-- Creates local variables for height and width
 	local height = self.surface:get_height()
 	local width = self.surface:get_width()
+	--print("The height is: "..height.." and the width is: "..width)
+	-- 1152, 603, 829
 
 	-- Get the profiles backpack items
 	self.backpack_items = self.backendstore:returnBackPackItems(self.profile:get_inventory())
@@ -70,10 +74,10 @@ function ProfileView:__init(remote_control, surface, profile)
 	self.button_size = {width = 2.5*width/45, height = 2.5*width/45}
 
 	self.buttons = {}
-	self.buttons[1] = Button(self.background_color, self.button_active, self.background_color, true, true, 1)
+	self.buttons[1] = Button(self.exit_inactive, self.button_active, self.exit_inactive, true, true, 1)
 	k = 1
 	while k <= get_size(self.backpack_items) do
-			self.buttons[k+1] = Button(self.background_color, self.button_active, self.background_color, true, false,k+1)
+			self.buttons[k+1] = Button(self.button_inactive, self.button_active, self.button_inactive, true, false,k+1)
 			k = k + 1
 	end
 
@@ -85,14 +89,16 @@ function ProfileView:__init(remote_control, surface, profile)
 	-- Add them to button grid at the correct place
 
 	-- Add exit button
-	self.button_grid:add_button({x = width/6,y = height-60}, {width = 6*width/45,height = 2*width/45}, self.buttons[1])
+	self.button_grid:add_button({x = 162-3*width/45,y = height-60}, {width = 6*width/45,height = 2*width/45}, self.buttons[1])
 
 	row = 1
 	j = 1
 	own_items = 0
 	while j <= get_size(self.backpack_items) do
-		self.item_positions[j+1] = {x = width/2+20+((j-1)-2*(row-1))*130,
-																y = 280}
+		self.item_positions[j+1] = {x = 10+(j-1)*(self.button_size.width+15),
+																y = 295}
+		--[[self.item_positions[j+1] = {x = width/2+20+((j-1)-2*(row-1))*130,
+																y = 320}]]
 		self.button_grid:add_button(self.item_positions[j+1], self.button_size, self.buttons[j+1])
 		j = j+1
 	end
@@ -146,7 +152,6 @@ function ProfileView:loadItemImages()
 		end
 	end
 
-	print(j)
 	return ret_list
 
 end
@@ -163,7 +168,8 @@ function ProfileView:render(surface)
 		-- Resets the surface and draws the background
 	surface:clear(self.background_color:to_table())
 
-	surface:copyfrom(self.backpack, nil, {x=2*width/3, y = 50}, true)
+	surface:copyfrom(self.room, nil, {x=324, y = 0}, true)
+	surface:copyfrom(self.backpack, nil, {x=2*width/3, y = height - 300}, true)
 
 	-- Print the buttons
 	self.button_grid:render(surface)
@@ -177,18 +183,18 @@ function ProfileView:render(surface)
 	self.header_font:draw(surface, {x=10,y=10}, "Your profile")
 
 	-- Draw the profile picture
-	surface:copyfrom(self.profile_picture, nil, {x = 10, y = 64}, true)
+	surface:copyfrom(self.profile_picture, nil, {x = 524, y = height-330}, true)
 
 	-- Draw profile info
-	self.font:draw(surface, {x=10,y=350}, "Name: ")
-	self.font:draw(surface, {x=180, y = 350}, self.profile:get_name())
-	self.font:draw(surface, {x=10,y=400}, "Birthday: ")
-	self.font:draw(surface, {x=180, y = 400}, tostring(self.profile:get_date_of_birth()))
-	self.font:draw(surface, {x=10,y=450}, "Experience: ")
-	self.font:draw(surface, {x=180, y = 450}, tostring(self.profile:get_experience()))
+	self.font:draw(surface, {x=10,y=70}, "Name: ")
+	self.font:draw(surface, {x=180, y = 70}, self.profile:get_name())
+	self.font:draw(surface, {x=10,y=105}, "Birthday: ")
+	self.font:draw(surface, {x=180, y = 105}, tostring(self.profile:get_date_of_birth()))
+	self.font:draw(surface, {x=10,y=140}, "Experience: ")
+	self.font:draw(surface, {x=180, y = 140}, tostring(self.profile:get_experience()))
 
 	--Draw Inventory header
-	self.header_font:draw(surface, {x=2*width/3-200,y = 200}, "Inventory")
+	self.header_font:draw(surface, {x=10,y = 230}, "Inventory")
 
 	-- Draw the info of the selected item
 	local sel_index = self.button_grid:get_selected()
@@ -196,8 +202,10 @@ function ProfileView:render(surface)
 
 	else
 		local item_selected = self.backpack_items[sel_index-1]
-		self.font:draw(surface, {x = width/2+20, y = 400}, "Item name: ")
-		self.font:draw(surface, {x = width/2+210, y = 400}, item_selected:get_name())
+		self.font:draw(surface, {x = 10, y = 380}, "Item name: ")
+		self.font:draw(surface, {x = 180, y = 380}, item_selected:get_name())
+		self.font:draw(surface, {x=10, y = 415}, "Description: ")
+		self.font:draw(surface, {x = 180, y = 415}, item_selected:get_description())
 	end
 
 end
