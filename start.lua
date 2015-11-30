@@ -33,7 +33,7 @@ function onKey(key, state)
 
 	-- Terminate program when exit key is pressed
 	if key == "exit" and state == "up" then
-	--	sys.stop()
+		sys.stop()
 	end
 end
 

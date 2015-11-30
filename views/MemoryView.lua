@@ -19,6 +19,7 @@ local Profile = require("lib.profile.Profile")
 local Font = require("lib.draw.Font")
 local PopUpView = require("views.PopUpView")
 local SubSurface = require("lib.view.SubSurface")
+local ExperienceCalculation = require("lib.scores.experiencecalculation")
 
 function MemoryView:__init(remote_control, surface, profile)
     View.__init(self)
@@ -209,6 +210,12 @@ function MemoryView:_determine_new_state()
             self.memory:open(card_index)
             self.button_grid:set_card_status(card_index, "FACING_UP")
             self.memory:is_finished()
+            if self.memory.finished == true then
+              local counter  = {self.memory.moves, self.memory.pairs}
+              local experience = ExperienceCalculation.Calculation(counter, "Memory")
+              self.profile:modify_balance(experience)
+              self.profile:modify_experience(experience)
+            end
             self:dirty(true)
         end
     end
@@ -269,11 +276,8 @@ function MemoryView:back_to_city()
     -- Trigger exit event
     local type = "confirmation"
     --local message = {"Hej hopp"}
-<<<<<<< HEAD
     local message =  {"Are you sure you want to exit?"}
-=======
-    local message =  {"Are you sure you want to exit?","Really sure?"}
->>>>>>> 7ed538b67badac523d092e0c05cd89a67df3012a
+
 
     local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
     --local pop_instance = self.button_grid:display_next_view(self.button_1.transfer_path)

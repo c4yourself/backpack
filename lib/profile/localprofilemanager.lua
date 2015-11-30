@@ -28,7 +28,7 @@ function localprofilemanager:save(profile)
 	file:write("\t\t\"name\": \"" .. profile:get_name() .. "\",\n")
 	file:write("\t\t\"password\": \"" .. profile:get_password() .. "\",\n")
 	file:write("\t\t\"sex\": \"" .. profile:get_sex() .. "\",\n")
-	file:write("\t\t\"city\": \"" .. profile:get_current_city() .. "\",\n")
+	file:write("\t\t\"city\": \"" .. profile:get_city() .. "\",\n")
 	file:write("}\n")
 	file:close()
 
@@ -129,7 +129,7 @@ function localprofilemanager:load(profile_email)
 		profile_tmp = Profile(name,email_address,date_of_birth,sex,city)
 		profile_tmp:set_balance(balance)
 		profile_tmp:set_experience(experience)
-		profile_tmp:set_inventory(inventory)
+		--profile_tmp:set_inventory(inventory)
 		profile_tmp:set_id(id)
 		io.close()
 
@@ -143,12 +143,17 @@ end
 -- @return profiles representing the list of profile instance
 -- @return false representing the dir is illegal
 function localprofilemanager:get_profileslist()
+	local profilename_list = {}
 	local profile_list = {}
 	local path = utils.absolute_path("data/profile/profile.config")
 	for line in io.lines(path) do
-		table.insert(profile_list,line)
+		table.insert(profilename_list,line)
 	end
 	io.close()
+	for i = 1, #profilename_list, 1 do
+		profile_list[i] = self:load(profilename_list[i])
+		print("localprofiles--- " .. profile_list[i]:get_name())
+	end
 	return profile_list
 end
 
