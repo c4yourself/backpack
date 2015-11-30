@@ -18,6 +18,7 @@ local Button = require("lib.components.Button")
 local MultipleChoiceGrid = require("lib.components.MultipleChoiceGrid")
 local NumericalQuizGrid = require("lib.components.NumericalQuizGrid")
 local ToggleButton = require("lib.components.ToggleButton")
+local ExperienceCalculation = require("lib.scores.experiencecalculation")
 
 --- Constructor for MultipleChoiceView
 function MultipleChoiceView:__init(remote_control, subsurface, profile)
@@ -35,7 +36,7 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 	-- Logic
 	-- Associate a quiz instance with the MultipleChoiceView
 	self.mult_choice_quiz = Quiz()
-	self.quiz_size = 2
+	self.quiz_size = 3
 	self.mult_choice_quiz:generate_citytour_quiz(self.profile:get_current_city(),self.quiz_size,1)
 	self.current_question = 1
 	self.correct_answer_number = 0
@@ -195,12 +196,12 @@ end
 
 ---Triggered everytime the user presses the next button
 function MultipleChoiceView:_next()
-	if end_flag ~= 1 then
+	if self.end_flag ~= 1 then
 		-- Next question is displayed
 		-- Make sure there are questions left to display
 		self.current_question = self.current_question + 1
 		if self.current_question > self.quiz_size then
-			end_flag = 1
+			self.end_flag = 1
 			self.quiz_state = "DONE"
 		else
 			self.quiz_state = "IDLE"
@@ -208,6 +209,7 @@ function MultipleChoiceView:_next()
 		self:dirty(true)
 	elseif self.end_flag == 1 then
 		-- Quiz is finished. Set up for a final result screen
+
 		self.quiz_state = "DONE"
 		self:dirty(true)
 	end
@@ -216,6 +218,12 @@ end
 ---Triggered everytime the user presses the back to city button
 function MultipleChoiceView:_exit()
 	--TODO add popup
+	if self.end_flag == 1 then
+		local counter  = self.correct_answer_number
+		local experience = ExperienceCalculation.Calculation(counter, "Multiplechoice")
+		self.profile:modify_balance(experience)
+		self.profile:modify_experience(experience)
+	end
 	self:trigger("exit_view", self.profile)
 end
 
@@ -338,6 +346,7 @@ function MultipleChoiceView:render(surface)
 		self.progress_counter_area:clear(self.progress_counter_color:to_table())
 		local current_question = self.current_question
 		local quiz_length = #self.mult_choice_quiz.questions
+		local current_question = math.min(current_question, quiz_length)
 		self.font:draw(self.progress_counter_area,
 									{x = 0, y = 0, height = self.counter_height,
 									width = self.counter_width},

@@ -130,9 +130,6 @@ function TravelView:_travel(button)
 	if button == "ok" then
 		self:stop_listening(event.remote_control)
 
-		local city_view_copy = require("views.CityViewCopy")
-		cvc = city_view_copy(event.remote_control)
-
 		--local wm = WorldMap()
 		local index
 
