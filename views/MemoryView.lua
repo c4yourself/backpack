@@ -19,6 +19,7 @@ local Profile = require("lib.profile.Profile")
 local Font = require("lib.draw.Font")
 local PopUpView = require("views.PopUpView")
 local SubSurface = require("lib.view.SubSurface")
+local ExperienceCalculation = require("lib.scores.experiencecalculation")
 
 function MemoryView:__init(remote_control, surface, profile)
     View.__init(self)
@@ -209,6 +210,12 @@ function MemoryView:_determine_new_state()
             self.memory:open(card_index)
             self.button_grid:set_card_status(card_index, "FACING_UP")
             self.memory:is_finished()
+            if self.memory.finished == true then
+              local counter  = {self.memory.moves, self.memory.pairs}
+              local experience = ExperienceCalculation.Calculation(counter, "Memory")
+              self.profile:modify_balance(experience)
+              self.profile:modify_experience(experience)
+            end
             self:dirty(true)
         end
     end
