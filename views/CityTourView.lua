@@ -37,9 +37,12 @@ function CityTourView:__init(remote_control, surface, profile)
 
 	-- Create the tour images
 	self.tour_attraction_images = {}
+
 	for k,v in pairs(attractions.attraction[self.city.code]) do
 		table.insert(self.tour_attraction_images, gfx.loadpng(attractions.attraction[self.city.code][k].pic_url))
 	end
+
+
 	-- = {gfx.loadpng(attractions.attraction[self.city.code][1].pic_url),
 	-- 															gfx.loadpng(attractions.attraction[self.city.code][2].pic_url]),
 	-- 															gfx.loadpng(attractions.attraction[self.city.code][3])
@@ -54,10 +57,10 @@ function CityTourView:__init(remote_control, surface, profile)
 
 	-- Create text on buttons
 	-- X and y values are not used!
-	button_1:set_textdata(attractions.attraction.paris[attractionpoint].answers[1], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
-	button_2:set_textdata(attractions.attraction.paris[attractionpoint].answers[2], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
-	button_3:set_textdata(attractions.attraction.paris[attractionpoint].answers[3], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
-	button_4:set_textdata(attractions.attraction.paris[attractionpoint].answers[4], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	button_1:set_textdata(attractions.attraction[self.city.code][attractionpoint].answers[1], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	button_2:set_textdata(attractions.attraction[self.city.code][attractionpoint].answers[2], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	button_3:set_textdata(attractions.attraction[self.city.code][attractionpoint].answers[3], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	button_4:set_textdata(attractions.attraction[self.city.code][attractionpoint].answers[4], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
 
 	local text_height = 75+25*table.getn(attractions.attraction[self.city.code][attractionpoint].text)
 	local indent = 55
@@ -90,10 +93,10 @@ function CityTourView:__init(remote_control, surface, profile)
 			self:trigger("exit_view")
 		else
 			attractionpoint = attractionpoint + 1
-			button_1:set_textdata(attractions.attraction.paris[attractionpoint].answers[1], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
-			button_2:set_textdata(attractions.attraction.paris[attractionpoint].answers[2], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
-			button_3:set_textdata(attractions.attraction.paris[attractionpoint].answers[3], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
-			button_4:set_textdata(attractions.attraction.paris[attractionpoint].answers[4], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
+			button_1:set_textdata(attractions.attraction[self.city.code][attractionpoint].answers[1], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
+			button_2:set_textdata(attractions.attraction[self.city.code][attractionpoint].answers[2], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
+			button_3:set_textdata(attractions.attraction[self.city.code][attractionpoint].answers[3], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
+			button_4:set_textdata(attractions.attraction[self.city.code][attractionpoint].answers[4], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
 			self:render(surface)
 			gfx.update()
 		end
@@ -146,7 +149,10 @@ end
 
 function CityTourView:destroy()
 	view.View.destroy(self)
-	self.tour_attraction_image:destroy()
+	
+	for k,v in pairs(self.tour_attraction_images) do
+		self.tour_attraction_images[k]:destroy()
+		end
 end
 
 function CityTourView:load_view(button)

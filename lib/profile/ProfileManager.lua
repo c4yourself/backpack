@@ -80,14 +80,14 @@ end
 -- @param email_address representing the email_address of the user
 -- @return profile representing the profile instance get from local based the city and email_address
 -- @return false representing now profile in local with such city and email_address
-function ProfileManager:load(city,email_address)
-	profile = localprofilemanager:load(city,email_address)
+function ProfileManager:load(email_address)
+	profile = localprofilemanager:load(email_address)
 
 	--check the city and email right or not
 	if profile ~= false then
 		return profile
 	else
-		return false, "Wrong about city and email_address"
+		return false, "Wrong about email_address"
 	end
 end
 

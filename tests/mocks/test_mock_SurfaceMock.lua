@@ -44,10 +44,8 @@ function TestSurfaceMock:test_clear()
 		width = 500,
 		height = 500
 	}
-	local col1 = Color(50, 50, 50, 50)
-	local col2 = Color(0, 0, 0, 0)
 
-	self.surface_mock:clear(col1, rect)
+	self.surface_mock:clear(Color(50, 50, 50, 50):to_table(), rect)
 	luaunit.assertEquals(self.surface_mock:get_pixel(0, 0), {r = 50, g = 50, b = 50, a = 50})
 	luaunit.assertEquals(self.surface_mock:get_pixel(500, 500), {r = 0, g = 0, b = 0, a = 0})
 	luaunit.assertEquals(self.surface_mock:get_pixel(0, 499), {r = 50, g = 50, b = 50, a = 50})

@@ -60,6 +60,16 @@ end
 function TestColor:test_to_table()
 	luaunit.assertEquals(draw.Color():to_table(), {0, 0, 0, 255})
 	luaunit.assertEquals(draw.Color(1, 2, 3, 4):to_table(), {1, 2, 3, 4})
+
+	luaunit.assertEquals(draw.Color(1, 2, 3, 4):to_table("index"), {1, 2, 3, 4})
+	luaunit.assertEquals(draw.Color(1, 2, 3, 4):to_table("short"), {r = 1, g = 2, b = 3, a = 4})
+end
+
+function TestColor:test_invalid_arguments()
+	luaunit.assertError(draw.Color, {1, 2, 3, 4})
+	luaunit.assertError(draw.Color, 256)
+	luaunit.assertError(draw.Color, -1)
+	luaunit.assertError(draw.Color, 3.14)
 end
 
 return TestColor

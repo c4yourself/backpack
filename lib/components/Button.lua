@@ -9,7 +9,7 @@ local Button = class("Button", View)
 --@param color The color of button which is neither disabled nor selected
 --@param color_selected The color for a selected button
 --@param color_disabled The color for a disabled button
---@param enaled The button is enabled or not when instantiating
+--@param enabled The button is enabled or not when instantiating
 --@param selected The button is selected or not when instantiating
 --@param transfer_path The path for the view after the button is clicked
 -- function Button:__init(color, color_selected, color_disabled, enabled, selected, transfer_path)
@@ -39,6 +39,10 @@ function Button:__init(color, color_selected, color_disabled, enabled, selected,
 	if transfer_path ~= nil then
 		self.transfer_path = transfer_path
 	end
+end
+
+function Button:set_transfer_path(transfer_path)
+	self.transfer_path = transfer_path
 end
 
 function Button:add_icon(icon_normal, icon_selected, icon_x, icon_y, icon_width, icon_height)

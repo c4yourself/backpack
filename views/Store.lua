@@ -46,9 +46,9 @@ function Store:__init(remote_control, surface, profile)
 
 
 	-- Some colors
-	self.background_color = Color{255, 255, 204, 255}
-	self.button_active = Color{255, 51, 51, 255}
-	self.button_inactive = Color{255, 153, 153, 255}
+	self.background_color = Color(255, 255, 204, 255)
+	self.button_active = Color(255, 51, 51, 255)
+	self.button_inactive = Color(255, 153, 153, 255)
 
 	-- Creates local variables for height and width
 	local height = self.surface:get_height()
@@ -148,9 +148,6 @@ function Store:__init(remote_control, surface, profile)
 	end
 
 	-- Instance remote control and mapps it to pressing enter
-	self.callback = utils.partial(self.action_made, self)
-	self:listen_to(event.remote_control,"button_release",self.callback)
-
 	self:listen_to(self.button_grid,"button_click",	button_callback)
 
 
@@ -230,7 +227,7 @@ function Store:render(surface)
 	local width = self.surface:get_width()
 
 		-- Resets the surface and draws the background
-	surface:clear(self.background_color)
+	surface:clear(self.background_color:to_table())
 	surface:copyfrom(self.cashier, nil, {x = 0, y = 100}, true)
 	surface:copyfrom(self.shelf, nil, {x=width/2-250,y=20}, true)
 	surface:copyfrom(self.backpack, nil, {x=width/2-100, y = 350}, true)
@@ -358,43 +355,6 @@ function Store:sell_item(item_index)
 	self:dirty(false)
 
 	return "Item sold"
-end
-
--- The function that decides what happends when the "ok" button is pressed
--- @param button The button that has been pressed
-function Store:action_made(button)
-
-	-- If the player has presseed enter a choice has been made
-	if button == "ok" then
-		--
-		-- -- Get the current index of button that is selected
-		-- selected_index = self.button_grid:get_selected()
-		--
-		-- -- If we have selected on of the purchasable items
-		-- if selected_index <= get_size(self.items) then
-		--
-		-- 	self.message["message"] = self:purchase_item(selected_index)
-		--
-		-- -- Elseif we have sold one of our items
-		-- elseif selected_index <= (get_size(self.items) + get_size(self.backpack_items)) then
-		--
-		-- 	self.message["message"] = self:sell_item(selected_index-get_size(self.items))
-		-- end
-		-- Otherwise we've exited
-	elseif button =="back" then
-
-		--self:trigger("exit_view")
-			--self:destroy()
-			--sys.stop()
-
-
-
-	end
-
-	-- Reload the relevant images after an action is made
-
-
-
 end
 
 -- Function to destory images
