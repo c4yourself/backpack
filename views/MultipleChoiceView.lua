@@ -171,17 +171,18 @@ function MultipleChoiceView:_submit()
 				table.insert(self.answer, self.user_input[j])
 			end
 			--self.answer[j] = tonumber(string.sub(self.user_input,j,j))
+		--self.mult_choice_quiz.current_question = self.mult_choice_quiz.current_question + 1
 		end
 		if self.mult_choice_quiz.questions[self.current_question]:is_correct(self.answer) == true then
 			self.correct_answer_number = self.correct_answer_number + 1
 			self.result_string = "Correct! You've answered "
 			.. self.correct_answer_number .. " questions correctly this far."
-			self.progress_table[self.mult_choice_quiz.current_question] = true
+			self.progress_table[self.current_question] = true
 			self.last_check = self.last_check + 1
 		else
 			self.result_string = "Wrong. You've answered "
 			.. self.correct_answer_number .. " questions correctly this far."
-			self.progress_table[self.mult_choice_quiz.current_question] = false
+			self.progress_table[self.current_question] = false
 			self.last_check=self.last_check + 1
 		end
 		self.quiz_state = "DISPLAY_RESULT"
