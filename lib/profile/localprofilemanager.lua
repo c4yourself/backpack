@@ -18,7 +18,7 @@ function localprofilemanager:save(profile)
 	--generate a file and write date into it
 	file:write("{\n")
 	file:write("\t\t\"badges\": " .. profile:get_badges_string() .. ",\n")
-	file:write("\t\t\"balance\": " .. profile:get_balance() .. ",\n")
+	file:write("\t\t\"balance\": " .. profile:get_experience() .. ",\n")
 	file:write("\t\t\"date_of_birth\": \"" .. profile:get_date_of_birth() .. "\",\n")
 	file:write("\t\t\"email_address\": \"" .. profile:get_email_address() .. "\",\n")
 	file:write("\t\t\"experience\": " .. profile:get_experience() .. ",\n")
