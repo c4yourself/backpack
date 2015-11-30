@@ -348,6 +348,11 @@ function ConnectFour:computer_AI(x_column)
 		print("tre i rad")
 		return make_move2
 	end ]]--
+
+	if self:get_player() ~= "O" then
+		error("Computer AI called when player turn")
+	end
+
 	local counter = 0
 repeat
 	if random_probability < 8 then
