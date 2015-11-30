@@ -28,7 +28,7 @@ function localprofilemanager:save(profile)
 	file:write("\t\t\"name\": \"" .. profile:get_name() .. "\",\n")
 	file:write("\t\t\"password\": \"" .. profile:get_password() .. "\",\n")
 	file:write("\t\t\"sex\": \"" .. profile:get_sex() .. "\",\n")
-	file:write("\t\t\"city\": \"" .. profile:get_current_city() .. "\",\n")
+	file:write("\t\t\"city\": \"" .. profile:get_city() .. "\",\n")
 	file:write("}\n")
 	file:close()
 
