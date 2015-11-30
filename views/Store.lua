@@ -148,9 +148,6 @@ function Store:__init(remote_control, surface, profile)
 	end
 
 	-- Instance remote control and mapps it to pressing enter
-	self.callback = utils.partial(self.action_made, self)
-	self:listen_to(event.remote_control,"button_release",self.callback)
-
 	self:listen_to(self.button_grid,"button_click",	button_callback)
 
 
@@ -358,43 +355,6 @@ function Store:sell_item(item_index)
 	self:dirty(false)
 
 	return "Item sold"
-end
-
--- The function that decides what happends when the "ok" button is pressed
--- @param button The button that has been pressed
-function Store:action_made(button)
-
-	-- If the player has presseed enter a choice has been made
-	if button == "ok" then
-		--
-		-- -- Get the current index of button that is selected
-		-- selected_index = self.button_grid:get_selected()
-		--
-		-- -- If we have selected on of the purchasable items
-		-- if selected_index <= get_size(self.items) then
-		--
-		-- 	self.message["message"] = self:purchase_item(selected_index)
-		--
-		-- -- Elseif we have sold one of our items
-		-- elseif selected_index <= (get_size(self.items) + get_size(self.backpack_items)) then
-		--
-		-- 	self.message["message"] = self:sell_item(selected_index-get_size(self.items))
-		-- end
-		-- Otherwise we've exited
-	elseif button =="back" then
-
-		--self:trigger("exit_view")
-			--self:destroy()
-			--sys.stop()
-
-
-
-	end
-
-	-- Reload the relevant images after an action is made
-
-
-
 end
 
 -- Function to destory images

@@ -41,6 +41,10 @@ function Button:__init(color, color_selected, color_disabled, enabled, selected,
 	end
 end
 
+function Button:set_transfer_path(transfer_path)
+	self.transfer_path = transfer_path
+end
+
 function Button:add_icon(icon_normal, icon_selected, icon_x, icon_y, icon_width, icon_height)
 	self._iconed = true
 

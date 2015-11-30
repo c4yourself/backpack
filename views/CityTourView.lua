@@ -136,12 +136,36 @@ function CityTourView:render(surface)
 
 	--Write all the tour text
 	for i, text in ipairs(attractions.attraction[self.city.code][attractionpoint].text) do
-		local text_width= width*2/3-2*text_indent
+		local text_width = width*2/3-2*text_indent
 		city_tour_text:draw(surface, {x = width/3+text_indent, y = 50+25*i, width = text_width, height = 25}, text, nil, nil)
 	end
 
 	-- Tour question
+
 	city_tour_text:draw(surface, {x = width/3+text_indent, y = (height+50+25*table.getn(attractions.attraction[self.city.code][attractionpoint].text)), width = 50, height = 50}, attractions.attraction[self.city.code][attractionpoint].question)
+
+	-- Code that inserts a new line when the question is too long.
+
+	-- local question = attractions.attraction[self.city.code][attractionpoint].question
+	-- local line_flag = false
+	-- local q1 = question
+	-- local q2 = ""
+	-- if #question > 25 then
+	-- 	for i = 15, #question do
+	-- 		if question:sub(i,i) == " " and not line_flag then
+	-- 			q1 = string.sub(question, 1, i)
+	-- 			q2 = string.sub(question, i, #question)
+	-- 			line_flag = true
+	-- 		end
+	-- 	end
+	-- end
+	-- city_tour_text:draw(surface, {x = width/3+text_indent,
+	-- y = (height+50+25*table.getn(attractions.attraction[self.city.code][attractionpoint].text))/2, width = 50, height = 50},
+	-- q1)
+	-- city_tour_text:draw(surface, {x = width/3+text_indent,
+	-- y = (height+50+25*table.getn(attractions.attraction[self.city.code][attractionpoint].text))/2+25, width = 50, height = 50},
+	-- q2)
+
 
 	--Render buttons
 	self.buttonGrid:render(surface)

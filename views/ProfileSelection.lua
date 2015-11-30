@@ -8,7 +8,7 @@ local View = require("lib.view.View")
 local Color = require("lib.draw.Color")
 local Profile = require("lib.profile.Profile")
 local ProfileManager = require("lib.profile.ProfileManager")
-local CityView = require("views.CityView")
+local CreateProfileView = require("views.CreateProfileView")
 local ProfileSelection = class("ProfileSelection", View)
 --local ProfileSelection = {}
 
@@ -20,7 +20,7 @@ function ProfileSelection:__init()
 
 	--local profile_list =  {"MaxiStormarknad","Bingoberra","Eivar","Skumtomte_90", "D4ngerBoi390KickflippingRainbow", "Wedge", "Biggles"} -- put contents of the scroll frame here, for example item names
 	self.profile_manager = ProfileManager()
-	self.profile_list = self.profile_manager:get_local()
+	self.profile_list = self.profile_manager:list()
 	self.profile_index = 0 --Zero indexing over profile_list
 	self.menu_index = 1
 	self.isLeftMenu = true
@@ -56,7 +56,7 @@ function ProfileSelection:get_email()
 end
 
 function ProfileSelection:get_city()
-	return self.profile_list[self.profile_index+1]:get_city().name
+	return self.profile_list[self.profile_index+1]:get_current_city()
 end
 
 function ProfileSelection:setLeftMenu(bool)
@@ -75,7 +75,8 @@ function ProfileSelection:callContinueGame()
 end
 
 function ProfileSelection:callCreateProfile()
-	---TODO: Starts the create profile view.
+	create_profile = CreateProfileView(event.remote_control)
+	view.view_manager:set_view(create_profile)
 end
 
 function ProfileSelection:okBtnPress()
