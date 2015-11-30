@@ -20,11 +20,12 @@ end
 -- @return profile_list_city representing the list of profiles city as string
 -- @return profile_list_email representing the list of profiles email_address as string
 function ProfileManager:list()
-	profile_list_local, profile_list_email = localprofilemanager.get_profileslist()
+	profile_list_local = localprofilemanager:get_profileslist()
 	self.profile_list_local = profile_list_local
 	--self.profile_list_city = profile_list_city
-	self.profile_list_email = profile_list_email
-	return profile_list_local, profile_list_email
+	--self.profile_list_email = profile_list_email
+
+	return profile_list_local
 end
 
 
