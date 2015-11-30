@@ -206,6 +206,10 @@ function ProfileView:render(surface)
 		self.font:draw(surface, {x = 180, y = 380}, item_selected:get_name())
 		self.font:draw(surface, {x=10, y = 415}, "Description: ")
 		self.font:draw(surface, {x = 180, y = 415}, item_selected:get_description())
+		self.font:draw(surface, {x=10, y = 450}, "Bought in: ")
+		self.font:draw(surface, {x = 180, y = 450}, item_selected:get_city())
+		self.font:draw(surface, {x=10, y = 485}, "Original price: ")
+		self.font:draw(surface, {x = 180, y = 485}, tostring(item_selected:get_price()))
 	end
 
 end
