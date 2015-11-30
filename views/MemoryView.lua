@@ -73,7 +73,7 @@ function MemoryView:__init(remote_control, surface, profile)
     local card_color = color(250, 105, 0, 255)--color.from_html("fa6900ff")
     --color(0, 128, 225, 255)
     local card_color_disabled = color(111,222,111,255)
-    local card_color_selected = color(33, 99, 111, 255)
+    local card_color_selected = color(250, 105, 0, 255)
     self.button_size = {width = 100, height = 100}
     local x_gap = self.button_size.width + 50
     local y_gap = self.button_size.height + 50
@@ -82,12 +82,25 @@ function MemoryView:__init(remote_control, surface, profile)
     self.pos_y = 50
 
     for i = 1, self.pairs*2 do
-        self.cards[i]  = CardComponent(card_color, card_color_selected,
+
+        local current_city = self.profile:get_city().name
+
+        print(i)
+        print(i)
+        print(i)
+        print(i)
+        print(i)
+        
+        self.cards[i]  = CardComponent(current_city, i, card_color, card_color_selected,
                                 card_color, true, false)
         --Temporary code snippet to be able to differentiate cards from eachother
         -- TODO write text or add pictures instead (?)
         -- local cc = (self.memory.cards[i] * 50) % 255
         -- local front_color = color(cc, cc, cc, cc)
+
+
+
+
         local cc1 = 255
         local cc2 = 255
         local cc3 = 255
@@ -101,6 +114,9 @@ function MemoryView:__init(remote_control, surface, profile)
         else
           cc1 = (self.memory.cards[i] * 50) % 255
         end
+
+
+
 
         local front_color = color(cc1, cc2, cc3, cc4)
         self.cards[i].front_color = front_color
