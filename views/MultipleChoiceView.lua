@@ -164,9 +164,11 @@ end
 function MultipleChoiceView:_submit()
 	if self.last_check == self.current_question and self.quiz_state ~= "DONE" then
 		self.user_input = self.views.grid.input
-		for j = 1, #self.user_input, 1 do
+		self.answer = {}
+		for j = 1, 4 --[[#self.user_input]] do
 			if self.user_input[j] ~= nil then
-				self.answer[j] = self.user_input[j]
+				--self.answer[j] = self.user_input[j]
+				table.insert(self.answer, self.user_input[j])
 			end
 			--self.answer[j] = tonumber(string.sub(self.user_input,j,j))
 		end
@@ -212,6 +214,7 @@ end
 
 ---Triggered everytime the user presses the back to city button
 function MultipleChoiceView:_exit()
+	--TODO add popup
 	self:trigger("exit_view", self.profile)
 end
 
@@ -331,45 +334,45 @@ function MultipleChoiceView:render(surface)
 									height = self.counter_height,
 									width = self.counter_width})
 		-- Render the Progress counter
-			self.progress_counter_area:clear(self.progress_counter_color:to_table())
-			local current_question = self.mult_choice_quiz.current_question
-			local quiz_length = #self.mult_choice_quiz.questions
-			local current_question = math.min(self.mult_choice_quiz.current_question,
-													quiz_length)
-			self.font:draw(self.progress_counter_area,
-										{x = 0, y = 0, height = self.counter_height,
-										width = self.counter_width},
-										tostring(current_question) .. " / " ..
-										tostring(quiz_length), "center", "middle")
-			-- Render the Progress bar
-			local bar_component_width = 45
-			local bar_component_height = 45
-			local progress_bar_margin = 10
-			local bar_component_x = self.x_counter + self.counter_width -
-									bar_component_width
-			local bar_component_y = self.y_counter + progress_bar_margin +
-									self.counter_height
-			local quiz_length = #self.progress_table
-			-- Create a progress bar and color its boxes
-			for i = 1, quiz_length do
-				local progress_bar_component = SubSurface(surface,
-											{x = bar_component_x, y = bar_component_y,
-											height = bar_component_height,
-											width = bar_component_width})
-				local bar_component_color = nil
-				-- Depending on the users success: color the boxes differently
-				if self.progress_table[i] == true then
-					bar_component_color = Color(0,255,0,255)
-				elseif self.progress_table[i] == false then
-					bar_component_color = Color(255,0,0,255)
-				else
-					bar_component_color = Color(255, 255, 255, 255)
-				end
-				progress_bar_component:clear(bar_component_color:to_table())
-				bar_component_y = bar_component_y + progress_bar_margin +
-									bar_component_height
+		self.progress_counter_area:clear(self.progress_counter_color:to_table())
+		local current_question = self.mult_choice_quiz.current_question
+		local quiz_length = #self.mult_choice_quiz.questions
+		local current_question = math.min(self.mult_choice_quiz.current_question,
+												quiz_length)
+		self.font:draw(self.progress_counter_area,
+									{x = 0, y = 0, height = self.counter_height,
+									width = self.counter_width},
+									tostring(current_question) .. " / " ..
+									tostring(quiz_length), "center", "middle")
+		-- Render the Progress bar
+		local bar_component_width = 45
+		local bar_component_height = 45
+		local progress_bar_margin = 10
+		local bar_component_x = self.x_counter + self.counter_width -
+								bar_component_width
+		local bar_component_y = self.y_counter + progress_bar_margin +
+								self.counter_height
+		local quiz_length = #self.progress_table
+		-- Create a progress bar and color its boxes
+		for i = 1, quiz_length do
+			local progress_bar_component = SubSurface(surface,
+										{x = bar_component_x, y = bar_component_y,
+										height = bar_component_height,
+										width = bar_component_width})
+			local bar_component_color = nil
+			-- Depending on the users success: color the boxes differently
+			if self.progress_table[i] == true then
+				bar_component_color = Color(0,255,0,255)
+			elseif self.progress_table[i] == false then
+				bar_component_color = Color(255,0,0,255)
+			else
+				bar_component_color = Color(255, 255, 255, 255)
 			end
-			self.prevent = false
+			progress_bar_component:clear(bar_component_color:to_table())
+			bar_component_y = bar_component_y + progress_bar_margin +
+								bar_component_height
+		end
+		self.prevent = false
 
 		self.views.grid:render(surface)
 	end
