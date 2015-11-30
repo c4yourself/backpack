@@ -171,17 +171,18 @@ function MultipleChoiceView:_submit()
 				table.insert(self.answer, self.user_input[j])
 			end
 			--self.answer[j] = tonumber(string.sub(self.user_input,j,j))
+		--self.mult_choice_quiz.current_question = self.mult_choice_quiz.current_question + 1
 		end
 		if self.mult_choice_quiz.questions[self.current_question]:is_correct(self.answer) == true then
 			self.correct_answer_number = self.correct_answer_number + 1
 			self.result_string = "Correct! You've answered "
 			.. self.correct_answer_number .. " questions correctly this far."
-			self.progress_table[self.mult_choice_quiz.current_question] = true
+			self.progress_table[self.current_question] = true
 			self.last_check = self.last_check + 1
 		else
 			self.result_string = "Wrong. You've answered "
 			.. self.correct_answer_number .. " questions correctly this far."
-			self.progress_table[self.mult_choice_quiz.current_question] = false
+			self.progress_table[self.current_question] = false
 			self.last_check=self.last_check + 1
 		end
 		self.quiz_state = "DISPLAY_RESULT"
@@ -335,10 +336,8 @@ function MultipleChoiceView:render(surface)
 									width = self.counter_width})
 		-- Render the Progress counter
 		self.progress_counter_area:clear(self.progress_counter_color:to_table())
-		local current_question = self.mult_choice_quiz.current_question
+		local current_question = self.current_question
 		local quiz_length = #self.mult_choice_quiz.questions
-		local current_question = math.min(self.mult_choice_quiz.current_question,
-												quiz_length)
 		self.font:draw(self.progress_counter_area,
 									{x = 0, y = 0, height = self.counter_height,
 									width = self.counter_width},
