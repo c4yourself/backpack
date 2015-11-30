@@ -33,7 +33,7 @@ function onKey(key, state)
 
 	-- Terminate program when exit key is pressed
 	if key == "exit" and state == "up" then
-		sys.stop()
+	--	sys.stop()
 	end
 end
 
@@ -49,7 +49,7 @@ function onStart()
 
 
 	--local city_view = CityView(event.remote_control, profile)
-	profile_selection = ProfileSelection()
+	--profile_selection = ProfileSelection()
 	--local profile = Profile("Tstar","Tstar@tstar.com",1975,"M", City.cities.cairo)
 	--profile:set_inventory("{3,5,9}")
 	--for i = 1, #profile.inventory do print(profile.inventory[i]) end
@@ -57,12 +57,12 @@ function onStart()
 	--local city_view = CityView(event.remote_control, profile)
 
 
-	local splash_screen = SplashView(
-		"data/images/logo.png", city_view, view.view_manager)
+	--local splash_screen = SplashView(
+	--	"data/images/logo.png", city_view, view.view_manager)
 
-	view.view_manager:set_view(profile_selection)
-	view.view_manager:set_view(splash_screen)
-	splash_screen:start(50)
+	--view.view_manager:set_view(profile_selection)
+	--view.view_manager:set_view(splash_screen)
+	--splash_screen:start(50)
 
 	--start connectfour
 --[[local cfc = ConnectFourComponent(event.remote_control)
