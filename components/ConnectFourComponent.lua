@@ -27,6 +27,7 @@ function ConnectFourComponent:__init(remote_control)
 
 	self.connectfour = ConnectFour()
 	self.current_column = 4
+	print("focus i init")
 	self:focus()
 
 	-- self:listen_to(
@@ -61,6 +62,7 @@ function ConnectFourComponent:press(key)
 	elseif key == "ok" then
 
 		self.connectfour:move(self.connectfour:get_player(), self.current_column)
+		print("blur i press ok")
 		self:blur()
 		--self:stop_listening(event.remote_control)
 		self:dirty()
@@ -187,7 +189,7 @@ function ConnectFourComponent:render(surface)
 	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect4toprow.png")),nil,{x=posx_constant, y=0.1*surface:get_height() - 0.5*height_coinbox, width = 7*width_coinbox, height = height_coinbox})
 
 
-	if self.connectfour:get_player() == nil then
+	--[[if self.connectfour:get_player() == nil then
 		print("brädet är fullt")
 		self.no_winner_delay = sys.new_timer(2500, function()
 			local message = {"The board is full, no one won. Return to city view"}
@@ -197,11 +199,13 @@ function ConnectFourComponent:render(surface)
 		self.no_winner_delay:start()
 
 
-	end
+	end]]--
 
 	if self.connectfour:get_winner() ~= nil then
 		print("någon har vunnit")
 		self.winner_delay = sys.new_timer(2500, function()
+			print("delayed")
+			self.winner_delay:stop()
 			local winner = self.connectfour:get_winner()
 			if winner == "X" then
 				winner_message = {"Congratulations, you won!"}
@@ -213,7 +217,7 @@ function ConnectFourComponent:render(surface)
 			end
 
 			self:delay2("message", winner_message)
-			self.winner_delay:stop()
+
 		end)
 		self.winner_delay:start()
 	end
@@ -247,7 +251,7 @@ function ConnectFourComponent:delay()
 			end
 		end
 	until self.connectfour:get_current_row(self.current_column) ~= 0
-
+print("focus i delay")
 	self:focus()
 
 	-- self:listen_to(
@@ -297,6 +301,7 @@ function ConnectFourComponent:_back_to_city(type, message)
 
   --  local popup_view = SubSurface(screen,{width=screen:get_width()*0.5, height=screen:get_height()*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25})
     --local pop = PopUpView(remote_control, popup_view, type, message)
+		print("blur i back_to_city")
     	self:blur()
     --self.views.button_grid:stop_listening(self.views.button_grid.event_listener,
                         --      "button_press",
@@ -318,6 +323,7 @@ function ConnectFourComponent:_back_to_city(type, message)
 			self:trigger("exit_view")
 			else
 			popup_view:destroy()
+			print("focus i back_to_city")
 			self:focus()
 			self:dirty(true)
 			gfx.update()
@@ -335,7 +341,7 @@ end
 function ConnectFourComponent:focus()
 	self:listen_to(
 	event.remote_control,
-	"button_press",
+	"button_release",
 	utils.partial(self.press, self)
 	)
 end
