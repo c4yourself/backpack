@@ -14,10 +14,14 @@ local Color = require("lib.draw.Color")
 local Font = require("lib.draw.Font")
 local NumericalQuizGrid = require("lib.components.NumericalQuizGrid")
 local Button = require("lib.components.Button")
+local ExperienceCalculation = require("lib.scores.experiencecalculation")
 
 --- Constructor for NumericQuizView
-function NumericQuizView:__init()
+function NumericQuizView:__init(remote_control, subsurface, profile)
 	View.__init(self)
+	self.remote_control = remote_control
+	self.surface = subsurface
+	self.profile = profile
 	--event.remote_control:off("button_release") -- TODO remove this once the ViewManager is fully implemented
 
 	-- Flags
@@ -71,7 +75,7 @@ function NumericQuizView:__init()
 	-- Associate a quiz instance with the View
 	self.num_quiz = Quiz()
 	self.progress_table = {}
-	self.num_quiz:generate_numerical_quiz("NOVICE", 5+1, "image_path")
+	self.num_quiz:generate_numerical_quiz("NOVICE", 2, "image_path")
 	for i=1, #self.num_quiz.questions do
 		self.progress_table[i] = -1
 	end
@@ -174,8 +178,6 @@ function NumericQuizView:render(surface)
 			self.answer_flag = false
 			-- The statements below was useful for finding a bug, leaving them
 			-- in case it re-occurs
-			--print("Correct answers: " .. tostring(self.num_quiz.correct_answers))
-			--print("Wrong answers: " .. tostring(self.num_quiz.wrong_answers))
 		else
 			-- Show a new question if there is one, otherwise show final result
 			self.answer_flag = false
@@ -316,6 +318,14 @@ end
 
 function NumericQuizView:back_to_city()
 	--TODO Add pop-up
+	local current_question = self.num_quiz.current_question
+	local quiz_length = #self.num_quiz.questions
+	if current_question >= quiz_length then
+		local counter  = self.num_quiz.correct_answers
+		local experience = ExperienceCalculation.Calculation(counter, "Mathquiz")
+		self.profile:modify_balance(experience)
+		self.profile:modify_experience(experience)
+	end
 	self:trigger("exit_view")
 	self:destroy()
 end
