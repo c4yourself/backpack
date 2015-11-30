@@ -97,6 +97,20 @@ function ConnectFour:get_player()
 	end
 end
 
+function ConnectFour:get_number_of_coins()
+	local count_X = 0
+
+	for row = 1, 6 do
+		for column = 1, 7 do
+			if self.board[row][column] == "X" then
+				count_X = count_X + 1
+			end
+		end
+	end
+
+	return count_X
+end
+
 --- Calculates which row the coin will stop at given a columnn
 -- @param column
 -- @return row
