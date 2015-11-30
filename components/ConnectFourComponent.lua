@@ -13,6 +13,8 @@ local font = require("lib.draw.Font")
 local color = require("lib.draw.Color")
 local button = require("lib.components.Button")
 local button_grid	=	require("lib.components.ButtonGrid")
+local PopUpView = require("views.PopUpView")
+
 
 local ConnectFourComponent = class("ConnectFourComponent", View)
 
@@ -59,6 +61,12 @@ function ConnectFourComponent:press(key)
 
 		self:stop_listening(event.remote_control)
 		self:dirty()
+
+		self.computer_delay = sys.new_timer(1000, function()
+			self:delay()
+			self.computer_delay:stop()
+		end)
+		self.computer_delay:start()
 	elseif key == "exit" then
 		--TODO pop-up
 	--	local exit_popup = subsurface(surface, area(100, 100, 400, 400))
@@ -66,7 +74,41 @@ function ConnectFourComponent:press(key)
 	--	local font_popup = font("data/fonts/DroidSans.ttf", 16, color_popup)
 	--	exit_popup:clear({r=255, g=255, b=255}, area(100, 100, 400, 400))
 	--	font_popup:draw(exit_popup, area(30,30,400,400), "Spelare X vann!")
+	local type = "confirmation"
+	--local message = {"Hej hopp"}
+	local message =  {"Are you sure you want to exit?"}
+
+	local subsurface = subsurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
+	--local pop_instance = self.button_grid:display_next_view(self.button_1.transfer_path)
+	local popup_view = PopUpView(remote_control,subsurface, type, message)
+	self:add_view(popup_view)
+	--local popup_view = PopUpView(remote_control,subsurface,type,message)
+
+
+	--  local popup_view = SubSurface(screen,{width=screen:get_width()*0.5, height=screen:get_height()*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25})
+	--local pop = PopUpView(remote_control, popup_view, type, message)
+--	self.button_grid:blur()
+	--self.views.button_grid:stop_listening(self.views.button_grid.event_listener,
+											--      "button_press",
+												--    callback)
+	local exit_view_func = function()
+		--Exit View
 		self:trigger("exit_view")
+	end
+
+	local destroy_pop = function()
+		popup_view:destroy()
+	--	self.button_grid:focus()
+		self:dirty(true)
+		gfx.update()
+	end
+
+	self:listen_to_once(popup_view,"exit_view",exit_view_func)
+	self:listen_to_once(popup_view, "destroy", destroy_pop)
+	popup_view:render(subsurface)
+--	gfx.update()
+
+	--	self:trigger("exit_view")
 	end
 	gfx.update()
 end
@@ -176,9 +218,12 @@ function ConnectFourComponent:render(surface)
 
 	--delays if it's the computers turn
 	if self.connectfour:get_player() == "O" then
-		local callback = utils.partial(self.delay, self, surface)
-		self.stop_timer = sys.new_timer(500, callback)
+		--self:delay()
+	--	local callback = utils.partial(self.delay, self, surface)
+	--	self.stop_timer = sys.new_timer(500, callback)
 	end
+
+
 
 	if self.connectfour:get_winner() ~= nil then
 		--TODO change to pop_up
@@ -186,7 +231,7 @@ function ConnectFourComponent:render(surface)
 		local color_popup = color(243, 137, 15, 255)
 		local font_popup = font("data/fonts/DroidSans.ttf", 16, color(0,0,0,255))
 		local winner = self.connectfour:get_winner()
-		winner_popup:clear(color_popup)
+		winner_popup:clear(color_popup:to_table())
 		if winner == "X" then
 			winner_message = "Congratulations, you won!"
 		elseif winner == "O" then
@@ -215,11 +260,10 @@ function ConnectFourComponent:render(surface)
 	gfx.update()
 end
 
----Puts a delay on computers move to slow down the process
--- @param surface
-function ConnectFourComponent:delay(surface)
+--- Puts a delay on computers move to slow down the process
+function ConnectFourComponent:delay()
 
-	self.stop_timer:stop()
+--	self.stop_timer:stop()
 
 	local AI_column = self.connectfour:computer_AI(self.current_column)
 	print("AI column component: " .. AI_column)
@@ -242,7 +286,7 @@ function ConnectFourComponent:delay(surface)
 
 	self:listen_to(
 	event.remote_control,
-	"button_release",
+	"button_press",
 	utils.partial(self.press, self)
 	)
 
