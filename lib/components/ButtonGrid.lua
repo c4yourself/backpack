@@ -15,7 +15,6 @@ local utils = require("lib.utils")
 local event = require("lib.event")
 local Font = require("lib.draw.Font")
 local Color = require("lib.draw.Color")
-local logger = require("lib.logger")
 
 --- Constructor for ButtonGrid
 function ButtonGrid:__init(remote_control)
@@ -54,7 +53,6 @@ end
 
 -- Starts the buttongrids listener
 function ButtonGrid:focus()
-	logger.debug(string.format("i focus"))
 	self:listen_to(
 	self.event_listener,
 	"button_press",
@@ -64,7 +62,6 @@ end
 
 -- Stops the buttongrids listener
 function ButtonGrid:blur()
-	logger.debug(string.format("i blur"))
 	self:stop_listening()
 end
 
@@ -82,8 +79,13 @@ function ButtonGrid:add_button(position, button_size, button)
 		 and position.y >= 0 and button_size.height >= 0
 		 and position.y + button_size.height < 720	then
 -- if ok, insert each button to the button_list
-	self:add_view(button)
-	table.insert(self.button_list, {button = button, x = position.x, y = position.y, width = button_size.width, height = button_size.height })
+	 table.insert(self.button_list,
+	 {button = button,
+	 x = position.x,
+	 y = position.y,
+	 width = button_size.width,
+	 height = button_size.height
+	 })
 
 	else
 		error("screen boundary error")
@@ -102,7 +104,6 @@ function ButtonGrid:insert_button(position, button_size, button, index)
 		 and position.x + button_size.width < 1280
 		 and position.y >= 0 and button_size.height >= 0
 		 and position.y + button_size.height < 720	then
-			 self:add_view(button)
 			 table.insert(self.button_list, index,
 			 {button = button,
 			 x = position.x,
@@ -152,30 +153,33 @@ function ButtonGrid:display_next_view(transfer_path)
 
  	local view_import = require(transfer_path)
 	return view_import
- 	--local view_instance = view_import()
-
- 	--view.view_manager:set_view(view_instance)
 end
 
 function ButtonGrid:press(button)
-	--if not self.paused then
+	if not self.paused then
     if button == "down" then
-		self:indicate_downward(self.button_indicator)
-		self:trigger("dirty")
-	elseif button == "up" then
-		self:indicate_upward(self.button_indicator)
-		self:trigger("dirty")
-	elseif button == "right" then
-		self:indicate_rightward(self.button_indicator)
-		self:trigger("dirty")
-	elseif button == "left" then
-		self:indicate_leftward(self.button_indicator, "left")
-		self:trigger("dirty")
-	elseif button == "ok" then
-		for i=1, #self.button_list do
-			if self.button_list[i].button:is_selected() == true then
-				self:trigger("button_click", self.button_list[i].button)
-				break
+			self:indicate_downward(self.button_indicator)
+			self:trigger("dirty")
+		elseif button == "up" then
+			self:indicate_upward(self.button_indicator)
+			self:trigger("dirty")
+		elseif button == "right" then
+			self:indicate_rightward(self.button_indicator)
+			self:trigger("dirty")
+		elseif button == "left" then
+			self:indicate_leftward(self.button_indicator, "left")
+			self:trigger("dirty")
+		elseif button == "ok" then
+			for i=1, #self.button_list do
+				if self.button_list[i].button:is_selected() == true then
+
+					--self:display_next_view(self.button_list[i].button.transfer_path)
+				--	gfx.update()
+				--	break
+				-- else
+					self:trigger("button_click", self.button_list[i].button)
+					break
+				end
 			end
 		end
 	end
@@ -188,6 +192,7 @@ function ButtonGrid:render(surface)
 -- If no button is selected when this button_grid is created,
 -- then the first button in the list will be selected.
 -- The indicator always points to the selected button
+
 	self:dirty(false)
 
 	if self.start_indicator == true then
@@ -236,12 +241,7 @@ function ButtonGrid:indicate_downward(button_indicator)
 	local sel_central_x = button_list[indicator].x + math.floor(button_list[indicator].width/2)
 	local sel_central_y = button_list[indicator].y + math.floor(button_list[indicator].height/2)
 	local nearest_button_index = nil
-	local corner_position = {x = math.min(button_list[indicator].x), y = 0}
-
-	local that_distance = self:distance_to_corner(corner_position, 2)
-
-	--print("the fucking distance to 2 issss " .. that_distance)
-	--print("the fucking  distance to 9 issss ".. self:distance_to_corner(corner_position, 9))
+	local corner_position = {x = button_list[indicator].x, y = 0}
 
 	for i=1, #button_list do
 		if button_list[i].y >= button_list[indicator].y + button_list[indicator].height then
@@ -282,8 +282,8 @@ end
 
 	if nearest_button_index ~= nil then
 		indicator = nearest_button_index
-		button_list[indicator].button:select(true)
 		button_list[button_indicator].button:select(false)
+		button_list[indicator].button:select(true)
 	end
 
 	self.button_indicator = indicator
@@ -313,13 +313,13 @@ if shortest_distance_buttons ~= 720 then
 		if button_list[j].y + button_list[j].height <= button_list[indicator].y then
 			local distance = self:button_distance(indicator, j)
 			if shortest_distance_buttons == distance then
-				-- print("the distance is "..distance)
 				nearest_button_index = j
 				break
 			end
 		end
  end
 end
+
 
 	if shortest_distance_buttons == 720 and #button_list ~= 1 then
 		for k=1, #button_list do
@@ -340,9 +340,10 @@ end
 	end
 
 	if nearest_button_index ~= nil then
+
 		indicator = nearest_button_index
-		button_list[indicator].button:select(true)
 		button_list[button_indicator].button:select(false)
+		button_list[indicator].button:select(true)
 	end
 
 	self.button_indicator = indicator
@@ -396,8 +397,8 @@ end
 
 	if nearest_button_index ~= nil then
 		indicator = nearest_button_index
-		button_list[indicator].button:select(true)
 		button_list[button_indicator].button:select(false)
+		button_list[indicator].button:select(true)
 	end
 
 	self.button_indicator = indicator
@@ -454,8 +455,8 @@ end
 
 	if nearest_button_index ~= nil then
 		indicator = nearest_button_index
-		button_list[indicator].button:select(true)
 		button_list[button_indicator].button:select(false)
+		button_list[indicator].button:select(true)
 	end
 
 	self.button_indicator = indicator

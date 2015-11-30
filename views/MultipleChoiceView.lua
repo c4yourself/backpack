@@ -346,6 +346,7 @@ function MultipleChoiceView:render(surface)
 		self.progress_counter_area:clear(self.progress_counter_color:to_table())
 		local current_question = self.current_question
 		local quiz_length = #self.mult_choice_quiz.questions
+		local current_question = math.min(current_question, quiz_length)
 		self.font:draw(self.progress_counter_area,
 									{x = 0, y = 0, height = self.counter_height,
 									width = self.counter_width},
