@@ -119,9 +119,6 @@ function Memory:is_finished()
 			count = count + 1
 				if count == #self.state then
 					self.finished = true
-					self.coins, self.experience = self:_calculate_reward()
-					self.profile:modify_balance(self.coins)
-					self.profile:modify_experience(self.experience)
 				end
 		end
 	end

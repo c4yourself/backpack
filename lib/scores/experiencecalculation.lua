@@ -44,8 +44,8 @@ function ExperienceCalculation.Calculation(counter,game_type)
 			return false
 		end
 	elseif game_type == "Memory" then
-		if #counter == 2 then
-			local index = counter[1] / (2 * counter[2])
+			if #counter == 2 then
+				local index = counter[1] / counter[2]
 			if index >= 2 then
 				experience_result = 20
 
