@@ -1,4 +1,6 @@
---- Splash screen that shows a centered image and the loads another view
+
+--- Base class for SplashView
+-- SplashView is the View that shows as the box starts up
 -- @classmod SplashView
 
 local class = require("lib.classy")

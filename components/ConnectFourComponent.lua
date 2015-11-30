@@ -66,7 +66,7 @@ function ConnectFourComponent:press(key)
 	--	local font_popup = font("data/fonts/DroidSans.ttf", 16, color_popup)
 	--	exit_popup:clear({r=255, g=255, b=255}, area(100, 100, 400, 400))
 	--	font_popup:draw(exit_popup, area(30,30,400,400), "Spelare X vann!")
-		self.trigger("exit_view")
+		self:trigger("exit_view")
 	end
 	gfx.update()
 end

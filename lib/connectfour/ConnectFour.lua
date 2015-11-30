@@ -326,7 +326,7 @@ end
 function ConnectFour:computer_AI(x_column)
 
 	local random_column -- = math.random(1,7)
-	local random_probability = math.random(8,10) --probability
+	local random_probability = math.random(1,10) --probability
 
 	--check if there's three in a row
 --[[	for i = 1, 7 do
@@ -348,13 +348,17 @@ function ConnectFour:computer_AI(x_column)
 		print("tre i rad")
 		return make_move2
 	end ]]--
-
+	local counter = 0
 repeat
 	if random_probability < 8 then
-
+		counter = counter + 1
 			local random_close = math.random(-1, 1)
 			random_column = x_column + random_close
 			print("random close column: " .. random_column)
+
+			if counter == 5 then
+				random_probability = 8
+			end
 
 	elseif random_probability >= 8 then
 		random_column = math.random(1,7)
