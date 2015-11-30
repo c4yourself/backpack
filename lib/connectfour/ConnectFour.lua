@@ -97,6 +97,20 @@ function ConnectFour:get_player()
 	end
 end
 
+function ConnectFour:get_number_of_coins()
+	local count_X = 0
+
+	for row = 1, 6 do
+		for column = 1, 7 do
+			if self.board[row][column] == "X" then
+				count_X = count_X + 1
+			end
+		end
+	end
+
+	return count_X
+end
+
 --- Calculates which row the coin will stop at given a columnn
 -- @param column
 -- @return row
@@ -292,20 +306,20 @@ end
 
 function ConnectFour: _check_three_in_a_row()
 	--row
-	print("check row")
+
 	local count = 1
 
 	for row1 = 1, 6 do
 		for column = 2, 7 do
 			if self:get(7-row1, column) ~=nil and self:get(7-row1, column) == self:get(7-row1, column-1) then
 				count = count + 1
-				print("count +1 : " .. count)
+
 				if count == 3 and row1~=1 and self:get(7-row1, column+1) == nil and self:get(7-row1-1, column+1) ~= nil then
-					print("count = 3")
+
 					return column+1
 				end
 				if count == 3 and row1==1 and self:get(7-row1, column+1) == nil then
-					print("count = 3")
+
 					return column+1
 				end
 			else
@@ -359,7 +373,7 @@ repeat
 		counter = counter + 1
 			local random_close = math.random(-1, 1)
 			random_column = x_column + random_close
-			print("random close column: " .. random_column)
+
 
 			if counter == 5 then
 				random_probability = 8
@@ -367,7 +381,7 @@ repeat
 
 	elseif random_probability >= 8 then
 		random_column = math.random(1,7)
-		print("random anywhere column: " .. random_column)
+
 	end
 	until self:is_valid_move("O", random_column)
 
