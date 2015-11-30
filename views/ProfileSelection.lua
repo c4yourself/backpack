@@ -9,6 +9,7 @@ local Color = require("lib.draw.Color")
 local Profile = require("lib.profile.Profile")
 local ProfileManager = require("lib.profile.ProfileManager")
 local CreateProfileView = require("views.CreateProfileView")
+local CityView = require("views.CityView")
 local ProfileSelection = class("ProfileSelection", View)
 --local ProfileSelection = {}
 
@@ -70,7 +71,11 @@ end
 function ProfileSelection:callContinueGame()
 	cur_prof = self.profile_list[self.profile_index+1]
 	profile = self.profile_manager:load(cur_prof.email_address)
-	city_view = CityView(event.remote_control, profile)
+	print(tostring(profile))
+	print(tostring(profile.name))
+	print(tostring(profile.city))
+
+	city_view = CityView(profile, event.remote_control)
 	view.view_manager:set_view(city_view)
 end
 
@@ -191,7 +196,9 @@ function ProfileSelection:render(surface)
 			surface:fill(self:pickColor(self.leftMenuCurrentValue), {width=500, height=100, x=100, y=(250)})
 		end
 
-		self.font_button:draw(surface, {x=120,y=(200-self.profile_index*diff_y+diff_y*counter)}, self.profile_list[key].name)
+		if (200-self.profile_index*diff_y+diff_y*counter)>0 then
+			self.font_button:draw(surface, {x=120,y=(200-self.profile_index*diff_y+diff_y*counter)}, self.profile_list[key].name)
+		end
 
 		buttons[counter]= text_button
 		counter=counter+1
