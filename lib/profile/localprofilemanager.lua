@@ -6,6 +6,7 @@ local class = require("lib.classy")
 local utils = require("lib.utils")
 local Profile = require("lib.profile.Profile")
 local localprofilemanager = class("localprofilemanager")
+local city = require("lib.city")
 
 ---Create a profile
 -- @param profile representing a profile instance
@@ -58,7 +59,7 @@ end
 function localprofilemanager:load(profile_email)
 	local profile_tmp = {}
 	local name, email_address, date_of_birth
-	local sex, city, balance, experience, inventory
+	local sex, tmp_city, balance, experience, inventory
 	local path = utils.absolute_path(string.format("data/profile/%s.json",profile_email))
 
 	--check the file exist or not
@@ -99,7 +100,7 @@ function localprofilemanager:load(profile_email)
 			if string.match(line,"\"city\"") ~= nil then
 				local tmp = {}
 				tmp = utils.split(line," ")
-				_,_,_,city = string.find(tmp[2],"([\"'])(.-)%1")
+				_,_,_,tmp_city = string.find(tmp[2],"([\"'])(.-)%1")
 			end
 
 			--match inventory
@@ -126,7 +127,8 @@ function localprofilemanager:load(profile_email)
 		end
 
 		--generate a profile instance
-		profile_tmp = Profile(name,email_address,date_of_birth,sex,city)
+		--print("city: " .. city)
+		profile_tmp = Profile(name,email_address,date_of_birth,sex,city.cities[tmp_city])
 		profile_tmp:set_balance(balance)
 		profile_tmp:set_experience(experience)
 		--profile_tmp:set_inventory(inventory)
