@@ -16,7 +16,6 @@ local city = require("lib.city")
 local class = require("lib.classy")
 local utils = require("lib.utils")
 local Profile = class("Profile")
-local Event = require("lib.event.Event")
 
 Profile.name = ""
 Profile.email_address = ""
@@ -311,12 +310,12 @@ function Profile:modify_experience(number)
 		self.experience = self.experience + number
 	end
 
-	Event:__init()
-	call_back = function(...)
-		ProfileManager:save(...)
-	end
-	Event:on("experience_change",call_back)
-	Event:trigger("experience_change",self)
+	--Event:__init()
+	--call_back = function(...)
+	--	ProfileManager:save(...)
+	--end
+	--Event:on("experience_change",call_back)
+	--Event:trigger("experience_change",self)
 	return self.experience
 end
 
