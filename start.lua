@@ -33,15 +33,13 @@ function onKey(key, state)
 
 	-- Terminate program when exit key is pressed
 	if key == "exit" and state == "up" then
-		--sys.stop()
+	--	sys.stop()
 	end
 end
 
 -- This function is called at the start of the program
 function onStart()
 	logger.trace("Started")
-
-	--view.view_manager:set_view(ProfileSelection())
 
 	local profile = Profile(
 		"Zen Terio","zen@zenterio.com", 1975, "M", city.cities.london)

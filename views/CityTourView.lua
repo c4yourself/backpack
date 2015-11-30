@@ -63,13 +63,13 @@ function CityTourView:__init(remote_control, surface, profile)
 	button_4:set_textdata(attractions.attraction[self.city.code][attractionpoint].answers[4], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
 
 	local text_height = 75+25*table.getn(attractions.attraction[self.city.code][attractionpoint].text)
-	local indent = 55
+	local indent = width/27
 	-- Create buttons positions and size
-	local button_size = {width=4*(width-indent)/27, height=4*(height-text_height)/13}
-	local position_1 = {x = 2*(width-indent)/3, y = button_size.height/2+text_height}
-	local position_2 = {x = 2*(width-indent)/3+button_size.width*5/4, y = button_size.height/2+text_height}
-	local position_3 = {x = 2*(width-indent)/3, y = 7*button_size.height/4+text_height}
-	local position_4 = {x = 2*(width-indent)/3+button_size.width*5/4, y = 7*button_size.height/4+text_height}
+	local button_size = {width=2/9*width, height=4*(height-text_height)/13}
+	local position_1 = {x = 90 + width / 3 + indent, y = button_size.height/2+text_height}
+	local position_2 = {x = 90 +width / 3 + 2 * indent + button_size.width, y = button_size.height/2+text_height}
+	local position_3 = {x = 90 +width / 3 + indent, y = 7*button_size.height/4+text_height}
+	local position_4 = {x = 90 +width / 3 + 2 * indent + button_size.width, y = 7*button_size.height/4+text_height}
 
 	self.buttonGrid:add_button(position_1, button_size, button_1)
 	self.buttonGrid:add_button(position_2, button_size, button_2)
@@ -141,27 +141,31 @@ function CityTourView:render(surface)
 	end
 
 	-- Tour question
+
+	city_tour_text:draw(surface, {x = width/3+text_indent, y = (height+50+25*table.getn(attractions.attraction[self.city.code][attractionpoint].text)), width = 50, height = 50}, attractions.attraction[self.city.code][attractionpoint].question)
+
 	-- Code that inserts a new line when the question is too long.
 
-	local question = attractions.attraction[self.city.code][attractionpoint].question
-	local line_flag = false
-	local q1 = question
-	local q2 = ""
-	if #question > 25 then
-		for i = 15, #question do
-			if question:sub(i,i) == " " and not line_flag then
-				q1 = string.sub(question, 1, i)
-				q2 = string.sub(question, i, #question)
-				line_flag = true
-			end
-		end
-	end
-	city_tour_text:draw(surface, {x = width/3+text_indent,
-	y = (height+50+25*table.getn(attractions.attraction[self.city.code][attractionpoint].text))/2, width = 50, height = 50},
-	q1)
-	city_tour_text:draw(surface, {x = width/3+text_indent,
-	y = (height+50+25*table.getn(attractions.attraction[self.city.code][attractionpoint].text))/2+25, width = 50, height = 50},
-	q2)
+	-- local question = attractions.attraction[self.city.code][attractionpoint].question
+	-- local line_flag = false
+	-- local q1 = question
+	-- local q2 = ""
+	-- if #question > 25 then
+	-- 	for i = 15, #question do
+	-- 		if question:sub(i,i) == " " and not line_flag then
+	-- 			q1 = string.sub(question, 1, i)
+	-- 			q2 = string.sub(question, i, #question)
+	-- 			line_flag = true
+	-- 		end
+	-- 	end
+	-- end
+	-- city_tour_text:draw(surface, {x = width/3+text_indent,
+	-- y = (height+50+25*table.getn(attractions.attraction[self.city.code][attractionpoint].text))/2, width = 50, height = 50},
+	-- q1)
+	-- city_tour_text:draw(surface, {x = width/3+text_indent,
+	-- y = (height+50+25*table.getn(attractions.attraction[self.city.code][attractionpoint].text))/2+25, width = 50, height = 50},
+	-- q2)
+
 
 	--Render buttons
 	self.buttonGrid:render(surface)
