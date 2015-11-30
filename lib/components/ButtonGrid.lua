@@ -153,9 +153,6 @@ function ButtonGrid:display_next_view(transfer_path)
 
  	local view_import = require(transfer_path)
 	return view_import
- 	--local view_instance = view_import()
-
- 	--view.view_manager:set_view(view_instance)
 end
 
 function ButtonGrid:press(button)
