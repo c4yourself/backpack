@@ -269,11 +269,11 @@ function MemoryView:back_to_city()
     -- Trigger exit event
     local type = "confirmation"
     --local message = {"Hej hopp"}
-    local message =  {"Are you sure you want to exit?","really sure?"}
+    local message =  {"Are you sure you want to exit?"}
 
     local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
     --local pop_instance = self.button_grid:display_next_view(self.button_1.transfer_path)
-    local popup_view = PopUpView(remote_control,subsurface, type, {"hej"})
+    local popup_view = PopUpView(remote_control,subsurface, type, message)
     self:add_view(popup_view)
     --local popup_view = PopUpView(remote_control,subsurface,type,message)
 
@@ -284,20 +284,33 @@ function MemoryView:back_to_city()
     --self.views.button_grid:stop_listening(self.views.button_grid.event_listener,
                         --      "button_press",
                           --    callback)
-    local exit_view_func = function()
-      --Exit View
-      self:trigger("exit_view")
-    end
+    -- local exit_view_func = function()
+    --   --Exit View
+    --   if button == "ok"
+    --   self:trigger("exit_view")
+    -- end
+    --
+    -- local destroy_pop = function()
+    --   popup_view:destroy()
+    --   self.button_grid:focus()
+    --   self:dirty(true)
+    --   gfx.update()
+    -- end
 
-    local destroy_pop = function()
+    local button_click_func = function(button)
+      if button == "ok" then
+      self:trigger("exit_view")
+      else
       popup_view:destroy()
       self.button_grid:focus()
       self:dirty(true)
       gfx.update()
     end
+    end
 
-    self:listen_to_once(popup_view,"exit_view",exit_view_func)
-    self:listen_to_once(popup_view, "destroy", destroy_pop)
+    self:listen_to_once(popup_view, "button_click", button_click_func)
+  --  self:listen_to_once(popup_view,"exit_view",exit_view_func)
+  --  self:listen_to_once(popup_view, "destroy", destroy_pop)
     popup_view:render(subsurface)
     gfx.update()
   --  self:trigger("exit_view")

@@ -14,6 +14,7 @@ local color = require("lib.draw.Color")
 local button = require("lib.components.Button")
 local button_grid	=	require("lib.components.ButtonGrid")
 local PopUpView = require("views.PopUpView")
+local SubSurface = require("lib.view.SubSurface")
 
 
 local ConnectFourComponent = class("ConnectFourComponent", View)
@@ -25,12 +26,13 @@ function ConnectFourComponent:__init(remote_control)
 
 	self.connectfour = ConnectFour()
 	self.current_column = 4
+	self:focus()
 
-	self:listen_to(
-	event.remote_control,
-	"button_press",
-	utils.partial(self.press, self)
-	)
+	-- self:listen_to(
+	-- event.remote_control,
+	-- "button_press",
+	-- utils.partial(self.press, self)
+	-- )
 end
 
 --- Responds differently depending on which key pressed on the remote control
@@ -58,8 +60,8 @@ function ConnectFourComponent:press(key)
 	elseif key == "ok" then
 		print("ok, move")
 		self.connectfour:move(self.connectfour:get_player(), self.current_column)
-
-		self:stop_listening(event.remote_control)
+		self:blur()
+		--self:stop_listening(event.remote_control)
 		self:dirty()
 
 		self.computer_delay = sys.new_timer(1000, function()
@@ -74,43 +76,14 @@ function ConnectFourComponent:press(key)
 	--	local font_popup = font("data/fonts/DroidSans.ttf", 16, color_popup)
 	--	exit_popup:clear({r=255, g=255, b=255}, area(100, 100, 400, 400))
 	--	font_popup:draw(exit_popup, area(30,30,400,400), "Spelare X vann!")
-	local type = "confirmation"
-	--local message = {"Hej hopp"}
-	local message =  {"Are you sure you want to exit?"}
+		--self:trigger("exit_view")
+		local type = "confirmation"
+    --local message = {"Hej hopp"}
+    local message =  {"Are you sure you want to exit?"}
+		self:_back_to_city(type, message)
 
-	local subsurface = subsurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
-	--local pop_instance = self.button_grid:display_next_view(self.button_1.transfer_path)
-	local popup_view = PopUpView(remote_control,subsurface, type, message)
-	self:add_view(popup_view)
-	--local popup_view = PopUpView(remote_control,subsurface,type,message)
-
-
-	--  local popup_view = SubSurface(screen,{width=screen:get_width()*0.5, height=screen:get_height()*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25})
-	--local pop = PopUpView(remote_control, popup_view, type, message)
---	self.button_grid:blur()
-	--self.views.button_grid:stop_listening(self.views.button_grid.event_listener,
-											--      "button_press",
-												--    callback)
-	local exit_view_func = function()
-		--Exit View
-		self:trigger("exit_view")
 	end
 
-	local destroy_pop = function()
-		popup_view:destroy()
-	--	self.button_grid:focus()
-		self:dirty(true)
-		gfx.update()
-	end
-
-	self:listen_to_once(popup_view,"exit_view",exit_view_func)
-	self:listen_to_once(popup_view, "destroy", destroy_pop)
-	popup_view:render(subsurface)
---	gfx.update()
-
-	--	self:trigger("exit_view")
-	end
-	gfx.update()
 end
 
 ---Prints out the top row
@@ -284,11 +257,13 @@ function ConnectFourComponent:delay()
 		end
 	until self.connectfour:get_current_row(self.current_column) ~= 0
 
-	self:listen_to(
-	event.remote_control,
-	"button_press",
-	utils.partial(self.press, self)
-	)
+	self:focus()
+
+	-- self:listen_to(
+	-- event.remote_control,
+	-- "button_press",
+	-- utils.partial(self.press, self)
+	-- )
 
 		self:dirty(true)
 end
@@ -311,6 +286,71 @@ end
 		end
 	until self.connectfour:get_current_row(self.current_column) ~= 0
 end ]]--
+
+function ConnectFourComponent:_back_to_city(type, message)
+    --self:destroy()
+    -- TODO Implement/connect pop-up for quit game
+    -- Appendix 2 in UX design document
+    -- Trigger exit event
+    --local type = "confirmation"
+    --local message = {"Hej hopp"}
+    --local message =  {"Are you sure you want to exit?"}
+
+    local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
+    --local pop_instance = self.button_grid:display_next_view(self.button_1.transfer_path)
+    local popup_view = PopUpView(remote_control,subsurface, type, message)
+    self:add_view(popup_view)
+    --local popup_view = PopUpView(remote_control,subsurface,type,message)
+
+
+  --  local popup_view = SubSurface(screen,{width=screen:get_width()*0.5, height=screen:get_height()*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25})
+    --local pop = PopUpView(remote_control, popup_view, type, message)
+    	self:blur()
+    --self.views.button_grid:stop_listening(self.views.button_grid.event_listener,
+                        --      "button_press",
+                          --    callback)
+    -- local exit_view_func = function()
+    --   --Exit View
+    --   self:trigger("exit_view")
+    -- end
+		--
+    -- local destroy_pop = function()
+    --   popup_view:destroy()
+		-- 	self:focus()
+    --   self:dirty(true)
+    --   gfx.update()
+    -- end
+
+		local button_click_func = function(button)
+			if button == "ok" then
+			self:trigger("exit_view")
+			else
+			popup_view:destroy()
+			self:focus()
+			self:dirty(true)
+			gfx.update()
+		end
+		end
+
+		self:listen_to_once(popup_view, "button_click", button_click_func)
+--    self:listen_to_once(popup_view,"exit_view",exit_view_func)
+--    self:listen_to_once(popup_view, "destroy", destroy_pop)
+    popup_view:render(subsurface)
+    gfx.update()
+  --  self:trigger("exit_view")
+end
+
+function ConnectFourComponent:focus()
+	self:listen_to(
+	event.remote_control,
+	"button_press",
+	utils.partial(self.press, self)
+	)
+end
+
+function ConnectFourComponent:blur()
+	self:stop_listening(event.remote_control)
+end
 
 
 
