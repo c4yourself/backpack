@@ -22,17 +22,17 @@ function CardComponent:__init(current_city, i, color, color_selected, color_disa
 	self.backside_color = Color(0,0,0,255)
 	self.front_color = Color(255, 255, 255, 255)
 	self.from_img = gfx.loadpng("data/images/memory_pictures/generic/memory_question.png")
-	self.current_city = current_city
+	self.current_city = current_city:lower()
 	self.current_city_lower = current_city:lower()
 
 	if i == 1  or i == 6 then
-		self.memory_img = gfx.loadpng("data/images/memory_pictures/"..current_city.."/memory_"..self.current_city_lower.."_1.png")
+		self.memory_img = gfx.loadpng("data/images/memory_pictures/"..self.current_city.."/memory_"..self.current_city_lower.."_1.png")
 	elseif i == 2 or i == 5 then
-		self.memory_img = gfx.loadpng("data/images/memory_pictures/"..current_city.."/memory_"..self.current_city_lower.."_2.png")
+		self.memory_img = gfx.loadpng("data/images/memory_pictures/"..self.current_city.."/memory_"..self.current_city_lower.."_2.png")
 	elseif i == 3 or i == 8 then
-		self.memory_img = gfx.loadpng("data/images/memory_pictures/"..current_city.."/memory_"..self.current_city_lower.."_3.png")
+		self.memory_img = gfx.loadpng("data/images/memory_pictures/"..self.current_city.."/memory_"..self.current_city_lower.."_3.png")
 	elseif i == 4 or i == 7 then
-		self.memory_img = gfx.loadpng("data/images/memory_pictures/"..current_city.."/memory_"..self.current_city_lower.."_4.png")
+		self.memory_img = gfx.loadpng("data/images/memory_pictures/"..self.current_city.."/memory_"..self.current_city_lower.."_4.png")
 	end
 end
 
