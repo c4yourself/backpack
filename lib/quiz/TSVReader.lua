@@ -10,8 +10,6 @@ local class = require("lib.classy")
 local utils = require("lib.utils")
 local TSVReader = class("TSVReader")
 local MultipleChoiceQuestion = require("lib.quiz.MultipleChoiceQuestion")
-local lfs = require("lfs")
---local profile = require("lib.profile.Profile")
 
 
 TSVReader.filename = ""
@@ -45,14 +43,10 @@ end
 -- @return false representing don't get question from TSV file
 function TSVReader:get_question(question_type)
 
-	--profile = ProfileManager:load("paris","John010@gmail.com")
-	--profile:modify_experience(1234)
-	--profile:modify_balance(345)
-
 	local tmp_table = {}
 	self.filename = utils.absolute_path(string.format("data/questions/%s.tsv",self.filename))
 
-	if(lfs.attributes(self.filename, "mode") == "file") then
+	--if(lfs.attributes(self.filename, "mode") == "file") then
 
 		--get the questions from TSV file
 		for line in io.lines(self.filename) do
@@ -74,9 +68,6 @@ function TSVReader:get_question(question_type)
 		end
 
 		return self.questions_table
-	else
-		return false
-	end
 end
 
 ---Generate random table
