@@ -8,6 +8,7 @@ local view = require("lib.view")
 local event = require("lib.event")
 local utils = require("lib.utils")
 local Color = require("lib.draw.Color")
+local Font = require("lib.draw.Font")
 local SubSurface = require("lib.view.SubSurface")
 local button= require("lib.components.Button")
 local button_grid	=	require("lib.components.ButtonGrid")
@@ -16,6 +17,8 @@ local BinaryButton	=	require("components.BinaryButton")
 local color = require("lib.draw.Color")
 local logger = require("lib.logger")
 local KeyboardComponent	=	require("components.KeyboardComponent")
+local ProfileManager = require("lib.profile.ProfileManager")
+local ProfileSelection = require("views.ProfileSelection")
 
 local LoginView = class("LoginView", View)
 
@@ -24,16 +27,26 @@ local LoginView = class("LoginView", View)
 function LoginView:__init(remote_control)
 	View.__init(self)
 	self.background_path = ""
-	name_input_field = InputField("Name:", {x = 700, y = 80}, true)
-	password_input_field = InputField("Password:", {x = 700, y = 230}, false)
-  password_input_field:set_private(true)
+	self.email_input_field = InputField("Name:", {x = 700, y = 80}, true)
+	self.password_input_field = InputField("Password:", {x = 700, y = 230}, false)
+  self.password_input_field:set_private(true)
 
-	self.active_field = name_input_field
+	--Button data
+	local button_color = Color(255, 99, 0, 255)
+	local color_selected = Color(255, 153, 0, 255)
+	local color_disabled = Color(111, 222, 111, 255)
+	local button_size = {width = 100, height = 100}
+	self.button_cancel = button(button_color, color_selected, color_disabled, true, false, "views.ProfileSelection")
+	self.button_cancel_text = Font("data/fonts/DroidSans.ttf", 40, Color(0, 0, 0, 255))
+	self.button_cancel_surface = SubSurface(screen, {width=500, height=100, x=700, y=530})
+	self.button_login = button(button_color, color_selected, color_disabled, true, false, "views.ProfileSelection")
+	self.button_login_text = Font("data/fonts/DroidSans.ttf", 40, Color(0, 0, 0, 255))
+	self.button_login_surface = SubSurface(screen, {width=500, height=100, x=700, y=380})
+	-- buttons done
 
+	self.active_field = self.email_input_field
 	self.background_color = {r=30, g=35, b=35}
-
 	self.render_ticket = false
-
 	self.hasActiveKeyboard = false
 	self.keyboard = KeyboardComponent()
 	self.keyboard:set_active(false)
@@ -48,13 +61,12 @@ function LoginView:__init(remote_control)
 		self.hasActiveKeyboard = false
 		self.keyboard:set_active(false)
 		surface:destroy(self.keyboard)
-		--self.active_field:render(screen)
 		self:render(screen)
 		gfx.update()
 	end
 	self:listen_to(self.keyboard, "exit", exit_keyboard_callback)
 
-	self.content_list = {name_input_field,password_input_field}
+	self.content_list = {self.email_input_field,self.password_input_field, self.button_login, self.button_cancel}
 	self.content_pointer = 1
 
 	self.callback = utils.partial(self.load_view, self)
@@ -76,27 +88,13 @@ function LoginView:render(surface)
 	end
 
 
-	name_input_field:render(surface)
-  password_input_field:render(surface)
-	-- --surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/paris.png")))
-	--
-	-- local log_in_button = sys.new_freetype({r=23, g=155, b=23}, 30, {x=700+50,y=35}, utils.absolute_path("data/fonts/DroidSans.ttf"))
-	-- surface:fill({r=23, g=0, b=23}, {width=500, height=100, x=700, y=45})
-	-- log_in_button:draw_over_surface(surface, "Ok")
-	--
-	-- local input = sys.new_freetype({r=23, g=155, b=23}, 30, {x=700+50,y=135}, utils.absolute_path("data/fonts/DroidSans.ttf"))
-	-- input:draw_over_surface(surface, "namn: ")
-	--
-	-- keyboard = KeyboardComponent()
-	-- keyboard:render(surface)
-	-- --logger:trace("active:" .. keyboard:is_active())
-	-- if keyboard:is_active() then
-	-- 	logger:trace("keyboard ACTIVE")
-	-- else
-	-- 	logger:trace("keyboard is not active")
-	-- end
-
-	--keyboard:set_active(false)
+	self.email_input_field:render(surface)
+  self.password_input_field:render(surface)
+	self.button_cancel:render(self.button_cancel_surface)
+	self.button_login:render(self.button_login_surface)
+	self.button_cancel_text:draw(surface, {x=700+190, y=530+20}, "Cancel")
+	self.button_login_text:draw(surface, {x=700+200, y=380+20}, "Login")
+	self.profile_manager = ProfileManager()
 
 
 end
@@ -112,19 +110,59 @@ function LoginView:load_view(button)
 			self.keyboard:button_press(button)
 	else
 		if button == "down" then
-			self.content_list[self.content_pointer]:set_highlighted(false)
-			if self.content_pointer + 1 > #self.content_list then
+			if self.content_pointer == 1 then
+				self.content_list[self.content_pointer]:set_highlighted(false)
+				self.content_pointer = 2
+				self.content_list[self.content_pointer]:set_highlighted(true)
+			elseif self.content_pointer == 2 then
+				self.content_list[self.content_pointer]:set_highlighted(false)
+				self.content_pointer = 3
+				self.content_list[self.content_pointer]:select(true)
+			elseif self.content_pointer == 3 then
+				self.content_list[self.content_pointer]:select(false)
+				self.content_pointer = 4
+				self.content_list[self.content_pointer]:select(true)
+
+			elseif self.content_pointer == 4 then
+				self.content_list[self.content_pointer]:select(false)
 				self.content_pointer = 1
-			else
-				self.content_pointer = self.content_pointer + 1
+				self.content_list[self.content_pointer]:set_highlighted(true)
 			end
-			self.content_list[self.content_pointer]:set_highlighted(true)
+		elseif button == "up" then
+			if self.content_pointer == 1 then
+				self.content_list[self.content_pointer]:set_highlighted(false)
+				self.content_pointer = 4
+				self.content_list[self.content_pointer]:select(true)
+			elseif self.content_pointer == 2 then
+				self.content_list[self.content_pointer]:set_highlighted(false)
+				self.content_pointer = 1
+				self.content_list[self.content_pointer]:set_highlighted(true)
+			elseif self.content_pointer == 3 then
+				self.content_list[self.content_pointer]:select(false)
+				self.content_pointer = 2
+				self.content_list[self.content_pointer]:set_highlighted(true)
+			elseif self.content_pointer == 4 then
+				self.content_list[self.content_pointer]:select(false)
+				self.content_pointer = 3
+				self.content_list[self.content_pointer]:select(true)
+			end
 		elseif button == "ok" then
-			if self.content_pointer == 1 or self.content_pointer == 1 then
+			if self.content_pointer == 1 or self.content_pointer == 2 then
 				self.render_ticket = true
 				self.active_field = self.content_list[self.content_pointer]
 				self.keyboard:new_input(self.active_field.text)
 				self.hasActiveKeyboard = true
+			elseif self.content_pointer == 3 then
+				logger:trace("detta står i email: " .. self.email_input_field:get_text())
+				logger:trace("detta står i password: " .. self.password_input_field:get_text())
+				--loginProfile = ProfileManager:login(self.email_input_field:get_text(),self.password_input_field:get_text())
+				loginProfile = ProfileManager:login("Anna54@gmail.com","")
+				
+
+			elseif self.content_pointer == 4 then
+				profile_selection = ProfileSelection(event.remote_control)
+				view.view_manager:set_view(profile_selection)
+				gfx.update()
 			end
 		end
 		self:render(screen)
