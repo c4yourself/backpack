@@ -17,15 +17,16 @@ local Button = require("lib.components.Button")
 local ExperienceCalculation = require("lib.scores.experiencecalculation")
 
 --- Constructor for NumericQuizView
+-- @param remote_control
+-- @param subsurface
+-- @param profile is the profile playing
 function NumericQuizView:__init(remote_control, subsurface, profile)
 	View.__init(self)
 	self.remote_control = remote_control
 	self.surface = subsurface
 	self.profile = profile
-	--event.remote_control:off("button_release") -- TODO remove this once the ViewManager is fully implemented
 
-	-- Flags
-	--Flags to determine whether a quiz or a question is answered
+-- Flags
 	self.answer_flag = false
 	self.quiz_flag = false
 	self.listening_initiated = false
@@ -43,16 +44,16 @@ function NumericQuizView:__init(remote_control, subsurface, profile)
 	local color_selected = Color(255, 153, 0, 255)
 	local color_disabled = Color(111, 222, 111, 255)
 
-	local height = screen:get_height()
-	local width = screen:get_width()
-	local button_size = {width = 372, height = 107}
+	local height = subsurface:get_height()
+	local width = subsurface:get_width()
+	local button_size = {width = 185, height = 70}
 
 	-- Add exit button
 	local button_exit = Button(button_color, color_selected, color_disabled,
 								true, true, "views.CityView")
-	local exit_position = {x = 42, y = 450}
+	local exit_position = {x = 0.1*width, y = 450}
 	button_exit:set_textdata("Back to city", Color(255,255,255,255),
-							{x = 0, y = 0}, 32,"data/fonts/DroidSans.ttf")
+							{x = 0, y = 0}, 24,"data/fonts/DroidSans.ttf")
 	self.views.grid:add_button(exit_position,
 						button_size,
 						button_exit)
@@ -61,10 +62,9 @@ function NumericQuizView:__init(remote_control, subsurface, profile)
 	-- Add next button
 	local button_next = Button(button_color, color_selected, color_disabled,
 								true, false, "")
-	local next_position = {x = 0.9 * width - exit_position.x - button_size.width,
-							y = exit_position.y}
+	local next_position = {x = 0.9 * width - button_size.width , y = exit_position.y}
 	button_next:set_textdata("Next question", Color(255,255,255,255),
-							{x = 0, y = 0}, 32,"data/fonts/DroidSans.ttf")
+							{x = 0, y = 0}, 24,"data/fonts/DroidSans.ttf")
 	self.views.grid:add_button(next_position,
 						button_size,
 						button_next)
@@ -75,7 +75,8 @@ function NumericQuizView:__init(remote_control, subsurface, profile)
 	-- Associate a quiz instance with the View
 	self.num_quiz = Quiz()
 	self.progress_table = {}
-	self:_set_level()
+--	self:_set_level()
+	self.level = "EXPERT"
 	self.num_quiz:generate_numerical_quiz(self.level, 10, "image_path")
 
 	for i=1, #self.num_quiz.questions do
@@ -84,10 +85,12 @@ function NumericQuizView:__init(remote_control, subsurface, profile)
 	self.user_answer = ""
 
 	-- Background colors for this view's own subsurfaces
-	self.question_area_color = Color(255,0,0,255)
-	self.progress_counter_color = Color(0,255,0,255)
-	self.question_area_font = Font("data/fonts/DroidSans.ttf", 32,
-									Color(255,255,255,255))
+	self.question_area_color = Color(255,255,255,255)
+	self.progress_counter_color = Color(255,99,0,255)
+	self.question_area_font = Font("data/fonts/DroidSans.ttf", 26,
+									Color(0,0,0,255))
+	self.progress_counter_font = Font("data/fonts/DroidSans.ttf", 32,
+																	Color(255,255,255,255))
 	-- Listeners and callbacks
 	self:listen_to(
 		event.remote_control,
@@ -157,16 +160,16 @@ function NumericQuizView:render(surface)
 										height = self.counter_height,
 										width = self.counter_width})
 			--Question area
-			local x = math.ceil(surface:get_width() * 0.2)
-			local y = math.ceil(surface:get_height() * 0.2)
-			local question_area_width = surface_width - 2 * x
-			local question_area_height = math.ceil(0.3*surface_height)
-			self.question_area_width = question_area_width
-			self.question_area_height = question_area_height
+		--	local x = math.ceil(surface:get_width() * 0.2)
+			local x = surface_width * 0.3
+			local y = surface_height * 0.2
+
+			self.question_area_width = surface_width*0.4
+			self.question_area_height = 0.3*surface_height
 
 			self.question_area = SubSurface(surface, {x = x, y = y,
-				height = question_area_height,
-				width = question_area_width})
+				height = self.question_area_height,
+				width = self.question_area_width})
 
 			self.areas_defined = true
 		end
@@ -198,11 +201,16 @@ function NumericQuizView:render(surface)
 			self.answer_flag = false
 			local question = self.num_quiz:get_question()
 			if question ~= nil then
-				local question_text = "What is the answer to: " .. question .. "?"
-				self.question_area_font:draw(self.question_area, {x = 0, y = 0,
+				local calculate_text = "Calculate"
+				local question_text = question .. " = ?"
+				self.question_area_font:draw(self.question_area, {x = 0, y = self.question_area_height*0.3,
 					height = self.question_area_height,
 					width = self.question_area_width},
-					question_text, "center", "middle")
+					calculate_text, "center")
+				self.question_area_font:draw(self.question_area, {x = 0, y = self.question_area_height*0.5,
+						height = self.question_area_height,
+						width = self.question_area_width},
+						question_text, "center")
 			else
 				-- The user has finished the quiz
 				self.views.num_input_comp:blur()
@@ -222,14 +230,14 @@ function NumericQuizView:render(surface)
 		local quiz_length = #self.num_quiz.questions
 		local current_question = math.min(self.num_quiz.current_question,
 												quiz_length)
-		self.question_area_font:draw(self.progress_counter_area,
+		self.progress_counter_font:draw(self.progress_counter_area,
 									{x = 0, y = 0, height = self.counter_height,
 									width = self.counter_width},
-									tostring(current_question) .. " / " ..
+									tostring(current_question) .. "/" ..
 									tostring(quiz_length), "center", "middle")
 		-- Render the Progress bar
-		local bar_component_width = 45
-		local bar_component_height = 45
+		local bar_component_width = 35
+		local bar_component_height = 35
 		local progress_bar_margin = 10
 		local bar_component_x = self.x_counter + self.counter_width -
 								bar_component_width
