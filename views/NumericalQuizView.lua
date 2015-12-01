@@ -129,8 +129,8 @@ function NumericQuizView:render(surface)
 
 	-- Define input area if it hasn't been done already
 	if not self.input_area_defined then
-		local input_x = math.ceil(surface:get_width() * 0.4)
-		local input_y = math.ceil(surface:get_height() * 0.6)
+		local input_x = math.ceil(surface_width * 0.4)
+		local input_y = math.ceil(surface_height * 0.6)
 		local input_height = 60
 		local input_width = 225
 		self.input_area = SubSurface(surface, {x = input_x, y = input_y,
@@ -139,6 +139,7 @@ function NumericQuizView:render(surface)
 		self.views.grid:add_button({x = input_x, y = input_y},
 							{height = input_height , width = input_width},
 							self.views.num_input_comp)
+
 		local input_index = self.views.grid:get_last_index()
 		self.views.grid:mark_as_input_comp(input_index)
 	end
@@ -254,28 +255,38 @@ function NumericQuizView:render(surface)
 		local bar_component_y = self.y_counter + progress_bar_margin +
 								self.counter_height
 		local quiz_length = #self.progress_table
+
 		-- Create a progress bar and color its boxes
+
+		-- Load boxes for the right and wrong answer
+		self.answer_correct = gfx.loadpng("data/images/progress_bar/rsz_11v_checkbox.png")
+		self.answer_nil = gfx.loadpng("data/images/progress_bar/rsz_empty_checkbox.png")
+		self.answer_false = gfx.loadpng("data/images/progress_bar/rsz_x_checkbox.png")
+
 		for i = 1, quiz_length do
-			local progress_bar_component = SubSurface(surface,
-										{x = bar_component_x, y = bar_component_y,
-										height = bar_component_height,
-										width = bar_component_width})
-			self.answer_correct = gfx.loadpng("data/images/progress_bar/rsz_11v_checkbox.png")
-			self.answer_nil = gfx.loadpng("data/images/progress_bar/rsz_empty_checkbox.png")
-			self.answer_false = gfx.loadpng("data/images/progress_bar/rsz_x_checkbox.png")
-		--	local bar_component_color = nil
-			-- Depending on the users success: color the boxes differently
+			local progress_bar_component_color = SubSurface(surface,
+										{x = bar_component_x+2, y = bar_component_y+2,
+										height = bar_component_height-4,
+										width = bar_component_width-4})
+			local progress_bar_component_pic = SubSurface(surface,
+																	{x = bar_component_x, y = bar_component_y,
+																	height = bar_component_height,
+																	width = bar_component_width})
+			-- Depending on the user's success: there will be different boxes
 			if self.progress_table[i] == true then
-				--bar_component_color = Color(0,255,0,255)
-				progress_bar_component:copyfrom(self.answer_correct)
+				bar_component_color = Color(0,255,0,255)
+				progress_bar_component_color:clear(bar_component_color:to_table())
+				progress_bar_component_pic:copyfrom(self.answer_correct)
 			elseif self.progress_table[i] == false then
-				progress_bar_component:copyfrom(self.answer_false)
-				--bar_component_color = Color(255,0,0,255)
+				bar_component_color = Color(255,0,0,255)
+				progress_bar_component_color:clear(bar_component_color:to_table())
+				progress_bar_component_pic:copyfrom(self.answer_false)
 			else
-				progress_bar_component:copyfrom(self.answer_nil)
-				--bar_component_color = Color(255, 255, 255, 255)
+				bar_component_color = Color(0, 0, 0, 50)
+				progress_bar_component_color:clear(bar_component_color:to_table())
+				progress_bar_component_pic:copyfrom(self.answer_nil)
 			end
-			--progress_bar_component:clear(bar_component_color:to_table())
+
 			bar_component_y = bar_component_y + progress_bar_margin +
 								bar_component_height
 		end

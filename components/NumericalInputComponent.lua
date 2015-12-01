@@ -83,7 +83,7 @@ function NumericalInputComponent:render(surface)
 	end
 	self.width = surface:get_width()
 	self.height = surface:get_height()
-	local question_font = Font("data/fonts/DroidSans.ttf", 20, Color(255,255,255,255))
+	local question_font = Font("data/fonts/DroidSans.ttf", 20, Color(255, 255, 255, 255))
 	question_font:draw(surface, {x = 0, y = 0,
 			height = self.height, width = self.width}, self.input,
 			"center", "middle")
