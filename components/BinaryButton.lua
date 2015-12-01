@@ -45,7 +45,7 @@ function BinaryButton:is_highlighted()
 	return self.highlighted
 end
 
-function BinaryButton:set_highlighted(status)
+function BinaryButton:select(status)
 	self.highlighted = status
 end
 

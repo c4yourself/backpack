@@ -113,11 +113,11 @@ function LoginView:load_view(button)
 	else
 		if button == "down" then
 			if self.content_pointer == 1 then
-				self.content_list[self.content_pointer]:set_highlighted(false)
+				self.content_list[self.content_pointer]:select(false)
 				self.content_pointer = 2
-				self.content_list[self.content_pointer]:set_highlighted(true)
+				self.content_list[self.content_pointer]:select(true)
 			elseif self.content_pointer == 2 then
-				self.content_list[self.content_pointer]:set_highlighted(false)
+				self.content_list[self.content_pointer]:select(false)
 				self.content_pointer = 3
 				self.content_list[self.content_pointer]:select(true)
 			elseif self.content_pointer == 3 then
@@ -128,22 +128,22 @@ function LoginView:load_view(button)
 			elseif self.content_pointer == 4 then
 				self.content_list[self.content_pointer]:select(false)
 				self.content_pointer = 1
-				self.content_list[self.content_pointer]:set_highlighted(true)
+				self.content_list[self.content_pointer]:select(true)
 			end
 			self:render(screen)
 		elseif button == "up" then
 			if self.content_pointer == 1 then
-				self.content_list[self.content_pointer]:set_highlighted(false)
+				self.content_list[self.content_pointer]:select(false)
 				self.content_pointer = 4
 				self.content_list[self.content_pointer]:select(true)
 			elseif self.content_pointer == 2 then
-				self.content_list[self.content_pointer]:set_highlighted(false)
+				self.content_list[self.content_pointer]:select(false)
 				self.content_pointer = 1
-				self.content_list[self.content_pointer]:set_highlighted(true)
+				self.content_list[self.content_pointer]:select(true)
 			elseif self.content_pointer == 3 then
 				self.content_list[self.content_pointer]:select(false)
 				self.content_pointer = 2
-				self.content_list[self.content_pointer]:set_highlighted(true)
+				self.content_list[self.content_pointer]:select(true)
 			elseif self.content_pointer == 4 then
 				self.content_list[self.content_pointer]:select(false)
 				self.content_pointer = 3

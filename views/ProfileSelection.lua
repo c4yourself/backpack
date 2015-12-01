@@ -87,7 +87,7 @@ function ProfileSelection:callContinueGame()
 end
 
 function ProfileSelection:callCreateProfile()
-	create_profile = CreateProfileView(event.remote_control)
+	create_profile = CreateProfileView(event.remote_control, self)
 	view.view_manager:set_view(create_profile)
 end
 
