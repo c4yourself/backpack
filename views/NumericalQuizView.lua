@@ -15,6 +15,7 @@ local Font = require("lib.draw.Font")
 local NumericalQuizGrid = require("lib.components.NumericalQuizGrid")
 local Button = require("lib.components.Button")
 local ExperienceCalculation = require("lib.scores.experiencecalculation")
+local PopUpView = require("views.PopUpView")
 
 --- Constructor for NumericQuizView
 -- @param remote_control
@@ -213,15 +214,16 @@ function NumericQuizView:render(surface)
 						question_text, "center")
 			else
 				-- The user has finished the quiz
-				self.views.num_input_comp:blur()
-				self.quiz_flag = true
-				local output = "You answered "
-								.. tostring(self.num_quiz.correct_answers)
-								.. " questions correctly."
-				self.question_area_font:draw(self.question_area, {x = 0, y = 0,
-								height = self.question_area_height,
-								width = self.question_area_width},
-								output, "center", "middle")
+				-- self.views.num_input_comp:blur()
+				-- self.quiz_flag = true
+				-- local output = "You answered "
+				-- 				.. tostring(self.num_quiz.correct_answers)
+				-- 				.. " questions correctly."
+				-- self.question_area_font:draw(self.question_area, {x = 0, y = 0,
+				-- 				height = self.question_area_height,
+				-- 				width = self.question_area_width},
+				-- 				output, "center", "middle")
+				self:back_to_city()
 			end
 		end
 		-- Render the Progress counter
@@ -341,6 +343,8 @@ end
 
 function NumericQuizView:back_to_city()
 	--TODO Add pop-up
+	local message = {""}
+	local type = ""
 	local current_question = self.num_quiz.current_question
 	local quiz_length = #self.num_quiz.questions
 	if current_question >= quiz_length then
@@ -348,9 +352,41 @@ function NumericQuizView:back_to_city()
 		local experience = ExperienceCalculation.Calculation(counter, "Mathquiz")
 		self.profile:modify_balance(experience)
 		self.profile:modify_experience(experience)
+
+		message = {"Good job! You answered ".. tostring(self.num_quiz.correct_answers).. " questions correctly ",
+							"and you received" .. experience .. " coins."}
+		type = "message"
+	else
+		message = {"Are you sure you want to exit?"}
+		type = "confirmation"
 	end
-	self:trigger("exit_view")
-	self:destroy()
+
+	local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
+	local popup_view = PopUpView(remote_control,subsurface, type, message)
+	self:add_view(popup_view)
+	self.views.grid:blur()
+	self.views.num_input_comp:blur()
+
+	local button_click_func = function(button)
+		if button == "ok" then
+		self:trigger("exit_view")
+		else
+		popup_view:destroy()
+		self.views.grid:focus()
+			self.views.num_input_comp:focus()
+		self:dirty(true)
+		gfx.update()
+	end
+	end
+
+	self:listen_to_once(popup_view, "button_click", button_click_func)
+	popup_view:render(subsurface)
+	gfx.update()
+
+
+
+--	self:trigger("exit_view")
+	--self:destroy()
 end
 
 return NumericQuizView
