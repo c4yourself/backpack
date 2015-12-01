@@ -19,6 +19,7 @@ local MultipleChoiceGrid = require("lib.components.MultipleChoiceGrid")
 local NumericalQuizGrid = require("lib.components.NumericalQuizGrid")
 local ToggleButton = require("lib.components.ToggleButton")
 local ExperienceCalculation = require("lib.scores.experiencecalculation")
+local PopUpView = require("views.PopUpView")
 
 --- Constructor for MultipleChoiceView
 function MultipleChoiceView:__init(remote_control, subsurface, profile)
@@ -203,6 +204,19 @@ function MultipleChoiceView:_next()
 		if self.current_question > self.quiz_size then
 			self.end_flag = 1
 			self.quiz_state = "DONE"
+			if self.end_flag == 1 then
+			-- 	local counter  = self.correct_answer_number
+			-- 	local experience = ExperienceCalculation.Calculation(counter, "Multiplechoice")
+			-- 	self.profile:modify_balance(experience)
+			-- 	self.profile:modify_experience(experience)
+			-- 	local type = "message"
+			-- 	local message = {"Good job! You received" .. experience .. " coins."}
+			-- --	local message = {"Good job! You received XX coins."}
+			-- 	self:_back_to_city(type, message)
+			end
+
+
+
 		else
 			self.quiz_state = "IDLE"
 		end
@@ -212,19 +226,32 @@ function MultipleChoiceView:_next()
 
 		self.quiz_state = "DONE"
 		self:dirty(true)
+
+	-- Don't know if the code below is in the right place? The experience shall be updated after finished game.
+		local counter  = self.correct_answer_number
+		local experience = ExperienceCalculation.Calculation(counter, "Multiplechoice")
+		self.profile:modify_balance(experience)
+		self.profile:modify_experience(experience)
+
+	-- When the game is finished, a popup-view with the text below shall be shown.
+	--This isn't working right now - the code probably shall be placed somewhere else?
+
+	-- 	local type = "message"
+	-- 	local message = {"Good job! You received" .. experience .. " coins."}
+	-- --	local message = {"Good job! You received XX coins."}
+	-- 	self:_back_to_city(type, message)
+
 	end
 end
 
 ---Triggered everytime the user presses the back to city button
 function MultipleChoiceView:_exit()
 	--TODO add popup
-	if self.end_flag == 1 then
-		local counter  = self.correct_answer_number
-		local experience = ExperienceCalculation.Calculation(counter, "Multiplechoice")
-		self.profile:modify_balance(experience)
-		self.profile:modify_experience(experience)
-	end
-	self:trigger("exit_view", self.profile)
+
+	local type = "confirmation"
+	local message = {"Are you sure you want to exit?"}
+	self:_back_to_city(type, message)
+	--self:trigger("exit_view", self.profile)
 end
 
 
@@ -390,6 +417,69 @@ function MultipleChoiceView:render(surface)
 
 	gfx.update()
 	self:dirty(false)
+end
+
+function MultipleChoiceView:_back_to_city(type, message)
+
+    local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
+		local popup_view = PopUpView(remote_control,subsurface, type, message)
+    self:add_view(popup_view)
+    self:blur()
+
+    local button_click_func = function(button)
+      if button == "ok" then
+      self:trigger("exit_view")
+      else
+			-- This isn't working right now!!
+      popup_view:destroy()
+      self:focus()
+      self:dirty(true)
+      gfx.update()
+    end
+    end
+
+    self:listen_to_once(popup_view, "button_click", button_click_func)
+    popup_view:render(subsurface)
+    gfx.update()
+end
+
+function MultipleChoiceView:focus()
+
+	self:listen_to(
+		self.views.grid,
+		"back",
+		utils.partial(self._exit, self)
+	)
+
+	self:listen_to(
+		self.views.grid,
+		"next",
+		utils.partial(self._next, self)
+	)
+
+	self:listen_to(
+		self.views.grid,
+		"submit",
+		utils.partial(self._submit, self)
+	)
+
+	self:listen_to(
+	event.remote_control,
+	"button_release",
+	utils.partial(self.press, self)
+	)
+
+	self:listen_to(
+		self.views.grid,
+		"dirty",
+		utils.partial(self.views.grid.render,
+						self.views.grid, surface)
+	)
+end
+
+function MultipleChoiceView:blur()
+	self:stop_listening(event.remote_control)
+	self:stop_listening(self.views.grid)
 end
 
 
