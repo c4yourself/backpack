@@ -184,7 +184,6 @@ end
 -- @param token a users authetication token received by login()
 -- @return result a instance of the Profile class
 function ProfileSynchronizer:get_profile(token)
-	print(token)
 	-- Json request for token data
 	local token_data =  [[{"profile_token":"]]..token..[[","zdata_hash":"49aac7d4ad14540a91c14255ea1288e2fdc9a54e53f01d15371e81345f5e3646"}]]
 	--local token_data =  [[{"profile_token":"]]..token..[[","zdata_hash":"49aac7d4ad14540a91c14255aa1288e2fdc9a54e53f01d15371e81345f5e3646"}]]

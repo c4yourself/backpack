@@ -49,7 +49,6 @@ function ProfileManager:check_login(profile)
 			localprofilemanager:save(profile)
 			return profile
 		else
-			print("Token e: "..profile:get_login_token())
 			result = self.profilesynchronizer:get_profile(profile:get_login_token())
 			if result["error"] then
 				return result
@@ -149,12 +148,10 @@ function ProfileManager:login(email_address,password)
 		if  login_result["error"] then
 			return false, "Wrong email address or password!"
 		else
-			print(login_result)
 			profile = self.profilesynchronizer:get_profile(login_result)
 			if profile["error"] then
-				print(profile["message"])
+				return false, "No profile found"
 			else
-				print(profile:get_name())
 				localprofilemanager:save(profile)
 				return true, login_result
 			end
