@@ -31,6 +31,8 @@ function LoginView:__init(remote_control)
 	self.password_input_field = InputField("Password:", {x = 700, y = 230}, false)
   self.password_input_field:set_private(true)
 
+	self.profile_selection = ProfileSelection(remote_control)
+
 	--Button data
 	local button_color = Color(255, 99, 0, 255)
 	local color_selected = Color(255, 153, 0, 255)
@@ -156,12 +158,18 @@ function LoginView:load_view(button)
 				logger:trace("detta står i email: " .. self.email_input_field:get_text())
 				logger:trace("detta står i password: " .. self.password_input_field:get_text())
 				--loginProfile = ProfileManager:login(self.email_input_field:get_text(),self.password_input_field:get_text())
-				loginProfile = ProfileManager:login("Anna54@gmail.com","")
-				
+				worked = ProfileManager:login("Anna54@gmail.com","")
+
+
+				view.view_manager:set_view(self.profile_selection)
+				gfx.update()
+
 
 			elseif self.content_pointer == 4 then
-				profile_selection = ProfileSelection(event.remote_control)
-				view.view_manager:set_view(profile_selection)
+				logger:trace("INNNNNE" .. self.email_input_field:get_text())
+
+
+				view.view_manager:set_view(self.profile_selection)
 				gfx.update()
 			end
 		end
