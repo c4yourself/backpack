@@ -29,7 +29,7 @@ function CityTourView:__init(remote_control, surface, profile)
 	city_tour_head_font = Font("data/fonts/DroidSans.ttf", 48, Color(0, 0, 0, 255))
 	city_tour_attraction_font = Font("data/fonts/DroidSans.ttf", 25, Color(0, 0, 0, 255))
 	city_tour_text =  Font("data/fonts/DroidSans.ttf", 20, Color(0, 0, 0, 255))
-
+	city_tour_question = Font("data/fonts/DroidSans.ttf", 25, Color(0, 0, 0, 255))
 	--Create button colors
 	local button_color = Color(255, 99, 0, 255)
 	local color_selected = Color(255, 153, 0, 255)
@@ -63,13 +63,13 @@ function CityTourView:__init(remote_control, surface, profile)
 	button_4:set_textdata(attractions.attraction[self.city.code][attractionpoint].answers[4], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
 
 	local text_height = 75+25*table.getn(attractions.attraction[self.city.code][attractionpoint].text)
-	local indent = width/27
+	local indent = 100
 	-- Create buttons positions and size
-	local button_size = {width=2/9*width, height=4*(height-text_height)/13}
-	local position_1 = {x = 90 + width / 3 + indent, y = button_size.height/2+text_height}
-	local position_2 = {x = 90 +width / 3 + 2 * indent + button_size.width, y = button_size.height/2+text_height}
-	local position_3 = {x = 90 +width / 3 + indent, y = 7*button_size.height/4+text_height}
-	local position_4 = {x = 90 +width / 3 + 2 * indent + button_size.width, y = 7*button_size.height/4+text_height}
+	local button_size = {width=9/36*width+5, height=3*(height-text_height)/13}
+	local position_1 = {x = width / 3 + indent, y = 5/4*button_size.height+text_height}
+	local position_2 = {x = width / 3 + 5/4*indent + button_size.width, y = 5/4*button_size.height+text_height}
+	local position_3 = {x = width / 3 + indent, y = 5/2*button_size.height+text_height}
+	local position_4 = {x = width / 3 + 5/4* indent + button_size.width, y = 5/2*button_size.height+text_height}
 
 	self.buttonGrid:add_button(position_1, button_size, button_1)
 	self.buttonGrid:add_button(position_2, button_size, button_2)
@@ -128,10 +128,10 @@ function CityTourView:render(surface)
 
 	-- Draw the fonts
 	city_tour_head_font:draw(surface, {x = height/6-10, y = 20}, "City Tour")
-	city_tour_attraction_font:draw(surface, {x = height/6, y = height*23/30+5, width = height*0.54*3/5, height = 30}, attractions.attraction[self.city.code][attractionpoint].name, center)
+	city_tour_attraction_font:draw(surface, {x = 0, y = height*23/30+5, width = width/3, height = 30}, attractions.attraction[self.city.code][attractionpoint].name, "center")
 
 	-- Draw tour text square x-axis
-	surface:fill({0,0,0,255}, {width = 2/3*width-150, height = 2, x = width/3+95, y =45})
+	surface:fill({0,0,0,255}, {width = 2/3*width-150, height = 2, x = width/3+95, y =70})
 	surface:fill({0,0,0,255}, {width = 2/3*width-150, height = 2, x = width/3+95, y =75+25*table.getn(attractions.attraction[self.city.code][attractionpoint].text)})
 
 	--Write all the tour text
@@ -141,8 +141,8 @@ function CityTourView:render(surface)
 	end
 
 	-- Tour question
-
-	city_tour_text:draw(surface, {x = width/3+text_indent, y = (height+50+25*table.getn(attractions.attraction[self.city.code][attractionpoint].text)), width = 50, height = 50}, attractions.attraction[self.city.code][attractionpoint].question)
+	local text_height = 75 + 25*table.getn(attractions.attraction[self.city.code][attractionpoint].text)
+	city_tour_question:draw(surface, {x = width/3, y = text_height, width = width*2/3, height = self.buttonGrid.button_list[1].y - text_height}, attractions.attraction[self.city.code][attractionpoint].question, "center", "middle")
 
 	-- Code that inserts a new line when the question is too long.
 
