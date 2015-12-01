@@ -70,8 +70,8 @@ end
 
 function ProfileSelection:callContinueGame()
 	cur_prof = self.profile_list[self.profile_index+1]
-	profile = self.profile_manager:load(cur_prof.email_address)
-	city_view = CityView(profile, event.remote_control)
+	--profile = self.profile_manager:load(cur_prof.email_address)
+	city_view = CityView(cur_prof, event.remote_control)
 	view.view_manager:set_view(city_view)
 end
 

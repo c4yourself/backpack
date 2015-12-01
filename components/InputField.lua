@@ -14,7 +14,7 @@ local InputField = class("InputField", View)
 
 function InputField:__init(name, position, highlighted)
 	View.__init(self)
-	self.highlighted_color = {r=255, g=99, b=0}
+	self.highlighted_color = {r=250, g=169, b=0}
 	self.normal_color = {r=255, g=255, b=255}
 	self.font_header = Font("data/fonts/DroidSans.ttf", 40, Color(255, 255, 255, 255))
 	self.font_text = Font("data/fonts/DroidSans.ttf", 40, Color(0, 0, 0, 255))
