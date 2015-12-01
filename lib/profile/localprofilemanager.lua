@@ -153,7 +153,6 @@ function localprofilemanager:get_profileslist()
 	io.close()
 	for i = 1, #profilename_list, 1 do
 		profile_list[i] = self:load(profilename_list[i])
-		("localprofiles--- " .. profile_list[i]:get_name())
 	end
 	return profile_list
 end
