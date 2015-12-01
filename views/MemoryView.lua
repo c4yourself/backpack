@@ -91,7 +91,7 @@ function MemoryView:__init(remote_control, surface, profile)
         print(i)
         print(i)
         print(i)
-        
+
         self.cards[i]  = CardComponent(current_city, i, card_color, card_color_selected,
                                 card_color, true, false)
         --Temporary code snippet to be able to differentiate cards from eachother
