@@ -100,6 +100,7 @@ end
 -- @param width_coinbox, width of a single coinbox
 -- @param height_coinbox, height of a single coinbox
 function ConnectFourComponent:top_row(surface, column, width_coinbox, height_coinbox)
+	print("toprow")
 	local posx = 0.35*surface:get_width()
 	local posy = 0.1*surface:get_height() - 0.5*height_coinbox
 	local current_color = {r = 0, g = 0, b = 0}
@@ -189,7 +190,7 @@ function ConnectFourComponent:render(surface)
 	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect4toprow.png")),nil,{x=posx_constant, y=0.1*surface:get_height() - 0.5*height_coinbox, width = 7*width_coinbox, height = height_coinbox})
 
 
-	--[[if self.connectfour:get_player() == nil then
+	if self.connectfour:_is_full_board() then
 		print("brädet är fullt")
 		self.no_winner_delay = sys.new_timer(2500, function()
 			local message = {"The board is full, no one won. Return to city view"}
@@ -197,11 +198,11 @@ function ConnectFourComponent:render(surface)
 			self.no_winner_delay:stop()
 		end)
 		self.no_winner_delay:start()
+	end
 
-
-	end]]--
-
-	if self.connectfour:get_winner() ~= nil then
+--	if self.connectfour:get_winner() ~= nil then
+local string = "hej"
+	if string == "hej" then
 		print("någon har vunnit")
 		self.winner_delay = sys.new_timer(2500, function()
 			print("delayed")
