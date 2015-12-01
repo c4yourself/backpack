@@ -142,10 +142,10 @@ end
 ---Get a string of inventory
 -- @return inventory_string
 function Profile:get_inventory_string()
-	local tmp = string.format("\"1\": %s",self.inventory[1])
+	local tmp = string.format("%s",self.inventory[1])
 
 	for i = 2, #self.inventory, 1 do
-		tmp = string.format("%s, \"%s\": %s",tmp,i,self.inventory[i])
+		tmp = string.format("%s,%s",tmp,self.inventory[i])
 	end
 
 	return string.format("{%s}",tmp)

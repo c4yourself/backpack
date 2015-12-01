@@ -127,7 +127,6 @@ function localprofilemanager:load(profile_email)
 		end
 
 		--generate a profile instance
-		--print("city: " .. city)
 		profile_tmp = Profile(name,email_address,date_of_birth,sex,city.cities[tmp_city])
 		profile_tmp:set_balance(balance)
 		profile_tmp:set_experience(experience)
@@ -154,7 +153,6 @@ function localprofilemanager:get_profileslist()
 	io.close()
 	for i = 1, #profilename_list, 1 do
 		profile_list[i] = self:load(profilename_list[i])
-		print("localprofiles--- " .. profile_list[i]:get_name())
 	end
 	return profile_list
 end
