@@ -207,12 +207,16 @@ function Store:remove_button(index)
 
 	-- Get the index of the button to be removed
 	remove_index = get_size(self.items) + get_size(self.backpack_items) + 1
+	
 	-- Remove it from the button table
 	table.remove(self.buttons, remove_index)
+
 	-- Remove it from the images to be drawn
 	table.remove(self.item_positions, remove_index)
+
 	-- Remove the picture
 	table.remove(self.item_images, index)
+
 	-- Remove it from the button_grid
 	self.button_grid:remove_button(remove_index, index)
 end
