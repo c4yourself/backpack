@@ -51,7 +51,7 @@ function NumericQuizView:__init(remote_control, subsurface, profile)
 
 	-- Add exit button
 	local button_exit = Button(button_color, color_selected, color_disabled,
-								true, true, "views.CityView")
+								true, false, "views.CityView")
 	local exit_position = {x = 0.1*width, y = 450}
 	button_exit:set_textdata("Back to city", Color(255,255,255,255),
 							{x = 0, y = 0}, 24,"data/fonts/DroidSans.ttf")
@@ -131,8 +131,8 @@ function NumericQuizView:render(surface)
 	if not self.input_area_defined then
 		local input_x = math.ceil(surface:get_width() * 0.4)
 		local input_y = math.ceil(surface:get_height() * 0.6)
-		local input_height = math.ceil(0.2 * surface_height)
-		local input_width = math.ceil(0.2 * surface_width)
+		local input_height = 60
+		local input_width = 225
 		self.input_area = SubSurface(surface, {x = input_x, y = input_y,
 									height = input_height,
 									width = input_width})
@@ -182,18 +182,24 @@ function NumericQuizView:render(surface)
 			-- The user has answered a question
 			local current_question = self.num_quiz.current_question
 			if self.num_quiz:answer(self.user_answer) then
-				output = "Correct!"
+				output1 = "Correct!"
+				output2 = ""
 				self.progress_table[current_question] = true
 			else
-				output = "False. You answered " .. tostring(self.user_answer) ..
-				 " and" .. "\n" .. "the correct answer was "
+				output1 = "False. You answered " .. tostring(self.user_answer) ..
+				 " and"
+				 output2 = "the correct answer was "
 				 .. tostring(self.num_quiz.questions[current_question].correct_answer) .. "."
 				self.progress_table[current_question] = false
 			end
 			self.question_area_font:draw(self.question_area,
 				{x = 0, y = 0, height = self.question_area_height,
 				width = self.question_area_width},
-				output, "center", "middle")
+				output1, "center", "middle")
+			self.question_area_font:draw(self.question_area,
+					{x = 0, y = 25, height = self.question_area_height,
+					width = self.question_area_width},
+					output2, "center", "middle")
 			self.answer_flag = false
 			-- The statements below was useful for finding a bug, leaving them
 			-- in case it re-occurs
@@ -226,6 +232,7 @@ function NumericQuizView:render(surface)
 				self:back_to_city()
 			end
 		end
+
 		-- Render the Progress counter
 		self.progress_counter_area:clear(self.progress_counter_color:to_table())
 		local current_question = self.num_quiz.current_question
@@ -237,6 +244,7 @@ function NumericQuizView:render(surface)
 									width = self.counter_width},
 									tostring(current_question) .. "/" ..
 									tostring(quiz_length), "center", "middle")
+
 		-- Render the Progress bar
 		local bar_component_width = 35
 		local bar_component_height = 35
@@ -252,16 +260,22 @@ function NumericQuizView:render(surface)
 										{x = bar_component_x, y = bar_component_y,
 										height = bar_component_height,
 										width = bar_component_width})
-			local bar_component_color = nil
+			self.answer_correct = gfx.loadpng("data/images/progress_bar/rsz_11v_checkbox.png")
+			self.answer_nil = gfx.loadpng("data/images/progress_bar/rsz_empty_checkbox.png")
+			self.answer_false = gfx.loadpng("data/images/progress_bar/rsz_x_checkbox.png")
+		--	local bar_component_color = nil
 			-- Depending on the users success: color the boxes differently
 			if self.progress_table[i] == true then
-				bar_component_color = Color(0,255,0,255)
+				--bar_component_color = Color(0,255,0,255)
+				progress_bar_component:copyfrom(self.answer_correct)
 			elseif self.progress_table[i] == false then
-				bar_component_color = Color(255,0,0,255)
+				progress_bar_component:copyfrom(self.answer_false)
+				--bar_component_color = Color(255,0,0,255)
 			else
-				bar_component_color = Color(255, 255, 255, 255)
+				progress_bar_component:copyfrom(self.answer_nil)
+				--bar_component_color = Color(255, 255, 255, 255)
 			end
-			progress_bar_component:clear(bar_component_color:to_table())
+			--progress_bar_component:clear(bar_component_color:to_table())
 			bar_component_y = bar_component_y + progress_bar_margin +
 								bar_component_height
 		end
