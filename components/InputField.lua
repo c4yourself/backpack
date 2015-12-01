@@ -38,7 +38,7 @@ function InputField:is_highlighted()
 	return self.highlighted
 end
 
-function InputField:set_highlighted(status)
+function InputField:select(status)--set_highlighted(status)
 	self.highlighted = status
 end
 

@@ -14,8 +14,6 @@ local logger = require("lib.logger")
 local SubSurface = require("lib.view.SubSurface")
 local utils = require("lib.utils")
 local view = require("lib.view")
-
-
 local CityView = class("CityView", view.View)
 
 --- Constructor for CityView
