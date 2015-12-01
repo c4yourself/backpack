@@ -52,7 +52,7 @@ attractions.attraction = { paris = {
                                             "unwell soldiers."}
                                   },
                                   {name = "Louvre",
-                                  question = "Around how many objects from prehistory to the 21st century are exhibited in the museum?",
+                                  question = "Around how many objects are exhibited in the museum?",
                                   answers = {"35,000", "100,000", "156", "2,000"},
                                   pic_url = "data/images/CityTourLouvre.png",
                                   text = {"The Louvre Palace or the Louvre Museum is one of the world's",
@@ -73,7 +73,7 @@ attractions.attraction = { paris = {
 
                           rio_de_janeiro = {
                                       {name = "Lagoa Neighborhood",
-                                      question = "Lagoa is located around a lagoon in Rio De Janeiro, what is this Lagoon called?",
+                                      question = "What is the Lagoon in Rio called?",
                                       answers = {"Lagoon of Rio", "Rodrigo de Fretias Lagoon", "The great lagoon of Brazil", "De Gávea Lagoon"},
                                       pic_url = "data/images/CityTourLagoa.png",
                                       text = {"Lagoa (English: Lagoon) is a beautiful residential neighborhood in",
@@ -105,7 +105,7 @@ attractions.attraction = { paris = {
                                       "most famous one being the Cascatinha Waterfall."}
                                       },
                                       {name = "Christ the Redeemer",
-                                      question = "Christ the Redeemer was created by a French sculptor, what was his name?",
+                                      question = "Christ the Redeemer was created by whom?",
                                       answers = {"Heitor da Silva Costa", "Paul Landowski", "Raymond Gayrard", "Pierre Hébert"},
                                       pic_url = "data/images/CityTourChristTheRedeemer.png",
                                       text = {"Christ the Redeemer is an Art Deco statue of Jesus Christ in Rio",
@@ -182,7 +182,6 @@ attractions.attraction = { paris = {
                                       {name = "Chhatrapati Shivaju Terminus",
                                       question = "How many years did it take to build the station?",
                                       answers = {"12", "8", "14", "10"},
-
                                       pic_url = "data/images/CityTourVictoriaStation.png",
                                       text = {"Chhatrapati Shivaji Terminus (previously Victoria Terminus) is a",
                                               "UNESCO World Heritage historic railway station in  Maharashtra,",
@@ -217,7 +216,7 @@ attractions.attraction = { paris = {
 
                                 london = {
                                           {name = "The Big Ben and Parliament",
-                                          question = "What is the Big Ben?",
+                                          question = "The Big Ben is ..",
                                           answers = {"A radio tower", "An observatory", "A clock tower", "A sculpture"},
                                           pic_url = "data/images/CityTourBigBen.png",
                                           text = {"Big Ben is the nickname for the Great Bell of the clock at the north",
@@ -262,7 +261,7 @@ attractions.attraction = { paris = {
                                                   "office, and the home of the Crown Jewels of England."}
                                           },
                                             {name = "Buckingham Palace",
-                                            question = "What was Buckingham Palace called when it was first built?",
+                                            question = "What was Buckingham Palace called first?",
                                             answers = {"Buckingham House ", "Buckingham Tower ", "The big Buckingham Residence ", "Buckingham House of the King"},
                                             pic_url = "data/images/CityTourBuckinghamPalace.png",
                                             text = {"Buckingham Palace is the London residence and principal workplace",
