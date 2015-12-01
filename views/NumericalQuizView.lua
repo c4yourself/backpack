@@ -75,7 +75,9 @@ function NumericQuizView:__init(remote_control, subsurface, profile)
 	-- Associate a quiz instance with the View
 	self.num_quiz = Quiz()
 	self.progress_table = {}
-	self.num_quiz:generate_numerical_quiz("NOVICE", 5+1, "image_path")
+	self:_set_level()
+	self.num_quiz:generate_numerical_quiz(self.level, 10, "image_path")
+
 	for i=1, #self.num_quiz.questions do
 		self.progress_table[i] = -1
 	end
@@ -92,6 +94,19 @@ function NumericQuizView:__init(remote_control, subsurface, profile)
 		"button_release",
 		utils.partial(self.press, self)
 	)
+end
+
+function NumericQuizView:_set_level()
+	local exp = self.profile:get_experience()
+	if exp <= 100 then
+		self.level = "BEGINNER"
+	elseif exp <=200 then
+		self.level = "NOVICE"
+	elseif exp <= 300 then
+		self.level = "ADVANCED"
+	elseif exp >300 then
+		self.level = "EXPERT"
+	end
 end
 
 ---Responds to a button press when the View is active
