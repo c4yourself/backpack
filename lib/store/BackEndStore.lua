@@ -82,7 +82,10 @@ function BackEndStore:returnItemList(city)
 end
 
 function BackEndStore:returnOfferPrice(item, curr_city)
-	local multiplier = 2 --sself.city_multiplier[self.city_list[item:get_city()]][self.city_list[curr_city]]
+	print(self.city_list[item:get_city()])
+	print(self.city_list[curr_city])
+	multiplier = self.city_multiplier[self.city_list[item:get_city()]][self.city_list[curr_city]]
+
 	return item:get_price()*multiplier
 end
 
