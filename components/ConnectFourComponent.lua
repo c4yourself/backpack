@@ -200,9 +200,7 @@ function ConnectFourComponent:render(surface)
 		self.no_winner_delay:start()
 	end
 
---	if self.connectfour:get_winner() ~= nil then
-local string = "hej"
-	if string == "hej" then
+	if self.connectfour:get_winner() ~= nil then
 		print("någon har vunnit")
 		self.winner_delay = sys.new_timer(2500, function()
 			print("delayed")
