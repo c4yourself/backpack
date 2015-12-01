@@ -18,20 +18,19 @@ local color = require("lib.draw.Color")
 local logger = require("lib.logger")
 local KeyboardComponent	=	require("components.KeyboardComponent")
 local ProfileManager = require("lib.profile.ProfileManager")
-local ProfileSelection = require("views.ProfileSelection")
 
 local LoginView = class("LoginView", View)
 
 --- Constructor for CityView
 -- @param event_listener Remote control to listen to
-function LoginView:__init(remote_control)
+function LoginView:__init(remote_control, profile_selection)
 	View.__init(self)
+	self.profile_selection = profile_selection
 	self.background_path = ""
 	self.email_input_field = InputField("Name:", {x = 700, y = 80}, true)
 	self.password_input_field = InputField("Password:", {x = 700, y = 230}, false)
   self.password_input_field:set_private(true)
 
-	self.profile_selection = ProfileSelection(remote_control)
 
 	--Button data
 	local button_color = Color(255, 99, 0, 255)
@@ -78,6 +77,8 @@ function LoginView:__init(remote_control)
 		self.callback
 		--utils.partial(self.load_view, self)
 	)
+
+	self.profile_manager = ProfileManager()
 end
 
 function LoginView:render(surface)
@@ -96,7 +97,6 @@ function LoginView:render(surface)
 	self.button_login:render(self.button_login_surface)
 	self.button_cancel_text:draw(surface, {x=700+190, y=530+20}, "Cancel")
 	self.button_login_text:draw(surface, {x=700+200, y=380+20}, "Login")
-	self.profile_manager = ProfileManager()
 
 
 end
@@ -130,6 +130,7 @@ function LoginView:load_view(button)
 				self.content_pointer = 1
 				self.content_list[self.content_pointer]:set_highlighted(true)
 			end
+			self:render(screen)
 		elseif button == "up" then
 			if self.content_pointer == 1 then
 				self.content_list[self.content_pointer]:set_highlighted(false)
@@ -148,20 +149,23 @@ function LoginView:load_view(button)
 				self.content_pointer = 3
 				self.content_list[self.content_pointer]:select(true)
 			end
+			self:render(screen)
 		elseif button == "ok" then
 			if self.content_pointer == 1 or self.content_pointer == 2 then
 				self.render_ticket = true
 				self.active_field = self.content_list[self.content_pointer]
 				self.keyboard:new_input(self.active_field.text)
 				self.hasActiveKeyboard = true
+				self:render(screen)
 			elseif self.content_pointer == 3 then
 				logger:trace("detta står i email: " .. self.email_input_field:get_text())
 				logger:trace("detta står i password: " .. self.password_input_field:get_text())
 				--loginProfile = ProfileManager:login(self.email_input_field:get_text(),self.password_input_field:get_text())
-				worked = ProfileManager:login("Anna54@gmail.com","")
+				worked, result = self.profile_manager:login(self.email_input_field:get_text(),self.password_input_field:get_text())
 
 
 				view.view_manager:set_view(self.profile_selection)
+				self:render(screen)
 				gfx.update()
 
 
@@ -173,7 +177,6 @@ function LoginView:load_view(button)
 				gfx.update()
 			end
 		end
-		self:render(screen)
 		gfx.update()
 	end
 end

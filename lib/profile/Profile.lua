@@ -147,7 +147,7 @@ function Profile:get_inventory_string()
 	for i = 2, #self.inventory, 1 do
 		tmp = string.format("%s,%s",tmp,self.inventory[i])
 	end
-
+	print(string.format("{%s}",tmp))
 	return string.format("{%s}",tmp)
 end
 

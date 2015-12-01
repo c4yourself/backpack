@@ -10,7 +10,9 @@ local Profile = require("lib.profile.Profile")
 local ProfileManager = require("lib.profile.ProfileManager")
 local CreateProfileView = require("views.CreateProfileView")
 local CityView = require("views.CityView")
+local LoginView = require("views.LoginView")
 local ProfileSelection = class("ProfileSelection", View)
+
 --local ProfileSelection = {}
 
 function ProfileSelection:__init()
@@ -65,14 +67,23 @@ function ProfileSelection:setLeftMenu(bool)
 end
 
 function ProfileSelection:callFetchProfile()
-	---TODO: Fetch profile from global server
+
+	login_view = LoginView(event.remote_control, self)
+	view.view_manager:set_view(login_view)
+
 end
 
 function ProfileSelection:callContinueGame()
 	cur_prof = self.profile_list[self.profile_index+1]
-	--profile = self.profile_manager:load(cur_prof.email_address)
-	city_view = CityView(cur_prof, event.remote_control)
-	view.view_manager:set_view(city_view)
+	result = self.profile_manager:check_login(cur_prof)
+
+	if result["error"] then
+		login_view = LoginView(event.remote_control,self)
+		view.view_manager:set_view(login_view)
+	else
+		city_view = CityView(cur_prof, event.remote_control)
+		view.view_manager:set_view(city_view)
+	end
 end
 
 function ProfileSelection:callCreateProfile()

@@ -1,0 +1,14 @@
+{
+		"badges": [nil],
+		"balance": 100,
+		"date_of_birth": "1993-06-14",
+		"email_address": "a",
+		"experience": 100,
+		"id": 3,
+		"inventory": "{1,2}",
+		"login_token": "pbkdf2:sha1:1000$vNn60QNT$503e6b0a0adddc742039d138001a41e52c1fb8cc",
+		"name": "Lennart",
+		"password": "",
+		"sex": "Male",
+		"city": "rio_de_janeiro",
+}

@@ -24,12 +24,12 @@ function localprofilemanager:save(profile)
 	file:write("\t\t\"email_address\": \"" .. profile:get_email_address() .. "\",\n")
 	file:write("\t\t\"experience\": " .. profile:get_experience() .. ",\n")
 	file:write("\t\t\"id\": " .. profile:get_id() .. ",\n")
-	file:write("\t\t\"inventory\": " .. profile:get_inventory_string() .. ",\n")
-	file:write("\t\t\"login_token\": \" \",\n")
+	file:write("\t\t\"inventory\": \"" .. profile:get_inventory_string() .. "\",\n")
+	file:write("\t\t\"login_token\": \"" .. profile:get_login_token() .. "\",\n")
 	file:write("\t\t\"name\": \"" .. profile:get_name() .. "\",\n")
 	file:write("\t\t\"password\": \"" .. profile:get_password() .. "\",\n")
 	file:write("\t\t\"sex\": \"" .. profile:get_sex() .. "\",\n")
-	file:write("\t\t\"city\": \"" .. profile:get_city() .. "\",\n")
+	file:write("\t\t\"city\": \"" .. profile:get_city().code .. "\",\n")
 	file:write("}\n")
 	file:close()
 
@@ -103,6 +103,13 @@ function localprofilemanager:load(profile_email)
 				_,_,_,tmp_city = string.find(tmp[2],"([\"'])(.-)%1")
 			end
 
+			--match token
+			if string.match(line,"\"login_token\"") ~= nil then
+				local tmp = {}
+				tmp = utils.split(line," ")
+				_,_,_,token = string.find(tmp[2],"([\"'])(.-)%1")
+			end
+
 			--match inventory
 			if string.match(line,"\"inventory\"") ~= nil then
 				local tmp = {}
@@ -130,7 +137,8 @@ function localprofilemanager:load(profile_email)
 		profile_tmp = Profile(name,email_address,date_of_birth,sex,city.cities[tmp_city])
 		profile_tmp:set_balance(balance)
 		profile_tmp:set_experience(experience)
-		--profile_tmp:set_inventory(inventory)
+		profile_tmp:set_inventory(inventory)
+		profile_tmp:set_login_token(token)
 		profile_tmp:set_id(id)
 		io.close()
 
