@@ -424,7 +424,7 @@ function MultipleChoiceView:_back_to_city(type, message)
     local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
 		local popup_view = PopUpView(remote_control,subsurface, type, message)
     self:add_view(popup_view)
-    self:blur()
+    self.views.grid:blur()
 
     local button_click_func = function(button)
       if button == "ok" then
@@ -432,7 +432,7 @@ function MultipleChoiceView:_back_to_city(type, message)
       else
 			-- This isn't working right now!!
       popup_view:destroy()
-      self:focus()
+      self.views.grid:focus()
       self:dirty(true)
       gfx.update()
     end
@@ -443,44 +443,45 @@ function MultipleChoiceView:_back_to_city(type, message)
     gfx.update()
 end
 
-function MultipleChoiceView:focus()
-
-	self:listen_to(
-		self.views.grid,
-		"back",
-		utils.partial(self._exit, self)
-	)
-
-	self:listen_to(
-		self.views.grid,
-		"next",
-		utils.partial(self._next, self)
-	)
-
-	self:listen_to(
-		self.views.grid,
-		"submit",
-		utils.partial(self._submit, self)
-	)
-
-	self:listen_to(
-	event.remote_control,
-	"button_release",
-	utils.partial(self.press, self)
-	)
-
-	self:listen_to(
-		self.views.grid,
-		"dirty",
-		utils.partial(self.views.grid.render,
-						self.views.grid, surface)
-	)
-end
-
-function MultipleChoiceView:blur()
-	self:stop_listening(event.remote_control)
-	self:stop_listening(self.views.grid)
-end
+-- These methods probably aren't needed?
+-- function MultipleChoiceView:focus()
+--
+-- 	self:listen_to(
+-- 		self.views.grid,
+-- 		"back",
+-- 		utils.partial(self._exit, self)
+-- 	)
+--
+-- 	self:listen_to(
+-- 		self.views.grid,
+-- 		"next",
+-- 		utils.partial(self._next, self)
+-- 	)
+--
+-- 	self:listen_to(
+-- 		self.views.grid,
+-- 		"submit",
+-- 		utils.partial(self._submit, self)
+-- 	)
+--
+-- 	self:listen_to(
+-- 	event.remote_control,
+-- 	"button_release",
+-- 	utils.partial(self.press, self)
+-- 	)
+--
+-- 	self:listen_to(
+-- 		self.views.grid,
+-- 		"dirty",
+-- 		utils.partial(self.views.grid.render,
+-- 						self.views.grid, surface)
+-- 	)
+-- end
+--
+-- function MultipleChoiceView:blur()
+-- 	self:stop_listening(event.remote_control)
+-- 	self:stop_listening(self.views.grid)
+-- end
 
 
 return MultipleChoiceView
