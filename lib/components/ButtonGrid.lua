@@ -55,7 +55,7 @@ end
 function ButtonGrid:focus()
 	self:listen_to(
 	self.event_listener,
-	"button_press",
+	"button_release",
 	self.callback
 	)
 end
@@ -128,12 +128,10 @@ function ButtonGrid:remove_button(index, remove_index)
 		table.remove(self.button_list, index)
 		if remove_index == index then
 			self.button_list[index-1].button:select(true)
-			self.button_indicator = index-1
 		end
 	else
 		error("Trying to remove a button out of range")
 	end
-
 	self:dirty(false)
 
 end
@@ -214,7 +212,7 @@ function ButtonGrid:render(surface)
 
 
 -- Go through the button_list to render all buttons
-  for i=1 , #self.button_list do
+    for i=1 , #self.button_list do
 
 		local button_data = self.button_list[i]
 		local area = {
@@ -230,7 +228,6 @@ function ButtonGrid:render(surface)
 			self:display_text(surface, i)
 	   end
    end
-	 
    gfx.update()
 end
 
@@ -471,18 +468,6 @@ function ButtonGrid:get_selected()
 			return i
 		end
 	end
-end
-
-function ButtonGrid:get_num_selected()
-	local count = 0
-	local sel_btns = {}
-	for i = 1, #self.button_list do
-		if self.button_list[i].button:is_selected() then
-			count = count +1
-			sel_btns[count] = i
-		end
-	end
-	return count, sel_btns
 end
 
 function ButtonGrid:button_distance(sel_button_index, button_index)

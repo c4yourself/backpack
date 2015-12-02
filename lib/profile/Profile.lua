@@ -130,24 +130,31 @@ end
 ---Get a string of badges
 -- @return badges_string
 function Profile:get_badges_string()
-	local tmp = string.format("%s",self.badges[1])
+	if #self.badges >0 then
+		local tmp = string.format("%s",self.badges[1])
 
-	for i = 2, #self.badges, 1 do
-		tmp = string.format("%s,%s",tmp,self.badges[i])
+		for i = 2, #self.badges, 1 do
+			tmp = string.format("%s,%s",tmp,self.badges[i])
+		end
+		return string.format("[%s]",tmp)
+	else
+		return "[]"
 	end
-
-	return string.format("[%s]",tmp)
 end
 
 ---Get a string of inventory
 -- @return inventory_string
 function Profile:get_inventory_string()
-	local tmp = string.format("%s",self.inventory[1])
+	if #self.inventory >0 then
+		local tmp = string.format("%s",self.inventory[1])
 
-	for i = 2, #self.inventory, 1 do
-		tmp = string.format("%s,%s",tmp,self.inventory[i])
+		for i = 2, #self.inventory, 1 do
+			tmp = string.format("%s,%s",tmp,self.inventory[i])
+		end
+		return string.format("{%s}",tmp)
+	else
+		return "{}"
 	end
-	return string.format("{%s}",tmp)
 end
 
 ---Set balance of the user

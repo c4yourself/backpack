@@ -16,21 +16,27 @@ local BinaryButton	=	require("components.BinaryButton")
 local Font = require("lib.draw.Font")
 local Color = require("lib.draw.Color")
 local logger = require("lib.logger")
+local City = require("lib.city")
+local Profile = require("lib.profile.Profile")
+local ProfileManager = require("lib.profile.ProfileManager")
 local KeyboardComponent	=	require("components.KeyboardComponent")
-
 local CreateProfileView2 = class("CreateProfileView2", View)
 
 --- Constructor for CityView
 -- @param event_listener Remote control to listen to
-function CreateProfileView2:__init(remote_control, return_view)
+function CreateProfileView2:__init(remote_control, return_view, email, password)
 	View.__init(self)
+	self.email = email
+	self.password = password
+
+	self.profile_manager = ProfileManager()
 
 	self.button_text = Font("data/fonts/DroidSans.ttf", 40, Color(255, 255, 255, 255))
 
-	input_field = InputField("Name:", {x = 700, y = 80}, true)
-	input_field2 = InputField("Age:", {x = 700, y = 230}, false)
+	self.input_field = InputField("Name:", {x = 700, y = 80}, true)
+	self.input_field2 = InputField("Date of birth: (YYYY-MM-DD)", {x = 700, y = 230}, false)
 	binary_button = BinaryButton("Sex:", "female", "male", {x = 700, y = 380}, false)
-	self.active_field = input_field
+	self.active_field = self.input_field
 
 	self.background_color = {r=30, g=35, b=35}
 	local button_color = Color(255, 99, 0, 255)
@@ -64,7 +70,7 @@ function CreateProfileView2:__init(remote_control, return_view)
 	end
 	self:listen_to(self.keyboard, "exit", exit_keyboard_callback)
 
-	self.content_list = {input_field,input_field2, binary_button, self.button_cancel, self.button_login}
+	self.content_list = {self.input_field,self.input_field2, binary_button, self.button_cancel, self.button_login}
 	self.content_pointer = 1
 
 	self.callback = utils.partial(self.load_view, self)
@@ -86,8 +92,8 @@ function CreateProfileView2:render(surface)
 	end
 
 
-	input_field:render(surface)
-	input_field2:render(surface)
+	self.input_field:render(surface)
+	self.input_field2:render(surface)
 	binary_button:render(surface)
 	self.button_cancel:render(self.button_cancel_surface)
 	self.button_login:render(self.button_login_surface)
@@ -150,6 +156,15 @@ function CreateProfileView2:load_view(button)
 				self.hasActiveKeyboard = true
 			elseif self.content_pointer == 3 then
 				self.content_list[self.content_pointer]:swap_value()
+			elseif self.content_pointer == 4 then
+				--cancel
+			elseif self.content_pointer == 5 then
+				self.profile = Profile(self.input_field.text, self.email, self.input_field2.text2, binary_button:get_value(), City.cities["london"])
+				self.profile:set_balance(0)
+				self.profile:set_experience(0)
+				self.profile:set_password(self.password)
+				self.profile:set_id(0)
+				self.profile_manager:create_new_profile(self.profile)
 			end
 		end
 		self:render(screen)

@@ -51,6 +51,20 @@ function utils.canonicalize_path(path)
 	return table.concat(output, "/")
 end
 
+--- Delay a function call to given number of milliseconds after this call.
+-- Does not block execution.
+-- @param delay Delay in milliseconds before firing callback
+-- @param callback Callback to run
+-- @return Created @{emulator.timer} instance
+function utils.delay(delay, callback)
+	local timer
+	timer = sys.new_timer(delay, function()
+		callback()
+		timer:stop()
+	end)
+	timer:start()
+end
+
 --- Extract table keys.
 -- @param input_table Table to extract keys from
 -- @return A table containing keys of input_table

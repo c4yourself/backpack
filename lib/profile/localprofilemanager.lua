@@ -36,11 +36,12 @@ function localprofilemanager:save(profile)
 	local profile_list = {}
 	local path = utils.absolute_path("data/profile/profile.config")
 	local profile_name = profile:get_email_address()
+
 	if self:check_config(profile_name) ~= true then
 		for line in io.lines(path) do
 			table.insert(profile_list,line)
 		end
-		table.insert(profile_list,profile:get_email_address())
+		table.insert(profile_list,1,profile:get_email_address())
 
 		local file = io.open(path,"w+");
 		for i = 1, #profile_list, 1 do
@@ -229,7 +230,9 @@ function localprofilemanager:check_config(profile_email)
 	local result = false
 	for line in io.lines(path) do
 		if string.find(line,profile_email) ~= nil then
-			result = true
+			if #line == #profile_email then
+				result = true
+			end
 		end
 	end
 	io.close()

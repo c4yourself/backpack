@@ -58,18 +58,11 @@ function love.run()
 		--Fire off any system timers
 		for i, t in ipairs(sys.timers) do
 			if t.running then
-				if t.time_since >= t.interval_millisec then
-					if type(t.callback) == "function" then
-						t.callback()
-					elseif type(t.callback) == "string" then
-						cb_function = loadstring(t.callback .. "()")
-						cb_function(t)
-					end
-					t.time_since = 0
+				if t:_is_ready() then
+					t:_fire()
 				else
-					t.time_since = t.time_since + (dt * 1000)
+					t:_update_time(dt * 1000)
 				end
-				sys.timers[i] = t
 			end
 		end
 
