@@ -46,8 +46,8 @@ function NumericQuizView:__init(remote_control, subsurface, profile)
 	local color_selected = Color(255, 153, 0, 255)
 	local color_disabled = Color(111, 222, 111, 255)
 
-	local height = subsurface:get_height()
-	local width = subsurface:get_width()
+	local height = math.ceil(subsurface:get_height())
+	local width = math.ceil(subsurface:get_width())
 	local button_size = {width = 185, height = 70}
 
 	-- Add exit button
@@ -88,10 +88,10 @@ function NumericQuizView:__init(remote_control, subsurface, profile)
 	self.user_answer = ""
 
 	-- Background colors for this view's own subsurfaces
-	self.question_area_color = Color(255,255,255,255)
+	self.question_area_color = Color( 0, 0, 0, 175)
 	self.progress_counter_color = Color(255,99,0,255)
 	self.question_area_font = Font("data/fonts/DroidSans.ttf", 26,
-									Color(0,0,0,255))
+									Color(255,255,255,255))
 	self.progress_counter_font = Font("data/fonts/DroidSans.ttf", 32,
 																	Color(255,255,255,255))
 	-- Listeners and callbacks
@@ -126,8 +126,8 @@ end
 --- Renders a NumericQuizView and all its child views on specified 'surface'
 -- @param surface Surface or SubSurface to render upon
 function NumericQuizView:render(surface)
-	local surface_width = surface:get_width()
-	local surface_height = surface:get_height()
+	local surface_width = math.ceil(surface:get_width())
+	local surface_height = math.ceil(surface:get_height())
 
 	-- Define input area if it hasn't been done already
 	if not self.input_area_defined then
@@ -164,7 +164,6 @@ function NumericQuizView:render(surface)
 										height = self.counter_height,
 										width = self.counter_width})
 			--Question area
-		--	local x = math.ceil(surface:get_width() * 0.2)
 			local x = surface_width * 0.3
 			local y = surface_height * 0.2
 
@@ -222,16 +221,6 @@ function NumericQuizView:render(surface)
 						width = self.question_area_width},
 						question_text, "center")
 			else
-				-- The user has finished the quiz
-				-- self.views.num_input_comp:blur()
-				-- self.quiz_flag = true
-				-- local output = "You answered "
-				-- 				.. tostring(self.num_quiz.correct_answers)
-				-- 				.. " questions correctly."
-				-- self.question_area_font:draw(self.question_area, {x = 0, y = 0,
-				-- 				height = self.question_area_height,
-				-- 				width = self.question_area_width},
-				-- 				output, "center", "middle")
 				self:back_to_city()
 			end
 		end
@@ -411,10 +400,6 @@ function NumericQuizView:back_to_city()
 	popup_view:render(subsurface)
 	gfx.update()
 
-
-
---	self:trigger("exit_view")
-	--self:destroy()
 end
 
 return NumericQuizView
