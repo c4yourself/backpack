@@ -23,10 +23,9 @@ local CreateProfileView = class("CreateProfileView", View)
 
 --- Constructor for CityView
 -- @param event_listener Remote control to listen to
-function CreateProfileView:__init(remote_control, return_view)
+function CreateProfileView:__init(remote_control)
 	View.__init(self)
 	self.remote_control = remote_control
-	self.return_view = return_view
 
 	self.button_text = Font("data/fonts/DroidSans.ttf", 40, Color(255, 255, 255, 255))
 	self.input_field = InputField("Mail:", {x = 700, y = 80}, true)
@@ -138,10 +137,12 @@ function CreateProfileView:load_view(button)
 				self:render(screen)
 				gfx.update()
 			elseif self.content_pointer == 4 then
-				--view.view_manager:set_view(self.return_view)
+				local ProfileSelection=require("views.ProfileSelection")
+				local profile_selection = ProfileSelection(event.remote_control)
+				view.view_manager:set_view(profile_selection)
 			elseif self.content_pointer == 5 then
 				--if self.input_field2.text == self.input_field3.text then
-				self.create_profile_2 = CreateProfileView2(self.remote_control, self.return_view, self.input_field.text, self.input_field2.text)
+				self.create_profile_2 = CreateProfileView2(self.remote_control, self.input_field.text, self.input_field2.text)
 				view.view_manager:set_view(self.create_profile_2)
 			end
 		end
