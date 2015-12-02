@@ -40,7 +40,6 @@ end
 --- Responds differently depending on which key pressed on the remote control
 -- @param key, the key pressed on the remote control
 function ConnectFourComponent:press(key)
-
 	if key == "right" then
 		repeat
 			if self.current_column == 7 then
@@ -66,16 +65,12 @@ function ConnectFourComponent:press(key)
 		self:blur()
 		--self:stop_listening(event.remote_control)
 		self:dirty()
-	print(self.connectfour:get_winner())
+
 		if self.connectfour:get_winner() == nil then
-
-		self.computer_delay = sys.new_timer(1000, function()
-			self:delay()
-			self.computer_delay:stop()
-		end)
-
-
-		self.computer_delay:start()
+			utils.delay(1000, function()
+				self:delay()
+				self:focus()
+			end)
 		end
 	elseif key == "exit" then
 		--TODO pop-up
@@ -192,19 +187,16 @@ function ConnectFourComponent:render(surface)
 
 	if self.connectfour:_is_full_board() then
 		print("brädet är fullt")
-		self.no_winner_delay = sys.new_timer(2500, function()
+		utils.delay(2500, function()
 			local message = {"The board is full, no one won. Return to city view"}
 			self:delay2("message", message)
-			self.no_winner_delay:stop()
 		end)
-		self.no_winner_delay:start()
 	end
 
 	if self.connectfour:get_winner() ~= nil then
 		print("någon har vunnit")
-		self.winner_delay = sys.new_timer(2500, function()
+		utils.delay(2500, function()
 			print("delayed")
-			self.winner_delay:stop()
 			local winner = self.connectfour:get_winner()
 			if winner == "X" then
 				winner_message = {"Congratulations, you won!"}
@@ -216,12 +208,8 @@ function ConnectFourComponent:render(surface)
 			end
 
 			self:delay2("message", winner_message)
-
 		end)
-		self.winner_delay:start()
 	end
-
-
 
 	self:dirty(false)
 	gfx.update()
@@ -251,7 +239,7 @@ function ConnectFourComponent:delay()
 		end
 	until self.connectfour:get_current_row(self.current_column) ~= 0
 print("focus i delay")
-	self:focus()
+
 
 	-- self:listen_to(
 	-- event.remote_control,
