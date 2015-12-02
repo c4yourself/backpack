@@ -24,7 +24,7 @@ local CreateProfileView2 = class("CreateProfileView2", View)
 
 --- Constructor for CityView
 -- @param event_listener Remote control to listen to
-function CreateProfileView2:__init(remote_control, return_view, email, password)
+function CreateProfileView2:__init(remote_control, email, password)
 	View.__init(self)
 	self.email = email
 	self.password = password
@@ -140,6 +140,8 @@ function CreateProfileView2:load_view(button)
 				self.content_pointer = self.content_pointer + 1
 			end
 			self.content_list[self.content_pointer]:select(true)
+			self:render(screen)
+			gfx.update()
 		elseif button == "up" or button == "left" then
 			self.content_list[self.content_pointer]:select(false)
 			if self.content_pointer - 1 < 1 then
@@ -148,16 +150,24 @@ function CreateProfileView2:load_view(button)
 				self.content_pointer = self.content_pointer - 1
 			end
 			self.content_list[self.content_pointer]:select(true)
+			self:render(screen)
+			gfx.update()
 		elseif button == "ok" then
 			if self.content_pointer == 1 or self.content_pointer == 2 then
 				self.render_ticket = true
 				self.active_field = self.content_list[self.content_pointer]
 				self.keyboard:new_input(self.active_field.text)
 				self.hasActiveKeyboard = true
+				self:render(screen)
+				gfx.update()
 			elseif self.content_pointer == 3 then
 				self.content_list[self.content_pointer]:swap_value()
+				self:render(screen)
+				gfx.update()
 			elseif self.content_pointer == 4 then
-				--cancel
+				local ProfileSelection=require("views.ProfileSelection")
+				local profile_selection = ProfileSelection(event.remote_control)
+				view.view_manager:set_view(profile_selection)
 			elseif self.content_pointer == 5 then
 				self.profile = Profile(self.input_field.text, self.email, self.input_field2.text2, binary_button:get_value(), City.cities["london"])
 				self.profile:set_balance(0)
@@ -167,8 +177,6 @@ function CreateProfileView2:load_view(button)
 				self.profile_manager:create_new_profile(self.profile)
 			end
 		end
-		self:render(screen)
-		gfx.update()
 	end
 end
 

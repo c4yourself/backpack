@@ -15,10 +15,10 @@ local ProfileSelection = class("ProfileSelection", View)
 
 --local ProfileSelection = {}
 
-function ProfileSelection:__init()
+function ProfileSelection:__init(remote_control)
 	View.__init(self)
-	event.remote_control:off("button_release") -- TODO remove this once the ViewManager is fully implemented
-
+	--event.remote_control:off("button_release") -- TODO remove this once the ViewManager is fully implemented
+	self.remote_control = remote_control
 	self.color = Color()
 
 	--local profile_list =  {"MaxiStormarknad","Bingoberra","Eivar","Skumtomte_90", "D4ngerBoi390KickflippingRainbow", "Wedge", "Biggles"} -- put contents of the scroll frame here, for example item names
@@ -44,7 +44,7 @@ function ProfileSelection:__init()
 
 	-- Listeners and callbacks
 	self:listen_to(
-		event.remote_control,
+		self.remote_control,
 		"button_release",
 		utils.partial(self.press, self)
 	)
@@ -87,7 +87,7 @@ function ProfileSelection:callContinueGame()
 end
 
 function ProfileSelection:callCreateProfile()
-	create_profile = CreateProfileView(event.remote_control, self)
+	create_profile = CreateProfileView(self.remote_control)
 	view.view_manager:set_view(create_profile)
 end
 
