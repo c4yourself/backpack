@@ -51,7 +51,7 @@ TestSysMock = require("mocks.test_mock_SysMock")
 TestSurfaceMock = require("mocks.test_mock_SurfaceMock")
 TestFontMock = require("mocks.test_mock_FontMock")
 --integration
-TestMockIntegration = require("integration.test_mock_integration")
+--TestMockIntegration = require("integration.test_mock_integration")
 
 
 lu = LuaUnit.LuaUnit.new()
