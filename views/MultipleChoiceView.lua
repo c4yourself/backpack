@@ -18,6 +18,8 @@ local Button = require("lib.components.Button")
 local MultipleChoiceGrid = require("lib.components.MultipleChoiceGrid")
 local NumericalQuizGrid = require("lib.components.NumericalQuizGrid")
 local ToggleButton = require("lib.components.ToggleButton")
+local ExperienceCalculation = require("lib.scores.experiencecalculation")
+local PopUpView = require("views.PopUpView")
 
 --- Constructor for MultipleChoiceView
 function MultipleChoiceView:__init(remote_control, subsurface, profile)
@@ -35,7 +37,7 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 	-- Logic
 	-- Associate a quiz instance with the MultipleChoiceView
 	self.mult_choice_quiz = Quiz()
-	self.quiz_size = 2
+	self.quiz_size = 3
 	self.mult_choice_quiz:generate_citytour_quiz(self.profile:get_current_city(),self.quiz_size,1)
 	self.current_question = 1
 	self.correct_answer_number = 0
@@ -164,22 +166,25 @@ end
 function MultipleChoiceView:_submit()
 	if self.last_check == self.current_question and self.quiz_state ~= "DONE" then
 		self.user_input = self.views.grid.input
-		for j = 1, #self.user_input, 1 do
+		self.answer = {}
+		for j = 1, 4 --[[#self.user_input]] do
 			if self.user_input[j] ~= nil then
-				self.answer[j] = self.user_input[j]
+				--self.answer[j] = self.user_input[j]
+				table.insert(self.answer, self.user_input[j])
 			end
 			--self.answer[j] = tonumber(string.sub(self.user_input,j,j))
+		--self.mult_choice_quiz.current_question = self.mult_choice_quiz.current_question + 1
 		end
 		if self.mult_choice_quiz.questions[self.current_question]:is_correct(self.answer) == true then
 			self.correct_answer_number = self.correct_answer_number + 1
 			self.result_string = "Correct! You've answered "
 			.. self.correct_answer_number .. " questions correctly this far."
-			self.progress_table[self.mult_choice_quiz.current_question] = true
+			self.progress_table[self.current_question] = true
 			self.last_check = self.last_check + 1
 		else
 			self.result_string = "Wrong. You've answered "
 			.. self.correct_answer_number .. " questions correctly this far."
-			self.progress_table[self.mult_choice_quiz.current_question] = false
+			self.progress_table[self.current_question] = false
 			self.last_check=self.last_check + 1
 		end
 		self.quiz_state = "DISPLAY_RESULT"
@@ -192,27 +197,61 @@ end
 
 ---Triggered everytime the user presses the next button
 function MultipleChoiceView:_next()
-	if end_flag ~= 1 then
+	if self.end_flag ~= 1 then
 		-- Next question is displayed
 		-- Make sure there are questions left to display
 		self.current_question = self.current_question + 1
 		if self.current_question > self.quiz_size then
-			end_flag = 1
+			self.end_flag = 1
 			self.quiz_state = "DONE"
+			if self.end_flag == 1 then
+			-- 	local counter  = self.correct_answer_number
+			-- 	local experience = ExperienceCalculation.Calculation(counter, "Multiplechoice")
+			-- 	self.profile:modify_balance(experience)
+			-- 	self.profile:modify_experience(experience)
+			-- 	local type = "message"
+			-- 	local message = {"Good job! You received" .. experience .. " coins."}
+			-- --	local message = {"Good job! You received XX coins."}
+			-- 	self:_back_to_city(type, message)
+			end
+
+
+
 		else
 			self.quiz_state = "IDLE"
 		end
 		self:dirty(true)
 	elseif self.end_flag == 1 then
 		-- Quiz is finished. Set up for a final result screen
+
 		self.quiz_state = "DONE"
 		self:dirty(true)
+
+	-- Don't know if the code below is in the right place? The experience shall be updated after finished game.
+		local counter  = self.correct_answer_number
+		local experience = ExperienceCalculation.Calculation(counter, "Multiplechoice")
+		self.profile:modify_balance(experience)
+		self.profile:modify_experience(experience)
+
+	-- When the game is finished, a popup-view with the text below shall be shown.
+	--This isn't working right now - the code probably shall be placed somewhere else?
+
+	-- 	local type = "message"
+	-- 	local message = {"Good job! You received" .. experience .. " coins."}
+	-- --	local message = {"Good job! You received XX coins."}
+	-- 	self:_back_to_city(type, message)
+
 	end
 end
 
 ---Triggered everytime the user presses the back to city button
 function MultipleChoiceView:_exit()
-	self:trigger("exit_view", self.profile)
+	--TODO add popup
+
+	local type = "confirmation"
+	local message = {"Are you sure you want to exit?"}
+	self:_back_to_city(type, message)
+	--self:trigger("exit_view", self.profile)
 end
 
 
@@ -331,45 +370,44 @@ function MultipleChoiceView:render(surface)
 									height = self.counter_height,
 									width = self.counter_width})
 		-- Render the Progress counter
-			self.progress_counter_area:clear(self.progress_counter_color:to_table())
-			local current_question = self.mult_choice_quiz.current_question
-			local quiz_length = #self.mult_choice_quiz.questions
-			local current_question = math.min(self.mult_choice_quiz.current_question,
-													quiz_length)
-			self.font:draw(self.progress_counter_area,
-										{x = 0, y = 0, height = self.counter_height,
-										width = self.counter_width},
-										tostring(current_question) .. " / " ..
-										tostring(quiz_length), "center", "middle")
-			-- Render the Progress bar
-			local bar_component_width = 45
-			local bar_component_height = 45
-			local progress_bar_margin = 10
-			local bar_component_x = self.x_counter + self.counter_width -
-									bar_component_width
-			local bar_component_y = self.y_counter + progress_bar_margin +
-									self.counter_height
-			local quiz_length = #self.progress_table
-			-- Create a progress bar and color its boxes
-			for i = 1, quiz_length do
-				local progress_bar_component = SubSurface(surface,
-											{x = bar_component_x, y = bar_component_y,
-											height = bar_component_height,
-											width = bar_component_width})
-				local bar_component_color = nil
-				-- Depending on the users success: color the boxes differently
-				if self.progress_table[i] == true then
-					bar_component_color = Color(0,255,0,255)
-				elseif self.progress_table[i] == false then
-					bar_component_color = Color(255,0,0,255)
-				else
-					bar_component_color = Color(255, 255, 255, 255)
-				end
-				progress_bar_component:clear(bar_component_color:to_table())
-				bar_component_y = bar_component_y + progress_bar_margin +
-									bar_component_height
+		self.progress_counter_area:clear(self.progress_counter_color:to_table())
+		local current_question = self.current_question
+		local quiz_length = #self.mult_choice_quiz.questions
+		local current_question = math.min(current_question, quiz_length)
+		self.font:draw(self.progress_counter_area,
+									{x = 0, y = 0, height = self.counter_height,
+									width = self.counter_width},
+									tostring(current_question) .. " / " ..
+									tostring(quiz_length), "center", "middle")
+		-- Render the Progress bar
+		local bar_component_width = 45
+		local bar_component_height = 45
+		local progress_bar_margin = 10
+		local bar_component_x = self.x_counter + self.counter_width -
+								bar_component_width
+		local bar_component_y = self.y_counter + progress_bar_margin +
+								self.counter_height
+		local quiz_length = #self.progress_table
+		-- Create a progress bar and color its boxes
+		for i = 1, quiz_length do
+			local progress_bar_component = SubSurface(surface,
+										{x = bar_component_x, y = bar_component_y,
+										height = bar_component_height,
+										width = bar_component_width})
+			local bar_component_color = nil
+			-- Depending on the users success: color the boxes differently
+			if self.progress_table[i] == true then
+				bar_component_color = Color(0,255,0,255)
+			elseif self.progress_table[i] == false then
+				bar_component_color = Color(255,0,0,255)
+			else
+				bar_component_color = Color(255, 255, 255, 255)
 			end
-			self.prevent = false
+			progress_bar_component:clear(bar_component_color:to_table())
+			bar_component_y = bar_component_y + progress_bar_margin +
+								bar_component_height
+		end
+		self.prevent = false
 
 		self.views.grid:render(surface)
 	end
@@ -380,6 +418,70 @@ function MultipleChoiceView:render(surface)
 	gfx.update()
 	self:dirty(false)
 end
+
+function MultipleChoiceView:_back_to_city(type, message)
+
+    local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
+		local popup_view = PopUpView(remote_control,subsurface, type, message)
+    self:add_view(popup_view)
+    self.views.grid:blur()
+
+    local button_click_func = function(button)
+      if button == "ok" then
+      self:trigger("exit_view")
+      else
+			-- This isn't working right now!!
+      popup_view:destroy()
+      self.views.grid:focus()
+      self:dirty(true)
+      gfx.update()
+    end
+    end
+
+    self:listen_to_once(popup_view, "button_click", button_click_func)
+    popup_view:render(subsurface)
+    gfx.update()
+end
+
+-- These methods probably aren't needed?
+-- function MultipleChoiceView:focus()
+--
+-- 	self:listen_to(
+-- 		self.views.grid,
+-- 		"back",
+-- 		utils.partial(self._exit, self)
+-- 	)
+--
+-- 	self:listen_to(
+-- 		self.views.grid,
+-- 		"next",
+-- 		utils.partial(self._next, self)
+-- 	)
+--
+-- 	self:listen_to(
+-- 		self.views.grid,
+-- 		"submit",
+-- 		utils.partial(self._submit, self)
+-- 	)
+--
+-- 	self:listen_to(
+-- 	event.remote_control,
+-- 	"button_release",
+-- 	utils.partial(self.press, self)
+-- 	)
+--
+-- 	self:listen_to(
+-- 		self.views.grid,
+-- 		"dirty",
+-- 		utils.partial(self.views.grid.render,
+-- 						self.views.grid, surface)
+-- 	)
+-- end
+--
+-- function MultipleChoiceView:blur()
+-- 	self:stop_listening(event.remote_control)
+-- 	self:stop_listening(self.views.grid)
+-- end
 
 
 return MultipleChoiceView

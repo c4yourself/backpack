@@ -9,7 +9,10 @@ local Color = require("lib.draw.Color")
 local Profile = require("lib.profile.Profile")
 local ProfileManager = require("lib.profile.ProfileManager")
 local CreateProfileView = require("views.CreateProfileView")
+local CityView = require("views.CityView")
+local LoginView = require("views.LoginView")
 local ProfileSelection = class("ProfileSelection", View)
+
 --local ProfileSelection = {}
 
 function ProfileSelection:__init()
@@ -20,7 +23,7 @@ function ProfileSelection:__init()
 
 	--local profile_list =  {"MaxiStormarknad","Bingoberra","Eivar","Skumtomte_90", "D4ngerBoi390KickflippingRainbow", "Wedge", "Biggles"} -- put contents of the scroll frame here, for example item names
 	self.profile_manager = ProfileManager()
-	self.profile_list = self.profile_manager:get_local()
+	self.profile_list = self.profile_manager:list()
 	self.profile_index = 0 --Zero indexing over profile_list
 	self.menu_index = 1
 	self.isLeftMenu = true
@@ -64,18 +67,27 @@ function ProfileSelection:setLeftMenu(bool)
 end
 
 function ProfileSelection:callFetchProfile()
-	---TODO: Fetch profile from global server
+
+	login_view = LoginView(event.remote_control, self)
+	view.view_manager:set_view(login_view)
+
 end
 
 function ProfileSelection:callContinueGame()
 	cur_prof = self.profile_list[self.profile_index+1]
-	profile = self.profile_manager:load(cur_prof.email_address)
-	city_view = CityView(event.remote_control, profile)
-	view.view_manager:set_view(city_view)
+	result = self.profile_manager:check_login(cur_prof)
+
+	if result["error"] then
+		login_view = LoginView(event.remote_control,self)
+		view.view_manager:set_view(login_view)
+	else
+		city_view = CityView(cur_prof, event.remote_control)
+		view.view_manager:set_view(city_view)
+	end
 end
 
 function ProfileSelection:callCreateProfile()
-	create_profile = CreateProfileView(event.remote_control)
+	create_profile = CreateProfileView(event.remote_control, self)
 	view.view_manager:set_view(create_profile)
 end
 
@@ -191,7 +203,9 @@ function ProfileSelection:render(surface)
 			surface:fill(self:pickColor(self.leftMenuCurrentValue), {width=500, height=100, x=100, y=(250)})
 		end
 
-		self.font_button:draw(surface, {x=120,y=(200-self.profile_index*diff_y+diff_y*counter)}, self.profile_list[key].name)
+		if (200-self.profile_index*diff_y+diff_y*counter)>0 then
+			self.font_button:draw(surface, {x=120,y=(200-self.profile_index*diff_y+diff_y*counter)}, self.profile_list[key].name)
+		end
 
 		buttons[counter]= text_button
 		counter=counter+1

@@ -16,7 +16,6 @@ local city = require("lib.city")
 local class = require("lib.classy")
 local utils = require("lib.utils")
 local Profile = class("Profile")
-local Event = require("lib.event.Event")
 
 Profile.name = ""
 Profile.email_address = ""
@@ -143,12 +142,11 @@ end
 ---Get a string of inventory
 -- @return inventory_string
 function Profile:get_inventory_string()
-	local tmp = string.format("\"1\": %s",self.inventory[1])
+	local tmp = string.format("%s",self.inventory[1])
 
 	for i = 2, #self.inventory, 1 do
-		tmp = string.format("%s, \"%s\": %s",tmp,i,self.inventory[i])
+		tmp = string.format("%s,%s",tmp,self.inventory[i])
 	end
-
 	return string.format("{%s}",tmp)
 end
 
@@ -311,12 +309,12 @@ function Profile:modify_experience(number)
 		self.experience = self.experience + number
 	end
 
-	Event:__init()
-	call_back = function(...)
-		ProfileManager:save(...)
-	end
-	Event:on("experience_change",call_back)
-	Event:trigger("experience_change",self)
+	--Event:__init()
+	--call_back = function(...)
+	--	ProfileManager:save(...)
+	--end
+	--Event:on("experience_change",call_back)
+	--Event:trigger("experience_change",self)
 	return self.experience
 end
 
