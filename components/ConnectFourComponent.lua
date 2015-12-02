@@ -187,7 +187,6 @@ function ConnectFourComponent:render(surface)
 
 
 	if self.connectfour:_is_full_board() then
-		print("brädet är fullt")
 		utils.delay(2500, function()
 			local message = {"The board is full, no one won."}
 			self:delay2("message", message)
@@ -195,9 +194,7 @@ function ConnectFourComponent:render(surface)
 	end
 
 	if self.connectfour:get_winner() ~= nil then
-		print("någon har vunnit")
 		utils.delay(2500, function()
-			print("delayed")
 			local winner = self.connectfour:get_winner()
 			if winner == "X" then
 				local count_x = self.connectfour:get_number_of_coins()
@@ -240,7 +237,6 @@ function ConnectFourComponent:delay()
 			end
 		end
 	until self.connectfour:get_current_row(self.current_column) ~= 0
-print("focus i delay")
 
 
 	-- self:listen_to(
@@ -290,7 +286,6 @@ function ConnectFourComponent:_back_to_city(type, message)
 
   --  local popup_view = SubSurface(screen,{width=screen:get_width()*0.5, height=screen:get_height()*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25})
     --local pop = PopUpView(remote_control, popup_view, type, message)
-		print("blur i back_to_city")
     	self:blur()
     --self.views.button_grid:stop_listening(self.views.button_grid.event_listener,
                         --      "button_press",
@@ -312,7 +307,6 @@ function ConnectFourComponent:_back_to_city(type, message)
 			self:trigger("exit_view")
 			else
 			popup_view:destroy()
-			print("focus i back_to_city")
 			self:focus()
 			self:dirty(true)
 			gfx.update()
