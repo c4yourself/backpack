@@ -72,7 +72,6 @@ end
 -- @return true representing it saves successfully both in local and server
 -- @return false representing it saves unsuccessfully in server
 function ProfileManager:create_new_profile(profile)
-
 	if self.profilesynchronizer:is_connected() then
 		local save_res = self.profilesynchronizer:save_profile(profile)
 		if save_res["error"] then
