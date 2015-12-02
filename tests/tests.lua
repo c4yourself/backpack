@@ -42,6 +42,8 @@ TestTSV = require("test_tsvreader")
 TestProfile = require("test_profile")
 TestMemory = require("test_memory")
 TestExperienceCalculation = require("test_experiencecalculation")
+TestCity = require("test_City")
+TestCountry = require("test_Country")
 --Mocks
 TestTimerMock = require("mocks.test_mock_TimerMock")
 TestGfxMock = require("mocks.test_mock_GfxMock")
@@ -52,6 +54,9 @@ TestSurfaceMock = require("mocks.test_mock_SurfaceMock")
 TestFontMock = require("mocks.test_mock_FontMock")
 --integration
 --TestMockIntegration = require("integration.test_mock_integration")
+--views
+--TestStore = require("view.test_store")
+TestSplashView = require("view.test_SplashView")
 
 
 lu = LuaUnit.LuaUnit.new()
