@@ -41,6 +41,10 @@ function ProfileSynchronizer:__init()
 end
 
 
+
+
+
+
 --- Check if connection to database is working
 -- @return boolean true/false depending on if database is up
 function ProfileSynchronizer:is_connected()
@@ -156,6 +160,25 @@ local function server_communication(data, url_extension)
 	return return_var
 end
 
+function ProfileSynchronizer:test_hash()
+
+
+	local hashkey = hash.hash256(self.ttlyawesomekey)
+
+	local json_request = [[{"hash":"]]..hashkey..[["}]]
+
+  --result = server_communication(token_data, self.get_profile_url)
+	result = server_communication(json_request, "/")
+
+	if result["error"] then
+		print(result["message"])
+	else
+		print(result["message"])
+	end
+
+
+end
+
 --- Login which receives the token for a given email and password
 -- @param email a users email
 -- @param password a users password
@@ -163,7 +186,8 @@ end
 function ProfileSynchronizer:login(email, password)
 
 	-- Json request for login
-	local json_request =  [[{"email":"]]..email..[[","password":"]]..password..[[","zdata_hash":"49aac7d4ad14540a91c14255ea1288e2fdc9a54e53f01d15371e81345f5e3646"}]]
+	local hashkey = hash.hash256(email..self.ttlyawesomekey)
+	local json_request =  [[{"email":"]]..email..[[","password":"]]..password..[[","zdata_hash":"]]..hashkey..[["}]]
 
 	result = server_communication(json_request, self.login_url)
 
@@ -173,7 +197,6 @@ function ProfileSynchronizer:login(email, password)
 		-- Return the error table if error
 		return result
 	else
-
 		-- If no error, return the correct token
 		return result.profile_token
 	end
