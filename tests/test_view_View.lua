@@ -96,4 +96,31 @@ function TestView:test_destroy_child_views()
 	remote_event:trigger("test_event")
 end
 
+function TestView:test_dirty_event_propagation()
+	local top = View()
+	local middle = View()
+	local bottom = View()
+	local bottom_unpropagated = View()
+
+	top:dirty(false)
+	middle:dirty(false)
+	bottom:dirty(false)
+	bottom_unpropagated:dirty(false)
+
+	top:add_view(middle, true)
+	middle:add_view(bottom, true)
+	bottom:add_view(bottom_unpropagated)
+
+	local is_dirty = false
+	top:on("dirty", function()
+		is_dirty = true
+	end)
+
+	bottom_unpropagated:dirty()
+	luaunit.assertFalse(is_dirty)
+
+	bottom:dirty()
+	luaunit.assertTrue(is_dirty)
+end
+
 return TestView
