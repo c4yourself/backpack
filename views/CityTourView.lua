@@ -22,6 +22,7 @@ function CityTourView:__init(remote_control, surface, profile)
 	--To keep track of which attraction to display. Increments every time a user answer a question
 	attractionpoint = 1
 
+	math.randomseed(os.time())
 	-- Create some colors
 	--border_color = Color(0, 0, 0, 255)
 
@@ -149,7 +150,7 @@ end
 
 function CityTourView:destroy()
 	view.View.destroy(self)
-	
+
 	for k,v in pairs(self.tour_attraction_images) do
 		self.tour_attraction_images[k]:destroy()
 		end
