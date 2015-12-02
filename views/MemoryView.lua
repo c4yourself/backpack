@@ -142,7 +142,7 @@ function MemoryView:__init(remote_control, surface, profile)
 function MemoryView:press(key)
     if key == "back" then
       local type = "confirmation"
-      local message =  {"Are you sure you want to exit?"}
+      local message = {"Are you sure you want to exit?"}
       self:back_to_city(type, message)
     end
 end
@@ -152,7 +152,9 @@ function MemoryView:_determine_new_state()
     local card_index = self.button_grid.last_selection
     if self.button_grid.button_list[card_index].button.status == nil
     or card_index > self.pairs * 2 then
-        self:back_to_city()
+        local type = "confirmation"
+        local message = {"Are you sure you want to exit?"}
+        self:back_to_city(type, message)
         return
     end
 
@@ -168,6 +170,7 @@ function MemoryView:_determine_new_state()
             self.memory:open(card_index)
             self.button_grid:set_card_status(card_index, "FACING_UP")
             self.memory:is_finished()
+            self:dirty(true)
             if self.memory.finished == true then
               local counter  = {self.memory.moves, self.memory.pairs}
               local experience = ExperienceCalculation.Calculation(counter, "Memory")
@@ -177,7 +180,7 @@ function MemoryView:_determine_new_state()
               local type = "message"
               self:back_to_city(type, message)
             end
-            self:dirty(true)
+
         end
     end
 end
