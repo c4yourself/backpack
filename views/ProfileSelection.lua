@@ -68,7 +68,7 @@ end
 
 function ProfileSelection:callFetchProfile()
 
-	login_view = LoginView(event.remote_control, self)
+	login_view = LoginView(event.remote_control)
 	view.view_manager:set_view(login_view)
 
 end
