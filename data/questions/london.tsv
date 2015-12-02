@@ -1,18 +1,19 @@
 single_choice	What is Big Ben?	Clock Tower;Ferris Wheel;Bridge;Stadium	1
-single_choice	Which of these countries are not part of the United Kingdom?	England;Wales;Ireland;Scotland	3
-single_choice	What is the name of the residence where Queen Elizabeth II of the United Kingdom lives?	Villa Eliza;London Eye;Buckingham Palace;Allerton Castle	3
-single_choice	If you are watching a Barclays Premier League game, you are most likely interested in...	Rugby;Horse Polo;Golf;Football	4
+single_choice	Which of these countries are not part of the UK?	England;Wales;Ireland;Scotland	3
+single_choice	What is the name of the royal residence?	Villa Eliza;London Eye;Buckingham Palace;Allerton Castle	3
+single_choice	What sport is played in Barclays Premier League?	Rugby;Horse Polo;Golf;Football	4
 single_choice	What is the name of the river flowing through London?	Elbe;Thames;River Shannon;Lagan	2
-single_choice	What is usually included in an English Breakfast?	Eggs, bacon, sausages, fried bread, mushrooms, baked beans;Lettuce, cheese, vinegar, chicken, tomatoes;French fries, fish, mayonnaise;Sheperd's pie	1
-single_choice	Who were William Shakespear?	Poet, playwright and actor;Professional footballer;Prince;Artist, producer and dancer	1
-single_choice	What is the name of an English physicist and mathematician known as one of the most influential scientists of all time?	Charles Darwin;Albert Einstein;Alexander Graham Bell;Isaac Newton	4
-single_choice	What is the name of the highly skilled archer who was "robbing from the rich and giving to the poor" and later became an animated movie character?	Aladdin;Peter Pan;Robin Hood;James Bond	3
-numeric	How long is Nile river which is the longest in the world?(km)	6670
-numeric	How high is Qomolangma which is the highest in the world?(m)	8844
-numeric	How many countries and regions in the world?	230
-numeric	How many countries and regions in Europe?	45
-numeric	How many countries and regions in Asia?	49
-numeric	How many countries and regions in North America?	28
-numeric	How many countries and regions in South America?	13
-numeric	How many countries and regions in Africa?	56
-numeric	How many countries and regions in Oceania?	30
+single_choice	What is usually included in an English Breakfast?	Eggs & bacon;Lettuce & cheese;French fries & mayo;Sheperd's pie	1
+single_choice	Who were William Shakespear?	Poet and playwrighter;Professional footballer;Prince;Artist and producer	1
+single_choice	What is the name of the famous English scientist? 	Charles Darwin;Albert Einstein;Alexander Graham Bell;Isaac Newton	4
+single_choice	Who was robbing from the rich and giving to the poor?	Aladdin;Peter Pan;Robin Hood;James Bond	3
+single_choice	When was the British museum established?	1783;1765;1734;1753	4
+numeric	How long is Nile river which is the longest in the world?(km)	6670	
+numeric	How high is Qomolangma which is the highest in the world?(m)	8844	
+numeric	How many countries and regions in the world?	230	
+numeric	How many countries and regions in Europe?	45	
+numeric	How many countries and regions in Asia?	49	
+numeric	How many countries and regions in North America?	28	
+numeric	How many countries and regions in South America?	13	
+numeric	How many countries and regions in Africa?	56	
+numeric	How many countries and regions in Oceania?	30	

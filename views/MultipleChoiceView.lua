@@ -37,8 +37,8 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 	-- Logic
 	-- Associate a quiz instance with the MultipleChoiceView
 	self.mult_choice_quiz = Quiz()
-	self.quiz_size = 3
-	self.mult_choice_quiz:generate_citytour_quiz(self.profile:get_current_city(),self.quiz_size,1)
+	self.quiz_size = 10
+	self.mult_choice_quiz:generate_singlechoice_quiz(self.profile:get_current_city(),self.quiz_size)
 	self.current_question = 1
 	self.correct_answer_number = 0
 
@@ -47,21 +47,23 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 	for i=1, #self.mult_choice_quiz.questions do
 		self.progress_table[i] = -1
 	end
-	self.progress_counter_color = Color(0,255,0,255)
+	self.progress_counter_color = Color(255,99,0,255)
+	self.progress_counter_font = Font("data/fonts/DroidSans.ttf", 32,
+																	Color(255,255,255,255))
 
 	-- User input
 	self.user_input = ""
 	self.answer = {}
 
 	-- Graphics and colors
-	self.question_area_color = Color(255, 255, 255, 255)
-	self.font = Font("data/fonts/DroidSans.ttf", 24, Color(0,0,0,255))
+	self.question_area_color  = Color(0, 0, 0, 175)
+	self.font = Font("data/fonts/DroidSans.ttf", 24, Color(255,255,255,255))
 
 	-- Buttons and grids
 	self.views.grid = MultipleChoiceGrid()
 
-	local height = screen:get_height()
-	local width = screen:get_width()
+	local height = subsurface:get_height()
+	local width = subsurface:get_width()
 
 	local button_color = Color(255, 99, 0, 255)
 	local color_selected = Color(255, 255, 255, 55)
@@ -71,9 +73,9 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 	-- Add back button
 	local button_exit = Button(Color(255,35,35,255), color_selected, color_disabled,
 								true, true, "views.CityView")
-	local exit_position = {x = width*0.25, y = height * 0.67}
+	local exit_position = {x = width*0.2, y = height * 0.67}
 	button_exit:set_textdata("Back to city", Color(255,255,255,255),
-							{x = 0, y = 0}, 32,"data/fonts/DroidSans.ttf")
+							{x = 0, y = 0}, 24,"data/fonts/DroidSans.ttf")
 	self.views.grid:add_button(exit_position,
 						button_size,
 						button_exit)
@@ -89,9 +91,9 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 	-- Add next button
 	local button_next = Button(Color(250, 169, 0,255), color_selected, color_disabled,
 								true, false, "")
-	local next_position = {x = width*0.55, y = height*0.67}
+	local next_position = {x =  width*0.8-300, y = height*0.67}
 	button_next:set_textdata("Next question", Color(255,255,255,255),
-							{x = 0, y = 0}, 32,"data/fonts/DroidSans.ttf")
+							{x = 0, y = 0}, 24,"data/fonts/DroidSans.ttf")
 	self.views.grid:add_button(next_position,
 						button_size,
 						button_next)
@@ -113,10 +115,10 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 	)
 
 	-- Question buttons
-	local button_position_1 = {x = width*0.25, y = height*0.33}
-	local button_position_2 = {x = width*0.55, y = height*0.33}
-	local button_position_3 = {x = width*0.25, y = height*0.47}
-	local button_position_4 = {x = width*0.55, y = height*0.47}
+	local button_position_1 = {x = width*0.2, y = height*0.33}
+	local button_position_2 = {x = width*0.8-300, y = height*0.33}
+	local button_position_3 = {x = width*0.2, y = height*0.47}
+	local button_position_4 = {x = width*0.8-300, y = height*0.47}
 
 	self.question_button_1 = ToggleButton(button_color, color_selected,
 							color_disabled, true, false, "")
@@ -301,16 +303,16 @@ function MultipleChoiceView:render(surface)
 			local button_4_text =  "D. " .. self.mult_choice_quiz.questions[self.current_question].Choices[4]
 
 			self.question_button_1:set_textdata(button_1_text, Color(255,255,255,255),
-										{x = 0, y = 0}, 32,"data/fonts/DroidSans.ttf")
+										{x = 0, y = 0}, 24,"data/fonts/DroidSans.ttf")
 
 			self.question_button_2:set_textdata(button_2_text, Color(255,255,255,255),
-										{x = 0, y = 0}, 32,"data/fonts/DroidSans.ttf")
+										{x = 0, y = 0}, 24,"data/fonts/DroidSans.ttf")
 
 			self.question_button_3:set_textdata(button_3_text, Color(255,255,255,255),
-										{x = 0, y = 0}, 32,"data/fonts/DroidSans.ttf")
+										{x = 0, y = 0}, 24,"data/fonts/DroidSans.ttf")
 
 			self.question_button_4:set_textdata(button_4_text, Color(255,255,255,255),
-										{x = 0, y = 0}, 32,"data/fonts/DroidSans.ttf")
+										{x = 0, y = 0}, 24,"data/fonts/DroidSans.ttf")
 
 		elseif self.quiz_state == "DISPLAY_RESULT" then
 			-- Display the result from one question
@@ -334,41 +336,58 @@ function MultipleChoiceView:render(surface)
 									y = self.y_counter,
 									height = self.counter_height,
 									width = self.counter_width})
+
 		-- Render the Progress counter
 		self.progress_counter_area:clear(self.progress_counter_color:to_table())
 		local current_question = self.current_question
 		local quiz_length = #self.mult_choice_quiz.questions
 		local current_question = math.min(current_question, quiz_length)
-		self.font:draw(self.progress_counter_area,
+		self.progress_counter_font:draw(self.progress_counter_area,
 									{x = 0, y = 0, height = self.counter_height,
 									width = self.counter_width},
-									tostring(current_question) .. " / " ..
+									tostring(current_question) .. "/" ..
 									tostring(quiz_length), "center", "middle")
 		-- Render the Progress bar
-		local bar_component_width = 45
-		local bar_component_height = 45
+		local bar_component_width = 35
+		local bar_component_height = 35
 		local progress_bar_margin = 10
 		local bar_component_x = self.x_counter + self.counter_width -
 								bar_component_width
 		local bar_component_y = self.y_counter + progress_bar_margin +
 								self.counter_height
 		local quiz_length = #self.progress_table
+
 		-- Create a progress bar and color its boxes
+
+		-- Load boxes for the right and wrong answer
+		self.answer_correct = gfx.loadpng("data/images/progress_bar/rsz_11v_checkbox.png")
+		self.answer_nil = gfx.loadpng("data/images/progress_bar/rsz_empty_checkbox.png")
+		self.answer_false = gfx.loadpng("data/images/progress_bar/rsz_x_checkbox.png")
+
 		for i = 1, quiz_length do
-			local progress_bar_component = SubSurface(surface,
-										{x = bar_component_x, y = bar_component_y,
-										height = bar_component_height,
-										width = bar_component_width})
-			local bar_component_color = nil
-			-- Depending on the users success: color the boxes differently
+			local progress_bar_component_color = SubSurface(surface,
+										{x = bar_component_x+2, y = bar_component_y+2,
+										height = bar_component_height-4,
+										width = bar_component_width-4})
+			local progress_bar_component_pic = SubSurface(surface,
+																	{x = bar_component_x, y = bar_component_y,
+																	height = bar_component_height,
+																	width = bar_component_width})
+
+	-- Depending on the user's success: there will be different boxes
 			if self.progress_table[i] == true then
 				bar_component_color = Color(0,255,0,255)
+				progress_bar_component_color:clear(bar_component_color:to_table())
+				progress_bar_component_pic:copyfrom(self.answer_correct)
 			elseif self.progress_table[i] == false then
 				bar_component_color = Color(255,0,0,255)
+				progress_bar_component_color:clear(bar_component_color:to_table())
+				progress_bar_component_pic:copyfrom(self.answer_false)
 			else
-				bar_component_color = Color(255, 255, 255, 255)
+				bar_component_color = Color(0, 0, 0, 50)
+			  progress_bar_component_color:clear(bar_component_color:to_table())
+				progress_bar_component_pic:copyfrom(self.answer_nil)
 			end
-			progress_bar_component:clear(bar_component_color:to_table())
 			bar_component_y = bar_component_y + progress_bar_margin +
 								bar_component_height
 		end
@@ -417,7 +436,6 @@ function MultipleChoiceView:_back_to_city(type, message)
     popup_view:render(subsurface)
     gfx.update()
 end
-
 
 function MultipleChoiceView:focus()
  	self:listen_to(
