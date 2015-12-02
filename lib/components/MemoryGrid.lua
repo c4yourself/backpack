@@ -1,8 +1,7 @@
---- MemoryGrid class.
--- This class builds on the ButtonGrid class and represents a set of memory cards
--- and buttons in the MemoryView. Memory cards are represented by the
--- CardComponent class
--- @classmod ButtonGrid
+--- MemoryGrid class. This class builds on the ButtonGrid class and represents
+-- a set of memory cards and buttons in the MemoryView. Memory cards are
+-- represented by the @{CardComponent} class
+-- @classmod MemoryGrid
 
 local class = require("lib.classy")
 local button = require("lib.components.Button")
@@ -14,10 +13,10 @@ local event = require("lib.event")
 local Font = require("lib.draw.Font")
 local Color = require("lib.draw.Color")
 local view = require("lib.view")
-
 local logger = require("lib.logger")
 
---- Constructor for MemoryGrid
+--- Constructor for MemoryGrid.
+-- @param remote_control Remote control or remote control mock to listen to.
 function MemoryGrid:__init(remote_control)
 	ButtonGrid.__init(self, remote_control)
 	self.temp_turned = {}
@@ -26,7 +25,7 @@ function MemoryGrid:__init(remote_control)
 end
 
 --- Used when buttons/cards need to be added to the view
--- @param position The button's/cards position on the surface
+-- @param position The button's/card's position on the surface
 -- @param button_size The size of button/card
 -- @param button The button/card instance
 -- @throws Error If the button/card cross the boundaries of the surface
@@ -65,15 +64,12 @@ function MemoryGrid:display_text(surface, button_index)
 										button_data.font_size,
 										button_data.font_color)
 
-		text_button:draw(surface, {x = self.button_list[button_index].x, y = self.button_list[button_index].y,
-															width = self.button_list[button_index].width, height = self.button_list[button_index].height}, button_data.text, "center", "middle")
+		text_button:draw(surface, {x = self.button_list[button_index].x,
+						y = self.button_list[button_index].y,
+						width = self.button_list[button_index].width,
+						height = self.button_list[button_index].height},
+						button_data.text, "center", "middle")
 	end
-
--- function MemoryGrid:display_next_view(transfer_path)
---  	local view_import = require(transfer_path)
---  	local view_instance = view_import()
---  	view.view_manager:set_view(view_instance)
--- end
 
 --- When "down" is pressed, the indicator shall follow the down-direction
 -- @param button_indicator The current indicator that points to the selected button
@@ -89,9 +85,6 @@ function MemoryGrid:indicate_downward(button_indicator)
 
 	local that_distance = self:distance_to_corner(corner_position, 2)
 
-	--print("the fucking distance to 2 issss " .. that_distance)
-	--print("the fucking  distance to 9 issss ".. self:distance_to_corner(corner_position, 9))
-
 	for i=1, #button_list do
 		if button_list[i].y >= button_list[indicator].y + button_list[indicator].height then
 			local distance = self:button_distance(indicator, i)
@@ -99,17 +92,17 @@ function MemoryGrid:indicate_downward(button_indicator)
 		end
 	end
 
-if shortest_distance_buttons ~= 720 then
-	for j=1, #button_list do
-		if  button_list[j].y >= button_list[indicator].y + button_list[indicator].height then
-			local distance = self:button_distance(indicator, j)
-			if shortest_distance_buttons == distance then
-				nearest_button_index = j
-				break
+	if shortest_distance_buttons ~= 720 then
+		for j=1, #button_list do
+			if  button_list[j].y >= button_list[indicator].y + button_list[indicator].height then
+				local distance = self:button_distance(indicator, j)
+				if shortest_distance_buttons == distance then
+					nearest_button_index = j
+					break
+				end
 			end
-		end
- end
-end
+	 	end
+	end
 
 	if shortest_distance_buttons == 720 and #button_list ~= 1 then
 		for k=1, #button_list do
@@ -157,18 +150,18 @@ function MemoryGrid:indicate_upward(button_indicator)
 		end
 	end
 
-if shortest_distance_buttons ~= 720 then
-	for j=1, #button_list do
-		if button_list[j].y + button_list[j].height <= button_list[indicator].y then
-			local distance = self:button_distance(indicator, j)
-			if shortest_distance_buttons == distance then
-				-- print("the distance is "..distance)
-				nearest_button_index = j
-				break
+	if shortest_distance_buttons ~= 720 then
+		for j=1, #button_list do
+			if button_list[j].y + button_list[j].height <= button_list[indicator].y then
+				local distance = self:button_distance(indicator, j)
+				if shortest_distance_buttons == distance then
+					-- print("the distance is "..distance)
+					nearest_button_index = j
+					break
+				end
 			end
 		end
- end
-end
+	end
 
 	if shortest_distance_buttons == 720 and #button_list ~= 1 then
 		for k=1, #button_list do
@@ -197,6 +190,8 @@ end
 	self.button_indicator = indicator
 end
 
+--- When "right" is pressed, the indicator shall follow the rightward direction
+-- @param button_indicator The current indicator that points to the selected button
 function MemoryGrid:indicate_rightward(button_indicator)
 	local indicator = button_indicator
 	local button_list = self.button_list
@@ -214,17 +209,17 @@ function MemoryGrid:indicate_rightward(button_indicator)
 		end
 	end
 
-if shortest_distance_buttons ~= 1280 then
-	for j=1, #button_list do
-		if button_list[j].x >= button_list[indicator].x + button_list[indicator].width then
-			local distance = self:button_distance(indicator, j)
-			if shortest_distance_buttons == distance then
-				nearest_button_index = j
-				break
+	if shortest_distance_buttons ~= 1280 then
+		for j=1, #button_list do
+			if button_list[j].x >= button_list[indicator].x + button_list[indicator].width then
+				local distance = self:button_distance(indicator, j)
+				if shortest_distance_buttons == distance then
+					nearest_button_index = j
+					break
+				end
 			end
-		end
- end
-end
+	 	end
+	end
 
 	if shortest_distance_buttons == 1280 and #button_list ~= 1 then
 		for k=1, #button_list do
@@ -252,6 +247,9 @@ end
 	self.button_indicator = indicator
 end
 
+
+--- When "left" is pressed, the indicator shall follow the leftward direction
+-- @param button_indicator The current indicator that points to the selected button
 function MemoryGrid:indicate_leftward(button_indicator, direction)
 	local indicator = button_indicator
 	local button_list = self.button_list
@@ -270,19 +268,19 @@ function MemoryGrid:indicate_leftward(button_indicator, direction)
 		end
 	end
 
-if shortest_distance_buttons ~= 1280 then
-	for j=1, #button_list do
-		if  button_list[indicator].x >= button_list[j].x + button_list[j].width then
-			local distance = self:button_distance(indicator, j)
-			if shortest_distance_buttons == distance then
-				--print("the distance is "..distance)
-				nearest_button_index = j
-				--print("the nearast button is ".. nearest_button_index)
-				break
+	if shortest_distance_buttons ~= 1280 then
+		for j=1, #button_list do
+			if  button_list[indicator].x >= button_list[j].x + button_list[j].width then
+				local distance = self:button_distance(indicator, j)
+				if shortest_distance_buttons == distance then
+					--print("the distance is "..distance)
+					nearest_button_index = j
+					--print("the nearast button is ".. nearest_button_index)
+					break
+				end
 			end
 		end
- end
-end
+	end
 
 	if shortest_distance_buttons == 1280 and #button_list ~= 1 then
 		for k=1, #button_list do
@@ -310,8 +308,9 @@ end
 	self.button_indicator = indicator
 end
 
-
-
+---Calculates the distance between the two buttons or cards specified
+--@param sel_button_index Number representing the index of button one
+--@param button_index Number representing the index of button two
 function MemoryGrid:button_distance(sel_button_index, button_index)
 	local sel_central_x = self.button_list[sel_button_index].x + math.floor(self.button_list[sel_button_index].width/2)
 	local sel_central_y = self.button_list[sel_button_index].y + math.floor(self.button_list[sel_button_index].height/2)
@@ -321,6 +320,11 @@ function MemoryGrid:button_distance(sel_button_index, button_index)
 	return distances
 end
 
+---Calculates the distance between the the corner of one button or card to
+-- another button or card
+--@param corner_position table with x and y fields representing x and y position
+--@param button_index Number representing the index of button/card to measure
+-- 		distance to
 function MemoryGrid:distance_to_corner(corner_position, button_index)
 
 	local central_x = self.button_list[button_index].x + math.floor(self.button_list[button_index].width/2)
@@ -331,7 +335,9 @@ function MemoryGrid:distance_to_corner(corner_position, button_index)
 	return distances
 end
 
-
+--- Overloaded press function. Responds to a user button press and determines a
+-- new state for the quiz.
+--@param button Button that the user pressed
 function MemoryGrid:press(button)
 	if button == "down" then
 		logger.debug(string.format("i press"))
@@ -358,6 +364,9 @@ function MemoryGrid:press(button)
 	end
 end
 
+---Renders the MemoryGrid and all its child components, given that they are
+-- flagged as dirty, on the specified Surface
+--@param surface @{Surface} or @{SubSurface} to render on
 function MemoryGrid:render(surface)
 -- If no button is selected when this button_grid is created,
 -- then the first button in the list will be selected.
@@ -400,11 +409,22 @@ function MemoryGrid:render(surface)
    gfx.update()
 end
 
-
+--- Sets the card status for card with index i to be either facing up or facing
+-- down. Triggers dirty if the status has changed. 
+--@param status String representing the new status. May be one of the following
+-- 				constants: "FACING_UP", "FACING_DOWN".
 function MemoryGrid:set_card_status(card_index, status)
 	self.button_list[card_index].button:set_card_status(status)
 end
 
+--- Sets status of several cards at once without triggering dirty between each
+-- new status. Should be used instead of set_card_status when several statuses
+-- needs to be changed at one time. Triggers dirty once complete.
+--
+--@param state_map Table with boolean values representing card states. If index
+--					i in the stame map is true the card with index i will be
+--					given the status "FACING_UP". Otherwise the card will be
+--					given the status "FACING_DOWN".
 function MemoryGrid:set_multiple_status(state_map)
 	for i=1, #state_map do
 		local state = state_map[i]

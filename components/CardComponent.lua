@@ -1,5 +1,6 @@
---- Base class for NumericalInputComponent
--- @classmod NumericalInputComponent
+--- CardComponent class. The CardComponent class is used for representing cards
+-- in the memory mini game. Builds upon the button class.
+-- @classmod CardComponent
 
 local class = require("lib.classy")
 local View = require("lib.view.View")
@@ -10,13 +11,16 @@ local utils = require("lib.utils")
 local Color = require("lib.draw.Color")
 local SubSurface = require("lib.view.SubSurface")
 
---- Constructor for NumericalInputComponent
--- @param event_listener Remote control to listen to
+--- Constructor for CardComponent
 -- @param current_city The users current city, used for chosing pictures
 -- @param i The cardnumber, used to match pictures
--- @param color The button color
--- @param color_selected The button color when selected
--- @param color_disabled The button color when disabled
+--@param color The color of card's backside
+--@param color_selected The color for a selected card
+--@param color_disabled The color for a disabled card
+--@param enabled The card is enabled or not when instantiating
+--@param selected The card is selected or not when instantiating
+--@param transfer_path The path for the view after the card is clicked.
+--			Note: this isn't currently in use for the cards
 function CardComponent:__init(current_city, i, color, color_selected, color_disabled, enabled, selected, transfer_path)
 	Button.__init(self, color, color_selected, color_disabled, enabled, selected, transfer_path)
 	self.status = "FACING_DOWN"
@@ -42,8 +46,8 @@ function CardComponent:__init(current_city, i, color, color_selected, color_disa
 	end
 end
 
---- Function to render a card
--- @param surface The surface to render the card on
+--Renders a CardComponent on the specified SubSurface
+--@param surface @{Surface} or @{SubSurface} to render on
 function CardComponent:render(surface)
 	self:dirty(false)
 	if self.status == "FACING_UP" then
@@ -68,8 +72,10 @@ function CardComponent:render(surface)
 	end
 end
 
---- Sets a status for a CardComponent
--- @param status The status to be set on the CardComponent
+--- Sets the card status to be either facing up or facing down. Triggers dirty
+-- if the status has changed.
+--@param status String representing the new status. May be one of the following
+-- 				constants: "FACING_UP", "FACING_DOWN".
 function CardComponent:set_card_status(status)
 	local old_status = self.status
 	if old_status ~= status then
