@@ -10,6 +10,7 @@ local button= require("lib.components.Button")
 local button_grid=require("lib.components.ButtonGrid")
 local CityTourView = class("CityTourView", View)
 local attractions  = require("lib.attractions")
+local PopUpView = require("views.PopUpView")
 
 function CityTourView:__init(remote_control, surface, profile)
 	View.__init(self)
@@ -117,6 +118,7 @@ end
 
 
 function CityTourView:render(surface)
+
 	surface:fill({r=255, g=255, b=255, a=255})
 
 	local height = surface:get_height()
@@ -169,6 +171,7 @@ function CityTourView:render(surface)
 
 	--Render buttons
 	self.buttonGrid:render(surface)
+	self:dirty(false)
 end
 
 function CityTourView:destroy()
@@ -183,7 +186,31 @@ function CityTourView:load_view(button)
 
 	if button == "back" then
 
-	self:trigger("exit_view")
+		local type = "confirmation"
+    local message =  {"Are you sure you want to exit the City Tour?"}
+
+
+    local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
+    local popup_view = PopUpView(remote_control,subsurface, type, message)
+    self:add_view(popup_view)
+
+    self.buttonGrid:blur()
+
+    local button_click_func = function(button)
+      if button == "ok" then
+      self:trigger("exit_view")
+      else
+      popup_view:destroy()
+      self.buttonGrid:focus()
+      self:dirty(true)
+      gfx.update()
+    end
+
+    end
+
+    self:listen_to_once(popup_view, "button_click", button_click_func)
+    popup_view:render(subsurface)
+    gfx.update()
 			--Stop listening to everything
 			-- TODO
 			-- Start listening to the exit
