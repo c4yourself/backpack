@@ -17,6 +17,7 @@ local Font = require("lib.draw.Font")
 local Color = require("lib.draw.Color")
 local logger = require("lib.logger")
 local Profile = require("lib.profile.Profile")
+local ProfileManager = require("lib.profile.ProfileManager")
 local KeyboardComponent	=	require("components.KeyboardComponent")
 local CreateProfileView2 = require("views.CreateProfileView2")
 local CreateProfileView = class("CreateProfileView", View)
@@ -77,6 +78,23 @@ function CreateProfileView:__init(remote_control)
 		self.callback
 		--utils.partial(self.load_view, self)
 	)
+end
+
+function CreateProfileView:control_input()
+	local ok_input = true
+	local profile_man = ProfileManager()
+	if self.input_field.text == "" then --Control for non-empty string, should check for special characters such as @.
+		ok_input = false
+	elseif self.input_field2.text == "" or self.input_field3.text == "" then
+		ok_input = false
+	elseif self.input_field2.text ~= self.input_field3.text then
+		ok_input = false
+	elseif profile_man:load(self.input_field.text)==false then
+		ok_input = false
+	elseif profile_man:check_email(self.input_field.text)==false then
+		ok_input = false
+	end
+	return ok_input
 end
 
 function CreateProfileView:render(surface)
@@ -141,9 +159,12 @@ function CreateProfileView:load_view(button)
 				local profile_selection = ProfileSelection(event.remote_control)
 				view.view_manager:set_view(profile_selection)
 			elseif self.content_pointer == 5 then
-				--if self.input_field2.text == self.input_field3.text then
-				self.create_profile_2 = CreateProfileView2(self.remote_control, self.input_field.text, self.input_field2.text)
-				view.view_manager:set_view(self.create_profile_2)
+				if self:control_input() then
+					self.create_profile_2 = CreateProfileView2(self.remote_control, self.input_field.text, self.input_field2.text)
+					view.view_manager:set_view(self.create_profile_2)
+				else
+					--Error message pop-up
+				end
 			end
 		end
 	end

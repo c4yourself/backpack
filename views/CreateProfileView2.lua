@@ -99,27 +99,23 @@ function CreateProfileView2:render(surface)
 	self.button_login:render(self.button_login_surface)
 	self.button_text:draw(surface, {x=700+50, y=530+15}, "Cancel")
 	self.button_text:draw(surface, {x=980+70, y=530+15}, "Create")
-	-- --surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/paris.png")))
-	--
-	-- local log_in_button = sys.new_freetype({r=23, g=155, b=23}, 30, {x=700+50,y=35}, utils.absolute_path("data/fonts/DroidSans.ttf"))
-	-- surface:fill({r=23, g=0, b=23}, {width=500, height=100, x=700, y=45})
-	-- log_in_button:draw_over_surface(surface, "Ok")
-	--
-	-- local input = sys.new_freetype({r=23, g=155, b=23}, 30, {x=700+50,y=135}, utils.absolute_path("data/fonts/DroidSans.ttf"))
-	-- input:draw_over_surface(surface, "namn: ")
-	--
-	-- keyboard = KeyboardComponent()
-	-- keyboard:render(surface)
-	-- --logger:trace("active:" .. keyboard:is_active())
-	-- if keyboard:is_active() then
-	-- 	logger:trace("keyboard ACTIVE")
-	-- else
-	-- 	logger:trace("keyboard is not active")
-	-- end
+end
 
-	--keyboard:set_active(false)
+function CreateProfileView2:control_input()
+	local ok_input = true
+	--local profile_man = ProfileManager()
+	if self.input_field.text == "" then --Control for non-empty string
+		ok_input = false
+	-- elseif self.input_field2.text == "" then -- Date of birth input control
+	-- 	ok_input = false
+	end
+	return ok_input
+end
 
-
+function CreateProfileView2:return_to_base_view()
+	local ProfileSelection=require("views.ProfileSelection")
+	local profile_selection = ProfileSelection(event.remote_control)
+	view.view_manager:set_view(profile_selection)
 end
 
 function CreateProfileView2:load_view(button)
@@ -165,16 +161,19 @@ function CreateProfileView2:load_view(button)
 				self:render(screen)
 				gfx.update()
 			elseif self.content_pointer == 4 then
-				local ProfileSelection=require("views.ProfileSelection")
-				local profile_selection = ProfileSelection(event.remote_control)
-				view.view_manager:set_view(profile_selection)
+				self:return_to_base_view()
 			elseif self.content_pointer == 5 then
-				self.profile = Profile(self.input_field.text, self.email, self.input_field2.text2, binary_button:get_value(), City.cities["london"])
-				self.profile:set_balance(0)
-				self.profile:set_experience(0)
-				self.profile:set_password(self.password)
-				self.profile:set_id(0)
-				self.profile_manager:create_new_profile(self.profile)
+				if self:control_input() then
+					self.profile = Profile(self.input_field.text, self.email, self.input_field2.text2, binary_button:get_value(), City.cities["london"])
+					self.profile:set_balance(0)
+					self.profile:set_experience(0)
+					self.profile:set_password(self.password)
+					self.profile:set_id(0)
+					self.profile_manager:create_new_profile(self.profile)
+					self:return_to_base_view()
+				else
+					-- Error message pop-up
+				end
 			end
 		end
 	end
