@@ -170,9 +170,18 @@ function MultipleChoiceView:_submit()
 			self.progress_table[self.current_question] = false
 			self.last_check=self.last_check + 1
 		end
-		self.views.grid:select_next()
-		self.quiz_state = "DISPLAY_RESULT"
-		self:dirty(true)
+		if self.current_question == self.quiz_size then
+			-- TODO Add pop-up displaying final result here
+			self.quiz_state = "DONE"
+			self:dirty(true)
+			print("\n" .. "\n" .. "\n" .. "\n" .. "\n" .. "\n")
+			print("Display final summary")
+			print("\n" .. "\n" .. "\n" .. "\n" .. "\n" .. "\n")
+		else
+			self.views.grid:select_next()
+			self.quiz_state = "DISPLAY_RESULT"
+			self:dirty(true)
+		end
 		--Reset user input after the answer has been displayed
 		self.answer = {}
 		self.user_input = ""
@@ -277,7 +286,7 @@ function MultipleChoiceView:render(surface)
 		local surface_width = surface:get_width()
 		local surface_height = surface:get_height()
 		surface:clear(color)
-
+		local pop_up_flag = false
 		-- If the areas haven't been defined yet, define them
 		if not self.areas_defined then
 			-- Question area
@@ -331,7 +340,7 @@ function MultipleChoiceView:render(surface)
 				result, "center", "middle")
 		elseif self.quiz_state == "DONE" then
 			-- Display the result from the whole quiz
-			self.mult_choice_quiz:calculate_score(self.correct_answer_number)
+			--[[self.mult_choice_quiz:calculate_score(self.correct_answer_number)
 			local quiz_result = "You've answered " .. self.correct_answer_number ..
 								" questions correctly and " .. --"\n" ..
 								" your final score is " ..
@@ -339,10 +348,11 @@ function MultipleChoiceView:render(surface)
 			self.font:draw(self.question_area,
 				{x = 0, y = 0, height = self.question_area_height,
 				width = self.question_area_width},
-				quiz_result, "center", "middle")
+				quiz_result, "center", "middle")]]
 			--[[self.font:draw(screen,Rectangle(100,300,200,200):to_table(),"You answered "
 			.. self.correct_answer_number .. " questions correctly and your score is "
 			.. self.mult_choice_quiz:get_score() .. ".")]]
+			pop_up_flag = true
 		end
 
 		--Progress counter
@@ -397,6 +407,15 @@ function MultipleChoiceView:render(surface)
 		self.prevent = false
 
 		self.views.grid:render(surface)
+		if pop_up_flag then
+			local counter  = self.correct_answer_number
+			local experience = ExperienceCalculation.Calculation(counter, "Multiplechoice")
+			self.profile:modify_balance(experience)
+			self.profile:modify_experience(experience)
+			local type = "message"
+			local message = {"Good job! You received" .. experience .. " coins."}
+			self:_back_to_city(type, message)
+		end
 	end
 
 	-- TODO Render all child views and copy changes to this view
