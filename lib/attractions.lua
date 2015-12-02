@@ -456,10 +456,27 @@ attractions.attraction = { paris = {
                                                   "used for a variety of other purposes, underwent re-modelling and",
                                                   "suffered decay until its restoration and return to its original",
                                                   "use in the late twentieth century."}
-                                        }
-
-
-                                      },
+                                          },
+                                          {name = "The Harbour Bridge",
+                                          question = "What is the nickname of the Sydney Harbor Bridge?",
+                                          answers = {"The Coathanger", "The Big Steel", "The Harbor Gateway", "The Connector"},
+                                          pic_url = "data/images/CityTourQueenHarbourBridge.png",
+                                          text = {"The Sydney Harbour Bridge is a bridge across Sydney Harbor that",
+                                                  "carries rail, vehicular, bicycle, and pedestrian traffic. The",
+                                                  "dramatic view of the bridge,the harbor, and the nearby Sydney Opera",
+                                                  "House is an iconic image of Sydney, and Australia. The bridge is",
+                                                  "nicknamed \"The Coathanger\" because of its arch-based design or is",
+                                                  "simply called \"The Bridge\" by Sydney residents. Under the direction",
+                                                  "of Dr J.J.C. Bradfield of the NSW Department of Public Works, the",
+                                                  "bridge was designed and built by British firm Dorman Long and Co Ltd",
+                                                  "of Middlesbrough and opened in 1932. The bridge's design was",
+                                                  "influenced by the Hell Gate Bridge in New York City. One of the",
+                                                  "ongoing tourist attractions of the bridge has been the south-east",
+                                                  "pylon, which is accessed via the pedestrian walkway across the",
+                                                  "bridge, and then a climb to the top of the pylon of about 200",
+                                                  "steps."}
+                                                }
+                                        },
 
 
                                   cairo = {
