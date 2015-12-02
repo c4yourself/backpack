@@ -22,9 +22,10 @@ local ConnectFourComponent = class("ConnectFourComponent", View)
 
 --- Constructor for ConnectFour component
 -- @param remote_control
-function ConnectFourComponent:__init(remote_control)
+function ConnectFourComponent:__init(remote_control, subsurface, profile)
 	View.__init(self)
 
+	self.profile = profile
 	self.connectfour = ConnectFour()
 	self.current_column = 4
 	print("focus i init")
@@ -188,7 +189,7 @@ function ConnectFourComponent:render(surface)
 	if self.connectfour:_is_full_board() then
 		print("brädet är fullt")
 		utils.delay(2500, function()
-			local message = {"The board is full, no one won. Return to city view"}
+			local message = {"The board is full, no one won."}
 			self:delay2("message", message)
 		end)
 	end
@@ -199,10 +200,11 @@ function ConnectFourComponent:render(surface)
 			print("delayed")
 			local winner = self.connectfour:get_winner()
 			if winner == "X" then
-				winner_message = {"Congratulations, you won!"}
 				local count_x = self.connectfour:get_number_of_coins()
-				ExpCalc.Calculation(count_x, "Connectfour")
-
+				local experience = ExpCalc.Calculation(count_x, "Connectfour")
+				self.profile:modify_balance(experience)
+				self.profile:modify_experience(experience)
+				winner_message = {"Congratulations, you won!", "You received " .. experience .. " coins."}
 			elseif winner == "O" then
 				winner_message = {"Sorry, you lost!"}
 			end
