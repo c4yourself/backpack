@@ -103,17 +103,14 @@ end
 
 ---Generates a citytour quiz of a given size
 -- @param image_path representing the city now
--- @param quiz_size representing how many questions it need
 -- @param attraction_number representing what attraction number you want a question for. String 1, 2 or 3
 -- @return true representing get the question table
 -- @return false representing don't get question from TSV
-function Quiz:generate_citytour_quiz(image_path,quiz_size,attraction_number)
+function Quiz:generate_citytour_quiz(image_path,attraction_number)
 	local tsvreader = TSVReader(image_path .. "_city_tour")
 	if tsvreader:get_question("city_tour" .. attraction_number) ~= false then
-		for i = 1, quiz_size,1 do
-			local multiplechoicequestion = tsvreader:generate_question(i)
-			self.questions[i] = multiplechoicequestion
-		end
+			local multiplechoicequestion = tsvreader:generate_question(1)
+			self.questions[1] = multiplechoicequestion
 		return true
 	else
 		return false
