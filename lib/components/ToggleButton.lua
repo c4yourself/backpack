@@ -9,7 +9,7 @@ local Color = require("lib.draw.Color")
 function ToggleButton:__init(color, color_selected, color_disabled, enabled, selected, transfer_path)
 	Button:__init(color, color_selected, color_disabled, enabled, selected, transfer_path)
 	self.toggled = false
-	self.color_toggled = Color(205,97,0,255)
+	self.color_toggled = Color(0,0,255,255)
 end
 
 -- Switches the state for the toggle button
@@ -22,10 +22,7 @@ end
 function ToggleButton:render(surface)
 	self:dirty(false)
 
-	if self.toggled and self:is_selected() then
-	--	surface:fill(self.color_toggled:to_table())
-		surface:fill(self.color_selected:to_table())
-	elseif self.toggled then
+	if self.toggled then
 		surface:fill(self.color_toggled:to_table())
 	elseif not self:is_enabled() then
 		surface:fill(self.color_disabled:to_table())
