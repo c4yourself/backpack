@@ -44,7 +44,7 @@ function MemoryView:__init(remote_control, surface, profile)
     self.profile = profile
 
     self:_set_pairs()
-    --self.pairs = 3 -- TODO For quicker manual testing, remove once done coding
+    --self.pairs = 6 -- TODO For quicker manual testing, remove once done coding
     self.memory = MemoryGame(self.pairs, self.profile)
     self.columns = math.ceil((self.pairs*2)^(1/2))
 
@@ -90,10 +90,9 @@ function MemoryView:__init(remote_control, surface, profile)
     for i = 1, self.pairs*2 do
 
         local current_city = self.profile:get_city().name
-        self.cards[i]  = CardComponent(current_city, i, card_color,
+        self.cards[i]  = CardComponent(current_city, self.memory.cards[i], card_color,
         card_color_selected, card_color, true, false)
 
-        -- Temporary code ends
         if i == 1 then
             self.pos_x = self.pos_x
         elseif ((i-1) % self.columns == 0) then
@@ -113,18 +112,13 @@ function MemoryView:__init(remote_control, surface, profile)
                                     self.button_size,
                                     self.cards[i])
     end
-
     -- Add other buttons to the grid
     -- (has to be done after the memory cards has been added)
     self.button_grid:add_button(self.positions["exit"], button_size_big,
                                    self.button_1)
 
     -- Listeners and callbacks
-    self:listen_to(
-        event.remote_control,
-        "button_release",
-        utils.partial(self.press, self)
-    )
+    self:focus()
 
     self:listen_to(
         self.button_grid,
@@ -137,7 +131,8 @@ function MemoryView:__init(remote_control, surface, profile)
         "navigation",
         utils.partial(self._check_match, self)
     )
-      gfx.update()
+
+    gfx.update()
     end
 
 
@@ -146,7 +141,9 @@ function MemoryView:__init(remote_control, surface, profile)
 -- @param key The key the user is pressing
 function MemoryView:press(key)
     if key == "back" then
-		self:back_to_city()
+      local type = "confirmation"
+      local message = {"Are you sure you want to exit?"}
+      self:back_to_city(type, message)
     end
 end
 
@@ -155,7 +152,9 @@ function MemoryView:_determine_new_state()
     local card_index = self.button_grid.last_selection
     if self.button_grid.button_list[card_index].button.status == nil
     or card_index > self.pairs * 2 then
-        self:back_to_city()
+        local type = "confirmation"
+        local message = {"Are you sure you want to exit?"}
+        self:back_to_city(type, message)
         return
     end
 
@@ -171,13 +170,17 @@ function MemoryView:_determine_new_state()
             self.memory:open(card_index)
             self.button_grid:set_card_status(card_index, "FACING_UP")
             self.memory:is_finished()
+            self:dirty(true)
             if self.memory.finished == true then
               local counter  = {self.memory.moves, self.memory.pairs}
               local experience = ExperienceCalculation.Calculation(counter, "Memory")
               self.profile:modify_balance(experience)
               self.profile:modify_experience(experience)
+              local message = {"You used " .. self.memory.moves .. " moves and received " .. experience .. " coins."}
+              local type = "message"
+              self:back_to_city(type, message)
             end
-            self:dirty(true)
+
         end
     end
 end
@@ -230,17 +233,14 @@ function MemoryView:render(surface)
 end
 
 --- Called when the user returns to the CityView
-function MemoryView:back_to_city()
-
-    local type = "confirmation"
-    local message =  {"Are you sure you want to exit?"}
-
+function MemoryView:back_to_city(type, message)
 
     local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
     local popup_view = PopUpView(remote_control,subsurface, type, message)
     self:add_view(popup_view)
 
     self.button_grid:blur()
+    self:blur()
 
     local button_click_func = function(button)
       if button == "ok" then
@@ -248,6 +248,7 @@ function MemoryView:back_to_city()
       else
       popup_view:destroy()
       self.button_grid:focus()
+      self:focus()
       self:dirty(true)
       gfx.update()
     end
@@ -264,17 +265,29 @@ function MemoryView:_set_pairs()
 	if exp <= 100 then
 		self.pairs = 4
 	elseif exp <=200 then
-		self.pairs = 4
+		self.pairs = 6
 	elseif exp <= 300 then
-		self.pairs = 4
+		self.pairs = 8
 	elseif exp >300 then
-		self.pairs = 4
+		self.pairs = 10
 	end
 end
 
 --- Function to destroy MemoryView
 function MemoryView:destroy()
     view.View.destroy(self)
+end
+
+function MemoryView:focus()
+  self:listen_to(
+      event.remote_control,
+      "button_release",
+      utils.partial(self.press, self)
+  )
+end
+
+function MemoryView:blur()
+  self:stop_listening(event.remote_control)
 end
 
 return MemoryView
