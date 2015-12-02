@@ -207,8 +207,10 @@ end
 -- @param token a users authetication token received by login()
 -- @return result a instance of the Profile class
 function ProfileSynchronizer:get_profile(token)
+
+	local hashkey = hash.hash256(token..self.ttlyawesomekey)
 	-- Json request for token data
-	local token_data =  [[{"profile_token":"]]..token..[[","zdata_hash":"49aac7d4ad14540a91c14255ea1288e2fdc9a54e53f01d15371e81345f5e3646"}]]
+	local token_data =  [[{"profile_token":"]]..token..[[","zdata_hash":"]]..hashkey..[["}]]
 	--local token_data =  [[{"profile_token":"]]..token..[[","zdata_hash":"49aac7d4ad14540a91c14255aa1288e2fdc9a54e53f01d15371e81345f5e3646"}]]
 
 	-- Returned result
@@ -233,7 +235,9 @@ end
 -- @return result either error message or message of delete completion
 function ProfileSynchronizer:delete_profile(email, password, token)
 
-	local json_request =  [[{"email":"]]..email..[[","password":"]]..password..[[","profile_token":"]]..token..[[","zdata_hash":"49aac7d4ad14540a91c14255ea1288e2fdc9a54e53f01d15371e81345f5e3646"}]]
+	local hashkey = hash.hash256(email..self.ttlyawesomekey)
+
+	local json_request =  [[{"email":"]]..email..[[","password":"]]..password..[[","profile_token":"]]..token..[[","zdata_hash":"]]..hashkey..[["}]]
 
 	result = server_communication(json_request, self.delete_profile_url)
 
@@ -266,6 +270,8 @@ function ProfileSynchronizer:save_profile(profile)
 	local profile_token = profile:get_login_token()
 	local sex = profile:get_sex()
 
+	local hashkey = hash.hash256(email_address..self.ttlyawesomekey)
+
 	-- Construct the json request from the data
 	local profile_data =  [[{"badges":"]]..badges..
 												[[","balance":"]]..balance..
@@ -279,7 +285,7 @@ function ProfileSynchronizer:save_profile(profile)
 												[[","password":"]]..password..
 												[[","profile_token":"]]..profile_token..
 												[[","sex":"]]..sex..
-												[[","zdata_hash":"49aac7d4ad14540a91c14255ea1288e2fdc9a54e53f01d15371e81345f5e3646"}]]
+												[[","zdata_hash":"]]..hashkey..[["}]]
 
 	-- Make the server request
 	result = server_communication(profile_data, self.save_profile_url)
