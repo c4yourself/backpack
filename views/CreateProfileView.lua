@@ -16,6 +16,7 @@ local BinaryButton	=	require("components.BinaryButton")
 local Font = require("lib.draw.Font")
 local Color = require("lib.draw.Color")
 local logger = require("lib.logger")
+local Profile = require("lib.profile.Profile")
 local KeyboardComponent	=	require("components.KeyboardComponent")
 local CreateProfileView2 = require("views.CreateProfileView2")
 local CreateProfileView = class("CreateProfileView", View)
@@ -28,11 +29,11 @@ function CreateProfileView:__init(remote_control, return_view)
 	self.return_view = return_view
 
 	self.button_text = Font("data/fonts/DroidSans.ttf", 40, Color(255, 255, 255, 255))
-	input_field = InputField("Mail:", {x = 700, y = 80}, true)
-	input_field2 = InputField("Password:", {x = 700, y = 230}, false)
-	input_field2:set_private(true)
-	input_field3 = InputField("Confirm Password:", {x = 700, y = 380}, false)
-	input_field3:set_private(true)
+	self.input_field = InputField("Mail:", {x = 700, y = 80}, true)
+	self.input_field2 = InputField("Password:", {x = 700, y = 230}, false)
+	self.input_field2:set_private(true)
+	self.input_field3 = InputField("Confirm Password:", {x = 700, y = 380}, false)
+	self.input_field3:set_private(true)
 
 	self.background_color = {r=30, g=35, b=35}
 	local button_color = Color(255, 99, 0, 255)
@@ -44,7 +45,7 @@ function CreateProfileView:__init(remote_control, return_view)
 	self.button_cancel_surface = SubSurface(screen, {width=220, height=75, x=700, y=530})
 	self.button_login_surface = SubSurface(screen, {width=220, height=75, x=980, y=530})
 
-	self.active_field = input_field
+	self.active_field = self.input_field
 
 	self.render_ticket = false
 
@@ -67,7 +68,7 @@ function CreateProfileView:__init(remote_control, return_view)
 	end
 	self:listen_to(self.keyboard, "exit", exit_keyboard_callback)
 
-	self.content_list = {input_field, input_field2, input_field3, self.button_cancel, self.button_login}
+	self.content_list = {self.input_field, self.input_field2, self.input_field3, self.button_cancel, self.button_login}
 	self.content_pointer = 1
 
 	self.callback = utils.partial(self.load_view, self)
@@ -89,9 +90,9 @@ function CreateProfileView:render(surface)
 	end
 
 
-	input_field:render(surface)
-	input_field2:render(surface)
-	input_field3:render(surface)
+	self.input_field:render(surface)
+	self.input_field2:render(surface)
+	self.input_field3:render(surface)
 	self.button_cancel:render(self.button_cancel_surface)
 	self.button_login:render(self.button_login_surface)
 	self.button_text:draw(surface, {x=700+50, y=530+15}, "Cancel")
@@ -139,7 +140,8 @@ function CreateProfileView:load_view(button)
 			elseif self.content_pointer == 4 then
 				--view.view_manager:set_view(self.return_view)
 			elseif self.content_pointer == 5 then
-				self.create_profile_2 = CreateProfileView2(self.remote_control, self.return_view)
+				--if self.input_field2.text == self.input_field3.text then
+				self.create_profile_2 = CreateProfileView2(self.remote_control, self.return_view, self.input_field.text, self.input_field2.text)
 				view.view_manager:set_view(self.create_profile_2)
 			end
 		end

@@ -68,6 +68,7 @@ end
 -- @return true representing it saves successfully both in local and server
 -- @return false representing it saves unsuccessfully in server
 function ProfileManager:create_new_profile(profile)
+	
 	localprofilemanager:save(profile)
 
 	--check the network
