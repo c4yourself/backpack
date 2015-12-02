@@ -209,7 +209,7 @@ function ProfileView:render(surface)
 		self.font:draw(surface, {x=10, y = 450}, "Bought in: ")
 		self.font:draw(surface, {x = 180, y = 450}, item_selected:get_city())
 		self.font:draw(surface, {x=10, y = 485}, "Original price: ")
-		self.font:draw(surface, {x = 180, y = 485}, tostring(item_selected:get_price()))
+		self.font:draw(surface, {x = 180, y = 485}, self.profile:get_city().country:format_balance(item_selected:get_price()))
 	end
 
 end

@@ -245,7 +245,7 @@ function Store:render(surface)
 
 	-- Draw balacne
 	local coins = self.profile:get_balance()
-	local local_coins = self.profile:get_city().country:universal_to_local_currency(coins)
+	local local_coins = self.profile:get_city().country:format_balance(coins)
 	self.font:draw(surface, {x = 2.9*width/4, y = height/8},"Coins: "..local_coins)
 
 	--Draw item info is one is selected, exit info otherwise
@@ -269,10 +269,10 @@ function Store:render(surface)
 		self.font:draw(surface, {x = 2.9*width/4, y = height/8+45}, "Item: " .. item:get_name())
 		self.font:draw(surface, {x = 2.9*width/4, y = height/8+70}, "Description: "..item:get_description())
 		if selected_item_index <= get_size(self.items) then
-			self.font:draw(surface, {x = 2.9*width/4, y = height/8+95}, "Purchase price: " .. self.profile:get_city().country:universal_to_local_currency(item:get_price()))
+			self.font:draw(surface, {x = 2.9*width/4, y = height/8+95}, "Purchase price: " .. self.profile:get_city().country:format_balance(item:get_price()))
 		else
 			self.font:draw(surface, {x = 2.9*width/4, y = height/8+95},
-			"Sale price: "..self.profile:get_city().country:universal_to_local_currency(self.backendstore:returnOfferPrice(item, self.current_city)))
+			"Sale price: "..self.profile:get_city().country:format_balance(self.backendstore:returnOfferPrice(item, self.current_city)))
 		end
 	end
 	self.font:draw(surface, {x = 2.9*width/4, y = height/8+130}, self.message["message"])
