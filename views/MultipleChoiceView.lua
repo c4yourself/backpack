@@ -171,12 +171,10 @@ function MultipleChoiceView:_submit()
 			self.last_check=self.last_check + 1
 		end
 		if self.current_question == self.quiz_size then
-			-- TODO Add pop-up displaying final result here
+			--The quiz is completeted. State changed to DONE, which prompts
+			-- the pop-up
 			self.quiz_state = "DONE"
 			self:dirty(true)
-			print("\n" .. "\n" .. "\n" .. "\n" .. "\n" .. "\n")
-			print("Display final summary")
-			print("\n" .. "\n" .. "\n" .. "\n" .. "\n" .. "\n")
 		else
 			self.views.grid:select_next()
 			self.quiz_state = "DISPLAY_RESULT"
@@ -197,19 +195,6 @@ function MultipleChoiceView:_next()
 		if self.current_question > self.quiz_size then
 			self.end_flag = 1
 			self.quiz_state = "DONE"
-			if self.end_flag == 1 then
-			-- 	local counter  = self.correct_answer_number
-			-- 	local experience = ExperienceCalculation.Calculation(counter, "Multiplechoice")
-			-- 	self.profile:modify_balance(experience)
-			-- 	self.profile:modify_experience(experience)
-			-- 	local type = "message"
-			-- 	local message = {"Good job! You received" .. experience .. " coins."}
-			-- --	local message = {"Good job! You received XX coins."}
-			-- 	self:_back_to_city(type, message)
-			end
-
-
-
 		else
 			self.quiz_state = "IDLE"
 		end
@@ -225,15 +210,6 @@ function MultipleChoiceView:_next()
 		local experience = ExperienceCalculation.Calculation(counter, "Multiplechoice")
 		self.profile:modify_balance(experience)
 		self.profile:modify_experience(experience)
-
-	-- When the game is finished, a popup-view with the text below shall be shown.
-	--This isn't working right now - the code probably shall be placed somewhere else?
-
-	-- 	local type = "message"
-	-- 	local message = {"Good job! You received" .. experience .. " coins."}
-	-- --	local message = {"Good job! You received XX coins."}
-	-- 	self:_back_to_city(type, message)
-
 	end
 end
 
@@ -332,26 +308,12 @@ function MultipleChoiceView:render(surface)
 
 		elseif self.quiz_state == "DISPLAY_RESULT" then
 			-- Display the result from one question
-			-- self.font:draw(screen,Rectangle(100,300,200,200):to_table(),self.result_string)
 			local result = self.result_string
 			self.font:draw(self.question_area,
 				{x = 0, y = 0, height = self.question_area_height,
 				width = self.question_area_width},
 				result, "center", "middle")
 		elseif self.quiz_state == "DONE" then
-			-- Display the result from the whole quiz
-			--[[self.mult_choice_quiz:calculate_score(self.correct_answer_number)
-			local quiz_result = "You've answered " .. self.correct_answer_number ..
-								" questions correctly and " .. --"\n" ..
-								" your final score is " ..
-								self.mult_choice_quiz:get_score() .. "."
-			self.font:draw(self.question_area,
-				{x = 0, y = 0, height = self.question_area_height,
-				width = self.question_area_width},
-				quiz_result, "center", "middle")]]
-			--[[self.font:draw(screen,Rectangle(100,300,200,200):to_table(),"You answered "
-			.. self.correct_answer_number .. " questions correctly and your score is "
-			.. self.mult_choice_quiz:get_score() .. ".")]]
 			pop_up_flag = true
 		end
 
@@ -417,14 +379,13 @@ function MultipleChoiceView:render(surface)
 			self:_back_to_city(type, message)
 		end
 	end
-
-	-- TODO Render all child views and copy changes to this view
-	-- Render children
-
 	gfx.update()
 	self:dirty(false)
 end
 
+---Funcion that triggers the end of game pop
+--@param type String representing the type of pop-up.
+--@param message String with message to display
 function MultipleChoiceView:_back_to_city(type, message)
 
     local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
@@ -437,11 +398,10 @@ function MultipleChoiceView:_back_to_city(type, message)
 		  	self:destroy()
       		self:trigger("exit_view")
       	else
-			-- This isn't working right now!!
-	      popup_view:destroy()
-	      self.views.grid:focus()
-	      self:dirty(true)
-	      gfx.update()
+	      	popup_view:destroy()
+	      	self.views.grid:focus()
+	      	self:dirty(true)
+	      	gfx.update()
     	end
     end
 
@@ -489,6 +449,5 @@ end
 -- 	self:stop_listening(event.remote_control)
 -- 	self:stop_listening(self.views.grid)
 -- end
-
 
 return MultipleChoiceView
