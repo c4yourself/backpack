@@ -247,7 +247,6 @@ function Profile:set_inventory(inventory_string)
 		--self.inventory[i] = tonumber(tmp[i])
 		table.insert(self.inventory, tonumber(tmp[i]))
 	end
-
 	--[[
 	for i=1, #tmp, 1 do
 		table.insert(self.inventory,tonumber(string.sub(tmp[i],string.find(tmp[i]," ") + 1,string.len(tmp[i]))))

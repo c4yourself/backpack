@@ -15,14 +15,14 @@ local SubSurface = require("lib.view.SubSurface")
 local utils = require("lib.utils")
 local view = require("lib.view")
 local PopUpView = require("views.PopUpView")
-
+local ProfileManager = require("lib.profile.ProfileManager")
 local CityView = class("CityView", view.View)
 
 --- Constructor for CityView
 -- @param event_listener Remote control to listen to
 function CityView:__init(profile, remote_control)
 	view.View.__init(self)
-
+	self.profile_manager = ProfileManager()
 	self.background_path = ""
 	--Instance of the  current profile, can be used to get name, sex etc
 	self.profile = profile
@@ -107,6 +107,7 @@ function CityView:__init(profile, remote_control)
 				self.button_grid:focus()
 				self:focus()
 				one_instance:destroy()
+				self.profile_manager:save(self.profile)
 				self:dirty(true)
 		end
 
@@ -251,15 +252,14 @@ function CityView:render(surface)
 	surface:fill(score_text_color:to_table(), {width=150, height=30, x=285,y=10})
 	if self.profile.experience / 500 ~= 1 then
 		--TODO: No negative values allowed! The self.profile.experience needs to be calculated properly externally before used here.
-		surface:fill(experience_bar_color:to_table(), {width=math.ceil(148*(1-self.profile.experience/500)), height=28, x=434-148*(1-self.profile.experience/500), y=11})
+		surface:fill(experience_bar_color:to_table(), {width=math.ceil(148*(1-(self.profile.experience%100)/100)), height=28, x=434-148*(1-(self.profile.experience%100)/100), y=11})
 	end
 
 	-- Add info to statusbar
 	city_view_large_font:draw(surface,  {x=10, y=10}, self.profile.name) -- Profile name
-	city_view_small_font:draw(surface, {x=200, y=15}, "Level: 3") -- Profile level
-	city_view_small_font:draw(surface, {x=440, y=15}, tostring(self.profile.experience .. "/500")) -- Profile experience
-	city_view_small_font:draw(surface, {x=width-100, y=15}, city.country:format_balance(
-	city.country:universal_to_local_currency(self.profile.balance))) -- Profile cash
+	city_view_small_font:draw(surface, {x=200, y=15}, "Level: " ..tostring((self.profile.experience-(self.profile.experience%100))/100+1)) -- Profile level
+	city_view_small_font:draw(surface, {x=440, y=15}, tostring(self.profile.experience%100 .. "/100")) -- Profile experience
+	city_view_small_font:draw(surface, {x=width-100, y=15}, city.country:format_balance(self.profile.balance)) -- Profile cash
 	city_view_large_font:draw(surface, {x=width/2, y=15}, self.profile:get_city().name, center) -- City name
 
 	surface:copyfrom(self.images.coin, nil, {x = width-145, y = 10, width = 30, height = 30}) -- Coin

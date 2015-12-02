@@ -73,7 +73,8 @@ local function create_existing_profile(data)
 	-- Constructor
 	new_profile = Profile(data.name, data.email_address, data.date_of_birth, data.sex, City.cities[data.current_city])
 	-- And additional data
- 	new_profile:set_balance(data.balance)
+
+ 	new_profile:set_balance(tonumber(data.balance))
 	new_profile:set_id(data.id)
 	new_profile:set_experience(data.experience)
 	new_profile:set_login_token(data.profile_token)
@@ -171,9 +172,9 @@ function ProfileSynchronizer:test_hash()
 	result = server_communication(json_request, "/")
 
 	if result["error"] then
-		print(result["message"])
+		--print(result["message"])
 	else
-		print(result["message"])
+		--print(result["message"])
 	end
 
 end

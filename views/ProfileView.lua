@@ -190,8 +190,10 @@ function ProfileView:render(surface)
 	self.font:draw(surface, {x=180, y = 70}, self.profile:get_name())
 	self.font:draw(surface, {x=10,y=105}, "Birthday: ")
 	self.font:draw(surface, {x=180, y = 105}, tostring(self.profile:get_date_of_birth()))
-	self.font:draw(surface, {x=10,y=140}, "Experience: ")
-	self.font:draw(surface, {x=180, y = 140}, tostring(self.profile:get_experience()))
+	self.font:draw(surface, {x=10,y=140}, "Level: ")
+	self.font:draw(surface, {x=180, y = 140}, tostring((self.profile:get_experience()-self.profile:get_experience()%100)/100))
+	self.font:draw(surface, {x=10,y=175}, "Experience: ")
+	self.font:draw(surface, {x=180, y = 175}, tostring(self.profile:get_experience()%100))
 
 	--Draw Inventory header
 	self.header_font:draw(surface, {x=10,y = 230}, "Inventory")
@@ -209,7 +211,7 @@ function ProfileView:render(surface)
 		self.font:draw(surface, {x=10, y = 450}, "Bought in: ")
 		self.font:draw(surface, {x = 180, y = 450}, item_selected:get_city())
 		self.font:draw(surface, {x=10, y = 485}, "Original price: ")
-		self.font:draw(surface, {x = 180, y = 485}, tostring(item_selected:get_price()))
+		self.font:draw(surface, {x = 180, y = 485}, self.profile:get_city().country:format_balance(item_selected:get_price()))
 	end
 
 end

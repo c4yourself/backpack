@@ -158,26 +158,21 @@ attractions.attraction = { paris = {
                                               }
                                     },
                                       {name = "Haji Ali Mosque/mausoleum",
-                                      question = "According to legends, Haji Ali once jabbed a finger into the soil making what gush out?",
+                                      question = "Haji Ali once jabbed a finger into the soil, what gushed out?",
                                       answers = {"Gold", "Water", "Wine", "Oil"},
                                       pic_url = "data/images/CityTourHajiAli.png",
-                                      text = {"The Haji Ali Dargah was constructed in 1431 in memory of a wealthy",
-                                              "Muslim merchant, Sayyed Peer Haji Ali Shah Bukhari, who gave up all",
-                                              "his worldly possessions before making a pilgrimage to Mecca. Hailing",
-                                              "from Bukhara, in present day Uzbekistan, Bukhari travelled around the",
-                                              "world in the early to mid 15th century, and eventually settled in",
-                                              "present day Bombay. According to legends surrounding his life, he",
-                                              "once saw a poor woman crying on the road, holding an empty vessel. He",
-                                              "asked her what the problem was, she sobbed that her husband would",
-                                              "thrash her as she stumbled and accidentally spilled the oil she was",
-                                              "carrying. He asked her to take him to the spot where she spilt the",
-                                              "oil. There, he jabbed a finger into the soil and the oil gushed out.",
-                                              "The overjoyed woman filled up the vessel and went home. Haji Ali died",
-                                              "during his journey to Mecca and miraculously the casket carrying his",
-                                              "body, floated back to these shores, getting stuck in the string of",
-                                              "rocky islets just off the shore of Worli. Thus, the Dargah was",
-                                              "constructed there, on a tiny islet located 500 meters from the coast,",
-                                              "in the middle of Worli Bay."}
+                                      text = {"The Haji Ali Dargah was constructed in 1431 in memory of Sayyed",
+                                              "Peer Haji Ali Shah Bukhari, who gave up all his worldly possessions",
+                                              "before making a pilgrimage to Mecca. According to legends surrounding",
+                                              "his life, he once saw a poor woman cryng on the road holding an empty",
+                                              "vessel. He asked her what the problem was, she said that she had",
+                                              "stumbled and accidently spilled the oil she was carrying. He asked her to",
+                                              "take him to the spot where she spilt the oil. There, he jabbed a finger into",
+                                              "the soil and the oil gushed out. The overjoyed woman filled up the vessel",
+                                              "and went home. Haji Ali died during his journey to Mecca and the casket",
+                                              "carrying his body, floated back to these shores, getting stuck in the string",
+                                              "of rocky islet just off the shore of Worli. Thus, the Dargah was constructed",
+                                              "there, on an islet 500 meters from the coast, in the middle of Wordli Bay."}
                                       },
                                       {name = "Chhatrapati Shivaju Terminus",
                                       question = "How many years did it take to build the station?",
@@ -456,10 +451,27 @@ attractions.attraction = { paris = {
                                                   "used for a variety of other purposes, underwent re-modelling and",
                                                   "suffered decay until its restoration and return to its original",
                                                   "use in the late twentieth century."}
-                                        }
-
-
-                                      },
+                                          },
+                                          {name = "The Harbour Bridge",
+                                          question = "What is the nickname of the Sydney Harbor Bridge?",
+                                          answers = {"The Coathanger", "The Big Steel", "The Harbor Gateway", "The Connector"},
+                                          pic_url = "data/images/CityTourQueenHarbourBridge.png",
+                                          text = {"The Sydney Harbour Bridge is a bridge across Sydney Harbor that",
+                                                  "carries rail, vehicular, bicycle, and pedestrian traffic. The",
+                                                  "dramatic view of the bridge,the harbor, and the nearby Sydney Opera",
+                                                  "House is an iconic image of Sydney, and Australia. The bridge is",
+                                                  "nicknamed \"The Coathanger\" because of its arch-based design or is",
+                                                  "simply called \"The Bridge\" by Sydney residents. Under the direction",
+                                                  "of Dr J.J.C. Bradfield of the NSW Department of Public Works, the",
+                                                  "bridge was designed and built by British firm Dorman Long and Co Ltd",
+                                                  "of Middlesbrough and opened in 1932. The bridge's design was",
+                                                  "influenced by the Hell Gate Bridge in New York City. One of the",
+                                                  "ongoing tourist attractions of the bridge has been the south-east",
+                                                  "pylon, which is accessed via the pedestrian walkway across the",
+                                                  "bridge, and then a climb to the top of the pylon of about 200",
+                                                  "steps."}
+                                                }
+                                        },
 
 
                                   cairo = {
