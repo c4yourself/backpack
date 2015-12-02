@@ -53,7 +53,7 @@ function CityView:__init(profile, remote_control)
 	local button_5 = Button(button_color, color_selected, color_disabled,true,false, "views.Store")
 	local button_6 = Button(button_color, color_selected, color_disabled,true,false, "views.ProfileView")
 	local button_7 = Button(button_color, color_selected, color_disabled,true,false, "views.TravelView")
-	local button_8 = Button(button_color, color_selected, color_disabled,true,false)
+	local button_8 = Button(button_color, color_selected, color_disabled,true,false, "views.ProfileSelection")
 	local city_tour_button = Button(city_view_color, city_view_selected_color, color_disabled, true, false, "views.CityTourView")
 
 
