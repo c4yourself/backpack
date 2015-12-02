@@ -162,7 +162,7 @@ attractions.attraction = { paris = {
                                       answers = {"Gold", "Water", "Wine", "Oil"},
                                       pic_url = "data/images/CityTourHajiAli.png",
                                       text = {"The Haji Ali Dargah was constructed in 1431 in memory of Sayyed",
-                                              "Sayyed Peer Haji Ali Shah Bukhari, who gave up all his worldly",
+                                              "Peer Haji Ali Shah Bukhari, who gave up all his worldly",
                                               "possessions before making a pilgrimage to Mecca. Bukhari travelled",
                                               "around the world in the early to mid 15th century, and eventually",
                                               "settled in present day Bombay. According to legends surrounding his",
