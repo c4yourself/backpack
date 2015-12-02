@@ -21,9 +21,18 @@ function CityTourView:__init(remote_control, surface, profile)
 	local height = (screen:get_height()-50)*0.9
 
 	--To keep track of which attraction to display. Increments every time a user answer a question
-	attractionpoint = 1
+	--attractionpoint = 1
 
 	math.randomseed(os.time())
+	local order_table = {{1,2,3,4},{1,2,4,3},{1,3,2,4},{1,3,4,2},{1,4,2,3},{1,4,3,2},{2,1,3,4},{2,1,4,3},{2,3,1,4},{2,3,4,1},{2,4,1,3},{2,4,3,1},
+												{3,1,2,4},{3,1,4,2},{3,2,1,4},{3,2,4,1},{3,4,1,2},{3,4,2,1},{4,1,2,3},{4,1,3,2},{4,2,1,3},{4,2,3,1},{4,3,1,2},{4,3,2,1},{}}
+	local random_order = math.random(table.getn(order_table))
+	attractionpoint = order_table[random_order][#order_table[random_order]]
+	-----
+	-----
+
+
+
 	-- Create some colors
 	--border_color = Color(0, 0, 0, 255)
 
@@ -90,15 +99,18 @@ function CityTourView:__init(remote_control, surface, profile)
 		gfx.update()
 	end
 
+	table.remove(order_table[random_order],#order_table[random_order])
 	local button_click = function()
-		if table.getn(attractions.attraction[self.city.code]) == attractionpoint then
+	--	if table.getn(attractions.attraction[self.city.code]) == attractionpoint then
+	if #order_table[random_order] == 0 then
 			self:trigger("exit_view")
 		else
-			attractionpoint = attractionpoint + 1
+			attractionpoint = order_table[random_order][#order_table[random_order]]
 			button_1:set_textdata(attractions.attraction[self.city.code][attractionpoint].answers[1], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
 			button_2:set_textdata(attractions.attraction[self.city.code][attractionpoint].answers[2], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
 			button_3:set_textdata(attractions.attraction[self.city.code][attractionpoint].answers[3], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
 			button_4:set_textdata(attractions.attraction[self.city.code][attractionpoint].answers[4], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
+			table.remove(order_table[random_order],#order_table[random_order])
 			self:render(surface)
 			gfx.update()
 		end

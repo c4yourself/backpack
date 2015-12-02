@@ -75,6 +75,31 @@ function onStart()
 	end
 	cfc:on("dirty",callback_dirty) ]]--
 
+	--menu.render(screen)
+  	--local city_view = CityView(event.remote_control)
 
+	-- the "up" and "down" buttons are enabled for
+	-- choosing alternatives in city_view_2
+
+
+	--splash_screen:start(50)
+
+	-- local city_view_2 = CityView2(event.remote_control)
+	-- view.view_manager:set_view(city_view_2)
+	-- gfx.update()
+
+
+
+		-- local city_view_2 = CityView2(event.remote_control)
+		-- view.view_manager:set_view(city_view_2)
+		-- gfx.update()
+
+	--local city_view = CityView(event.remote_control)
+	--view.view_manager:set_view(city_view)
+	--gfx.update()
+
+	--local city_view_2 = CityView2(event.remote_control)
+	--view.view_manager:set_view(city_view_2)
+	--gfx.update()
 
 end
