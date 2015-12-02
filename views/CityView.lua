@@ -15,14 +15,14 @@ local SubSurface = require("lib.view.SubSurface")
 local utils = require("lib.utils")
 local view = require("lib.view")
 local PopUpView = require("views.PopUpView")
-
+local ProfileManager = require("lib.profile.ProfileManager")
 local CityView = class("CityView", view.View)
 
 --- Constructor for CityView
 -- @param event_listener Remote control to listen to
 function CityView:__init(profile, remote_control)
 	view.View.__init(self)
-
+	self.profile_manager = ProfileManager()
 	self.background_path = ""
 	--Instance of the  current profile, can be used to get name, sex etc
 	self.profile = profile
@@ -103,6 +103,7 @@ function CityView:__init(profile, remote_control)
 				self.button_grid:focus()
 				self:focus()
 				one_instance:destroy()
+				self.profile_manager:save(self.profile)
 				self:dirty(true)
 		end
 
