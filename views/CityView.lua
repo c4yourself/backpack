@@ -53,7 +53,7 @@ function CityView:__init(profile, remote_control)
 	local button_5 = Button(button_color, color_selected, color_disabled,true,false, "views.Store")
 	local button_6 = Button(button_color, color_selected, color_disabled,true,false, "views.ProfileView")
 	local button_7 = Button(button_color, color_selected, color_disabled,true,false, "views.TravelView")
-	local button_8 = Button(button_color, color_selected, color_disabled,true,false)
+	local button_8 = Button(button_color, color_selected, color_disabled,true,false, "exit")
 	local city_tour_button = Button(city_view_color, city_view_selected_color, color_disabled, true, false, "views.CityTourView")
 
 
@@ -92,6 +92,10 @@ function CityView:__init(profile, remote_control)
 
 	-- Callback function for handling button clicks
 	local button_callback = function(button)
+		if button.transfer_path == "exit" then
+			self:exit_city_view()
+		else
+
 		local subsurface = SubSurface(screen,{width=screen:get_width()*0.9, height=(screen:get_height()-50)*0.9, x=screen:get_width()*0.05, y=screen:get_height()*0.05+50})
 		local make_instance = self.button_grid:display_next_view(button.transfer_path)
 		local one_instance = make_instance(remote_control, subsurface, self.profile)
@@ -115,11 +119,12 @@ function CityView:__init(profile, remote_control)
 		self:listen_to_once(one_instance,"exit_view", exit_view)
 		gfx.update()
 	end
-
+end
 	 local button_render = function()
 		self:render(screen)
 		gfx.update()
 	end
+
 
 	self:focus()
 
@@ -163,6 +168,38 @@ function CityView:__init(profile, remote_control)
 		"button_click",
 		button_callback
 	)
+
+end
+
+
+-- Calls a pop up for exiting the city view to the profile
+function CityView:exit_city_view()
+	local type = "confirmation"
+	local message =  {"Are you sure you want to exit the City View?"}
+	local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
+	local popup_view = PopUpView(remote_control,subsurface, type, message)
+
+	self:add_view(popup_view)
+	self.button_grid:blur()
+	self:blur()
+
+	local button_click_func = function(button)
+		if button == "ok" then
+			local ProfileSelection = require("views.ProfileSelection")
+			local profile_selection = ProfileSelection()
+			view.view_manager:set_view(profile_selection)
+		else
+			popup_view:destroy()
+			self.button_grid:focus()
+			self:focus()
+			self:dirty(true)
+			gfx.update()
+		end
+	end
+
+	self:listen_to_once(popup_view, "button_click", button_click_func)
+	popup_view:render(subsurface)
+	gfx.update()
 
 end
 
@@ -255,35 +292,8 @@ end
 function CityView:load_view(button)
 	if button == "back" then
 
-		local type = "confirmation"
-    local message =  {"Are you sure you want to exit the City View?"}
-    local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
-    local popup_view = PopUpView(remote_control,subsurface, type, message)
+		self:exit_city_view()
 
-	  self:add_view(popup_view)
-    self.button_grid:blur()
-		self:blur()
-
-    local button_click_func = function(button)
-      if button == "ok" then
-				local ProfileSelection = require("views.ProfileSelection")
-				local profile_selection = ProfileSelection()
-				view.view_manager:set_view(profile_selection)
-      else
-      	popup_view:destroy()
-      	self.button_grid:focus()
-				self:focus()
-      	self:dirty(true)
-      	gfx.update()
-    	end
-    end
-
-    self:listen_to_once(popup_view, "button_click", button_click_func)
-    popup_view:render(subsurface)
-    gfx.update()
-			--Stop listening to everything
-			-- TODO
-			-- Start listening to the exit
 
 	end
 end
