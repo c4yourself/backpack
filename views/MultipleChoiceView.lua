@@ -141,11 +141,7 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 								self.question_button_4)
 
 	-- Listeners and callbacks
-	self:listen_to(
-	event.remote_control,
-	"button_release",
-	utils.partial(self.press, self)
-	)
+	self:focus()
 end
 
 ---Triggered everytime the user presses the submit button
@@ -209,7 +205,7 @@ function MultipleChoiceView:_next()
 		-- Quiz is finished. Set up for a final result screen
 
 		self.quiz_state = "DONE"
-		self:dirty(true)
+	--	self:dirty(true)
 
 	-- Don't know if the code below is in the right place? The experience shall be updated after finished game.
 		local counter  = self.correct_answer_number
@@ -220,10 +216,10 @@ function MultipleChoiceView:_next()
 	-- When the game is finished, a popup-view with the text below shall be shown.
 	--This isn't working right now - the code probably shall be placed somewhere else?
 
-	-- 	local type = "message"
-	-- 	local message = {"Good job! You received" .. experience .. " coins."}
-	-- --	local message = {"Good job! You received XX coins."}
-	-- 	self:_back_to_city(type, message)
+		local type = "message"
+		local message = {"Good job! You received" .. experience .. " coins."}
+	--	local message = {"Good job! You received XX coins."}
+		self:_back_to_city(type, message)
 
 	end
 end
@@ -399,9 +395,6 @@ function MultipleChoiceView:render(surface)
 		self.views.grid:render(surface)
 	end
 
-	-- TODO Render all child views and copy changes to this view
-	-- Render children
-
 	gfx.update()
 	self:dirty(false)
 end
@@ -412,14 +405,15 @@ function MultipleChoiceView:_back_to_city(type, message)
 		local popup_view = PopUpView(remote_control,subsurface, type, message)
     self:add_view(popup_view)
     self.views.grid:blur()
+		self:blur()
 
     local button_click_func = function(button)
       if button == "ok" then
       self:trigger("exit_view")
       else
-			-- This isn't working right now!!
       popup_view:destroy()
       self.views.grid:focus()
+			self:focus()
       self:dirty(true)
       gfx.update()
     end
@@ -430,45 +424,20 @@ function MultipleChoiceView:_back_to_city(type, message)
     gfx.update()
 end
 
--- These methods probably aren't needed?
--- function MultipleChoiceView:focus()
---
--- 	self:listen_to(
--- 		self.views.grid,
--- 		"back",
--- 		utils.partial(self._exit, self)
--- 	)
---
--- 	self:listen_to(
--- 		self.views.grid,
--- 		"next",
--- 		utils.partial(self._next, self)
--- 	)
---
--- 	self:listen_to(
--- 		self.views.grid,
--- 		"submit",
--- 		utils.partial(self._submit, self)
--- 	)
---
--- 	self:listen_to(
--- 	event.remote_control,
--- 	"button_release",
--- 	utils.partial(self.press, self)
--- 	)
---
--- 	self:listen_to(
--- 		self.views.grid,
--- 		"dirty",
--- 		utils.partial(self.views.grid.render,
--- 						self.views.grid, surface)
--- 	)
--- end
---
--- function MultipleChoiceView:blur()
--- 	self:stop_listening(event.remote_control)
--- 	self:stop_listening(self.views.grid)
--- end
+
+function MultipleChoiceView:focus()
+ 	self:listen_to(
+ 	event.remote_control,
+ 	"button_release",
+	utils.partial(self.press, self)
+)
+
+
+end
+
+function MultipleChoiceView:blur()
+	self:stop_listening(event.remote_control)
+end
 
 
 return MultipleChoiceView

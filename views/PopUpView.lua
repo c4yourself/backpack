@@ -37,6 +37,7 @@ function PopUp:__init(remote_control,surface, type, message)
 	self.button_color = Color(255,90,0,255)
 	self.color_selected = Color(255,153,0,255)
 	self.color_disabled = Color(0,0,0,255)
+	self.text_color = Color(255,255,255,255)
 
 	if self.type == "message" then
 		self:_create_message_buttons()
@@ -87,7 +88,7 @@ end
 
 function PopUp:_create_message_buttons()
 	button_ok = Button(self.button_color,self.color_selected,self.color_disabled,true,true, "button_ok")
-	button_ok:set_textdata("Ok",self.color_selected, {x=200, y=200},16, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	button_ok:set_textdata("Ok",self.text_color, {x=200, y=200},20, "data/fonts/DroidSans.ttf")
 	self.popup_button_grid:add_button({x = self.width*0.4, y = self.height*0.7}, self.button_size, button_ok)
 end
 
@@ -95,8 +96,8 @@ end
 function PopUp:_create_confirmation_buttons()
 	local button_confirmation = Button(self.button_color,self.color_selected,self.color_disabled,true,true, "button_confirmation")
 	local button_cancel = Button(self.button_color,self.color_selected,self.color_disabled,true,false, "button_cancel")
-	button_confirmation:set_textdata("Confirm",self.color_selected, {x=200, y=200},16, utils.absolute_path("data/fonts/DroidSans.ttf"))
-	button_cancel:set_textdata("Cancel",self.color_selected, {x=200, y=200},16, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	button_confirmation:set_textdata("Confirm",self.text_color, {x=200, y=200},20, "data/fonts/DroidSans.ttf")
+	button_cancel:set_textdata("Cancel",self.text_color, {x=200, y=200},20, "data/fonts/DroidSans.ttf")
 
 	self.popup_button_grid:add_button({x = self.width*0.2, y = self.height*0.7}, self.button_size, button_confirmation)
 	self.popup_button_grid:add_button({x = self.width*0.55, y = self.height*0.7}, self.button_size, button_cancel)
