@@ -25,12 +25,9 @@ function CityTourView:__init(remote_control, surface, profile)
 
 	math.randomseed(os.time())
 	local order_table = {{1,2,3,4},{1,2,4,3},{1,3,2,4},{1,3,4,2},{1,4,2,3},{1,4,3,2},{2,1,3,4},{2,1,4,3},{2,3,1,4},{2,3,4,1},{2,4,1,3},{2,4,3,1},
-												{3,1,2,4},{3,1,4,2},{3,2,1,4},{3,2,4,1},{3,4,1,2},{3,4,2,1},{4,1,2,3},{4,1,3,2},{4,2,1,3},{4,2,3,1},{4,3,1,2},{4,3,2,1},{}}
+												{3,1,2,4},{3,1,4,2},{3,2,1,4},{3,2,4,1},{3,4,1,2},{3,4,2,1},{4,1,2,3},{4,1,3,2},{4,2,1,3},{4,2,3,1},{4,3,1,2},{4,3,2,1}}
 	local random_order = math.random(table.getn(order_table))
 	attractionpoint = order_table[random_order][#order_table[random_order]]
-	-----
-	-----
-
 
 
 	-- Create some colors
