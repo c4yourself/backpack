@@ -89,7 +89,7 @@ function CreateProfileView:control_input()
 		ok_input = false
 	elseif self.input_field2.text ~= self.input_field3.text then
 		ok_input = false
-	elseif profile_man:load(self.input_field.text)==false then
+	elseif profile_man:load(self.input_field.text)~=false then
 		ok_input = false
 	elseif profile_man:check_email(self.input_field.text)==false then
 		ok_input = false
