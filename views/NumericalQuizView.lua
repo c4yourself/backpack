@@ -1,4 +1,5 @@
---- Base class for NumericQuizView
+--- Base class for NumericQuizView. View class responsible for rendering the
+-- numerical quiz and its child components
 -- @classmod NumericQuizView
 local NumericalInputComponent = require("components.NumericalInputComponent")
 local class = require("lib.classy")
@@ -15,10 +16,9 @@ local Font = require("lib.draw.Font")
 local NumericalQuizGrid = require("lib.components.NumericalQuizGrid")
 local Button = require("lib.components.Button")
 
---- Constructor for NumericQuizView
+--- Constructor for NumericQuizView.
 function NumericQuizView:__init()
 	View.__init(self)
-	--event.remote_control:off("button_release") -- TODO remove this once the ViewManager is fully implemented
 
 	-- Flags
 	--Flags to determine whether a quiz or a question is answered
@@ -54,6 +54,7 @@ function NumericQuizView:__init()
 						button_exit)
 	local exit_index = self.views.grid:get_last_index()
 	self.views.grid:mark_as_back_button(exit_index)
+
 	-- Add next button
 	local button_next = Button(button_color, color_selected, color_disabled,
 								true, false, "")
@@ -90,7 +91,7 @@ function NumericQuizView:__init()
 	)
 end
 
----Responds to a button press when the View is active
+--- Responds to a 'key' press when the View is active
 -- @param key Key that was pressed
 function NumericQuizView:press(key)
  	if key == "back" then
@@ -98,8 +99,8 @@ function NumericQuizView:press(key)
 	end
 end
 
----Renders a NumericQuizView and all its child views
---@param surface Surface or SubSurface to render upon
+--- Renders a NumericQuizView and all its child views on specified 'surface'
+-- @param surface Surface or SubSurface to render upon
 function NumericQuizView:render(surface)
 	local surface_width = surface:get_width()
 	local surface_height = surface:get_height()
@@ -159,10 +160,11 @@ function NumericQuizView:render(surface)
 			-- The user has answered a question
 			local current_question = self.num_quiz.current_question
 			if self.num_quiz:answer(self.user_answer) then
-				output = "Correct!"
+				local output = "Correct!"
 				self.progress_table[current_question] = true
 			else
-				output = "False. You answered " .. tostring(self.user_answer) ..
+				local output = "False. You answered " ..
+				tostring(self.user_answer) ..
 				 " and" .. "\n" .. "the correct answer was "
 				 .. tostring(self.num_quiz.questions[current_question].correct_answer) .. "."
 				self.progress_table[current_question] = false
@@ -314,6 +316,7 @@ function NumericQuizView:next_question()
 	self:dirty(true)
 end
 
+--- Method for destroying the numerical quiz view and exiting the quiz
 function NumericQuizView:back_to_city()
 	--TODO Add pop-up
 	self:trigger("exit_view")

@@ -1,5 +1,5 @@
---- Base class for NumericalInputComponent
---
+--- NumericalInputComponent class. Used for numerical input in the numerical
+-- quiz.
 -- @classmod NumericalInputComponent
 
 local class = require("lib.classy")
@@ -11,7 +11,8 @@ local Color = require("lib.draw.Color")
 local Font = require("lib.draw.Font")
 
 --- Constructor for NumericalInputComponent
--- @param event_listener Remote control to listen to
+-- @param remote_control Remote control to listen to. Defaults to the global
+--			remote_control instance
 function NumericalInputComponent:__init(remote_control)
 	View.__init(self)
 	self.input = ""
@@ -29,8 +30,9 @@ function NumericalInputComponent:__init(remote_control)
 	self.color_disabled = {r = 255, b = 255, g = 255, a = 255}
 end
 
+--- Selects or de-selects the input component
+--@param status Boolean representing a new status
 function NumericalInputComponent:select(status)
-
 	if status == nil then
 		status = true
 	end
@@ -41,11 +43,14 @@ function NumericalInputComponent:select(status)
 	self:dirty(true)
 end
 
+--- Checks if the input field is currently selected by the user
+--@return Boolean signifying whether the input field is selected or not.
 function NumericalInputComponent:is_selected()
 	return self._selected
 end
 
--- NumericalInputComponent responds to a button press event
+-- NumericalInputComponent responds to a button press even
+--@param button Button that was pressed by the user
 function NumericalInputComponent:press(button)
 	if button == "backspace" then
 		if #self.input > 0 then
@@ -69,7 +74,9 @@ function NumericalInputComponent:press(button)
 	self.test_trigger_flag = true
 end
 
---- Renders the NumericalInputField
+--- Renders the NumericalInputField and all its child components on the
+-- specified surface
+--@param surface @{Surface} or @{SubSurface} to render on
 function NumericalInputComponent:render(surface)
 	if self._selected == true then
 		self:focus()
@@ -84,7 +91,6 @@ function NumericalInputComponent:render(surface)
 	question_font:draw(surface, {x = 0, y = 0,
 			height = self.height, width = self.width}, self.input,
 			"center", "middle")
-	--font:draw_over_surface(surface, self.input)
 	gfx.update()
 	self:dirty(false)
 end
@@ -110,6 +116,7 @@ function NumericalInputComponent:focus()
 end
 
 --- Checks if the component is focused or not
+--@return Boolean signifying whether the field us focused or not
 function NumericalInputComponent:is_focused()
 	return self.focused
 end
@@ -130,6 +137,7 @@ function NumericalInputComponent:set_text(text)
 end
 
 --- Returns the current input string
+--@return String with the input currently in the input field
 function NumericalInputComponent:get_text()
 	return self.input
 end
