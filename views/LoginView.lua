@@ -158,23 +158,28 @@ function LoginView:load_view(button)
 				self.hasActiveKeyboard = true
 				self:render(screen)
 			elseif self.content_pointer == 3 then
-				logger:trace("detta står i email: " .. self.email_input_field:get_text())
-				logger:trace("detta står i password: " .. self.password_input_field:get_text())
+				--logger:trace("detta står i email: " .. self.email_input_field:get_text())
+				--logger:trace("detta står i password: " .. self.password_input_field:get_text())
 				--loginProfile = ProfileManager:login(self.email_input_field:get_text(),self.password_input_field:get_text())
 				worked, result = self.profile_manager:login(self.email_input_field:get_text(),self.password_input_field:get_text())
 
+				ProfileSelection = require("views.ProfileSelection")
+				local profile_selection = ProfileSelection(event.remote_control)
 
-				view.view_manager:set_view(self.profile_selection)
-				self:render(screen)
-				gfx.update()
+				view.view_manager:set_view(profile_selection)
+				--profile_selection:render(screen)
+				--gfx.update()
 
 
 			elseif self.content_pointer == 4 then
-				logger:trace("INNNNNE" .. self.email_input_field:get_text())
+				--logger:trace("INNNNNE" .. self.email_input_field:get_text())
 
+				ProfileSelection = require("views.ProfileSelection")
+				local profile_selection = ProfileSelection(event.remote_control)
 
-				view.view_manager:set_view(self.profile_selection)
-				gfx.update()
+				view.view_manager:set_view(profile_selection)
+				--profile_selection:render(screen)
+				--gfx.update()
 			end
 		end
 		gfx.update()
