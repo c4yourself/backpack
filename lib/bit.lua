@@ -26,7 +26,6 @@ local function band(x, y, z)
 end
 
 local function bxor(x, y)
-	if true then return bit32.bxor(x, y) end
 	local _x, _y = x, y
 	local z = 0
 	for i = 0, 31 do
@@ -80,10 +79,6 @@ function bit.bor(a, ...)
 
 	for i, value in ipairs(values) do
 		out = bor(out % 2 ^ 32, value % 2 ^ 32)
-	end
-
-	if out ~= bit32.bor(a, ...) then
-		print("error or")
 	end
 
 	return out

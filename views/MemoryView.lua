@@ -44,7 +44,7 @@ function MemoryView:__init(remote_control, surface, profile)
     self.profile = profile
 
     self:_set_pairs()
-    --self.pairs = 3 -- TODO For quicker manual testing, remove once done coding
+    --self.pairs = 6 -- TODO For quicker manual testing, remove once done coding
     self.memory = MemoryGame(self.pairs, self.profile)
     self.columns = math.ceil((self.pairs*2)^(1/2))
 
@@ -90,10 +90,9 @@ function MemoryView:__init(remote_control, surface, profile)
     for i = 1, self.pairs*2 do
 
         local current_city = self.profile:get_city().name
-        self.cards[i]  = CardComponent(current_city, i, card_color,
+        self.cards[i]  = CardComponent(current_city, self.memory.cards[i], card_color,
         card_color_selected, card_color, true, false)
 
-        -- Temporary code ends
         if i == 1 then
             self.pos_x = self.pos_x
         elseif ((i-1) % self.columns == 0) then
@@ -263,11 +262,11 @@ function MemoryView:_set_pairs()
 	if exp <= 100 then
 		self.pairs = 4
 	elseif exp <=200 then
-		self.pairs = 4
+		self.pairs = 6
 	elseif exp <= 300 then
-		self.pairs = 4
+		self.pairs = 8
 	elseif exp >300 then
-		self.pairs = 4
+		self.pairs = 10
 	end
 end
 

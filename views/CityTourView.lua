@@ -10,6 +10,7 @@ local button= require("lib.components.Button")
 local button_grid=require("lib.components.ButtonGrid")
 local CityTourView = class("CityTourView", View)
 local attractions  = require("lib.attractions")
+local PopUpView = require("views.PopUpView")
 
 function CityTourView:__init(remote_control, surface, profile)
 	View.__init(self)
@@ -20,7 +21,14 @@ function CityTourView:__init(remote_control, surface, profile)
 	local height = (screen:get_height()-50)*0.9
 
 	--To keep track of which attraction to display. Increments every time a user answer a question
-	attractionpoint = 1
+	--attractionpoint = 1
+
+	math.randomseed(os.time())
+	local order_table = {{1,2,3,4},{1,2,4,3},{1,3,2,4},{1,3,4,2},{1,4,2,3},{1,4,3,2},{2,1,3,4},{2,1,4,3},{2,3,1,4},{2,3,4,1},{2,4,1,3},{2,4,3,1},
+												{3,1,2,4},{3,1,4,2},{3,2,1,4},{3,2,4,1},{3,4,1,2},{3,4,2,1},{4,1,2,3},{4,1,3,2},{4,2,1,3},{4,2,3,1},{4,3,1,2},{4,3,2,1}}
+	local random_order = math.random(table.getn(order_table))
+	attractionpoint = order_table[random_order][#order_table[random_order]]
+
 
 	-- Create some colors
 	--border_color = Color(0, 0, 0, 255)
@@ -88,15 +96,18 @@ function CityTourView:__init(remote_control, surface, profile)
 		gfx.update()
 	end
 
+	table.remove(order_table[random_order],#order_table[random_order])
 	local button_click = function()
-		if table.getn(attractions.attraction[self.city.code]) == attractionpoint then
+	--	if table.getn(attractions.attraction[self.city.code]) == attractionpoint then
+	if #order_table[random_order] == 0 then
 			self:trigger("exit_view")
 		else
-			attractionpoint = attractionpoint + 1
+			attractionpoint = order_table[random_order][#order_table[random_order]]
 			button_1:set_textdata(attractions.attraction[self.city.code][attractionpoint].answers[1], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
 			button_2:set_textdata(attractions.attraction[self.city.code][attractionpoint].answers[2], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
 			button_3:set_textdata(attractions.attraction[self.city.code][attractionpoint].answers[3], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
 			button_4:set_textdata(attractions.attraction[self.city.code][attractionpoint].answers[4], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
+			table.remove(order_table[random_order],#order_table[random_order])
 			self:render(surface)
 			gfx.update()
 		end
@@ -117,6 +128,7 @@ end
 
 
 function CityTourView:render(surface)
+
 	surface:fill({r=255, g=255, b=255, a=255})
 
 	local height = surface:get_height()
@@ -169,6 +181,7 @@ function CityTourView:render(surface)
 
 	--Render buttons
 	self.buttonGrid:render(surface)
+	self:dirty(false)
 end
 
 function CityTourView:destroy()
@@ -183,7 +196,31 @@ function CityTourView:load_view(button)
 
 	if button == "back" then
 
-	self:trigger("exit_view")
+		local type = "confirmation"
+    local message =  {"Are you sure you want to exit the City Tour?"}
+
+
+    local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
+    local popup_view = PopUpView(remote_control,subsurface, type, message)
+    self:add_view(popup_view)
+
+    self.buttonGrid:blur()
+
+    local button_click_func = function(button)
+      if button == "ok" then
+      self:trigger("exit_view")
+      else
+      popup_view:destroy()
+      self.buttonGrid:focus()
+      self:dirty(true)
+      gfx.update()
+    end
+
+    end
+
+    self:listen_to_once(popup_view, "button_click", button_click_func)
+    popup_view:render(subsurface)
+    gfx.update()
 			--Stop listening to everything
 			-- TODO
 			-- Start listening to the exit
