@@ -27,7 +27,7 @@ function LoginView:__init(remote_control, profile_selection)
 	View.__init(self)
 	self.profile_selection = profile_selection
 	self.background_path = ""
-	self.email_input_field = InputField("Name:", {x = 700, y = 80}, true)
+	self.email_input_field = InputField("Email:", {x = 700, y = 80}, true)
 	self.password_input_field = InputField("Password:", {x = 700, y = 230}, false)
   self.password_input_field:set_private(true)
 
@@ -38,10 +38,10 @@ function LoginView:__init(remote_control, profile_selection)
 	local color_disabled = Color(111, 222, 111, 255)
 	local button_size = {width = 100, height = 100}
 	self.button_cancel = button(button_color, color_selected, color_disabled, true, false, "views.ProfileSelection")
-	self.button_cancel_text = Font("data/fonts/DroidSans.ttf", 40, Color(0, 0, 0, 255))
+	self.button_cancel_text = Font("data/fonts/DroidSans.ttf", 40, Color(255, 255, 255, 255))
 	self.button_cancel_surface = SubSurface(screen, {width=500, height=100, x=700, y=530})
 	self.button_login = button(button_color, color_selected, color_disabled, true, false, "views.ProfileSelection")
-	self.button_login_text = Font("data/fonts/DroidSans.ttf", 40, Color(0, 0, 0, 255))
+	self.button_login_text = Font("data/fonts/DroidSans.ttf", 40, Color(255, 255, 255, 255))
 	self.button_login_surface = SubSurface(screen, {width=500, height=100, x=700, y=380})
 	-- buttons done
 
@@ -158,23 +158,28 @@ function LoginView:load_view(button)
 				self.hasActiveKeyboard = true
 				self:render(screen)
 			elseif self.content_pointer == 3 then
-				logger:trace("detta står i email: " .. self.email_input_field:get_text())
-				logger:trace("detta står i password: " .. self.password_input_field:get_text())
+				--logger:trace("detta står i email: " .. self.email_input_field:get_text())
+				--logger:trace("detta står i password: " .. self.password_input_field:get_text())
 				--loginProfile = ProfileManager:login(self.email_input_field:get_text(),self.password_input_field:get_text())
 				worked, result = self.profile_manager:login(self.email_input_field:get_text(),self.password_input_field:get_text())
 
+				ProfileSelection = require("views.ProfileSelection")
+				local profile_selection = ProfileSelection(event.remote_control)
 
-				view.view_manager:set_view(self.profile_selection)
-				self:render(screen)
-				gfx.update()
+				view.view_manager:set_view(profile_selection)
+				--profile_selection:render(screen)
+				--gfx.update()
 
 
 			elseif self.content_pointer == 4 then
-				logger:trace("INNNNNE" .. self.email_input_field:get_text())
+				--logger:trace("INNNNNE" .. self.email_input_field:get_text())
 
+				ProfileSelection = require("views.ProfileSelection")
+				local profile_selection = ProfileSelection(event.remote_control)
 
-				view.view_manager:set_view(self.profile_selection)
-				gfx.update()
+				view.view_manager:set_view(profile_selection)
+				--profile_selection:render(screen)
+				--gfx.update()
 			end
 		end
 		gfx.update()

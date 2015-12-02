@@ -328,7 +328,7 @@ end
 function ConnectFourComponent:focus()
 	self:listen_to(
 	event.remote_control,
-	"button_release",
+	"button_press",
 	utils.partial(self.press, self)
 	)
 end

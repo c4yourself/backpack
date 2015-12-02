@@ -291,7 +291,10 @@ end
 
 function CityView:load_view(button)
 	if button == "back" then
+
 		self:exit_city_view()
+
+
 	end
 end
 
