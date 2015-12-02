@@ -7,7 +7,6 @@ local ProfileSynchronizer = class("ProfileSynchronizer")
 local json = require("lib.dkjson")
 local Profile = require("lib.profile.Profile")
 local City = require"lib.city"
-
 -- Some possible test code to use; this really can't be automateed
 --[[
 local profilesynchronizer = ProfileSynchronizer()
@@ -36,6 +35,7 @@ function ProfileSynchronizer:__init()
 	self.get_profile_url = "/profile/info/"
 	self.save_profile_url ="/profile/"
 	self.delete_profile_url = "/profile/delete/"
+	self.email_check_url = "/profile/checkemail/"
 	self.ttlyawesomekey = "c4y0ur5elf"
 
 end
@@ -176,6 +176,20 @@ function ProfileSynchronizer:test_hash()
 		print(result["message"])
 	end
 
+end
+
+function ProfileSynchronizer:check_email(email)
+
+	local hashkey = hash.hash256(email..self.ttlyawesomekey)
+	local json_request = [[{"email":"]]..email..[[","zdata_hash":"]]..hashkey..[["}]]
+
+	result = server_communication(json_request, self.email_check_url)
+
+	if result["error"] then
+		return result
+	else
+		return result.email_available
+	end
 
 end
 

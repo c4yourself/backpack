@@ -27,7 +27,7 @@ function LoginView:__init(remote_control, profile_selection)
 	View.__init(self)
 	self.profile_selection = profile_selection
 	self.background_path = ""
-	self.email_input_field = InputField("Name:", {x = 700, y = 80}, true)
+	self.email_input_field = InputField("Email:", {x = 700, y = 80}, true)
 	self.password_input_field = InputField("Password:", {x = 700, y = 230}, false)
   self.password_input_field:set_private(true)
 

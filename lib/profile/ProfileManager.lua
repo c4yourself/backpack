@@ -73,17 +73,24 @@ end
 -- @return false representing it saves unsuccessfully in server
 function ProfileManager:create_new_profile(profile)
 
-	localprofilemanager:save(profile)
-
-	--check the network
-	if self.profilesynchronizer:is_connected() ~= false then
-		self.profilesynchronizer:delete_profile(localprofilemanager:get_delete_params(profile))
-		self.profilesynchronizer:save_profile(profile)
-
-		return true, "Create new profile successfully in local and server!"
+	if self.profilesynchronizer:is_connected() then
+		local save_res = self.profilesynchronizer:save_profile(profile)
+		if save_res["error"] then
+			localprofilemanager:save(profile)
+			return true, "Local profile created"
+		else
+			localprofilemanager:save(save_res)
+			return true, "Profile created and saved online"
+		end
 	else
-		return false, "Create new local profile successfully. The netowork is not connected!"
+		localprofilemanager:save(profile)
+		return true, "Local profile created"
 	end
+
+end
+
+function ProfileManager:check_email(email)
+	return self.profilesynchronizer:check_email(email)
 end
 
 ---Save profile to local and server
