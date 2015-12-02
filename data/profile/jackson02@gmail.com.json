@@ -5,7 +5,7 @@
 		"email_address": "jackson02@gmail.com",
 		"experience": 0,
 		"id": 0,
-		"inventory": {1,2,3},
+		"inventory": "{1,2,3}",
 		"login_token": " ",
 		"name": "Jackson",
 		"password": "",
