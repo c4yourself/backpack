@@ -232,7 +232,7 @@ function ProfileSynchronizer:save_profile(profile)
 	-- Extract the data from the profile
 	local badges = profile:get_badges_string()
 	local balance = profile:get_balance()
-	local current_city = profile:get_city()
+	local current_city = profile:get_city().code
 	local date_of_birth = profile:get_date_of_birth()
 	local email_address = profile:get_email_address()
 	local experience = profile:get_experience()

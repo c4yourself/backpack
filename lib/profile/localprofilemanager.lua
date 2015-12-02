@@ -6,6 +6,7 @@ local class = require("lib.classy")
 local utils = require("lib.utils")
 local Profile = require("lib.profile.Profile")
 local localprofilemanager = class("localprofilemanager")
+local city = require("lib.city")
 
 ---Create a profile
 -- @param profile representing a profile instance
@@ -24,11 +25,11 @@ function localprofilemanager:save(profile)
 	file:write("\t\t\"experience\": " .. profile:get_experience() .. ",\n")
 	file:write("\t\t\"id\": " .. profile:get_id() .. ",\n")
 	file:write("\t\t\"inventory\": " .. profile:get_inventory_string() .. ",\n")
-	file:write("\t\t\"login_token\": \" \",\n")
+	file:write("\t\t\"login_token\": \"" .. profile:get_login_token() .. "\",\n")
 	file:write("\t\t\"name\": \"" .. profile:get_name() .. "\",\n")
 	file:write("\t\t\"password\": \"" .. profile:get_password() .. "\",\n")
 	file:write("\t\t\"sex\": \"" .. profile:get_sex() .. "\",\n")
-	file:write("\t\t\"city\": \"" .. profile:get_current_city() .. "\",\n")
+	file:write("\t\t\"city\": \"" .. profile:get_city().code .. "\",\n")
 	file:write("}\n")
 	file:close()
 
@@ -58,7 +59,7 @@ end
 function localprofilemanager:load(profile_email)
 	local profile_tmp = {}
 	local name, email_address, date_of_birth
-	local sex, city, balance, experience, inventory
+	local sex, tmp_city, balance, experience, inventory
 	local path = utils.absolute_path(string.format("data/profile/%s.json",profile_email))
 
 	--check the file exist or not
@@ -99,7 +100,14 @@ function localprofilemanager:load(profile_email)
 			if string.match(line,"\"city\"") ~= nil then
 				local tmp = {}
 				tmp = utils.split(line," ")
-				_,_,_,city = string.find(tmp[2],"([\"'])(.-)%1")
+				_,_,_,tmp_city = string.find(tmp[2],"([\"'])(.-)%1")
+			end
+
+			--match token
+			if string.match(line,"\"login_token\"") ~= nil then
+				local tmp = {}
+				tmp = utils.split(line," ")
+				_,_,_,token = string.find(tmp[2],"([\"'])(.-)%1")
 			end
 
 			--match inventory
@@ -126,10 +134,11 @@ function localprofilemanager:load(profile_email)
 		end
 
 		--generate a profile instance
-		profile_tmp = Profile(name,email_address,date_of_birth,sex,city)
+		profile_tmp = Profile(name,email_address,date_of_birth,sex,city.cities[tmp_city])
 		profile_tmp:set_balance(balance)
 		profile_tmp:set_experience(experience)
 		profile_tmp:set_inventory(inventory)
+		profile_tmp:set_login_token(token)
 		profile_tmp:set_id(id)
 		io.close()
 
@@ -143,12 +152,16 @@ end
 -- @return profiles representing the list of profile instance
 -- @return false representing the dir is illegal
 function localprofilemanager:get_profileslist()
+	local profilename_list = {}
 	local profile_list = {}
 	local path = utils.absolute_path("data/profile/profile.config")
 	for line in io.lines(path) do
-		table.insert(profile_list,line)
+		table.insert(profilename_list,line)
 	end
 	io.close()
+	for i = 1, #profilename_list, 1 do
+		profile_list[i] = self:load(profilename_list[i])
+	end
 	return profile_list
 end
 

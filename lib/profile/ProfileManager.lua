@@ -5,7 +5,7 @@ local class = require("lib.classy")
 --local profile = require("lib.profile.Profile")
 ProfileManager = class("ProfileManager")
 local localprofilemanager = require("lib.profile.localprofilemanager")
-local profilesynchronizer = require("lib.profile.ProfileSynchronizer")
+local ProfileSynchronizer = require("lib.profile.ProfileSynchronizer")
 
 ---List the profiles
 -- @return profile_list_local representing the list instances of profile
@@ -13,6 +13,7 @@ local profilesynchronizer = require("lib.profile.ProfileSynchronizer")
 -- @return profile_list_email representing the list of profiles email_address as string
 function ProfileManager:__init()
 	self:list()
+	self.profilesynchronizer = ProfileSynchronizer()
 end
 
 ---List the profiles
@@ -20,11 +21,12 @@ end
 -- @return profile_list_city representing the list of profiles city as string
 -- @return profile_list_email representing the list of profiles email_address as string
 function ProfileManager:list()
-	profile_list_local, profile_list_email = localprofilemanager.get_profileslist()
+	profile_list_local = localprofilemanager:get_profileslist()
 	self.profile_list_local = profile_list_local
 	--self.profile_list_city = profile_list_city
-	self.profile_list_email = profile_list_email
-	return profile_list_local, profile_list_email
+	--self.profile_list_email = profile_list_email
+
+	return profile_list_local
 end
 
 
@@ -40,6 +42,27 @@ function ProfileManager:get_email()
 	return self.profile_list_email
 end
 
+function ProfileManager:check_login(profile)
+	if self.profilesynchronizer:is_connected() then
+		if profile:get_id() == 0 then
+			profile = self.profilesynchronizer:save_profile(profile)
+			localprofilemanager:save(profile)
+			return profile
+		else
+			result = self.profilesynchronizer:get_profile(profile:get_login_token())
+			if result["error"] then
+				return result
+			else
+				return profile
+			end
+		end
+	else
+		return profile
+	end
+
+
+end
+
 ---Create profile to local and server
 -- @param profile representing the profile to save
 -- @return true representing it saves successfully both in local and server
@@ -48,9 +71,9 @@ function ProfileManager:create_new_profile(profile)
 	localprofilemanager:save(profile)
 
 	--check the network
-	if profilesynchronizer:is_connected() ~= false then
-		profilesynchronizer:delete_profile(localprofilemanager:get_delete_params(profile))
-		profilesynchronizer:save_profile(profile)
+	if self.profilesynchronizer:is_connected() ~= false then
+		self.profilesynchronizer:delete_profile(localprofilemanager:get_delete_params(profile))
+		self.profilesynchronizer:save_profile(profile)
 
 		return true, "Create new profile successfully in local and server!"
 	else
@@ -66,8 +89,8 @@ function ProfileManager:save(profile)
 	localprofilemanager:save(profile)
 
 	--check the network
-	if profilesynchronizer:is_connected() ~= false then
-		profilesynchronizer:save_profile(profile)
+	if self.profilesynchronizer:is_connected() ~= false then
+		self.profilesynchronizer:save_profile(profile)
 
 		return true, "Save profile successfully in local and server!"
 	else
@@ -95,7 +118,7 @@ end
 -- @param profile representing profile instance
 -- @return server_profile representing the profile instance get from server
 function ProfileManager:synchronize(profile)
-	server_profile = profilesynchronizer:get_profile(localprofilemanager:get_profile_token(profile))
+	server_profile = self.profilesynchronizer:get_profile(localprofilemanager:get_profile_token(profile))
 
 	--check if it's a profile instance form server
 	if server_profile ~= nil then
@@ -119,13 +142,19 @@ end
 -- @return false email_address or password is wrong or network is not connected
 function ProfileManager:login(email_address,password)
 	--check the network
-	if profilesynchronizer:is_connected() == true then
-
-		--Login server
-		if profilesynchronizer:login(email_address,password) == "login_token" then
-			return true, email_address, password
-		else
+	if self.profilesynchronizer:is_connected() == true then
+		login_result = self.profilesynchronizer:login(email_address,password)
+				--Login server
+		if  login_result["error"] then
 			return false, "Wrong email address or password!"
+		else
+			profile = self.profilesynchronizer:get_profile(login_result)
+			if profile["error"] then
+				return false, "No profile found"
+			else
+				localprofilemanager:save(profile)
+				return true, login_result
+			end
 		end
 
 	else

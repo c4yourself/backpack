@@ -14,8 +14,6 @@ local logger = require("lib.logger")
 local SubSurface = require("lib.view.SubSurface")
 local utils = require("lib.utils")
 local view = require("lib.view")
-
-
 local CityView = class("CityView", view.View)
 
 --- Constructor for CityView
@@ -210,6 +208,7 @@ function CityView:render(surface)
 	surface:fill(status_bar_color:to_table(), {width=width, height=50, x=0, y=0})
 	surface:fill(score_text_color:to_table(), {width=150, height=30, x=285,y=10})
 	if self.profile.experience / 500 ~= 1 then
+		--TODO: No negative values allowed! The self.profile.experience needs to be calculated properly externally before used here.
 		surface:fill(experience_bar_color:to_table(), {width=math.ceil(148*(1-self.profile.experience/500)), height=28, x=434-148*(1-self.profile.experience/500), y=11})
 	end
 

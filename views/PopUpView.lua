@@ -59,9 +59,12 @@ function PopUp:__init(remote_control,surface, type, message)
 
 	local button_click = function(button)
 		if button.transfer_path == "button_confirmation" then
-			self:trigger("exit_view")
+--			self:trigger("exit_view")
+			self:trigger("button_click", "ok")
+		elseif button.transfer_path == "button_cancel" then
+			self:trigger("button_click", "cancel")
 		else
-			self:trigger("destroy")
+			self:trigger("button_click", "ok")
 		end
 
 

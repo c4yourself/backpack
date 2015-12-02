@@ -97,6 +97,49 @@ function ConnectFour:get_player()
 	end
 end
 
+--- Checks if the board is full
+-- @return boolean, true if the board is full
+-- @local
+function ConnectFour:_is_full_board()
+	local count_X = 0
+	local count_O = 0
+
+	for row = 1, 6 do
+		for column = 1, 7 do
+			if self.board[row][column] == "X" then
+				count_X = count_X + 1
+			elseif self.board[row][column] == "O" then
+				count_O = count_O + 1
+			end
+		end
+	end
+
+	--the board is full
+	if count_X + count_O >= 42 then
+		return true
+	else
+		return false
+	end
+end
+
+--- Calculates the number of coins that player has put
+-- @param number of coins
+function ConnectFour:get_number_of_coins()
+	local count_X = 0
+
+	for row = 1, 6 do
+		for column = 1, 7 do
+			if self.board[row][column] == "X" then
+				count_X = count_X + 1
+			end
+		end
+	end
+
+	return count_X
+end
+
+
+
 --- Calculates which row the coin will stop at given a columnn
 -- @param column
 -- @return row
