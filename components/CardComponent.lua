@@ -31,19 +31,37 @@ function CardComponent:__init(current_city, i, color, color_selected, color_disa
 	self.from_img = gfx.loadpng("data/images/memory_pictures/generic/memory_question.png")
 	self.current_city = current_city:lower()
 
-	if i == 1  or i == 6 then
+	if i == 1 then
 		self.memory_img = gfx.loadpng("data/images/memory_pictures/"..self.current_city.."/memory_"..self.current_city.."_1.png")
-	elseif i == 2 or i == 5 then
+	elseif i == 2 then
 		self.memory_img = gfx.loadpng("data/images/memory_pictures/"..self.current_city.."/memory_"..self.current_city.."_2.png")
-	elseif i == 3 or i == 8 then
+	elseif i == 3 then
 		self.memory_img = gfx.loadpng("data/images/memory_pictures/"..self.current_city.."/memory_"..self.current_city.."_3.png")
-	elseif i == 4 or i == 7 then
+	elseif i == 4 then
 		self.memory_img = gfx.loadpng("data/images/memory_pictures/"..self.current_city.."/memory_"..self.current_city.."_4.png")
-	elseif i == 9 or i == 12 then
+	elseif i == 5 then
 		self.memory_img = gfx.loadpng("data/images/memory_pictures/generic/memory_boat.png")
-	elseif i == 10 or i == 11 then
+	elseif i == 6 then
 		self.memory_img = gfx.loadpng("data/images/memory_pictures/generic/memory_bus.png")
+	elseif i == 7 then
+		self.memory_img = gfx.loadpng("data/images/memory_pictures/generic/memory_plane.png")
+	elseif i == 8 then
+		self.memory_img = gfx.loadpng("data/images/memory_pictures/generic/memory_train.png")
 	end
+	--
+	-- if i == 1  or i == 6 then
+	-- 	self.memory_img = gfx.loadpng("data/images/memory_pictures/"..self.current_city.."/memory_"..self.current_city.."_1.png")
+	-- elseif i == 2 or i == 5 then
+	-- 	self.memory_img = gfx.loadpng("data/images/memory_pictures/"..self.current_city.."/memory_"..self.current_city.."_2.png")
+	-- elseif i == 3 or i == 8 then
+	-- 	self.memory_img = gfx.loadpng("data/images/memory_pictures/"..self.current_city.."/memory_"..self.current_city.."_3.png")
+	-- elseif i == 4 or i == 7 then
+	-- 	self.memory_img = gfx.loadpng("data/images/memory_pictures/"..self.current_city.."/memory_"..self.current_city.."_4.png")
+	-- elseif i == 9 or i == 12 then
+	-- 	self.memory_img = gfx.loadpng("data/images/memory_pictures/generic/memory_boat.png")
+	-- elseif i == 10 or i == 11 then
+	-- 	self.memory_img = gfx.loadpng("data/images/memory_pictures/generic/memory_bus.png")
+	-- end
 end
 
 --Renders a CardComponent on the specified SubSurface

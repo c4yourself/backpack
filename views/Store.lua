@@ -150,7 +150,6 @@ function Store:__init(remote_control, surface, profile)
 	-- Instance remote control and mapps it to pressing enter
 	self:listen_to(self.button_grid,"button_click",	button_callback)
 
-
 end
 
 -- Load all the images for the items

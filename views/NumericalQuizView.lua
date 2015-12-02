@@ -95,11 +95,7 @@ function NumericQuizView:__init(remote_control, subsurface, profile)
 	self.progress_counter_font = Font("data/fonts/DroidSans.ttf", 32,
 																	Color(255,255,255,255))
 	-- Listeners and callbacks
-	self:listen_to(
-		event.remote_control,
-		"button_release",
-		utils.partial(self.press, self)
-	)
+self:focus()
 end
 
 function NumericQuizView:_set_level()
@@ -383,6 +379,7 @@ function NumericQuizView:back_to_city()
 	self:add_view(popup_view)
 	self.views.grid:blur()
 	self.views.num_input_comp:blur()
+	self:blur()
 
 	local button_click_func = function(button)
 		if button == "ok" then
@@ -390,7 +387,8 @@ function NumericQuizView:back_to_city()
 		else
 		popup_view:destroy()
 		self.views.grid:focus()
-			self.views.num_input_comp:focus()
+		self.views.num_input_comp:focus()
+		self:focus()
 		self:dirty(true)
 		gfx.update()
 	end
@@ -400,6 +398,18 @@ function NumericQuizView:back_to_city()
 	popup_view:render(subsurface)
 	gfx.update()
 
+end
+
+function NumericQuizView:focus()
+	self:listen_to(
+		event.remote_control,
+		"button_release",
+		utils.partial(self.press, self)
+	)
+end
+
+function NumericQuizView:blur()
+	self:stop_listening(event.remote_control)
 end
 
 return NumericQuizView

@@ -143,11 +143,7 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 								self.question_button_4)
 
 	-- Listeners and callbacks
-	self:listen_to(
-	event.remote_control,
-	"button_release",
-	utils.partial(self.press, self)
-	)
+	self:focus()
 end
 
 ---Triggered everytime the user presses the submit button
@@ -205,13 +201,23 @@ function MultipleChoiceView:_next()
 		-- Quiz is finished. Set up for a final result screen
 
 		self.quiz_state = "DONE"
-		self:dirty(true)
+	--	self:dirty(true)
 
 	-- Don't know if the code below is in the right place? The experience shall be updated after finished game.
 		local counter  = self.correct_answer_number
 		local experience = ExperienceCalculation.Calculation(counter, "Multiplechoice")
 		self.profile:modify_balance(experience)
 		self.profile:modify_experience(experience)
+
+
+	-- When the game is finished, a popup-view with the text below shall be shown.
+	--This isn't working right now - the code probably shall be placed somewhere else?
+
+	-- 	local type = "message"
+	-- 	local message = {"Good job! You received" .. experience .. " coins."}
+	-- --	local message = {"Good job! You received XX coins."}
+	-- 	self:_back_to_city(type, message)
+
 	end
 end
 
@@ -411,8 +417,10 @@ function MultipleChoiceView:_back_to_city(type, message)
 		local popup_view = PopUpView(remote_control,subsurface, type, message)
     self:add_view(popup_view)
     self.views.grid:blur()
+		self:blur()
 
     local button_click_func = function(button)
+
       	if button == "ok" then
 		  	self:destroy()
       		self:trigger("exit_view")
@@ -427,6 +435,20 @@ function MultipleChoiceView:_back_to_city(type, message)
     self:listen_to_once(popup_view, "button_click", button_click_func)
     popup_view:render(subsurface)
     gfx.update()
+end
+
+function MultipleChoiceView:focus()
+ 	self:listen_to(
+ 	event.remote_control,
+ 	"button_release",
+	utils.partial(self.press, self)
+)
+
+
+end
+
+function MultipleChoiceView:blur()
+	self:stop_listening(event.remote_control)
 end
 
 return MultipleChoiceView
