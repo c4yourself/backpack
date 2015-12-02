@@ -207,7 +207,7 @@ function Store:remove_button(index)
 
 	-- Get the index of the button to be removed
 	remove_index = get_size(self.items) + get_size(self.backpack_items) + 1
-	
+
 	-- Remove it from the button table
 	table.remove(self.buttons, remove_index)
 
@@ -246,7 +246,8 @@ function Store:render(surface)
 
 	-- Draw balacne
 	local coins = self.profile:get_balance()
-	self.font:draw(surface, {x = 2.9*width/4, y = height/8},"Coins: "..coins)
+	local local_coins = self.profile:get_city().country:universal_to_local_currency(coins)
+	self.font:draw(surface, {x = 2.9*width/4, y = height/8},"Coins: "..local_coins)
 
 	--Draw item info is one is selected, exit info otherwise
 	local selected_item_index = self.button_grid:get_selected()
@@ -269,10 +270,10 @@ function Store:render(surface)
 		self.font:draw(surface, {x = 2.9*width/4, y = height/8+45}, "Item: " .. item:get_name())
 		self.font:draw(surface, {x = 2.9*width/4, y = height/8+70}, "Description: "..item:get_description())
 		if selected_item_index <= get_size(self.items) then
-			self.font:draw(surface, {x = 2.9*width/4, y = height/8+95}, "Purchase price: " .. item:get_price())
+			self.font:draw(surface, {x = 2.9*width/4, y = height/8+95}, "Purchase price: " .. self.profile:get_city().country:universal_to_local_currency(item:get_price()))
 		else
 			self.font:draw(surface, {x = 2.9*width/4, y = height/8+95},
-			"Sale price: "..self.backendstore:returnOfferPrice(item, self.current_city))
+			"Sale price: "..self.profile:get_city().country:universal_to_local_currency(self.backendstore:returnOfferPrice(item, self.current_city)))
 		end
 	end
 	self.font:draw(surface, {x = 2.9*width/4, y = height/8+130}, self.message["message"])
