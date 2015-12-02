@@ -49,6 +49,7 @@ TestFreetypeMock = require("mocks.test_mock_FreetypeMock")
 TestPlayerMock = require("mocks.test_mock_PlayerMock")
 TestSysMock = require("mocks.test_mock_SysMock")
 TestSurfaceMock = require("mocks.test_mock_SurfaceMock")
+TestFontMock = require("mocks.test_mock_FontMock")
 --integration
 TestMockIntegration = require("integration.test_mock_integration")
 
