@@ -413,7 +413,7 @@ function MultipleChoiceView:render(surface)
 			self.profile:modify_balance(experience)
 			self.profile:modify_experience(experience)
 			local type = "message"
-			local message = {"Good job! You received" .. experience .. " coins."}
+			local message = {"Good job! You received " .. experience .. " coins."}
 			self:_back_to_city(type, message)
 		end
 	end
@@ -433,15 +433,16 @@ function MultipleChoiceView:_back_to_city(type, message)
     self.views.grid:blur()
 
     local button_click_func = function(button)
-      if button == "ok" then
-      self:trigger("exit_view")
-      else
+      	if button == "ok" then
+		  	self:destroy()
+      		self:trigger("exit_view")
+      	else
 			-- This isn't working right now!!
-      popup_view:destroy()
-      self.views.grid:focus()
-      self:dirty(true)
-      gfx.update()
-    end
+	      popup_view:destroy()
+	      self.views.grid:focus()
+	      self:dirty(true)
+	      gfx.update()
+    	end
     end
 
     self:listen_to_once(popup_view, "button_click", button_click_func)
