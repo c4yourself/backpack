@@ -79,8 +79,7 @@ function NumericQuizView:__init(remote_control, subsurface, profile)
 	-- Associate a quiz instance with the View
 	self.num_quiz = Quiz()
 	self.progress_table = {}
---	self:_set_level()
-	self.level = "EXPERT"
+	self:_set_level()
 	self.num_quiz:generate_numerical_quiz(self.level, 10, "image_path")
 
 	for i=1, #self.num_quiz.questions do
