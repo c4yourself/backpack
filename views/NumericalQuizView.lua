@@ -36,6 +36,7 @@ function NumericQuizView:__init(remote_control, subsurface, profile)
 	self.areas_defined = false
 	self.prevent = false -- This flag is used for avoiding bug where render is
 						-- called twice upon a submit.
+	self._suppress_new_question = false
 	--Components
 	self.views.grid = NumericalQuizGrid(remote_control)
 	--Instanciate a numerical input component and make the quiz listen for changes
@@ -46,8 +47,8 @@ function NumericQuizView:__init(remote_control, subsurface, profile)
 	local color_selected = Color(255, 153, 0, 255)
 	local color_disabled = Color(111, 222, 111, 255)
 
-	local height = subsurface:get_height()
-	local width = subsurface:get_width()
+	local height = math.ceil(subsurface:get_height())
+	local width = math.ceil(subsurface:get_width())
 	local button_size = {width = 185, height = 70}
 
 	-- Add exit button
@@ -88,18 +89,14 @@ function NumericQuizView:__init(remote_control, subsurface, profile)
 	self.user_answer = ""
 
 	-- Background colors for this view's own subsurfaces
-	self.question_area_color = Color(255,255,255,255)
+	self.question_area_color = Color( 0, 0, 0, 175)
 	self.progress_counter_color = Color(255,99,0,255)
 	self.question_area_font = Font("data/fonts/DroidSans.ttf", 26,
-									Color(0,0,0,255))
+									Color(255,255,255,255))
 	self.progress_counter_font = Font("data/fonts/DroidSans.ttf", 32,
-																	Color(255,255,255,255))
+									Color(255,255,255,255))
 	-- Listeners and callbacks
-	self:listen_to(
-		event.remote_control,
-		"button_release",
-		utils.partial(self.press, self)
-	)
+self:focus()
 end
 
 function NumericQuizView:_set_level()
@@ -126,8 +123,9 @@ end
 --- Renders a NumericQuizView and all its child views on specified 'surface'
 -- @param surface Surface or SubSurface to render upon
 function NumericQuizView:render(surface)
-	local surface_width = surface:get_width()
-	local surface_height = surface:get_height()
+	local surface_width = math.ceil(surface:get_width())
+	local surface_height = math.ceil(surface:get_height())
+	self._pop_up_flag = false
 
 	-- Define input area if it hasn't been done already
 	if not self.input_area_defined then
@@ -164,7 +162,6 @@ function NumericQuizView:render(surface)
 										height = self.counter_height,
 										width = self.counter_width})
 			--Question area
-		--	local x = math.ceil(surface:get_width() * 0.2)
 			local x = surface_width * 0.3
 			local y = surface_height * 0.2
 
@@ -204,35 +201,46 @@ function NumericQuizView:render(surface)
 					width = self.question_area_width},
 					output2, "center", "middle")
 			self.answer_flag = false
-			-- The statements below was useful for finding a bug, leaving them
-			-- in case it re-occurs
+		elseif self._suppress_new_question then
+			self.suppress_new_question = false
+			-- Show the current question instead of a new one
+			local calculate_text = "Calculate"
+			local question_text = self.question_area_text .. " = ?"
+			self.question_area_font:draw(self.question_area,
+										{x = 0,
+										y = self.question_area_height*0.3,
+										height = self.question_area_height,
+										width = self.question_area_width},
+										calculate_text, "center")
+			self.question_area_font:draw(self.question_area,
+										{x = 0,
+										y = self.question_area_height*0.5,
+										height = self.question_area_height,
+										width = self.question_area_width},
+										question_text, "center")
 		else
+
 			-- Show a new question if there is one, otherwise show final result
 			self.answer_flag = false
 			local question = self.num_quiz:get_question()
+			self.question_area_text = question
 			if question ~= nil then
 				local calculate_text = "Calculate"
 				local question_text = question .. " = ?"
-				self.question_area_font:draw(self.question_area, {x = 0, y = self.question_area_height*0.3,
-					height = self.question_area_height,
-					width = self.question_area_width},
-					calculate_text, "center")
-				self.question_area_font:draw(self.question_area, {x = 0, y = self.question_area_height*0.5,
-						height = self.question_area_height,
-						width = self.question_area_width},
-						question_text, "center")
+				self.question_area_font:draw(self.question_area,
+											{x = 0,
+											y = self.question_area_height*0.3,
+											height = self.question_area_height,
+											width = self.question_area_width},
+											calculate_text, "center")
+				self.question_area_font:draw(self.question_area,
+											{x = 0,
+											y = self.question_area_height*0.5,
+											height = self.question_area_height,
+											width = self.question_area_width},
+											question_text, "center")
 			else
-				-- The user has finished the quiz
-				-- self.views.num_input_comp:blur()
-				-- self.quiz_flag = true
-				-- local output = "You answered "
-				-- 				.. tostring(self.num_quiz.correct_answers)
-				-- 				.. " questions correctly."
-				-- self.question_area_font:draw(self.question_area, {x = 0, y = 0,
-				-- 				height = self.question_area_height,
-				-- 				width = self.question_area_width},
-				-- 				output, "center", "middle")
-				self:back_to_city()
+				self._pop_up_flag = true
 			end
 		end
 
@@ -271,9 +279,10 @@ function NumericQuizView:render(surface)
 										height = bar_component_height-4,
 										width = bar_component_width-4})
 			local progress_bar_component_pic = SubSurface(surface,
-																	{x = bar_component_x, y = bar_component_y,
-																	height = bar_component_height,
-																	width = bar_component_width})
+													{x = bar_component_x,
+													y = bar_component_y,
+													height = bar_component_height,
+													width = bar_component_width})
 			-- Depending on the user's success: there will be different boxes
 			if self.progress_table[i] == true then
 				bar_component_color = Color(0,255,0,255)
@@ -293,6 +302,7 @@ function NumericQuizView:render(surface)
 								bar_component_height
 		end
 		self.prevent = false
+		self._suppress_new_question = false
 	end
 
 	-- In case we haven't started listning to our child views: start doing so
@@ -338,8 +348,11 @@ function NumericQuizView:render(surface)
 		self.listening_initiated = true
 	end
 
-	self:dirty(false)
 	self.views.grid:render(surface)
+	if self._pop_up_flag == true then
+		self:back_to_city()
+	end
+	self:dirty(false)
 	gfx.update()
 end
 
@@ -381,19 +394,25 @@ function NumericQuizView:back_to_city()
 		self.profile:modify_balance(experience)
 		self.profile:modify_experience(experience)
 
-		message = {"Good job! You answered ".. tostring(self.num_quiz.correct_answers).. " questions correctly ",
-							"and you received" .. experience .. " coins."}
+		message = {"Good job! You answered "
+					.. tostring(self.num_quiz.correct_answers) ..
+					" questions correctly ",
+					"and you received " .. experience .. " coins."}
 		type = "message"
 	else
 		message = {"Are you sure you want to exit?"}
 		type = "confirmation"
 	end
 
-	local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
+	local subsurface = SubSurface(screen,{width = screen:get_width()*0.5,
+									height = (screen:get_height()-50)*0.5,
+									x = screen:get_width()*0.25,
+									y = screen:get_height()*0.25+50})
 	local popup_view = PopUpView(remote_control,subsurface, type, message)
 	self:add_view(popup_view)
 	self.views.grid:blur()
 	self.views.num_input_comp:blur()
+	self:blur()
 
 	local button_click_func = function(button)
 		if button == "ok" then
@@ -401,7 +420,10 @@ function NumericQuizView:back_to_city()
 		else
 		popup_view:destroy()
 		self.views.grid:focus()
-			self.views.num_input_comp:focus()
+		self.views.num_input_comp:focus()
+		self:focus()
+		self._suppress_new_question = true -- Prevents the quiz from
+											-- skipping a question
 		self:dirty(true)
 		gfx.update()
 	end
@@ -411,10 +433,20 @@ function NumericQuizView:back_to_city()
 	popup_view:render(subsurface)
 	gfx.update()
 
+end
 
+---Focuses the NumericalQuizView, i.e. makes it listen to the remote control
+function NumericQuizView:focus()
+	self:listen_to(
+		event.remote_control,
+		"button_release",
+		utils.partial(self.press, self)
+	)
+end
 
---	self:trigger("exit_view")
-	--self:destroy()
+---Blurs the NumericQuizView, i.e. makes it stop listening to the remote control
+function NumericQuizView:blur()
+	self:stop_listening(event.remote_control)
 end
 
 return NumericQuizView

@@ -164,8 +164,8 @@ function CreateProfileView2:load_view(button)
 				self:return_to_base_view()
 			elseif self.content_pointer == 5 then
 				if self:control_input() then
-					self.profile = Profile(self.input_field.text, self.email, self.input_field2.text2, binary_button:get_value(), City.cities["london"])
-					self.profile:set_balance(0)
+					self.profile = Profile(self.input_field.text, self.email, self.input_field2.text, binary_button:get_value(), City.cities["london"])
+					self.profile:set_balance(500)
 					self.profile:set_experience(0)
 					self.profile:set_password(self.password)
 					self.profile:set_id(0)

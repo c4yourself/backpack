@@ -1,17 +1,23 @@
+-- Global font cache to work around a bug on the set-top box
+font_cache = {}
+
+--local CityView = require("views.CityView")
+local ProfileSelection = require("views.ProfileSelection")
 local event = require("lib.event")
 local logger = require("lib.logger")
+local SplashView = require("views.SplashView")
 local utils = require("lib.utils")
-local menu = require("views.menu")
-
 local view = require("lib.view")
-local CityView = require("views.CityView")
-local MemoryView = require("views.MemoryView")
-
+local City = require("lib.city")
+local Profile = require("lib.profile.Profile")
+local CityTourView = require "views.CityTourView"
 --- This function runs every time a key is pressed
 -- The current mapping for the emulator can be found in emulator/zto.lua
 -- @param key Key that was pressed
 -- @param state Either up or repeat
 function onKey(key, state)
+	font_cache = font_cache
+
 	logger.trace("Remote control input (" .. key .. ", " .. state .. ")")
 
 	--testing remote control
@@ -31,9 +37,20 @@ end
 
 -- This function is called at the start of the program
 function onStart()
-	local memory_view = MemoryView()
-	view.view_manager:set_view(memory_view)
-	memory_view:on("dirty", function() memory_view:render(screen); gfx.update() end)
-	memory_view:render(screen)
-	gfx.update()
+
+	logger.trace("Started")
+	--local profile = Profile("Tstar","Tstar@tstar.com",1975,"M", City.cities.cairo)
+
+
+
+
+
+	--local city_view = CityView(event.remote_control, profile)
+
+	local profile = Profile("Tstar","Tstar@tstar.com",1975,"M", "paris")
+	local citytour = CityTourView(event.remote_control,screen, profile)
+
+	view.view_manager:set_view(citytour)
+
+	--gfx.update()
 end

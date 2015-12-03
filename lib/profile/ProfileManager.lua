@@ -45,12 +45,12 @@ end
 function ProfileManager:check_login(profile)
 	if self.profilesynchronizer:is_connected() then
 		if profile:get_id() == 0 then
-			profile = self.profilesynchronizer:save_profile(profile)
-			if profile["error"] then
-				return Profile
+			local new_profile = self.profilesynchronizer:save_profile(profile)
+			if new_profile["error"] then
+				return new_profile
 			else
-				localprofilemanager:save(profile)
-				return profile
+				localprofilemanager:save(new_profile)
+				return new_profile
 			end
 		else
 			result = self.profilesynchronizer:get_profile(profile:get_login_token())
@@ -72,7 +72,6 @@ end
 -- @return true representing it saves successfully both in local and server
 -- @return false representing it saves unsuccessfully in server
 function ProfileManager:create_new_profile(profile)
-
 	if self.profilesynchronizer:is_connected() then
 		local save_res = self.profilesynchronizer:save_profile(profile)
 		if save_res["error"] then
@@ -98,14 +97,18 @@ end
 -- @return true representing it saves successfully both in local and server
 -- @return false representing it saves unsuccessfully in server
 function ProfileManager:save(profile)
-	localprofilemanager:save(profile)
 
 	--check the network
 	if self.profilesynchronizer:is_connected() ~= false then
-		self.profilesynchronizer:save_profile(profile)
-
+		local profile_new = self.profilesynchronizer:save_profile(profile)
+		if profile_new["error"] then
+			--print(profile_new["message"])
+		else
+			localprofilemanager:save(profile_new)
+		end
 		return true, "Save profile successfully in local and server!"
 	else
+		localprofilemanager:save(profile)
 		return false, "The netowork is not connected!"
 	end
 end
