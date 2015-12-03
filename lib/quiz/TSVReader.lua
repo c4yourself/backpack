@@ -49,12 +49,9 @@ function TSVReader:get_question(question_type)
 	--if(lfs.attributes(self.filename, "mode") == "file") then
 
 		--get the questions from TSV file
-		local i = 1
 		for line in io.lines(self.filename) do
 			if string.sub(line,1,string.len(question_type)) == question_type then
 				table.insert(tmp_table,string.sub(line,string.len(question_type) + 2,#line))
-			--	print(tmp_table[i])
-				i=i+1
 			end
 		end
 
@@ -101,8 +98,10 @@ end
 -- @param count representing question[count]
 -- @return question representing the instance of MultipleChoiceQuestion
 function TSVReader:generate_question(count)
-	seed = self.generate_random(#self.question_index,#self.question_index)
-	count = self.question_index[seed[count]]
+	local seed = self.generate_random(#self.question_index,#self.question_index)
+
+	local count = self.question_index[seed[count]]
+
 	local question = MultipleChoiceQuestion(self.image_path,self.questions_table[count][1],self.correct_answers[count],self.choices[count])
 	return question
 end
