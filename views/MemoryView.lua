@@ -89,7 +89,7 @@ function MemoryView:__init(remote_control, surface, profile)
 
     for i = 1, self.pairs*2 do
 
-        local current_city = self.profile:get_city().name
+        local current_city = self.profile.city
         self.cards[i]  = CardComponent(current_city, self.memory.cards[i], card_color,
         card_color_selected, card_color, true, false)
 
