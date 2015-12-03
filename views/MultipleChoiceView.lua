@@ -38,7 +38,7 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 	-- Associate a quiz instance with the MultipleChoiceView
 	self.mult_choice_quiz = Quiz()
 	self.quiz_size = 10
-	self.mult_choice_quiz:generate_multiplechoice_quiz(self.profile:get_current_city(),self.quiz_size)
+	self.mult_choice_quiz:generate_singlechoice_quiz(self.profile:get_current_city(),self.quiz_size)
 	self.current_question = 1
 	self.correct_answer_number = 0
 
@@ -277,7 +277,7 @@ function MultipleChoiceView:render(surface)
 			local x = math.ceil(surface:get_width() * 0.2)
 			local y = math.ceil(surface:get_height() * 0.1)
 			self.question_area_width = surface_width - 2 * x
-			self.question_area_height = math.ceil(0.17*surface_height)
+			self.question_area_height = math.ceil(0.20*surface_height)
 
 			self.question_area = SubSurface(surface, {x = x, y = y,
 				height = self.question_area_height,
@@ -291,12 +291,42 @@ function MultipleChoiceView:render(surface)
 		if self.quiz_state == "IDLE" then
 
 			-- Draw question
-			local question = self.current_question .. ". "
-					.. self.mult_choice_quiz.questions[self.current_question].question
+			local question_nr = self.current_question .. ". "
+			local question = self.mult_choice_quiz.questions[self.current_question].question
+			-- local new_question = ""
+			-- local new_question1 = nil
+			-- local new_question2 = nil
+			-- local str_len = string.len(question)
+			--
+			-- for j = 1, math.ceil(str_len/60) do
+			-- 	local new_str_len = string.len(string.sub(question,(j-1) * 60 + 1,j * 60))
+			-- 	if new_str_len >= 60 then
+			-- 		print("detta j"..j)
+			-- 		for i = 1, 60 do
+			-- 				if string.sub(question, j*60-i, j*60-i) == " " then
+			-- 					if j == math.ceil(str_len/60) then
+			-- 					new_question = new_question .. string.sub(question, j*60-i,str_len)
+			-- 					break
+			-- 					else
+			-- 					new_question = new_question .. string.sub(question,(j-1)*60+1,j*60-i-1) .. "\n"
+			-- 					break
+			-- 					end
+			-- 				end
+			-- 		end
+			-- 	end
+			-- end
+
+			-- if new_question == "" then
+			-- 	new_question = question
+			-- end
+		--	local question1 = self.mult_choice_quiz.questions[self.current_question].question
+		--	print("hej")
+		--	print(string.len(self.mult_choice_quiz.questions[self.current_question].question))
 			self.font:draw(self.question_area,
 				{x = 0, y = 0, height = self.question_area_height,
 				width = self.question_area_width},
-				question, "center", "middle")
+				question_nr .. question, "center", "middle")
+
 			local button_1_text =  "A. " .. self.mult_choice_quiz.questions[self.current_question].Choices[1]
 			local button_2_text =  "B. " .. self.mult_choice_quiz.questions[self.current_question].Choices[2]
 			local button_3_text =  "C. " .. self.mult_choice_quiz.questions[self.current_question].Choices[3]
