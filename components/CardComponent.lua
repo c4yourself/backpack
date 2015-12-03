@@ -73,6 +73,7 @@ end
 function CardComponent:render(surface)
 	self:dirty(false)
 	if self.status == "FACING_UP" then
+		surface:fill(self.backside_color:to_table())
 		surface:copyfrom(self.memory_img)
 	elseif self.status == "FACING_DOWN" then
 		surface:fill(self.backside_color:to_table())
@@ -82,6 +83,7 @@ function CardComponent:render(surface)
 	end
 
 	if self:is_selected() then
+		print("IS SELECTED")
 		local margin = 0.30
 		local area = {
 			width = surface.width - 17,
