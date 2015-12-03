@@ -6,8 +6,8 @@ local SurfaceMock = class("SurfaceMock")
 
 --- Constructor for SurfaceMock.
 function SurfaceMock:__init(width, height)
-	self.width = width
-	self.height = height
+	self.width = math.floor(width)
+	self.height = math.floor(height)
 
 	local default_color = Color(0, 0, 0, 0)
 	self.pixels = {}
@@ -40,10 +40,12 @@ function SurfaceMock:fill(color, rectangle)
 	local c = Color.from_table(color)
 	local rect = self:_get_rectangle(rectangle)
 
-	local w = rect.x + rect.width - 1
-	local h = rect.y + rect.height - 1
+	local w = math.floor(rect.x + rect.width - 1)
+	local h = math.floor(rect.y + rect.height - 1)
 	for i = rect.x, w do
 		for j = rect.y, h do
+			--print("this is i: " .. i)
+			--print("this is j: " .. j)
 			self.pixels[i][j] = self.pixels[i][j]:blend(c)
 		end
 	end
@@ -54,23 +56,14 @@ end
 function SurfaceMock:copyfrom(src_surface, src_rectangle, dest_rectangle, blend_option)
 	local dest_rect = self:_get_rectangle(dest_rectangle)
 	local w = dest_rect.x + dest_rect.width - 1
-	local dest_rect = dest_rect.x + dest_rect.w
+	local h = dest_rect.y + dest_rect.height - 1
 
-	if blend_option == false then
 		for i = dest_rect.x, w do
 			for j = dest_rect.y, h do
-				local c = Color(src_surface:get_pixel(src_rectangle.x + i, src_rectangle.y + j))
+				local c = Color(255, 50, 70, 255)
 				self.pixels[i][j] = c
 			end
 		end
-	else
-		for i = dest_rect.x, w do
-			for j = dest_rect.y, h do
-				local c = Color(src_surface:get_pixel(src_rectangle.x + i, src_rectangle.y + j))
-				self.pixels[i][j] = self.pixel[i][j]:blend(c)
-			end
-		end
-	end
 end
 
 --- Get this surface's width
@@ -85,7 +78,8 @@ end
 
 --- Get color of the pixel at location x and y
 function SurfaceMock:get_pixel(x, y)
-	return self.pixels[x][y]:to_values()
+	local r, g, b, a  = self.pixels[x][y]:to_values()
+	return {r = r, g = g, b = b, a = a}
 end
 
 --- Set color of the pixel at location x and y
@@ -123,8 +117,8 @@ function SurfaceMock:_get_rectangle(rectangle)
 	}
 
 	if rectangle ~= nil then
-		rect.x = (rectangle.x or 0)
-		rect.y = (rectangle.y or 0)
+		rect.x = math.floor(rectangle.x or 0)
+		rect.y = math.floor(rectangle.y or 0)
 
 		if rect.x + (rectangle.width or rectangle.w) <= rect.width then
 			rect.width = (rectangle.width or rectangle.w)

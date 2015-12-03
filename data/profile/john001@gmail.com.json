@@ -1,0 +1,14 @@
+{
+		"badges": [],
+		"balance": 850,
+		"date_of_birth": "1991-01-03",
+		"email_address": "john001@gmail.com",
+		"experience": 0,
+		"id": 0,
+		"inventory": "{1,3,17,17}",
+		"login_token": "pbkdf2:sha1:1000$L1nAX0or$776a8c290113a9310b9eb72c49518905a55f89c9",
+		"name": "John",
+		"password": "",
+		"sex": "male",
+		"city": "london",
+}

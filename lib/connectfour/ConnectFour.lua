@@ -1,5 +1,5 @@
 --- Connect four logics
--- @module connectfour
+-- @classmod ConnectFour
 local class = require("lib.classy")
 local logger = require("lib.logger")
 local utils = require("lib.utils")
@@ -7,16 +7,16 @@ local utils = require("lib.utils")
 local ConnectFour = class("ConnectFour")
 
 --- Constructor for ConnectFour
--- @param board table containing the board
--- @param player current player
 function ConnectFour:__init()
 
 	self.board = {{},{},{},{},{},{}}
+	--{{},{"X", "O", "X", "O", "X", "O"}, {"O", "X", "O","X", "O", "X", "O"},{"O", "X", "O", "X", "O", "X", "O"},{"X", "O", "X", "O", "X", "O", "X"},{"X", "O", "X", "O", "X", "O", "X"}}
 	self.player = "X"
 end
 
 --- Converts the board to a string
 -- @return output a string containing the board
+
 function ConnectFour:serialize()
 
 	local output = ""
@@ -59,7 +59,7 @@ return connect_four
 end
 
 
---- Returns the color of the disc at the given position. If there is no disc in the given column nil is returned
+--- Returns the color of the coin at the given position. If there is no coin in the given column nil is returned
 -- @param row
 -- @param column
 -- @return output the value at the given position
@@ -97,13 +97,55 @@ function ConnectFour:get_player()
 	end
 end
 
---- Calculates which row the disc will stop at given a columnn
+--- Checks if the board is full
+-- @return boolean, true if the board is full
+-- @local
+function ConnectFour:_is_full_board()
+	local count_X = 0
+	local count_O = 0
+
+	for row = 1, 6 do
+		for column = 1, 7 do
+			if self.board[row][column] == "X" then
+				count_X = count_X + 1
+			elseif self.board[row][column] == "O" then
+				count_O = count_O + 1
+			end
+		end
+	end
+
+	--the board is full
+	if count_X + count_O >= 42 then
+		return true
+	else
+		return false
+	end
+end
+
+--- Calculates the number of coins that player has put
+-- @param number of coins
+function ConnectFour:get_number_of_coins()
+	local count_X = 0
+
+	for row = 1, 6 do
+		for column = 1, 7 do
+			if self.board[row][column] == "X" then
+				count_X = count_X + 1
+			end
+		end
+	end
+
+	return count_X
+end
+
+
+
+--- Calculates which row the coin will stop at given a columnn
 -- @param column
 -- @return row
 function ConnectFour:get_current_row(column)
 
 	local row = 7
-
 	repeat
 		row = row - 1
 		if row < 1 then
@@ -115,21 +157,21 @@ function ConnectFour:get_current_row(column)
 	return row
 end
 
---- Resets the board, making every value nil
+--- Resets the game-board to nil, clear the board
 function ConnectFour:reset_board()
-		for row = 1, 6 do
-			for column = 1, 7 do
-				self.board[row][column] =  nil
-			end
+	for row = 1,6 do
+		for column = 1, 7 do
+			self.board[row][column] = nil
 		end
+	end
 end
 
---- Returns true if the given player can add a disc to the given column
+--- Returns true if the given player can add a coin to the given column
 -- @param player the player who tries to make a move
--- @param column the column where the player wants to drop the disc
+-- @param column the column where the player wants to drop the coin
 -- @return boolean
 function ConnectFour:is_valid_move(player, column)
-	row = self:get_current_row(column)
+		local row = self:get_current_row(column)
 
 	if row > 0 and column >= 1 and column <= 7 and self:get_player() == player then
 		return true
@@ -138,9 +180,9 @@ function ConnectFour:is_valid_move(player, column)
 	end
 end
 
---- Drops a disc of the given player into the given column. If the move is invalid an error is raised. If it is not the given player’s turn an error is raised
+--- Drops a coin of the given player into the given column. If the move is invalid an error is raised. If it is not the given player’s turn an error is raised
 -- @param player the player who makes the move
--- @param column the column where the player puts the disc
+-- @param column the column where the player puts the coin
 function ConnectFour:move(player, column)
 
 	--guard condition
@@ -157,7 +199,8 @@ end
 -- @param row the row where the last move was made
 -- @param column the column where the last move was made
 -- @return player string containing the player if there is a winner else nil
-function ConnectFour:find_winner(player, row, column)
+--@local
+function ConnectFour:_find_winner(player, row, column)
 
 	local count = 0
 	local current_row = row
@@ -259,13 +302,15 @@ function ConnectFour:find_winner(player, row, column)
 	return nil
 end
 
+---Checks if there is a winner by calling _find_winner() with the top-coin in each column as a parameter
+-- @return player string containing the player if there is a winner else nil
 function ConnectFour:get_winner()
 	for i = 1, 7 do
 		local row = self:get_current_row(i)
 		if row ~= 6 then
 			local player = self:get(row+1, i)
 			if player ~= nil then
-				local winner = self:find_winner(player, row+1, i)
+				local winner = self:_find_winner(player, row+1, i)
 				if winner ~= nil then
 					return winner
 				end
@@ -276,35 +321,100 @@ function ConnectFour:get_winner()
 return nil
 end
 
+function ConnectFour:_check_three_in_a_column(row, column)
+	--column
+	if row<4 then
+		if self:get(row+2, column) == self:get(row+1, column) then
+			if self:get(row+1, column)== self:get(row+3, column) then
+			return true
+			end
+		end
+	end
+	return false
+end
 
-function ConnectFour:computer_AI(x_column)
-	--local random_column
-	--repeat
-	--	random_column = math.random(1,7)
-	--until self:is_valid_move("O", random_column)
+function ConnectFour: _check_three_in_a_row()
+	--row
 
-	--return random_column
+	local count = 1
 
-	local random_column
+	for row1 = 1, 6 do
+		for column = 2, 7 do
+			if self:get(7-row1, column) ~=nil and self:get(7-row1, column) == self:get(7-row1, column-1) then
+				count = count + 1
 
-	random_probability = math.random(1,10) --probability
+				if count == 3 and row1~=1 and self:get(7-row1, column+1) == nil and self:get(7-row1-1, column+1) ~= nil then
 
-	if random_probability < 8 then
-		repeat
-			random_close = math.random(-1, 1)
-			random_column = x_column + random_close
-		until self:is_valid_move("O", random_column)
-	elseif random_probability >= 8 then
-		random_column = math.random(1,7)
+					return column+1
+				end
+				if count == 3 and row1==1 and self:get(7-row1, column+1) == nil then
+
+					return column+1
+				end
+			else
+				count = 1
+			end
+		end
 	end
 
+	return nil
+
+
+
+end
+
+--- Decides which column the computer should choose during next move
+-- @param x_column , column for the last put coin by the player
+-- @return random_column, number choosen column
+function ConnectFour:computer_AI(x_column)
+
+	local random_column -- = math.random(1,7)
+	local random_probability = math.random(1,10) --probability
+
+	--check if there's three in a row
+--[[	for i = 1, 7 do
+		local row = self:get_current_row(i)
+		print("before check three " .. i .. row)
+
+		if row > 0 then
+		local make_move = self:_check_three_in_a_column(row, i)
+			if make_move == true then
+				print("column from check_three")
+				return i
+			end
+		end
+	end ]]--
+
+
+--[[	local make_move2 = self:_check_three_in_a_row(row)
+	if make_move2 ~= nil then
+		print("tre i rad")
+		return make_move2
+	end ]]--
+
+	if self:get_player() ~= "O" then
+		error("Computer AI called when player turn")
+	end
+
+	local counter = 0
+repeat
+	if random_probability < 8 then
+		counter = counter + 1
+			local random_close = math.random(-1, 1)
+			random_column = x_column + random_close
+
+
+			if counter == 5 then
+				random_probability = 8
+			end
+
+	elseif random_probability >= 8 then
+		random_column = math.random(1,7)
+
+	end
+	until self:is_valid_move("O", random_column)
+
 	return random_column
-
-
-
-
-
-
 
 end
 

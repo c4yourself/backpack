@@ -6,7 +6,7 @@ local hash = require("lib.hash")
 local ProfileSynchronizer = class("ProfileSynchronizer")
 local json = require("lib.dkjson")
 local Profile = require("lib.profile.Profile")
-
+local City = require"lib.city"
 -- Some possible test code to use; this really can't be automateed
 --[[
 local profilesynchronizer = ProfileSynchronizer()
@@ -35,9 +35,14 @@ function ProfileSynchronizer:__init()
 	self.get_profile_url = "/profile/info/"
 	self.save_profile_url ="/profile/"
 	self.delete_profile_url = "/profile/delete/"
+	self.email_check_url = "/profile/checkemail/"
 	self.ttlyawesomekey = "c4y0ur5elf"
 
 end
+
+
+
+
 
 
 --- Check if connection to database is working
@@ -66,13 +71,14 @@ end
 local function create_existing_profile(data)
 
 	-- Constructor
-	new_profile = Profile(data.name, data.email_address, data.date_of_birth, data.sex, data.current_city)
-
+	new_profile = Profile(data.name, data.email_address, data.date_of_birth, data.sex, City.cities[data.current_city])
 	-- And additional data
- 	new_profile:set_balance(data.balance)
+
+ 	new_profile:set_balance(tonumber(data.balance))
 	new_profile:set_id(data.id)
 	new_profile:set_experience(data.experience)
 	new_profile:set_login_token(data.profile_token)
+	new_profile:set_inventory(data.inventory)
 	return new_profile
 end
 
@@ -155,6 +161,39 @@ local function server_communication(data, url_extension)
 	return return_var
 end
 
+function ProfileSynchronizer:test_hash()
+
+
+	local hashkey = hash.hash256(self.ttlyawesomekey)
+
+	local json_request = [[{"hash":"]]..hashkey..[["}]]
+
+  --result = server_communication(token_data, self.get_profile_url)
+	result = server_communication(json_request, "/")
+
+	if result["error"] then
+		--print(result["message"])
+	else
+		--print(result["message"])
+	end
+
+end
+
+function ProfileSynchronizer:check_email(email)
+
+	local hashkey = hash.hash256(email..self.ttlyawesomekey)
+	local json_request = [[{"email":"]]..email..[[","zdata_hash":"]]..hashkey..[["}]]
+
+	result = server_communication(json_request, self.email_check_url)
+
+	if result["error"] then
+		return result
+	else
+		return result.email_available
+	end
+
+end
+
 --- Login which receives the token for a given email and password
 -- @param email a users email
 -- @param password a users password
@@ -162,7 +201,8 @@ end
 function ProfileSynchronizer:login(email, password)
 
 	-- Json request for login
-	local json_request =  [[{"email":"]]..email..[[","password":"]]..password..[[","zdata_hash":"49aac7d4ad14540a91c14255ea1288e2fdc9a54e53f01d15371e81345f5e3646"}]]
+	local hashkey = hash.hash256(email..self.ttlyawesomekey)
+	local json_request =  [[{"email":"]]..email..[[","password":"]]..password..[[","zdata_hash":"]]..hashkey..[["}]]
 
 	result = server_communication(json_request, self.login_url)
 
@@ -172,7 +212,6 @@ function ProfileSynchronizer:login(email, password)
 		-- Return the error table if error
 		return result
 	else
-
 		-- If no error, return the correct token
 		return result.profile_token
 	end
@@ -183,8 +222,10 @@ end
 -- @param token a users authetication token received by login()
 -- @return result a instance of the Profile class
 function ProfileSynchronizer:get_profile(token)
+
+	local hashkey = hash.hash256(token..self.ttlyawesomekey)
 	-- Json request for token data
-	local token_data =  [[{"profile_token":"]]..token..[[","zdata_hash":"49aac7d4ad14540a91c14255ea1288e2fdc9a54e53f01d15371e81345f5e3646"}]]
+	local token_data =  [[{"profile_token":"]]..token..[[","zdata_hash":"]]..hashkey..[["}]]
 	--local token_data =  [[{"profile_token":"]]..token..[[","zdata_hash":"49aac7d4ad14540a91c14255aa1288e2fdc9a54e53f01d15371e81345f5e3646"}]]
 
 	-- Returned result
@@ -209,7 +250,9 @@ end
 -- @return result either error message or message of delete completion
 function ProfileSynchronizer:delete_profile(email, password, token)
 
-	local json_request =  [[{"email":"]]..email..[[","password":"]]..password..[[","profile_token":"]]..token..[[","zdata_hash":"49aac7d4ad14540a91c14255ea1288e2fdc9a54e53f01d15371e81345f5e3646"}]]
+	local hashkey = hash.hash256(email..self.ttlyawesomekey)
+
+	local json_request =  [[{"email":"]]..email..[[","password":"]]..password..[[","profile_token":"]]..token..[[","zdata_hash":"]]..hashkey..[["}]]
 
 	result = server_communication(json_request, self.delete_profile_url)
 
@@ -231,7 +274,7 @@ function ProfileSynchronizer:save_profile(profile)
 	-- Extract the data from the profile
 	local badges = profile:get_badges_string()
 	local balance = profile:get_balance()
-	local current_city = profile:get_city()
+	local current_city = profile:get_city().code
 	local date_of_birth = profile:get_date_of_birth()
 	local email_address = profile:get_email_address()
 	local experience = profile:get_experience()
@@ -241,6 +284,8 @@ function ProfileSynchronizer:save_profile(profile)
 	local password = profile:get_password()
 	local profile_token = profile:get_login_token()
 	local sex = profile:get_sex()
+
+	local hashkey = hash.hash256(email_address..self.ttlyawesomekey)
 
 	-- Construct the json request from the data
 	local profile_data =  [[{"badges":"]]..badges..
@@ -255,7 +300,7 @@ function ProfileSynchronizer:save_profile(profile)
 												[[","password":"]]..password..
 												[[","profile_token":"]]..profile_token..
 												[[","sex":"]]..sex..
-												[[","zdata_hash":"49aac7d4ad14540a91c14255ea1288e2fdc9a54e53f01d15371e81345f5e3646"}]]
+												[[","zdata_hash":"]]..hashkey..[["}]]
 
 	-- Make the server request
 	result = server_communication(profile_data, self.save_profile_url)
