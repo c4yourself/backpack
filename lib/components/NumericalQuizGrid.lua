@@ -82,8 +82,6 @@ function NumericalQuizGrid:press(button)
 				self:trigger("next")
 			end
 		end
-		print("indicator: " .. self.button_indicator)
-		print("\n" .. "\n" .. "\n" .. "\n" .. "\n" .. "\n")
 	--end
 end
 

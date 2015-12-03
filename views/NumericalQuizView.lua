@@ -36,6 +36,7 @@ function NumericQuizView:__init(remote_control, subsurface, profile)
 	self.areas_defined = false
 	self.prevent = false -- This flag is used for avoiding bug where render is
 						-- called twice upon a submit.
+	self._suppress_new_question = false
 	--Components
 	self.views.grid = NumericalQuizGrid(remote_control)
 	--Instanciate a numerical input component and make the quiz listen for changes
@@ -200,10 +201,29 @@ function NumericQuizView:render(surface)
 					width = self.question_area_width},
 					output2, "center", "middle")
 			self.answer_flag = false
-			else
+		elseif self._suppress_new_question then
+			self.suppress_new_question = false
+			-- Show the current question instead of a new one
+			local calculate_text = "Calculate"
+			local question_text = self.question_area_text .. " = ?"
+			self.question_area_font:draw(self.question_area,
+										{x = 0,
+										y = self.question_area_height*0.3,
+										height = self.question_area_height,
+										width = self.question_area_width},
+										calculate_text, "center")
+			self.question_area_font:draw(self.question_area,
+										{x = 0,
+										y = self.question_area_height*0.5,
+										height = self.question_area_height,
+										width = self.question_area_width},
+										question_text, "center")
+		else
+
 			-- Show a new question if there is one, otherwise show final result
 			self.answer_flag = false
 			local question = self.num_quiz:get_question()
+			self.question_area_text = question
 			if question ~= nil then
 				local calculate_text = "Calculate"
 				local question_text = question .. " = ?"
@@ -259,9 +279,10 @@ function NumericQuizView:render(surface)
 										height = bar_component_height-4,
 										width = bar_component_width-4})
 			local progress_bar_component_pic = SubSurface(surface,
-																	{x = bar_component_x, y = bar_component_y,
-																	height = bar_component_height,
-																	width = bar_component_width})
+													{x = bar_component_x,
+													y = bar_component_y,
+													height = bar_component_height,
+													width = bar_component_width})
 			-- Depending on the user's success: there will be different boxes
 			if self.progress_table[i] == true then
 				bar_component_color = Color(0,255,0,255)
@@ -281,6 +302,7 @@ function NumericQuizView:render(surface)
 								bar_component_height
 		end
 		self.prevent = false
+		self._suppress_new_question = false
 	end
 
 	-- In case we haven't started listning to our child views: start doing so
@@ -400,6 +422,8 @@ function NumericQuizView:back_to_city()
 		self.views.grid:focus()
 		self.views.num_input_comp:focus()
 		self:focus()
+		self._suppress_new_question = true -- Prevents the quiz from
+											-- skipping a question
 		self:dirty(true)
 		gfx.update()
 	end
