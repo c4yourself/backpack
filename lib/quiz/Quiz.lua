@@ -108,8 +108,33 @@ end
 -- @return false representing don't get question from TSV
 function Quiz:generate_citytour_quiz(image_path,attraction_number)
 	local tsvreader = TSVReader(image_path .. "_city_tour")
+
+	for k,v in pairs(tsvreader.questions_table) do
+		tsvreader.questions_table[k] = nil
+	end
+
+	for k,v in pairs(tsvreader.choices) do
+		tsvreader.choices[k] = nil
+	end
+
+	for k,v in pairs(tsvreader.correct_answers) do
+		tsvreader.correct_answers[k] = nil
+	end
+
 	if tsvreader:get_question("city_tour" .. attraction_number) ~= false then
-			local multiplechoicequestion = tsvreader:generate_question(1)
+			print (tsvreader.questions_table[1][1])
+			print (tsvreader.questions_table[1][2])
+			print (tsvreader.questions_table[1][3])
+			print (tsvreader.questions_table[2][1])
+			print (tsvreader.questions_table[2][2])
+			print (tsvreader.questions_table[2][3])
+			print (tsvreader.questions_table[3][1])
+			print (tsvreader.questions_table[3][2])
+			print (tsvreader.questions_table[3][3])
+
+
+			local multiplechoicequestion = tsvreader:generate_question(tonumber(attraction_number))
+
 			self.questions[1] = multiplechoicequestion
 		return true
 	else

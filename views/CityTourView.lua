@@ -104,15 +104,18 @@ function CityTourView:__init(remote_control, surface, profile)
 	local button_click = function()
 
 		attractionpoint = attractionpoint + 1
-		print(attractionpoint)
-		-- Generate a new quiz for the city tour
-		self.city_tour_quiz:generate_citytour_quiz(self.profile:get_current_city(), tostring(attractionpoint))
 
 		if table.getn(attractions.attraction[self.city.code]) == attractionpoint then
 --	if #order_table[random_order] == 0 then
 			self:trigger("exit_view")
 		else
+
+			self.city_tour_quiz.questions[1] = nil
+			-- Generate a new quiz for the city tour
+			
+			self.city_tour_quiz:generate_citytour_quiz(self.profile:get_current_city(), tostring(attractionpoint))
 		--	attractionpoint = order_table[random_order][#order_table[random_order]]
+
 			button_1:set_textdata(self.city_tour_quiz.questions[1].Choices[1], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
 			button_2:set_textdata(self.city_tour_quiz.questions[1].Choices[2], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
 			button_3:set_textdata(self.city_tour_quiz.questions[1].Choices[3], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))

@@ -49,9 +49,12 @@ function TSVReader:get_question(question_type)
 	--if(lfs.attributes(self.filename, "mode") == "file") then
 
 		--get the questions from TSV file
+		local i = 1
 		for line in io.lines(self.filename) do
 			if string.sub(line,1,string.len(question_type)) == question_type then
 				table.insert(tmp_table,string.sub(line,string.len(question_type) + 2,#line))
+				print(tmp_table[i])
+				i=i+1
 			end
 		end
 

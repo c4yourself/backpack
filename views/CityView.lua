@@ -187,7 +187,7 @@ function CityView:exit_city_view()
 	local button_click_func = function(button)
 		if button == "ok" then
 			local ProfileSelection = require("views.ProfileSelection")
-			local profile_selection = ProfileSelection()
+			local profile_selection = ProfileSelection(event.remote_control)
 			view.view_manager:set_view(profile_selection)
 		else
 			popup_view:destroy()
