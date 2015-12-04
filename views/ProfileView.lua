@@ -13,8 +13,8 @@ local utils = require("lib.utils")
 local SubSurface = require("lib.view.SubSurface")
 local Color = require("lib.draw.Color")
 local Font = require("lib.draw.Font")
-local Button = require("lib.components.Button")
-local ButtonGrid=require("lib.components.ButtonGrid")
+local Button = require("components.Button")
+local ButtonGrid=require("components.ButtonGrid")
 local ProfileManager = require("lib.profile.ProfileManager")
 
 -- Get size of Table

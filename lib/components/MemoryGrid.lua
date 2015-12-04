@@ -4,9 +4,7 @@
 -- @classmod MemoryGrid
 
 local class = require("lib.classy")
-local button = require("lib.components.Button")
-local ButtonGrid = require("lib.components.ButtonGrid")
-local MemoryGrid = class("MemoryGrid", ButtonGrid)
+local ButtonGrid = require("components.ButtonGrid")
 local SubSurface = require("lib.view.SubSurface")
 local utils = require("lib.utils")
 local event = require("lib.event")
@@ -14,6 +12,8 @@ local Font = require("lib.draw.Font")
 local Color = require("lib.draw.Color")
 local view = require("lib.view")
 local logger = require("lib.logger")
+
+local MemoryGrid = class("MemoryGrid", ButtonGrid)
 
 --- Constructor for MemoryGrid.
 -- @param remote_control Remote control or remote control mock to listen to.

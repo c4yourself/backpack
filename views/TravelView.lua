@@ -12,7 +12,6 @@ local SubSurface = require("lib.view.SubSurface")
 local ListItem = require("lib.components.ListItem")
 local ListComp =	require("lib.components.ListComp")
 local WorldMap = require("views.WorldMapView")
-local button_return = require("lib.components.Button")
 local city = require("lib.city")
 
 local TravelView = class("TravelView", View)

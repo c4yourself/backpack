@@ -14,7 +14,7 @@ local SubSurface = require("lib.view.SubSurface")
 local Color = require("lib.draw.Color")
 local Font = require("lib.draw.Font")
 local NumericalQuizGrid = require("lib.components.NumericalQuizGrid")
-local Button = require("lib.components.Button")
+local Button = require("components.Button")
 local ExperienceCalculation = require("lib.scores.experiencecalculation")
 local PopUpView = require("views.PopUpView")
 
