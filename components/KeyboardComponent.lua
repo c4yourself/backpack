@@ -82,10 +82,6 @@ function KeyboardComponent:render(surface)
 	my = 0
 
 	for i=1, self.nbr_of_buttons["x"]*self.nbr_of_buttons["y"] do
-		-- local spoc = sys.new_freetype({r=255, g=255, b=255}, 32,
-		-- {x=(self.button_start_location["left"]+((self.button_size["width"]+self.button_padding)*mx))+self.button_size["height"]/2,
-		-- y=(self.button_start_location["top"]+((self.button_size["height"]+self.button_padding)*my))+self.button_size["height"]/4},
-		-- utils.absolute_path("data/fonts/DroidSans.ttf"))
 
 		if self.x_pointer==mx and self.y_pointer==my then
 			self.marker = SubSurface(surface,{width=self.button_size["width"],
