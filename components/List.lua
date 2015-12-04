@@ -1,15 +1,12 @@
-
-
 local class = require("lib.classy")
 local View = require("lib.view.View")
-local list_item = require("lib.components.ListItem")
 local SubSurface = require("lib.view.SubSurface")
 local event = require("lib.event")
 local utils = require("lib.utils")
 
-local ListComp = class("ListComp",View)
+local List = class("List", View)
 
-function ListComp:__init(visible_items)
+function List:__init(visible_items)
 	View.__init(self)
 
 	self.visible_items = visible_items or 3
@@ -24,7 +21,7 @@ function ListComp:__init(visible_items)
 
 end
 
-function ListComp:button_press(key)
+function List:button_press(key)
 	if key == "up" then
 		self.current_index = math.max(self.current_index - 1, 1)
 		if self.current_index < self.start_index then
@@ -44,11 +41,11 @@ function ListComp:button_press(key)
 
 end
 
-function ListComp:add_list_item(list_item)
+function List:add_list_item(list_item)
 	 table.insert(self.item_list, list_item)
 end
 
-function ListComp:render(surface)
+function List:render(surface)
 
 	surface:clear({65, 70, 72, 255})
 	surface:clear({255, 255, 255, 255},
@@ -85,4 +82,4 @@ function ListComp:render(surface)
 end
 
 
-return ListComp
+return List

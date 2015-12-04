@@ -1,12 +1,10 @@
-
-
 local class = require("lib.classy")
 local View = require("lib.view.View")
-local ListItem = class("ListItem", View)
 local Font = require("lib.draw.Font")
 local Color = require("lib.draw.Color")
 local utils = require("lib.utils")
 
+local ListItem = class("ListItem", View)
 
 function ListItem:__init(text_left, icon, money, font, text_position_left, text_position_right, font_highlight)
 	View.__init(self)
@@ -18,7 +16,7 @@ function ListItem:__init(text_left, icon, money, font, text_position_left, text_
 	self.text_position_right = text_position_right
 	self.font = font
 	self.font_highlight = font_highlight
-	
+
 end
 
 function ListItem:select(status)

@@ -9,13 +9,12 @@ local utils = require("lib.utils")
 local event = require("lib.event")
 local view = require("lib.view")
 local SubSurface = require("lib.view.SubSurface")
-local ListItem = require("lib.components.ListItem")
-local ListComp =	require("lib.components.ListComp")
+local List = require("components.List")
+local ListItem = require("components.ListItem")
 local WorldMap = require("views.WorldMapView")
 local city = require("lib.city")
 
 local TravelView = class("TravelView", View)
-
 
 function TravelView:__init(remote_control, surface, profile)
 	View.__init(self)
@@ -29,7 +28,7 @@ function TravelView:__init(remote_control, surface, profile)
 	self.font_dest = Font("data/fonts/DroidSans.ttf", 20, Color(255, 150, 0, 255))
 	self.font_header = Font("data/fonts/DroidSans.ttf", 30, Color(255, 255, 255, 255))
 
-	self.list_comp = ListComp()
+	self.list_comp = List()
 
 	local list_item_position_left = {x=65, y=35}
 	local list_item_position_right = {x=375, y=35}
