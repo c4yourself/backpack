@@ -92,7 +92,7 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 
 	-- Add next button
 	local button_next = Button(Color(250, 169, 0,255), color_selected, color_disabled,
-								true, false, "")
+								true, false)
 	local next_position = {x =  width*0.8-300, y = height*0.67}
 	button_next:set_textdata("Next question", Color(255,255,255,255),
 							{x = 0, y = 0}, 24,"data/fonts/DroidSans.ttf")
@@ -296,11 +296,9 @@ function MultipleChoiceView:render(surface)
 			local question_nr = self.current_question .. ". "
 			local question = self.mult_choice_quiz.questions[self.current_question].question
 			local new_question = ""
-			local new_question1 = nil
-			local new_question2 = nil
 			local str_len = string.len(question)
 			local count_from_break = 0
-			local yq = 0
+			local yq = 15
 
 			-- If the question is too long, this is where it is printed in several lines
 			if str_len >= 60 then
@@ -313,23 +311,23 @@ function MultipleChoiceView:render(surface)
 								self.font:draw(self.question_area,
 									{x = 0, y = yq, height = self.question_area_height,
 									width = self.question_area_width},
-									new_question)
+									new_question, "center")
 								break
 							else
-								new_question = string.sub(question,(j-1)*60+1-count_from_break,j*60-i-count_from_break) .. "\n" --new_question .. string.sub(question,(j-1)*60+1-count_from_break,j*60-i-1) .. "\n"
+								new_question = string.sub(question,(j-1)*60+1-count_from_break,j*60-i-count_from_break) .. "\n"
 								count_from_break = count_from_break + i
 								self.font:draw(self.question_area,
 									{x = 0, y = yq, height = self.question_area_height,
 									width = self.question_area_width},
-									new_question)
-								yq = j*25
+									new_question, "center")
+								yq = 10 + j*35
 								break
 							end
 					end
 				end
 			end
 			count_from_break = 0
-			yq = 0
+			yq = 15
 		end
 
 			if new_question == "" then
@@ -337,7 +335,7 @@ function MultipleChoiceView:render(surface)
 				self.font:draw(self.question_area,
 					{x = 0, y = 0, height = self.question_area_height,
 					width = self.question_area_width},
-					new_question)
+					new_question, "center", "middle")
 			end
 
 			local button_1_text =  "A. " .. self.mult_choice_quiz.questions[self.current_question].Choices[1]
