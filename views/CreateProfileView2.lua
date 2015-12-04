@@ -98,7 +98,7 @@ function CreateProfileView2:render(surface)
 	self.button_cancel:render(self.button_cancel_surface)
 	self.button_login:render(self.button_login_surface)
 	self.button_text:draw(surface, {x=700+50, y=530+15}, "Cancel")
-	self.button_text:draw(surface, {x=980+70, y=530+15}, "Create")
+	self.button_text:draw(surface, {x=980+50, y=530+15}, "Create")
 end
 
 function CreateProfileView2:control_input()
