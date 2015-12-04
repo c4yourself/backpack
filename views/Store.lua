@@ -106,6 +106,7 @@ function Store:__init(remote_control, surface, profile)
 	-- Some fix for movement
 	--self:listen_to(event.remote_control, "button_release", function() self:dirty() end)
 	local button_render = function()
+		self.message["message"] = "Select item to purchase or sell"
 		self:render(self.surface)
 		gfx.update()
 	end
@@ -118,11 +119,11 @@ function Store:__init(remote_control, surface, profile)
 		selected_index = button.transfer_path
 		local continue = true
 
+
 		-- If we have selected on of the purchasable items
 		if selected_index <= get_size(self.items) then
 
 			self.message["message"] = self:purchase_item(selected_index)
-
 		-- Elseif we have sold one of our items
 		elseif selected_index <= (get_size(self.items) + get_size(self.backpack_items)) then
 
@@ -142,6 +143,7 @@ function Store:__init(remote_control, surface, profile)
 			end
 
 			self.item_images = self:loadItemImages()
+
 			self:render(self.surface)
 			gfx.update()
 		end
@@ -224,7 +226,6 @@ end
 -- @param surface is the surface to draw on
 function Store:render(surface)
 
-
 	-- Creates local variables for height and width
 	local height = self.surface:get_height()
 	local width = self.surface:get_width()
@@ -277,7 +278,6 @@ function Store:render(surface)
 	end
 	self.font:draw(surface, {x = 2.9*width/4, y = height/8+130}, self.message["message"])
 	--Draw header
-	self.header_font:draw(surface, {x=10,y=10}, "Store")
 
 end
 
