@@ -306,12 +306,10 @@ function MultipleChoiceView:render(surface)
 			if str_len >= 60 then
 			for j = 1, (math.ceil(str_len/60) + 1) do
 				local new_str_len = string.len(string.sub(question,(j-1) * 60 + 1 - count_from_break, str_len))
-				print ("new_stringggggg:" .. new_str_len)
 					for i = 0, 100 do
 						if string.sub(question, j*60-i-count_from_break, j*60-i-count_from_break) == " " then
 							if new_str_len < 60 then
 								new_question = string.sub(question, (j-1)*60 + 1 - count_from_break,str_len)
-									print("rad hej hej:" .. string.len(new_question))
 								self.font:draw(self.question_area,
 									{x = 0, y = yq, height = self.question_area_height,
 									width = self.question_area_width},
@@ -341,12 +339,6 @@ function MultipleChoiceView:render(surface)
 					width = self.question_area_width},
 					new_question)
 			end
-
-			--new_question = "hejhehje" .."\n" .. "ahhaah".."\n" .."hdjhdjd" .."\n"
-		--	local question1 = self.mult_choice_quiz.questions[self.current_question].question
-		--	print("hej")
-		--	print(string.len(self.mult_choice_quiz.questions[self.current_question].question))
-
 
 			local button_1_text =  "A. " .. self.mult_choice_quiz.questions[self.current_question].Choices[1]
 			local button_2_text =  "B. " .. self.mult_choice_quiz.questions[self.current_question].Choices[2]

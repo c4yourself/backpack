@@ -102,9 +102,6 @@ function CityTourView:__init(remote_control, surface, profile)
 
 -- When an answer is pressed
 	local button_click = function(button)
-		--print(self.city_tour_quiz:answer(button.text))
-		print(button.text)
-		print(self.city_tour_quiz.questions[1].correct_answers[1])
 		attractionpoint = attractionpoint + 1
 		local type = "message"
 		local message = {}
@@ -114,7 +111,6 @@ function CityTourView:__init(remote_control, surface, profile)
 			table.insert(message, "Wrong answer")
 		end
 
-		print(message)
 		local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
     local popup_view = PopUpView(remote_control,subsurface, type, message)
     self:add_view(popup_view)

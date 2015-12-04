@@ -172,9 +172,9 @@ function ProfileSynchronizer:test_hash()
 	result = server_communication(json_request, "/")
 
 	if result["error"] then
-		--print(result["message"])
+		--logger.trace(result["message"])
 	else
-		--print(result["message"])
+		--logger.trace(result["message"])
 	end
 
 end

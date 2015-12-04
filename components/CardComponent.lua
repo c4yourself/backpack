@@ -83,7 +83,6 @@ function CardComponent:render(surface)
 	end
 
 	if self:is_selected() then
-		print("IS SELECTED")
 		local margin = 0.30
 		local area = {
 			width = surface.width - 17,

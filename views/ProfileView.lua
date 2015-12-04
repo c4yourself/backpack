@@ -63,8 +63,6 @@ function ProfileView:__init(remote_control, surface, profile)
 	-- Creates local variables for height and width
 	local height = self.surface:get_height()
 	local width = self.surface:get_width()
-	--print("The height is: "..height.." and the width is: "..width)
-	-- 1152, 603, 829
 
 	-- Get the profiles backpack items
 	self.backpack_items = self.backendstore:returnBackPackItems(self.profile:get_inventory())
@@ -171,10 +169,10 @@ function ProfileView:render(surface)
 	surface:copyfrom(self.room, nil, {x=324, y = 0}, true)
 	surface:copyfrom(self.backpack, nil, {x=2*width/3, y = height - 300}, true)
 
-	-- Print the buttons
+	-- Prints the buttons
 	self.button_grid:render(surface)
 
-	-- Print the items
+	-- Prints the items
 	for i = 1, #self.item_images do
 		surface:copyfrom(self.item_images[i], nil, self.item_positions[i+1], true)
 	end
