@@ -3,7 +3,6 @@
 -- @classmod MultipleChoiceView
 local class = require("lib.classy")
 local View = require("lib.view.View")
-local MultipleChoiceView = class("MultipleChoiceView", View)
 local utils = require("lib.utils")
 local event = require("lib.event")
 local view = require("lib.view")
@@ -15,11 +14,12 @@ local Rectangle = require("lib.draw.Rectangle")
 local SubSurface = require("lib.view.SubSurface")
 local ButtonGrid = require("components.ButtonGrid")
 local Button = require("components.Button")
-local MultipleChoiceGrid = require("lib.components.MultipleChoiceGrid")
-local NumericalQuizGrid = require("lib.components.NumericalQuizGrid")
+local MultipleChoiceGrid = require("components.MultipleChoiceGrid")
 local ToggleButton = require("components.ToggleButton")
 local ExperienceCalculation = require("lib.scores.experiencecalculation")
 local PopUpView = require("views.PopUpView")
+
+local MultipleChoiceView = class("MultipleChoiceView", View)
 
 --- Constructor for MultipleChoiceView
 function MultipleChoiceView:__init(remote_control, subsurface, profile)

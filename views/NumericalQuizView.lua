@@ -4,7 +4,6 @@
 local NumericalInputComponent = require("components.NumericalInputComponent")
 local class = require("lib.classy")
 local View = require("lib.view.View")
-local NumericQuizView = class("NumericQuizView", View)
 local utils = require("lib.utils")
 local event = require("lib.event")
 local view = require("lib.view")
@@ -13,10 +12,12 @@ local NumericQuestion = require("lib.quiz.NumericQuestion")
 local SubSurface = require("lib.view.SubSurface")
 local Color = require("lib.draw.Color")
 local Font = require("lib.draw.Font")
-local NumericalQuizGrid = require("lib.components.NumericalQuizGrid")
+local NumericalQuizGrid = require("components.NumericalQuizGrid")
 local Button = require("components.Button")
 local ExperienceCalculation = require("lib.scores.experiencecalculation")
 local PopUpView = require("views.PopUpView")
+
+local NumericQuizView = class("NumericQuizView", View)
 
 --- Constructor for NumericQuizView
 -- @param remote_control
