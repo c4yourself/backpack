@@ -3,7 +3,6 @@
 -- @classmod MultipleChoiceGrid
 
 local class = require("lib.classy")
-local button = require("lib.components.Button")
 local NumericalQuizGrid = require("lib.components.NumericalQuizGrid")
 local MultipleChoiceGrid = class("MultipleChoiceGrid", NumericalQuizGrid)
 local SubSurface = require("lib.view.SubSurface")

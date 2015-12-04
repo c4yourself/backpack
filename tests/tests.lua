@@ -45,6 +45,7 @@ TestMemory = require("test_memory")
 TestExperienceCalculation = require("test_experiencecalculation")
 TestCity = require("test_City")
 TestCountry = require("test_Country")
+TestItem = require("test_item")
 --Mocks
 TestTimerMock = require("mocks.test_mock_TimerMock")
 TestGfxMock = require("mocks.test_mock_GfxMock")

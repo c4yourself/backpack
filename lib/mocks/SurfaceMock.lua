@@ -44,8 +44,6 @@ function SurfaceMock:fill(color, rectangle)
 	local h = math.floor(rect.y + rect.height - 1)
 	for i = rect.x, w do
 		for j = rect.y, h do
-			--print("this is i: " .. i)
-			--print("this is j: " .. j)
 			self.pixels[i][j] = self.pixels[i][j]:blend(c)
 		end
 	end

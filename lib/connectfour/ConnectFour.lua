@@ -374,12 +374,10 @@ function ConnectFour:computer_AI(x_column)
 	--check if there's three in a row
 --[[	for i = 1, 7 do
 		local row = self:get_current_row(i)
-		print("before check three " .. i .. row)
 
 		if row > 0 then
 		local make_move = self:_check_three_in_a_column(row, i)
 			if make_move == true then
-				print("column from check_three")
 				return i
 			end
 		end
@@ -388,7 +386,6 @@ function ConnectFour:computer_AI(x_column)
 
 --[[	local make_move2 = self:_check_three_in_a_row(row)
 	if make_move2 ~= nil then
-		print("tre i rad")
 		return make_move2
 	end ]]--
 

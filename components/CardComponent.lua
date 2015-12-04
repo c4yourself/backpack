@@ -4,7 +4,7 @@
 
 local class = require("lib.classy")
 local View = require("lib.view.View")
-local Button = require("lib.components.Button")
+local Button = require("components.Button")
 local CardComponent = class("CardComponent", Button)
 local event = require("lib.event")
 local utils = require("lib.utils")
@@ -47,6 +47,10 @@ function CardComponent:__init(current_city, i, color, color_selected, color_disa
 		self.memory_img = gfx.loadpng("data/images/memory_pictures/generic/memory_plane.png")
 	elseif i == 8 then
 		self.memory_img = gfx.loadpng("data/images/memory_pictures/generic/memory_train.png")
+	elseif i == 9 then
+		self.memory_img = gfx.loadpng("data/images/memory_pictures/generic/memory_dog.png")
+	elseif i == 10 then
+		self.memory_img = gfx.loadpng("data/images/memory_pictures/generic/memory_bat.png")
 	end
 	--
 	-- if i == 1  or i == 6 then
@@ -69,6 +73,7 @@ end
 function CardComponent:render(surface)
 	self:dirty(false)
 	if self.status == "FACING_UP" then
+		surface:fill(self.backside_color:to_table())
 		surface:copyfrom(self.memory_img)
 	elseif self.status == "FACING_DOWN" then
 		surface:fill(self.backside_color:to_table())

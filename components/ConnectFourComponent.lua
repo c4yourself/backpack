@@ -11,8 +11,6 @@ local subsurface = require("lib.view.SubSurface")
 local area = require("lib.draw.Rectangle")
 local font = require("lib.draw.Font")
 local color = require("lib.draw.Color")
-local button = require("lib.components.Button")
-local button_grid	=	require("lib.components.ButtonGrid")
 local PopUpView = require("views.PopUpView")
 local SubSurface = require("lib.view.SubSurface")
 local ExpCalc = require("lib.scores.experiencecalculation")
@@ -28,7 +26,6 @@ function ConnectFourComponent:__init(remote_control, subsurface, profile)
 	self.profile = profile
 	self.connectfour = ConnectFour()
 	self.current_column = 4
-	print("focus i init")
 	self:focus()
 
 	-- self:listen_to(
@@ -62,7 +59,6 @@ function ConnectFourComponent:press(key)
 	elseif key == "ok" then
 
 		self.connectfour:move(self.connectfour:get_player(), self.current_column)
-		print("blur i press ok")
 		self:blur()
 		--self:stop_listening(event.remote_control)
 		self:dirty()
@@ -96,7 +92,6 @@ end
 -- @param width_coinbox, width of a single coinbox
 -- @param height_coinbox, height of a single coinbox
 function ConnectFourComponent:top_row(surface, column, width_coinbox, height_coinbox)
-	print("toprow")
 	local posx = 0.35*surface:get_width()
 	local posy = 0.1*surface:get_height() - 0.5*height_coinbox
 	local current_color = {r = 0, g = 0, b = 0}
@@ -139,7 +134,7 @@ function ConnectFourComponent:render(surface)
 
 	self:top_row(surface, self.current_column, width_coinbox, height_coinbox)
 
-	--print the board
+	--prints the board
 	for i = 1, 6 do
 		local posx = 0.35*surface:get_width()
     for j = 1, 7 do
@@ -162,7 +157,7 @@ function ConnectFourComponent:render(surface)
 	local f = font("data/fonts/DroidSans.ttf", 16, color(255, 128, 0, 255))
 	local target1 = area(0.05*surface:get_width(),0.9*surface:get_height()-1.5*height_coinbox, 300, 60)
 	surface:clear(color(255, 255, 255, 255):to_table(), target1:to_table())
-	f:draw(surface, target1:to_table(), "Back to City View, press Return", "center", "middle")
+	f:draw(surface, target1:to_table(), "Back to city, press Exit", "center", "middle")
 
 	--heading
 	local heading = font("data/fonts/DroidSans.ttf", 32, color(255, 128, 0, 255))

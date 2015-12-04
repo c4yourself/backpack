@@ -10,9 +10,6 @@ end
 function TestProfile:test_get_name()
 	luaunit.assertEquals(self.profile:get_name(),"HuanyuLi")
 end
-function TestProfile:test_get_profile_name()
-	luaunit.assertEquals(self.profile:get_profile_name(),"lodon__lihuanyuasas@163.com")
-end
 function TestProfile:test_get_email_address()
 	luaunit.assertEquals(self.profile:get_email_address(),"lihuanyuasas@163.com")
 end
