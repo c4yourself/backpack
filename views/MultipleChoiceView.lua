@@ -293,39 +293,58 @@ function MultipleChoiceView:render(surface)
 			-- Draw question
 			local question_nr = self.current_question .. ". "
 			local question = self.mult_choice_quiz.questions[self.current_question].question
-			-- local new_question = ""
-			-- local new_question1 = nil
-			-- local new_question2 = nil
-			-- local str_len = string.len(question)
-			--
-			-- for j = 1, math.ceil(str_len/60) do
-			-- 	local new_str_len = string.len(string.sub(question,(j-1) * 60 + 1,j * 60))
-			-- 	if new_str_len >= 60 then
-			-- 		print("detta j"..j)
-			-- 		for i = 1, 60 do
-			-- 				if string.sub(question, j*60-i, j*60-i) == " " then
-			-- 					if j == math.ceil(str_len/60) then
-			-- 					new_question = new_question .. string.sub(question, j*60-i,str_len)
-			-- 					break
-			-- 					else
-			-- 					new_question = new_question .. string.sub(question,(j-1)*60+1,j*60-i-1) .. "\n"
-			-- 					break
-			-- 					end
-			-- 				end
-			-- 		end
-			-- 	end
-			-- end
+			local new_question = ""
+			local new_question1 = nil
+			local new_question2 = nil
+			local str_len = string.len(question)
+			local count_from_break = 0
+			local yq = 0
 
-			-- if new_question == "" then
-			-- 	new_question = question
-			-- end
+			-- If the question is too long, this is where it is printed in several lines
+			if str_len >= 60 then
+			for j = 1, (math.ceil(str_len/60) + 1) do
+				local new_str_len = string.len(string.sub(question,(j-1) * 60 + 1 - count_from_break, str_len))
+				print ("new_stringggggg:" .. new_str_len)
+					for i = 0, 100 do
+						if string.sub(question, j*60-i-count_from_break, j*60-i-count_from_break) == " " then
+							if new_str_len < 60 then
+								new_question = string.sub(question, (j-1)*60 + 1 - count_from_break,str_len)
+									print("rad hej hej:" .. string.len(new_question))
+								self.font:draw(self.question_area,
+									{x = 0, y = yq, height = self.question_area_height,
+									width = self.question_area_width},
+									new_question)
+								break
+							else
+								new_question = string.sub(question,(j-1)*60+1-count_from_break,j*60-i-count_from_break) .. "\n" --new_question .. string.sub(question,(j-1)*60+1-count_from_break,j*60-i-1) .. "\n"
+								count_from_break = count_from_break + i
+								self.font:draw(self.question_area,
+									{x = 0, y = yq, height = self.question_area_height,
+									width = self.question_area_width},
+									new_question)
+								yq = j*25
+								break
+							end
+					end
+				end
+			end
+			count_from_break = 0
+			yq = 0
+		end
+
+			if new_question == "" then
+				new_question = question
+				self.font:draw(self.question_area,
+					{x = 0, y = 0, height = self.question_area_height,
+					width = self.question_area_width},
+					new_question)
+			end
+
+			--new_question = "hejhehje" .."\n" .. "ahhaah".."\n" .."hdjhdjd" .."\n"
 		--	local question1 = self.mult_choice_quiz.questions[self.current_question].question
 		--	print("hej")
 		--	print(string.len(self.mult_choice_quiz.questions[self.current_question].question))
-			self.font:draw(self.question_area,
-				{x = 0, y = 0, height = self.question_area_height,
-				width = self.question_area_width},
-				question_nr .. question, "center", "middle")
+
 
 			local button_1_text =  "A. " .. self.mult_choice_quiz.questions[self.current_question].Choices[1]
 			local button_2_text =  "B. " .. self.mult_choice_quiz.questions[self.current_question].Choices[2]
