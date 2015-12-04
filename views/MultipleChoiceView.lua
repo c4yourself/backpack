@@ -17,7 +17,7 @@ local ButtonGrid = require("components.ButtonGrid")
 local Button = require("components.Button")
 local MultipleChoiceGrid = require("lib.components.MultipleChoiceGrid")
 local NumericalQuizGrid = require("lib.components.NumericalQuizGrid")
-local ToggleButton = require("lib.components.ToggleButton")
+local ToggleButton = require("components.ToggleButton")
 local ExperienceCalculation = require("lib.scores.experiencecalculation")
 local PopUpView = require("views.PopUpView")
 
