@@ -2,6 +2,7 @@
 
 local class = require("lib.classy")
 local Color = require("lib.draw.Color")
+local cities = require("lib.city")
 local Font = require("lib.draw.Font")
 local View = require("lib.view.View")
 local utils = require("lib.utils")
@@ -17,10 +18,11 @@ local city = require("lib.city")
 local TravelView = class("TravelView", View)
 
 
-function TravelView:__init(remote_control)
+function TravelView:__init(remote_control, surface, profile)
 	View.__init(self)
 
-	self.city = city.cities.paris
+	self.profile = profile
+	self.city = profile:get_city()
 	self.routes = self.city.travel_routes
 
 	self.font = Font("data/fonts/DroidSans.ttf", 20, Color(65, 70, 72, 255))
@@ -54,8 +56,9 @@ function TravelView:__init(remote_control)
 
 		if i == 1 then
 			list_item:select()
-	  end
-			self.list_comp:add_list_item(list_item)
+		end
+
+		self.list_comp:add_list_item(list_item)
 	end
 
 	local callback = utils.partial(self._travel, self)
@@ -130,16 +133,17 @@ function TravelView:_travel(button)
 	if button == "ok" then
 		self:stop_listening(event.remote_control)
 
-		--local wm = WorldMap()
+		-- Find index of currently selected travel route
 		local index
-
 		for i = 1, #self.list_comp.item_list, 1 do
 			if self.list_comp.item_list[i]._selected == true then
 				index = i
+				break
 			end
 		end
 
-		local dest = self.list_comp.item_list[index].text_left
+		-- Find destination city index based on selected city
+		local destination = city.cities[self.city.travel_routes[index][1]]
 
 		local transportation = self.list_comp.item_list[index].icon
 
@@ -151,8 +155,10 @@ function TravelView:_travel(button)
 			transportation = "train"
 		end
 
-		--wm:render(screen, "paris", dest, transportation, cvc)
-
+		local world_map = WorldMap(
+			self.profile, destination, transportation, view.view_manager)
+		view.view_manager:set_view(world_map)
+		world_map:start()
 	elseif button == "4" then
 		self:stop_listening(event.remote_control)
 		local city_view_copy = require("views.CityViewCopy")
