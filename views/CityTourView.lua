@@ -100,30 +100,54 @@ function CityTourView:__init(remote_control, surface, profile)
 		gfx.update()
 	end
 
---	table.remove(order_table[random_order],#order_table[random_order])
-	local button_click = function()
-
+-- When an answer is pressed
+	local button_click = function(button)
+		--print(self.city_tour_quiz:answer(button.text))
+		print(button.text)
+		print(self.city_tour_quiz.questions[1].correct_answers[1])
 		attractionpoint = attractionpoint + 1
-
-		if table.getn(attractions.attraction[self.city.code]) == attractionpoint then
---	if #order_table[random_order] == 0 then
-			self:trigger("exit_view")
+		local type = "message"
+		local message = {}
+		if self.city_tour_quiz.questions[1].Choices[self.city_tour_quiz.questions[1].correct_answers[1]] == button.text then
+			table.insert(message, "Correct answer")
 		else
-
-			self.city_tour_quiz.questions[1] = nil
-			-- Generate a new quiz for the city tour
-			
-			self.city_tour_quiz:generate_citytour_quiz(self.profile:get_current_city(), tostring(attractionpoint))
-		--	attractionpoint = order_table[random_order][#order_table[random_order]]
-
-			button_1:set_textdata(self.city_tour_quiz.questions[1].Choices[1], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
-			button_2:set_textdata(self.city_tour_quiz.questions[1].Choices[2], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
-			button_3:set_textdata(self.city_tour_quiz.questions[1].Choices[3], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
-			button_4:set_textdata(self.city_tour_quiz.questions[1].Choices[4], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
-		--	table.remove(order_table[random_order],#order_table[random_order])
-			self:render(surface)
-			gfx.update()
+			table.insert(message, "Wrong answer")
 		end
+
+		print(message)
+		local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
+    local popup_view = PopUpView(remote_control,subsurface, type, message)
+    self:add_view(popup_view)
+    self.buttonGrid:blur()
+
+    local button_click_func = function(button)
+      if button == "ok" then
+      	popup_view:destroy()
+      	self.buttonGrid:focus()
+				if table.getn(attractions.attraction[self.city.code]) == attractionpoint then
+
+					self:trigger("exit_view")
+				else
+					self.city_tour_quiz.questions[1] = nil
+					self.city_tour_quiz:generate_citytour_quiz(self.profile:get_current_city(), tostring(attractionpoint))
+					button_1:set_textdata(self.city_tour_quiz.questions[1].Choices[1], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
+					button_2:set_textdata(self.city_tour_quiz.questions[1].Choices[2], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
+					button_3:set_textdata(self.city_tour_quiz.questions[1].Choices[3], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
+					button_4:set_textdata(self.city_tour_quiz.questions[1].Choices[4], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
+					self:render(surface)
+					gfx.update()
+				end
+    	end
+    end
+
+    self:listen_to_once(popup_view, "button_click", button_click_func)
+    popup_view:render(subsurface)
+    gfx.update()
+
+
+
+
+
 	end
 
 	self:listen_to(
