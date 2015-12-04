@@ -6,16 +6,17 @@ local utils = require("lib.utils")
 local event = require("lib.event")
 local view = require("lib.view")
 local SubSurface = require("lib.view.SubSurface")
-local button= require("lib.components.Button")
-local button_grid=require("lib.components.ButtonGrid")
-local CityTourView = class("CityTourView", View)
+local Button = require("components.Button")
+local ButtonGrid = require("components.ButtonGrid")
 local attractions  = require("lib.attractions")
 local PopUpView = require("views.PopUpView")
 local Quiz = require("lib.quiz.Quiz")
 
+local CityTourView = class("CityTourView", View)
+
 function CityTourView:__init(remote_control, surface, profile)
 	View.__init(self)
-	self.buttonGrid = button_grid(remote_control)
+	self.buttonGrid = ButtonGrid(remote_control)
 	self.city = profile:get_city()
 	self.profile = profile
 	self.city_tour_quiz = Quiz()
@@ -61,10 +62,10 @@ function CityTourView:__init(remote_control, surface, profile)
 --	self.tour_attraction_image = gfx.loadpng(attractions.attraction.paris[1].pic_url)
 
 	-- Create answer buttons
-	local button_1 = button(button_color, color_selected, color_disabled,true, true, "Correct")
-	local button_2 = button(button_color, color_selected, color_disabled,true, false, "False")
-	local button_3 = button(button_color, color_selected, color_disabled,true, false, "False")
-	local button_4 = button(button_color, color_selected, color_disabled,true, false, "False")
+	local button_1 = Button(button_color, color_selected, color_disabled,true, true, "Correct")
+	local button_2 = Button(button_color, color_selected, color_disabled,true, false, "False")
+	local button_3 = Button(button_color, color_selected, color_disabled,true, false, "False")
+	local button_4 = Button(button_color, color_selected, color_disabled,true, false, "False")
 
 	-- Create text on buttons
 	-- X and y values are not used!

@@ -8,13 +8,13 @@
 local class = require("lib.classy")
 local view = require("lib.view")
 local View = require("lib.view.View")
-local button = require("lib.components.Button")
-local ButtonGrid = class("ButtonGrid",View)
 local SubSurface = require("lib.view.SubSurface")
 local utils = require("lib.utils")
 local event = require("lib.event")
 local Font = require("lib.draw.Font")
 local Color = require("lib.draw.Color")
+
+local ButtonGrid = class("ButtonGrid", View)
 
 --- Constructor for ButtonGrid
 function ButtonGrid:__init(remote_control)

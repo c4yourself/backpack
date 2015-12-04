@@ -4,7 +4,6 @@ local class = require("lib.classy")
 local View = require("lib.view.View")
 local view = require("lib.view")
 local event = require("lib.event")
-local Store = class("Store", view.View)
 local BackEndStore = require("lib.store.BackEndStore")
 local Profile = require("lib.profile.Profile")
 local event = require("lib.event")
@@ -13,9 +12,11 @@ local utils = require("lib.utils")
 local SubSurface = require("lib.view.SubSurface")
 local Color = require("lib.draw.Color")
 local Font = require("lib.draw.Font")
-local Button = require("lib.components.Button")
-local ButtonGrid=require("lib.components.ButtonGrid")
+local Button = require("components.Button")
+local ButtonGrid=require("components.ButtonGrid")
 local ProfileManager = require("lib.profile.ProfileManager")
+
+local Store = class("Store", view.View)
 
 -- Get size of Table
 -- @param a Is the table to get ther size of

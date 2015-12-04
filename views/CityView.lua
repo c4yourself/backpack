@@ -3,8 +3,8 @@
 -- to numerical input on the remote.
 -- @classmod CityView
 
-local Button = require("lib.components.Button")
-local ButtonGrid=require("lib.components.ButtonGrid")
+local Button = require("components.Button")
+local ButtonGrid = require("components.ButtonGrid")
 local class = require("lib.classy")
 local CityTourView = require("views.CityTourView")
 local Color = require("lib.draw.Color")
