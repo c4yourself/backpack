@@ -1,7 +1,7 @@
 --- An area (pixmap) in graphics memory.
 --
 -- Part of Zenterio Lua API.  Color format is 32-bit RGBA. Surfaces are
--- constructed using @{emulator.gfx:new_surface|gfx:new_surface}.
+-- constructed using @{emulator.gfx.new_surface|gfx.new_surface}.
 --
 -- @classmod emulator.surface
 -- @alias surface
