@@ -102,14 +102,16 @@ end
 --
 -- @param src_surface Surface to copy pixels from.
 -- @param src_rectangle Source rectangle on surface to copy from. Defaults to
---                      entire surface.
+--                      entire surface. Omitted area will be cropped.
 -- @param dest_rectangle Destination rectangle on this surface to copy to.
 --                       Defaults src_rectangle's width and height at position
 --                       {x = 0, y = 0}.
 -- @param blend_option true if alpha blending should occur, otherwise false.
+--                     Default is false.
 -- @zenterio
 function surface:copyfrom(src_surface, src_rectangle, dest_rectangle, blend_option)
 	local source_rectangle = src_surface:_get_rectangle(src_rectangle)
+	print(source_rectangle.width, source_rectangle.height)
 	local destination_rectangle = self:_get_rectangle(dest_rectangle, {
 		width = source_rectangle.width, height = source_rectangle.height
 	})
@@ -120,25 +122,44 @@ function surface:copyfrom(src_surface, src_rectangle, dest_rectangle, blend_opti
 	local canvas = love.graphics.newCanvas(
 		self.image_data:getWidth(), self.image_data:getHeight())
 
+	-- Calculate Quad of source surface to draw (normally entire surface)
+	local cropping = love.graphics.newQuad(
+		source_rectangle.x,
+		source_rectangle.y,
+		source_rectangle.width,
+		source_rectangle.height,
+		src_surface:get_width(),
+		src_surface:get_height())
+
+	-- Determine draw function to use. Compatibility with Love 0.8
+	local drawq = love.graphics.draw
+	if love.graphics.drawq then
+		drawq = love.graphics.drawq
+	end
+
 	canvas:renderTo(function()
 		-- Set blend mode to premultiplied to make alpha transparency work
 		-- correctly. If left to alpha transparent pixels will darken for every
 		-- call to :copyfrom.
 		love.graphics.setBlendMode("premultiplied")
 		love.graphics.draw(love.graphics.newImage(self.image_data))
-		love.graphics.setBlendMode("alpha")
 
-		if blend_option ~= false then
+		if blend_option then
 			love.graphics.setBlendMode("alpha")
 		else
-			if not pcall(love.graphics.setBlendMode, "replace") then
-				logger.warn(
-					"Replace blend mode not supported by this version of Love")
-			end
+			-- Clear pixels where target will be drawn
+			love.graphics.setScissor(
+				destination_rectangle.x,
+				destination_rectangle.y,
+				destination_rectangle.width,
+				destination_rectangle.height)
+			love.graphics.clear()
+			love.graphics.setScissor()
 		end
 
-		love.graphics.draw(
+		drawq(
 			love.graphics.newImage(src_surface.image_data),
+			cropping,
 			destination_rectangle.x,
 			destination_rectangle.y,
 			0,
