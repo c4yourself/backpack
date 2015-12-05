@@ -78,7 +78,7 @@ function Store:__init(remote_control, surface, profile)
 	self.font = Font("data/fonts/DroidSans.ttf", 20, Color(255, 255, 255, 255))
 	self.header_font = Font("data/fonts/DroidSans.ttf", 40, Color(255,255,255,255))
 	self.buttons[k] = Button(self.button_inactive, self.button_active, self.button_inactive, true, false, k)
-	self.buttons[k]:set_textdata("Exit",Color(255,255,255,255), {x = 100, y = 300}, 30, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	self.buttons[k]:set_textdata("Back to City",Color(255,255,255,255), {x = 100, y = 300}, 30, utils.absolute_path("data/fonts/DroidSans.ttf"))
 
 	-- Add them to button grid at the correct place
 	row = 1
@@ -103,7 +103,7 @@ function Store:__init(remote_control, surface, profile)
 	self.item_images = self:loadItemImages()
 
 	-- Add exit button
-	self.button_grid:add_button({x = width/6,y = height-60}, {width = 6*width/45,height = 2*width/45}, self.buttons[k])
+	self.button_grid:add_button({x = width/6,y = height-60}, {width = 8*width/45,height = 2*width/45}, self.buttons[k])
 
 	-- Add to view
 	self.add_view(self.button_grid, false)
