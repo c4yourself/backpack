@@ -166,15 +166,19 @@ function ConnectFourComponent:render(surface)
 
 	--text player + yellow box
 	local text_player = font("data/fonts/DroidSans.ttf", 22, color(255, 255, 51, 255))
-	local target3 = area(0.05*surface:get_width(),0.5*surface:get_height()-2*height_coinbox, 200, 60)
+	local target3 = area(0.05*surface:get_width(),0.5*surface:get_height()-3*height_coinbox, 200, 60)
 	text_player:draw(surface, target3:to_table(), "Player")
-		surface:clear(coin_color_player, {x=0.055*surface:get_width(), y=0.5*surface:get_height()-1.5*height_coinbox, width = width_coinbox, height = height_coinbox})
+		surface:clear(coin_color_player, {x=0.055*surface:get_width(), y=0.5*surface:get_height()-2.5*height_coinbox, width = width_coinbox, height = height_coinbox})
+			-- make box to a coin
+	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect_four/player_coin_cover.png")),nil,{x=0.055*surface:get_width(), y=0.5*surface:get_height()-2.5*height_coinbox, width = width_coinbox, height = height_coinbox}, true)
 
 	--text compunter + red box
 	local text_computer = font("data/fonts/DroidSans.ttf", 22, color(255, 0, 0, 255))
-	local target4 = area(0.05*surface:get_width(),0.5*surface:get_height()+0.1*height_coinbox, 200, 60)
+	local target4 = area(0.05*surface:get_width(),0.5*surface:get_height()-0.9*height_coinbox, 200, 60)
 	text_computer:draw(surface, target4:to_table(), "Computer")
-	surface:clear(coin_color_computer, {x=0.055*surface:get_width(), y=0.5*surface:get_height()+0.5*height_coinbox+8, width = width_coinbox, height = height_coinbox})
+	surface:clear(coin_color_computer, {x=0.055*surface:get_width(), y=0.5*surface:get_height()-0.5*height_coinbox+8, width = width_coinbox, height = height_coinbox})
+			-- make box to a coin
+	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect_four/player_coin_cover.png")),nil,{x=0.055*surface:get_width(), y=0.5*surface:get_height()-0.5*height_coinbox+8, width = width_coinbox, height = height_coinbox}, true)
 
 	--insert picture over board
 	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect_four/connect4board.png")),nil,{x=posx_constant, y=posy_constant, width = 7*width_coinbox, height = 6*height_coinbox}, true)
