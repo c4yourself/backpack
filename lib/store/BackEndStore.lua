@@ -67,6 +67,9 @@ function BackEndStore:__init()
 
 end
 
+
+--- Function for returning the items relevant for a city
+-- @param city The city for which items are to be returned
 function BackEndStore:returnItemList(city)
 	local ret_list = {}
 	local count = 1
@@ -81,12 +84,17 @@ function BackEndStore:returnItemList(city)
 	return ret_list
 end
 
+--- Function to get the price for an item for another city in a given city
+-- @param item The item at hand
+-- @param curr_city THe city the item can be sold in
 function BackEndStore:returnOfferPrice(item, curr_city)
 	multiplier = self.city_multiplier[self.city_list[item:get_city()]][self.city_list[curr_city]]
 
 	return item:get_price()*multiplier
 end
 
+--- Function to return an item based on its ID
+--  @param id The item ID code
 function BackEndStore:returnItem(id)
 	local i = 1
 	while i <= get_size(self.item_list) do
@@ -98,6 +106,8 @@ function BackEndStore:returnItem(id)
 	return error("Trying to find non-existing item")
 end
 
+--- Function that returns the item instances corresponding to an inventory
+-- @param inventory The inventory to return items for
 function BackEndStore:returnBackPackItems(inventory)
 	local i = 1
 	local j = 1
