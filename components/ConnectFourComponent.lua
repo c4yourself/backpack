@@ -155,9 +155,9 @@ function ConnectFourComponent:render(surface)
 
 	--Back to city button
 	local f = font("data/fonts/DroidSans.ttf", 16, color(255, 128, 0, 255))
-	local target1 = area(0.05*surface:get_width(),0.9*surface:get_height()-1.5*height_coinbox, 300, 60)
+	local target1 = area(0.05*surface:get_width(),0.9*surface:get_height()-2.0*height_coinbox, 250, 90)
 	surface:clear(color(255, 255, 255, 255):to_table(), target1:to_table())
-	f:draw(surface, target1:to_table(), "Back to city, press Exit", "center", "middle")
+	f:draw(surface, target1:to_table(), "Press Exit to go back to City", "center", "middle")
 
 	--heading
 	--local heading = font("data/fonts/DroidSans.ttf", 32, color(255, 128, 0, 255))
