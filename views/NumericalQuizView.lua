@@ -287,15 +287,15 @@ function NumericQuizView:render(surface)
 			if self.progress_table[i] == true then
 				bar_component_color = Color(0,255,0,255)
 				progress_bar_component_color:clear(bar_component_color:to_table())
-				progress_bar_component_pic:copyfrom(self.answer_correct)
+				progress_bar_component_pic:copyfrom(self.answer_correct, nil, nil, true)
 			elseif self.progress_table[i] == false then
 				bar_component_color = Color(255,0,0,255)
 				progress_bar_component_color:clear(bar_component_color:to_table())
-				progress_bar_component_pic:copyfrom(self.answer_false)
+				progress_bar_component_pic:copyfrom(self.answer_false, nil, nil, true)
 			else
 				bar_component_color = Color(0, 0, 0, 50)
 				progress_bar_component_color:clear(bar_component_color:to_table())
-				progress_bar_component_pic:copyfrom(self.answer_nil)
+				progress_bar_component_pic:copyfrom(self.answer_nil, nil, nil, true)
 			end
 
 			bar_component_y = bar_component_y + progress_bar_margin +

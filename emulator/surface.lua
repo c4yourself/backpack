@@ -111,7 +111,6 @@ end
 -- @zenterio
 function surface:copyfrom(src_surface, src_rectangle, dest_rectangle, blend_option)
 	local source_rectangle = src_surface:_get_rectangle(src_rectangle)
-	print(source_rectangle.width, source_rectangle.height)
 	local destination_rectangle = self:_get_rectangle(dest_rectangle, {
 		width = source_rectangle.width, height = source_rectangle.height
 	})

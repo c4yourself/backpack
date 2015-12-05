@@ -262,21 +262,21 @@ function CityView:render(surface)
 	city_view_small_font:draw(surface, {x=width-100, y=15}, city.country:format_balance(self.profile.balance)) -- Profile cash
 	city_view_large_font:draw(surface, {x=width/2, y=15}, self.profile:get_city().name, center) -- City name
 
-	surface:copyfrom(self.images.coin, nil, {x = width-145, y = 10, width = 30, height = 30}) -- Coin
+	surface:copyfrom(self.images.coin, nil, {x = width-145, y = 10, width = 30, height = 30}, true) -- Coin
 
  	-- using the button grid to render all buttons and texts
 	self.button_grid:render(surface)
 
 	--surface:copyfrom(self.images.paris_selected, nil, {x = width/3, y = 0, width=width*2/3, height=height})
 	local icon_indent = 3
-	surface:copyfrom(self.images.multiple_choice_icon, nil, {x = self.button_grid.button_list[1].x + icon_indent, y = self.button_grid.button_list[1].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent})
-	surface:copyfrom(self.images.math_icon, nil, {x = self.button_grid.button_list[2].x + icon_indent, y = self.button_grid.button_list[2].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent})
-	surface:copyfrom(self.images.memory_icon, nil, {x = self.button_grid.button_list[3].x + icon_indent, y = self.button_grid.button_list[3].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent})
-	surface:copyfrom(self.images.four_in_a_row_icon, nil, {x = self.button_grid.button_list[4].x + icon_indent, y = self.button_grid.button_list[4].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent})
-	surface:copyfrom(self.images.store_icon, nil, {x = self.button_grid.button_list[5].x + icon_indent, y = self.button_grid.button_list[5].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent})
-	surface:copyfrom(self.images.user_icon, nil, {x = self.button_grid.button_list[6].x + icon_indent, y = self.button_grid.button_list[6].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent})
-	surface:copyfrom(self.images.flight_icon, nil, {x = self.button_grid.button_list[7].x + icon_indent, y = self.button_grid.button_list[7].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent})
-	surface:copyfrom(self.images.exit_icon, nil, {x = self.button_grid.button_list[8].x + icon_indent, y = self.button_grid.button_list[8].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent})
+	surface:copyfrom(self.images.multiple_choice_icon, nil, {x = self.button_grid.button_list[1].x + icon_indent, y = self.button_grid.button_list[1].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent}, true)
+	surface:copyfrom(self.images.math_icon, nil, {x = self.button_grid.button_list[2].x + icon_indent, y = self.button_grid.button_list[2].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent}, true)
+	surface:copyfrom(self.images.memory_icon, nil, {x = self.button_grid.button_list[3].x + icon_indent, y = self.button_grid.button_list[3].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent}, true)
+	surface:copyfrom(self.images.four_in_a_row_icon, nil, {x = self.button_grid.button_list[4].x + icon_indent, y = self.button_grid.button_list[4].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent}, true)
+	surface:copyfrom(self.images.store_icon, nil, {x = self.button_grid.button_list[5].x + icon_indent, y = self.button_grid.button_list[5].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent}, true)
+	surface:copyfrom(self.images.user_icon, nil, {x = self.button_grid.button_list[6].x + icon_indent, y = self.button_grid.button_list[6].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent}, true)
+	surface:copyfrom(self.images.flight_icon, nil, {x = self.button_grid.button_list[7].x + icon_indent, y = self.button_grid.button_list[7].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent}, true)
+	surface:copyfrom(self.images.exit_icon, nil, {x = self.button_grid.button_list[8].x + icon_indent, y = self.button_grid.button_list[8].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent}, true)
 
 	self:dirty(false)
 end

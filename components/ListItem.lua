@@ -35,7 +35,7 @@ function ListItem:render(surface)
 
 		self.font_highlight:draw(surface, self.text_position_right, tostring(self.money))
 		surface:copyfrom(gfx.loadpng(self.icon), nil, {x=15, y=(surface:get_height()/2)-(icon_height/2),
-			width=40, height=icon_height})
+			width=40, height=icon_height}, true)
 
 	else
 		surface:clear({r=255, g=150, b=0, a=255})
@@ -43,7 +43,7 @@ function ListItem:render(surface)
 		self.font:draw(surface, self.text_position_right, tostring(self.money))
 
 		surface:copyfrom(gfx.loadpng(self.icon), nil, {x=15, y=(surface:get_height()/2)-(icon_height/2),
-			width=40, height=icon_height})
+			width=40, height=icon_height}, true)
 
 end
 

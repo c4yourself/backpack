@@ -177,8 +177,8 @@ function ConnectFourComponent:render(surface)
 	surface:clear(coin_color_computer, {x=0.055*surface:get_width(), y=0.5*surface:get_height()+0.5*height_coinbox+8, width = width_coinbox, height = height_coinbox})
 
 	--insert picture over board
-	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect4board.png")),nil,{x=posx_constant, y=posy_constant, width = 7*width_coinbox, height = 6*height_coinbox})
-	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect4toprow.png")),nil,{x=posx_constant, y=0.1*surface:get_height() - 0.5*height_coinbox, width = 7*width_coinbox, height = height_coinbox})
+	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect4board.png")),nil,{x=posx_constant, y=posy_constant, width = 7*width_coinbox, height = 6*height_coinbox}, true)
+	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect4toprow.png")),nil,{x=posx_constant, y=0.1*surface:get_height() - 0.5*height_coinbox, width = 7*width_coinbox, height = height_coinbox}, true)
 
 
 	if self.connectfour:_is_full_board() then
