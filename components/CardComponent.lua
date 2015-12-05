@@ -4,7 +4,7 @@
 
 local class = require("lib.classy")
 local View = require("lib.view.View")
-local Button = require("lib.components.Button")
+local Button = require("components.Button")
 local CardComponent = class("CardComponent", Button)
 local event = require("lib.event")
 local utils = require("lib.utils")
@@ -74,16 +74,15 @@ function CardComponent:render(surface)
 	self:dirty(false)
 	if self.status == "FACING_UP" then
 		surface:fill(self.backside_color:to_table())
-		surface:copyfrom(self.memory_img)
+		surface:copyfrom(self.memory_img, nil, nil, true)
 	elseif self.status == "FACING_DOWN" then
 		surface:fill(self.backside_color:to_table())
-		surface:copyfrom(self.from_img)
+		surface:copyfrom(self.from_img, nil, nil, true)
 	elseif not self:is_enabled() then
 		surface:fill(self.color_disabled:to_table())
 	end
 
 	if self:is_selected() then
-		print("IS SELECTED")
 		local margin = 0.30
 		local area = {
 			width = surface.width - 17,

@@ -4,7 +4,6 @@
 local NumericalInputComponent = require("components.NumericalInputComponent")
 local class = require("lib.classy")
 local View = require("lib.view.View")
-local NumericQuizView = class("NumericQuizView", View)
 local utils = require("lib.utils")
 local event = require("lib.event")
 local view = require("lib.view")
@@ -13,10 +12,12 @@ local NumericQuestion = require("lib.quiz.NumericQuestion")
 local SubSurface = require("lib.view.SubSurface")
 local Color = require("lib.draw.Color")
 local Font = require("lib.draw.Font")
-local NumericalQuizGrid = require("lib.components.NumericalQuizGrid")
-local Button = require("lib.components.Button")
+local NumericalQuizGrid = require("components.NumericalQuizGrid")
+local Button = require("components.Button")
 local ExperienceCalculation = require("lib.scores.experiencecalculation")
 local PopUpView = require("views.PopUpView")
+
+local NumericQuizView = class("NumericQuizView", View)
 
 --- Constructor for NumericQuizView
 -- @param remote_control
@@ -286,15 +287,15 @@ function NumericQuizView:render(surface)
 			if self.progress_table[i] == true then
 				bar_component_color = Color(0,255,0,255)
 				progress_bar_component_color:clear(bar_component_color:to_table())
-				progress_bar_component_pic:copyfrom(self.answer_correct)
+				progress_bar_component_pic:copyfrom(self.answer_correct, nil, nil, true)
 			elseif self.progress_table[i] == false then
 				bar_component_color = Color(255,0,0,255)
 				progress_bar_component_color:clear(bar_component_color:to_table())
-				progress_bar_component_pic:copyfrom(self.answer_false)
+				progress_bar_component_pic:copyfrom(self.answer_false, nil, nil, true)
 			else
 				bar_component_color = Color(0, 0, 0, 50)
 				progress_bar_component_color:clear(bar_component_color:to_table())
-				progress_bar_component_pic:copyfrom(self.answer_nil)
+				progress_bar_component_pic:copyfrom(self.answer_nil, nil, nil, true)
 			end
 
 			bar_component_y = bar_component_y + progress_bar_margin +

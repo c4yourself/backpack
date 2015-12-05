@@ -102,7 +102,6 @@ function ProfileManager:save(profile)
 	if self.profilesynchronizer:is_connected() ~= false then
 		local profile_new = self.profilesynchronizer:save_profile(profile)
 		if profile_new["error"] then
-			--print(profile_new["message"])
 		else
 			localprofilemanager:save(profile_new)
 		end

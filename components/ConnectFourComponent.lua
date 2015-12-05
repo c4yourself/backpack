@@ -11,8 +11,6 @@ local subsurface = require("lib.view.SubSurface")
 local area = require("lib.draw.Rectangle")
 local font = require("lib.draw.Font")
 local color = require("lib.draw.Color")
-local button = require("lib.components.Button")
-local button_grid	=	require("lib.components.ButtonGrid")
 local PopUpView = require("views.PopUpView")
 local SubSurface = require("lib.view.SubSurface")
 local ExpCalc = require("lib.scores.experiencecalculation")
@@ -28,7 +26,6 @@ function ConnectFourComponent:__init(remote_control, subsurface, profile)
 	self.profile = profile
 	self.connectfour = ConnectFour()
 	self.current_column = 4
-	print("focus i init")
 	self:focus()
 
 	-- self:listen_to(
@@ -62,7 +59,6 @@ function ConnectFourComponent:press(key)
 	elseif key == "ok" then
 
 		self.connectfour:move(self.connectfour:get_player(), self.current_column)
-		print("blur i press ok")
 		self:blur()
 		--self:stop_listening(event.remote_control)
 		self:dirty()
@@ -96,7 +92,6 @@ end
 -- @param width_coinbox, width of a single coinbox
 -- @param height_coinbox, height of a single coinbox
 function ConnectFourComponent:top_row(surface, column, width_coinbox, height_coinbox)
-	print("toprow")
 	local posx = 0.35*surface:get_width()
 	local posy = 0.1*surface:get_height() - 0.5*height_coinbox
 	local current_color = {r = 0, g = 0, b = 0}
@@ -139,7 +134,7 @@ function ConnectFourComponent:render(surface)
 
 	self:top_row(surface, self.current_column, width_coinbox, height_coinbox)
 
-	--print the board
+	--prints the board
 	for i = 1, 6 do
 		local posx = 0.35*surface:get_width()
     for j = 1, 7 do
@@ -182,8 +177,8 @@ function ConnectFourComponent:render(surface)
 	surface:clear(coin_color_computer, {x=0.055*surface:get_width(), y=0.5*surface:get_height()+0.5*height_coinbox+8, width = width_coinbox, height = height_coinbox})
 
 	--insert picture over board
-	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect4board.png")),nil,{x=posx_constant, y=posy_constant, width = 7*width_coinbox, height = 6*height_coinbox})
-	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect4toprow.png")),nil,{x=posx_constant, y=0.1*surface:get_height() - 0.5*height_coinbox, width = 7*width_coinbox, height = height_coinbox})
+	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect4board.png")),nil,{x=posx_constant, y=posy_constant, width = 7*width_coinbox, height = 6*height_coinbox}, true)
+	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect4toprow.png")),nil,{x=posx_constant, y=0.1*surface:get_height() - 0.5*height_coinbox, width = 7*width_coinbox, height = height_coinbox}, true)
 
 
 	if self.connectfour:_is_full_board() then

@@ -78,7 +78,6 @@ function ProfileSelection:callContinueGame()
 	result = self.profile_manager:check_login(cur_prof)
 
 	if result["error"] then
-		--print(result["message"])
 		login_view = LoginView(event.remote_control,self)
 		view.view_manager:set_view(login_view)
 	else

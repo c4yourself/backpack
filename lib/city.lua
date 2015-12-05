@@ -51,7 +51,7 @@ city.cities = {
 	new_york = city.City("new_york", "New York", city.countries.usa, {
 		{"london", "boat", 4000},
 		{"london", "plane", 6000},
-		{"rio", "plane", 5000},
+		{"rio_de_janeiro", "plane", 5000},
 		{"tokyo", "plane", 8000},
 	}),
 
@@ -73,7 +73,7 @@ city.cities = {
 		{"tokyo", "boat", 3000},
 		{"tokyo", "plane", 5000},
 		{"bombay", "plane", 7500},
-		{"rio", "plane", 4000}
+		{"rio_de_janeiro", "plane", 4000}
 	}),
 }
 

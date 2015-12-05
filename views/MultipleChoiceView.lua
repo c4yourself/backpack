@@ -3,7 +3,6 @@
 -- @classmod MultipleChoiceView
 local class = require("lib.classy")
 local View = require("lib.view.View")
-local MultipleChoiceView = class("MultipleChoiceView", View)
 local utils = require("lib.utils")
 local event = require("lib.event")
 local view = require("lib.view")
@@ -13,13 +12,14 @@ local Font = require("lib.draw.Font")
 local Color = require("lib.draw.Color")
 local Rectangle = require("lib.draw.Rectangle")
 local SubSurface = require("lib.view.SubSurface")
-local ButtonGrid = require("lib.components.ButtonGrid")
-local Button = require("lib.components.Button")
-local MultipleChoiceGrid = require("lib.components.MultipleChoiceGrid")
-local NumericalQuizGrid = require("lib.components.NumericalQuizGrid")
-local ToggleButton = require("lib.components.ToggleButton")
+local ButtonGrid = require("components.ButtonGrid")
+local Button = require("components.Button")
+local MultipleChoiceGrid = require("components.MultipleChoiceGrid")
+local ToggleButton = require("components.ToggleButton")
 local ExperienceCalculation = require("lib.scores.experiencecalculation")
 local PopUpView = require("views.PopUpView")
+
+local MultipleChoiceView = class("MultipleChoiceView", View)
 
 --- Constructor for MultipleChoiceView
 function MultipleChoiceView:__init(remote_control, subsurface, profile)
@@ -92,7 +92,7 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 
 	-- Add next button
 	local button_next = Button(Color(250, 169, 0,255), color_selected, color_disabled,
-								true, false, "")
+								true, false)
 	local next_position = {x =  width*0.8-300, y = height*0.67}
 	button_next:set_textdata("Next question", Color(255,255,255,255),
 							{x = 0, y = 0}, 24,"data/fonts/DroidSans.ttf")
@@ -296,42 +296,38 @@ function MultipleChoiceView:render(surface)
 			local question_nr = self.current_question .. ". "
 			local question = self.mult_choice_quiz.questions[self.current_question].question
 			local new_question = ""
-			local new_question1 = nil
-			local new_question2 = nil
 			local str_len = string.len(question)
 			local count_from_break = 0
-			local yq = 0
+			local yq = 15
 
 			-- If the question is too long, this is where it is printed in several lines
 			if str_len >= 60 then
 			for j = 1, (math.ceil(str_len/60) + 1) do
 				local new_str_len = string.len(string.sub(question,(j-1) * 60 + 1 - count_from_break, str_len))
-				print ("new_stringggggg:" .. new_str_len)
 					for i = 0, 100 do
 						if string.sub(question, j*60-i-count_from_break, j*60-i-count_from_break) == " " then
 							if new_str_len < 60 then
 								new_question = string.sub(question, (j-1)*60 + 1 - count_from_break,str_len)
-									print("rad hej hej:" .. string.len(new_question))
 								self.font:draw(self.question_area,
 									{x = 0, y = yq, height = self.question_area_height,
 									width = self.question_area_width},
-									new_question)
+									new_question, "center")
 								break
 							else
-								new_question = string.sub(question,(j-1)*60+1-count_from_break,j*60-i-count_from_break) .. "\n" --new_question .. string.sub(question,(j-1)*60+1-count_from_break,j*60-i-1) .. "\n"
+								new_question = string.sub(question,(j-1)*60+1-count_from_break,j*60-i-count_from_break) .. "\n"
 								count_from_break = count_from_break + i
 								self.font:draw(self.question_area,
 									{x = 0, y = yq, height = self.question_area_height,
 									width = self.question_area_width},
-									new_question)
-								yq = j*25
+									new_question, "center")
+								yq = 10 + j*35
 								break
 							end
 					end
 				end
 			end
 			count_from_break = 0
-			yq = 0
+			yq = 15
 		end
 
 			if new_question == "" then
@@ -339,14 +335,8 @@ function MultipleChoiceView:render(surface)
 				self.font:draw(self.question_area,
 					{x = 0, y = 0, height = self.question_area_height,
 					width = self.question_area_width},
-					new_question)
+					new_question, "center", "middle")
 			end
-
-			--new_question = "hejhehje" .."\n" .. "ahhaah".."\n" .."hdjhdjd" .."\n"
-		--	local question1 = self.mult_choice_quiz.questions[self.current_question].question
-		--	print("hej")
-		--	print(string.len(self.mult_choice_quiz.questions[self.current_question].question))
-
 
 			local button_1_text =  "A. " .. self.mult_choice_quiz.questions[self.current_question].Choices[1]
 			local button_2_text =  "B. " .. self.mult_choice_quiz.questions[self.current_question].Choices[2]
@@ -429,15 +419,15 @@ function MultipleChoiceView:render(surface)
 			if self.progress_table[i] == true then
 				bar_component_color = Color(0,255,0,255)
 				progress_bar_component_color:clear(bar_component_color:to_table())
-				progress_bar_component_pic:copyfrom(self.answer_correct)
+				progress_bar_component_pic:copyfrom(self.answer_correct, nil, nil, true)
 			elseif self.progress_table[i] == false then
 				bar_component_color = Color(255,0,0,255)
 				progress_bar_component_color:clear(bar_component_color:to_table())
-				progress_bar_component_pic:copyfrom(self.answer_false)
+				progress_bar_component_pic:copyfrom(self.answer_false, nil, nil, true)
 			else
 				bar_component_color = Color(0, 0, 0, 50)
 			  progress_bar_component_color:clear(bar_component_color:to_table())
-				progress_bar_component_pic:copyfrom(self.answer_nil)
+				progress_bar_component_pic:copyfrom(self.answer_nil, nil, nil, true)
 			end
 			bar_component_y = bar_component_y + progress_bar_margin +
 								bar_component_height

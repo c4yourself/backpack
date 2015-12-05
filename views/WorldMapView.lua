@@ -45,7 +45,7 @@ function WorldMap:__init(profile, destination, method, view_manager)
 	self.images = {
 		map = gfx.loadpng("data/images/worldmap2.png"),
 		vehicle = gfx.loadpng(
-			"data/images/" .. self.method .. ({left = "1", right = "2"})[direction] .. ".png")
+			"data/images/travel_screen/" .. self.method .. "_" .. direction .. ".png")
 	}
 
 	self._step_count = 50

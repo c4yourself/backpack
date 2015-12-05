@@ -7,13 +7,10 @@ local view = require("lib.view")
 local event = require("lib.event")
 local MemoryGame = require("lib.memory.Memory")
 local utils = require("lib.utils")
-local MemoryView = class("MemoryView", View)
-local card= require("lib.components.MemoryCardComponent")
-local button_grid	=	require("lib.components.ButtonGrid")
-local color = require("lib.draw.Color")
+local Color = require("lib.draw.Color")
 local serpent = require("lib.serpent")
-local button = require("lib.components.Button")
-local MemoryGrid = require("lib.components.MemoryGrid")
+local Button = require("components.Button")
+local MemoryGrid = require("components.MemoryGrid")
 local CardComponent = require("components.CardComponent")
 local Profile = require("lib.profile.Profile")
 local Font = require("lib.draw.Font")
@@ -21,6 +18,7 @@ local PopUpView = require("views.PopUpView")
 local SubSurface = require("lib.view.SubSurface")
 local ExperienceCalculation = require("lib.scores.experiencecalculation")
 
+local MemoryView = class("MemoryView", View)
 
 --- Constructor for MemoryView
 -- @param remote_control The remote control bound to the memory
@@ -58,17 +56,17 @@ function MemoryView:__init(remote_control, surface, profile)
     end
 
     -- Graphics
-    self.font = Font("data/fonts/DroidSans.ttf", 32, color(255, 255, 255, 255))
-    self.button_color = color(250, 105, 0, 255)
-    self.color_selected = color(250, 169, 0, 255)
-    self.color_disabled = color(111,222,111,255)
-    self.text_color = color(255, 255, 255, 255)
+    self.font = Font("data/fonts/DroidSans.ttf", 32, Color(255, 255, 255, 255))
+    self.button_color = Color(250, 105, 0, 255)
+    self.color_selected = Color(250, 169, 0, 255)
+    self.color_disabled = Color(111,222,111,255)
+    self.text_color = Color(255, 255, 255, 255)
 
     -- Components
     local width = screen:get_width()
     local height = screen:get_height()
     local button_size_big = {width = 300, height = 100}
-    self.button_1 = button(self.button_color, self.color_selected,
+    self.button_1 = Button(self.button_color, self.color_selected,
         self.color_disabled, true, false, "views.PopUpView")
     self.positions["exit"] = {x = 100, y = 450}
     self.button_1:set_textdata("Back to City", self.text_color,
@@ -76,10 +74,9 @@ function MemoryView:__init(remote_control, surface, profile)
         utils.absolute_path("data/fonts/DroidSans.ttf"))
 
     -- Create the button grid
-    local card_color = color(250, 105, 0, 255)--color.from_html("fa6900ff")
-    --color(0, 128, 225, 255)
-    local card_color_disabled = color(111,222,111,255)
-    local card_color_selected = color(250, 105, 0, 255)
+    local card_color = Color(250, 105, 0, 255)--color.from_html("fa6900ff")
+    local card_color_disabled = Color(111,222,111,255)
+    local card_color_selected = Color(250, 105, 0, 255)
     self.button_size = {width = 100, height = 100}
     local x_gap = self.button_size.width + 50
     local y_gap = self.button_size.height + 50
@@ -214,7 +211,7 @@ function MemoryView:render(surface)
     end
 --At this point, we should check the memory states and keep the card that are true in memory.states open
     if self:is_dirty() then
-        surface:clear(color(0, 0, 0, 255):to_table())
+        surface:clear(Color(0, 0, 0, 255):to_table())
         -- Add the number of turns
         local turns_text = Font("data/fonts/DroidSans.ttf", 30, self.text_color)
         local turns = Font("data/fonts/DroidSans.ttf", 30, self.text_color)

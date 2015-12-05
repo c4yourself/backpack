@@ -4,18 +4,18 @@ local view = require("lib.view")
 local event = require("lib.event")
 local SubSurface = require("lib.view.SubSurface")
 local utils = require("lib.utils")
-local button_grid	=	require("lib.components.ButtonGrid")
+local ButtonGrid = require("components.ButtonGrid")
 local Color = require("lib.draw.Color")
 local Font = require("lib.draw.Font")
 local serpent = require("lib.serpent")
-local Button = require("lib.components.Button")
+local Button = require("components.Button")
 local Profile = require("lib.profile.Profile")
 
 local PopUp = class("PopUp",View)
 
 function PopUp:__init(remote_control,surface, type, message)
 	View:__init(self)
-	self.popup_button_grid = button_grid(remote_control)
+	self.popup_button_grid = ButtonGrid(remote_control)
 	self:add_view(self.popup_button_grid)
 
 	self.width = screen:get_width() * 0.5

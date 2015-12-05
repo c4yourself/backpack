@@ -8,13 +8,13 @@
 local class = require("lib.classy")
 local view = require("lib.view")
 local View = require("lib.view.View")
-local button = require("lib.components.Button")
-local ButtonGrid = class("ButtonGrid",View)
 local SubSurface = require("lib.view.SubSurface")
 local utils = require("lib.utils")
 local event = require("lib.event")
 local Font = require("lib.draw.Font")
 local Color = require("lib.draw.Color")
+
+local ButtonGrid = class("ButtonGrid", View)
 
 --- Constructor for ButtonGrid
 function ButtonGrid:__init(remote_control)
@@ -266,7 +266,6 @@ end
 		for k=1, #button_list do
 				local distance = self:distance_to_corner(corner_position, k)
 				shortest_distance_corner = math.min(shortest_distance_corner, distance)
-				--print("the minium distance at the moment is "..shortest_distance_corner)
 		end
 	end
 
@@ -427,9 +426,7 @@ if shortest_distance_buttons ~= 1280 then
 		if  button_list[indicator].x >= button_list[j].x + button_list[j].width then
 			local distance = self:button_distance(indicator, j)
 			if shortest_distance_buttons == distance then
-				--print("the distance is "..distance)
 				nearest_button_index = j
-				--print("the nearast button is ".. nearest_button_index)
 				break
 			end
 		end
