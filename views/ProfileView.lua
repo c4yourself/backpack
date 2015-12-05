@@ -40,6 +40,7 @@ function ProfileView:__init(remote_control, surface, profile)
 	self.profile = profile
 	self.remote_control = remote_control
 	self.item_positions = {}
+	self.image_positions = {}
 	self.item_images = {}
 	self.message = {["message"] = "Select item to purchase or sell"}
 
@@ -69,7 +70,7 @@ function ProfileView:__init(remote_control, surface, profile)
 
 
 	-- Create the number of buttons that correspond to items in backpack
-	self.button_size = {width = 2.5*width/45, height = 2.5*width/45}
+	self.button_size = {width = 2.8*width/45, height = 0.5*width/45}
 
 	self.buttons = {}
 	self.buttons[1] = Button(Color(255,90,0,255), Color(255,153,0,255), Color(0,0,0,255), true, true, 1)
@@ -94,8 +95,10 @@ function ProfileView:__init(remote_control, surface, profile)
 	j = 1
 	own_items = 0
 	while j <= get_size(self.backpack_items) do
-		self.item_positions[j+1] = {x = 10+(j-1)*(self.button_size.width+15),
+		self.image_positions[j+1] = {x = 10+(j-1)*(self.button_size.width+8),
 																y = 295}
+		self.item_positions[j+1] = {x = 10+(j-1)*(self.button_size.width+8),
+																y = 355}
 		--[[self.item_positions[j+1] = {x = width/2+20+((j-1)-2*(row-1))*130,
 																y = 320}]]
 		self.button_grid:add_button(self.item_positions[j+1], self.button_size, self.buttons[j+1])
@@ -175,7 +178,7 @@ function ProfileView:render(surface)
 
 	-- Prints the items
 	for i = 1, #self.item_images do
-		surface:copyfrom(self.item_images[i], nil, self.item_positions[i+1], true)
+		surface:copyfrom(self.item_images[i], nil, self.image_positions[i+1], true)
 	end
 
 	--Draw header
