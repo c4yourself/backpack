@@ -53,7 +53,7 @@ function BackEndStore:__init()
 
 
 
-	self.city_list = {["Paris"] = 1, ["Tokyo"] = 2, ["Bombay"] = 3, ["Kairo"] = 4,
+	self.city_list = {["Paris"] = 1, ["Tokyo"] = 2, ["Bombay"] = 3, ["Cairo"] = 4,
 										["London"] = 5, ["New York"]= 6, ["Rio De Jeneiro"] = 7, ["Sydney"] = 8}
 	-- Matrix for increase value between cities
 	self.city_multiplier = {{1, 1.8, 1.4, 1.5, 0.9, 1.2, 1.2, 1.1},
