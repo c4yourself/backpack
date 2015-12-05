@@ -214,7 +214,6 @@ function ProfileSelection:render(surface)
 			self.font_button:draw(surface, {x=120,y=(200-self.profile_index*diff_y+diff_y*counter)}, self.profile_list[key].name)
 		end
 
-		buttons[counter]= text_button
 		counter=counter+1
  	end
 
