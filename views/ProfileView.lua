@@ -1,5 +1,5 @@
--- The view class store
--- @classmod Store
+-- The view class ProfileView
+-- @classmod ProfileView
 local class = require("lib.classy")
 local View = require("lib.view.View")
 local view = require("lib.view")
@@ -25,7 +25,7 @@ local function get_size(a)
 	return i
 end
 
---- Constructor for Store
+--- Constructor for ProfileView
 -- @param event_listener Remote control to listen to
 function ProfileView:__init(remote_control, surface, profile)
 	-- Add some internal variables that we will want to use later
@@ -88,7 +88,6 @@ function ProfileView:__init(remote_control, surface, profile)
 	-- Add them to button grid at the correct place
 
 	-- Add exit button
-	--self.button_grid:add_button({x = 162-3*width/45,y = height-60}, {width = 6*width/45,height = 2*width/45}, self.buttons[1])
 	self.button_grid:add_button({x = 10,y = height-85}, {width = 300,height = 75}, self.buttons[1])
 
 	row = 1
@@ -99,8 +98,6 @@ function ProfileView:__init(remote_control, surface, profile)
 																y = 295}
 		self.item_positions[j+1] = {x = 10+(j-1)*(self.button_size.width+8),
 																y = 355}
-		--[[self.item_positions[j+1] = {x = width/2+20+((j-1)-2*(row-1))*130,
-																y = 320}]]
 		self.button_grid:add_button(self.item_positions[j+1], self.button_size, self.buttons[j+1])
 		j = j+1
 	end
