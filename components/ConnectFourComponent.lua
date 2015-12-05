@@ -160,9 +160,9 @@ function ConnectFourComponent:render(surface)
 	f:draw(surface, target1:to_table(), "Back to city, press Exit", "center", "middle")
 
 	--heading
-	local heading = font("data/fonts/DroidSans.ttf", 32, color(255, 128, 0, 255))
-	local target2 = area(0.05*surface:get_width(),0.1*surface:get_height(), 200, 60)
-	heading:draw(surface, target2:to_table(), "Connect Four")
+	--local heading = font("data/fonts/DroidSans.ttf", 32, color(255, 128, 0, 255))
+	--local target2 = area(0.05*surface:get_width(),0.1*surface:get_height(), 200, 60)
+	--heading:draw(surface, target2:to_table(), "Connect Four")
 
 	--text player + yellow box
 	local text_player = font("data/fonts/DroidSans.ttf", 22, color(255, 255, 51, 255))
@@ -177,7 +177,8 @@ function ConnectFourComponent:render(surface)
 	surface:clear(coin_color_computer, {x=0.055*surface:get_width(), y=0.5*surface:get_height()+0.5*height_coinbox+8, width = width_coinbox, height = height_coinbox})
 
 	--insert picture over board
-	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect4board.png")),nil,{x=posx_constant, y=posy_constant, width = 7*width_coinbox, height = 6*height_coinbox}, true)
+	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect_four/connect4board.png")),nil,{x=posx_constant, y=posy_constant, width = 7*width_coinbox, height = 6*height_coinbox}, true)
+	--surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect4board.png")),nil,{x=posx_constant, y=posy_constant, width = 7*width_coinbox, height = 6*height_coinbox}, true)
 	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect4toprow.png")),nil,{x=posx_constant, y=0.1*surface:get_height() - 0.5*height_coinbox, width = 7*width_coinbox, height = height_coinbox}, true)
 
 
