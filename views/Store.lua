@@ -46,9 +46,10 @@ function Store:__init(remote_control, surface, profile)
 
 
 	-- Some colors
-	self.background_color = Color(255, 255, 204, 255)
-	self.button_active = Color(255, 51, 51, 255)
-	self.button_inactive = Color(255, 153, 153, 255)
+	--self.background_color = Color(255, 255, 204, 255)
+	self.background_color = Color(30, 35, 35, 255)
+	self.button_active = Color(255, 153, 0, 255)
+	self.button_inactive = Color(255, 99, 0, 255)
 
 	-- Creates local variables for height and width
 	local height = self.surface:get_height()
@@ -72,10 +73,10 @@ function Store:__init(remote_control, surface, profile)
 	end
 
 	-- Add the exit button
-	self.font = Font("data/fonts/DroidSans.ttf", 20, Color(0, 0, 0, 255))
-	self.header_font = Font("data/fonts/DroidSans.ttf", 40, Color(0,0,0,255))
+	self.font = Font("data/fonts/DroidSans.ttf", 20, Color(255, 255, 255, 255))
+	self.header_font = Font("data/fonts/DroidSans.ttf", 40, Color(255,255,255,255))
 	self.buttons[k] = Button(self.button_inactive, self.button_active, self.button_inactive, true, false, k)
-	self.buttons[k]:set_textdata("Exit",Color(255,0,0,255), {x = 100, y = 300}, 20, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	self.buttons[k]:set_textdata("Exit",Color(255,255,255,255), {x = 100, y = 300}, 30, utils.absolute_path("data/fonts/DroidSans.ttf"))
 
 	-- Add them to button grid at the correct place
 	row = 1
