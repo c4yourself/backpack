@@ -1,8 +1,3 @@
---- Base class for CreateProfileView2
--- A CityView is the input field in a numerical quiz. It responds
--- to numerical input on the remote.
--- @classmod CreateProfileView2
-
 local class = require("lib.classy")
 local View = require("lib.view.View")
 local view = require("lib.view")
@@ -21,8 +16,8 @@ local ProfileManager = require("lib.profile.ProfileManager")
 local KeyboardComponent	=	require("components.KeyboardComponent")
 local CreateProfileView2 = class("CreateProfileView2", View)
 
---- Constructor for CityView
--- @param event_listener Remote control to listen to
+--- Constructor
+-- @param remote_control, email, password
 function CreateProfileView2:__init(remote_control, email, password)
 	View.__init(self)
 	self.email = email
@@ -81,15 +76,14 @@ function CreateProfileView2:__init(remote_control, email, password)
 	)
 end
 
+--- Draws the view on given surface.
+-- @param surface
 function CreateProfileView2:render(surface)
-	-- -- Resets the surface and draws the background
-
 	surface:clear(self.background_color)
 
 	if self.hasActiveKeyboard==true then
 		self.keyboard:render(screen)
 	end
-
 
 	self.input_field:render(surface)
 	self.input_field2:render(surface)
@@ -100,6 +94,8 @@ function CreateProfileView2:render(surface)
 	self.button_text:draw(surface, {x=980+50, y=530+15}, "Create")
 end
 
+--- Safeguards for incorrect input goes here.
+-- @param
 function CreateProfileView2:control_input()
 	local ok_input = true
 	--local profile_man = ProfileManager()
@@ -111,15 +107,17 @@ function CreateProfileView2:control_input()
 	return ok_input
 end
 
+--- A Cancel button call to return to profile selection.
+-- @param
 function CreateProfileView2:return_to_base_view()
 	local ProfileSelection=require("views.ProfileSelection")
 	local profile_selection = ProfileSelection(event.remote_control)
 	view.view_manager:set_view(profile_selection)
 end
 
+--- Runs when a key on the remote control has been pressed.
+-- @param button
 function CreateProfileView2:load_view(button)
-
-	-- TODO set mappings to RC
 	if self.hasActiveKeyboard == true then
 		if self.render_ticket == true then
 			self.render_ticket = false
