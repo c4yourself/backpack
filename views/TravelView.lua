@@ -29,6 +29,7 @@ function TravelView:__init(remote_control, surface, profile)
 	self.font_header = Font("data/fonts/DroidSans.ttf", 30, Color(255, 255, 255, 255))
 
 	self.list_comp = List()
+	self:add_view(self.list_comp, true)
 
 	local list_item_position_left = {x=65, y=35}
 	local list_item_position_right = {x=375, y=35}
@@ -68,8 +69,12 @@ function TravelView:__init(remote_control, surface, profile)
 
 end
 
-function TravelView:render(surface)
+function TravelView:destroy()
+	View.destroy(self)
+	self.image:destroy()
+end
 
+function TravelView:render(surface)
 	surface:clear({r=0, g=0, b=0, a=255})
 
 	local button_color = {r=255, g=150, b=0, a=255}
@@ -99,7 +104,7 @@ function TravelView:render(surface)
 	local list_comp_surface = SubSurface(surface,{width=450, height=300,
 		x = 20, y = math.floor(surface:get_height()*0.2)})
 	self.list_comp:render(list_comp_surface)
-	self.list_comp:on("dirty", function() self:render(surface); gfx.update() end)
+	--self.list_comp:on("dirty", function() self:render(surface); gfx.update() end)
 
 	local current_destination = city.cities[self.routes[self.list_comp.current_index][1]]
 

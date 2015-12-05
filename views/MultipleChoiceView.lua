@@ -144,6 +144,8 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 								button_size,
 								self.question_button_4)
 
+	self:add_view(self.views.grid, true)
+
 	-- Listeners and callbacks
 	self:focus()
 end
@@ -246,29 +248,6 @@ end
 -- that it's flagged as dirty
 -- @param surface @{Surface} or @{SubSurface} to render this view on
 function MultipleChoiceView:render(surface)
-	if not self.listening_initiated then
-		-- If this view are not listening to all the components it should
-		-- listen to yet: start listening
-		local callback = utils.partial(self.press)
-
-		self:listen_to(
-			event.remote_control,
-			"button_release",
-			callback
-		)
-
-		self:listen_to(
-			self.views.grid,
-			"dirty",
-			utils.partial(self.views.grid.render,
-							self.views.grid, surface)
-		)
-
-		-- TODO initiate listening to the button group, when its implemented
-		self.listening_initiated = true
-	end
-
-	if self:is_dirty() then
 		local surface_width = surface:get_width()
 		local surface_height = surface:get_height()
 		surface:clear(color)
@@ -444,8 +423,6 @@ function MultipleChoiceView:render(surface)
 			local message = {"Good job! You received " .. experience .. " coins."}
 			self:_back_to_city(type, message)
 		end
-	end
-	gfx.update()
 	self:dirty(false)
 end
 
