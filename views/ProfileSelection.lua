@@ -39,7 +39,7 @@ function ProfileSelection:__init(remote_control)
 
 	-- Common fonts
 	self.font_header = Font("data/fonts/DroidSans.ttf", 40, Color(255, 255, 255, 255))
-	self.font_button = Font("data/fonts/DroidSans.ttf", 30, Color(255, 255, 255, 255))
+	self.font_button = Font("data/fonts/DroidSans.ttf", 32, Color(255, 255, 255, 255))
 
 	-- Listeners and callbacks
 	self:listen_to(
