@@ -92,7 +92,7 @@ end
 -- @param width_coinbox, width of a single coinbox
 -- @param height_coinbox, height of a single coinbox
 function ConnectFourComponent:top_row(surface, column, width_coinbox, height_coinbox)
-	local posx = 0.35*surface:get_width()
+	local posx = 0.41*surface:get_width()
 	local posy = 0.1*surface:get_height() - 0.5*height_coinbox
 	local current_color = {r = 0, g = 0, b = 0}
 	local color = {r = 0, g = 0, b = 0}
@@ -130,13 +130,13 @@ function ConnectFourComponent:render(surface)
 	local height_coinbox = math.floor((1/7)*(0.8)*surface:get_height())
 	local posy = 0.1*surface:get_height()+ 0.5*height_coinbox
 	local posy_constant = 0.1*surface:get_height()+ 0.5*height_coinbox
-	local posx_constant = 0.35*surface:get_width()
+	local posx_constant = 0.41*surface:get_width()
 
 	self:top_row(surface, self.current_column, width_coinbox, height_coinbox)
 
 	--prints the board
 	for i = 1, 6 do
-		local posx = 0.35*surface:get_width()
+		local posx = 0.41*surface:get_width()
     for j = 1, 7 do
 			if self.connectfour:get(i,j) == nil then
 				temp_color = {r=255, g=255, b=255}
@@ -155,6 +155,7 @@ function ConnectFourComponent:render(surface)
 
 	--Back to city button
 	local f = font("data/fonts/DroidSans.ttf", 16, color(255, 128, 0, 255))
+	--local f = font("data/fonts/DroidSans.ttf", 16, color(0, 0, 0, 255))
 	local target1 = area(0.05*surface:get_width(),0.9*surface:get_height()-2.0*height_coinbox, 250, 90)
 	surface:clear(color(255, 255, 255, 255):to_table(), target1:to_table())
 	f:draw(surface, target1:to_table(), "Press Exit to go back to City", "center", "middle")
