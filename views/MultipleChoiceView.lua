@@ -145,8 +145,8 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 
 	self:add_view(self.views.grid, true)
 
-	-- Listeners and callbacks
 	self:focus()
+	self.views.grid:select_button(3)
 end
 
 ---Triggered everytime the user presses the submit button
@@ -199,39 +199,25 @@ function MultipleChoiceView:_next()
 		else
 			self.quiz_state = "IDLE"
 		end
+		self.views.grid:select_button(3)
 		self:dirty(true)
 	elseif self.end_flag == 1 then
 		-- Quiz is finished. Set up for a final result screen
-
 		self.quiz_state = "DONE"
-	--	self:dirty(true)
 
-	-- Don't know if the code below is in the right place? The experience shall be updated after finished game.
 		local counter  = self.correct_answer_number
 		local experience = ExperienceCalculation.Calculation(counter, "Multiplechoice")
 		self.profile:modify_balance(experience)
 		self.profile:modify_experience(experience)
-
-
-	-- When the game is finished, a popup-view with the text below shall be shown.
-	--This isn't working right now - the code probably shall be placed somewhere else?
-
-	-- 	local type = "message"
-	-- 	local message = {"Good job! You received" .. experience .. " coins."}
-	-- --	local message = {"Good job! You received XX coins."}
-	-- 	self:_back_to_city(type, message)
-
 	end
 end
 
 --- Destroys the quiz view and exits teh mini game. Triggered when the user
 -- presses the back to city button
 function MultipleChoiceView:_exit()
-	--TODO add popup
 	local type = "confirmation"
 	local message = {"Are you sure you want to exit?"}
 	self:_back_to_city(type, message)
-	--self:trigger("exit_view", self.profile)
 end
 
 
@@ -279,26 +265,35 @@ function MultipleChoiceView:render(surface)
 			local count_from_break = 0
 			local yq = 15
 
-			-- If the question is too long, this is where it is printed in several lines
+			-- If the question is too long, this is where it is printed in
+			-- several lines
 			if str_len >= 60 then
 			for j = 1, (math.ceil(str_len/60) + 1) do
-				local new_str_len = string.len(string.sub(question,(j-1) * 60 + 1 - count_from_break, str_len))
+				local new_str_len = string.len(string.sub(question,
+								(j-1) * 60 + 1 - count_from_break, str_len))
 					for i = 0, 100 do
-						if string.sub(question, j*60-i-count_from_break, j*60-i-count_from_break) == " " then
+						if string.sub(question,
+									j*60-i-count_from_break,
+									j*60-i-count_from_break) == " " then
 							if new_str_len < 60 then
-								new_question = string.sub(question, (j-1)*60 + 1 - count_from_break,str_len)
+								new_question = string.sub(question,
+										(j-1)*60 + 1 - count_from_break,str_len)
 								self.font:draw(self.question_area,
-									{x = 0, y = yq, height = self.question_area_height,
-									width = self.question_area_width},
-									new_question, "center")
+											{x = 0, y = yq,
+											height = self.question_area_height,
+											width = self.question_area_width},
+											new_question, "center")
 								break
 							else
-								new_question = string.sub(question,(j-1)*60+1-count_from_break,j*60-i-count_from_break) .. "\n"
+								new_question = string.sub(question,
+												(j-1)*60+1-count_from_break,
+												j*60-i-count_from_break) .. "\n"
 								count_from_break = count_from_break + i
 								self.font:draw(self.question_area,
-									{x = 0, y = yq, height = self.question_area_height,
-									width = self.question_area_width},
-									new_question, "center")
+											{x = 0, y = yq,
+											height = self.question_area_height,
+											width = self.question_area_width},
+											new_question, "center")
 								yq = 10 + j*35
 								break
 							end
@@ -390,9 +385,9 @@ function MultipleChoiceView:render(surface)
 										height = bar_component_height-4,
 										width = bar_component_width-4})
 			local progress_bar_component_pic = SubSurface(surface,
-																	{x = bar_component_x, y = bar_component_y,
-																	height = bar_component_height,
-																	width = bar_component_width})
+										{x = bar_component_x, y = bar_component_y,
+										height = bar_component_height,
+										width = bar_component_width})
 
 	-- Depending on the user's success: there will be different boxes
 			if self.progress_table[i] == true then
@@ -430,15 +425,17 @@ end
 --@param type String representing the type of pop-up.
 --@param message String with message to display
 function MultipleChoiceView:_back_to_city(type, message)
-
-    local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
-		local popup_view = PopUpView(remote_control,subsurface, type, message)
+    local subsurface = SubSurface(screen,
+									{width = screen:get_width() * 0.5,
+									height = (screen:get_height() - 50) * 0.5,
+									x = screen:get_width() * 0.25,
+									y = screen:get_height() * 0.25 + 50})
+	local popup_view = PopUpView(remote_control,subsurface, type, message)
     self:add_view(popup_view)
     self.views.grid:blur()
-		self:blur()
+	self:blur()
 
     local button_click_func = function(button)
-
       	if button == "ok" then
 		  	self:destroy()
       		self:trigger("exit_view")
@@ -455,16 +452,17 @@ function MultipleChoiceView:_back_to_city(type, message)
     gfx.update()
 end
 
+---Focuses the {@MultipleChoiceView}, which makes it listen to the remote control
 function MultipleChoiceView:focus()
  	self:listen_to(
  	event.remote_control,
  	"button_release",
 	utils.partial(self.press, self)
 )
-
-
 end
 
+---Blurs the {@MultipleChoiceView}, which stops it listening to the
+-- remote control
 function MultipleChoiceView:blur()
 	self:stop_listening(event.remote_control)
 end

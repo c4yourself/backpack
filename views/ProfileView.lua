@@ -73,11 +73,21 @@ function ProfileView:__init(remote_control, surface, profile)
 	self.button_size = {width = 2.8*width/45, height = 0.5*width/45}
 
 	self.buttons = {}
-	self.buttons[1] = Button(Color(255,90,0,255), Color(255,153,0,255), Color(0,0,0,255), true, true, 1)
-	k = 1
-	while k <= get_size(self.backpack_items) do
-			self.buttons[k+1] = Button(self.button_inactive, self.button_active, self.button_inactive, true, false,k+1)
-			k = k + 1
+	if get_size(self.backpack_items) > 0 then
+		self.buttons[1] = Button(Color(255,90,0,255), Color(255,153,0,255), Color(0,0,0,255), true, false, 1)
+		self.buttons[2] = Button(self.button_inactive, self.button_active, self.button_inactive, true, true,2)
+		k = 2
+		while k <= get_size(self.backpack_items) do
+				self.buttons[k+1] = Button(self.button_inactive, self.button_active, self.button_inactive, true, false,k+1)
+				k = k + 1
+		end
+	else
+		self.buttons[1] = Button(Color(255,90,0,255), Color(255,153,0,255), Color(0,0,0,255), true, true, 1)
+		k = 1
+		while k <= get_size(self.backpack_items) do
+				self.buttons[k+1] = Button(self.button_inactive, self.button_active, self.button_inactive, true, false,k+1)
+				k = k + 1
+		end
 	end
 
 	-- Add the exit button
