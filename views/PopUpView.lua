@@ -126,12 +126,12 @@ function PopUp:render(surface)
 		self.message_font:draw(surface, {x = self.width * 0.5 - len*4, y=message_line_pos}, self.message[i])
 		message_line_pos = message_line_pos + self.message_font_height + 5
 	end
-	
+
 	surface:fill({0,0,0,255}, {width = self.width * 0.5, height = 2, x = self.width * 0.25, y = message_line_pos + 30})
 
 	--Render buttons
 	self.popup_button_grid:render(surface)
-	--self:trigger("exit_view")
+	self:trigger("exit_view")
 end
 
 function PopUp:load_view(button)
