@@ -42,8 +42,9 @@ function onStart()
 	logger.trace("Started")
 
 	local profile = Profile(
-		"Zen Terio","zen@zenterio.com", 1975, "M", city.cities.sydney)
+		"Zen Terio","zen@zenterio.com", "1975-12-11", "M", city.cities.sydney)
 	profile.balance = 6000
+	profile:set_inventory("{4,9,15,27}")
 
 	view.view_manager:set_view(CityView(profile))
 
