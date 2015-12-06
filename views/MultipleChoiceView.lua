@@ -146,8 +146,8 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 
 	self:add_view(self.views.grid, true)
 
-	-- Listeners and callbacks
 	self:focus()
+	self.views.grid:select_button(3)
 end
 
 ---Triggered everytime the user presses the submit button
