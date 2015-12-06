@@ -32,10 +32,10 @@ function PopUp:__init(remote_control,surface, type, message)
 	-- Create buttons positions and size
 	self.button_size = {width=self.width*0.22, height=self.height*0.15}
 
-	self.button_color = Color(255,90,0,255)
-	self.color_selected = Color(255,153,0,255)
-	self.color_disabled = Color(0,0,0,255)
-	self.text_color = Color(255,255,255,255)
+	self.button_color = Color(255, 90, 0, 255)
+	self.color_selected = Color(255, 153, 0, 255)
+	self.color_disabled = Color(1, 1, 1, 255)
+	self.text_color = Color(255, 255, 255, 255)
 
 	if self.type == "message" then
 		self:_create_message_buttons()

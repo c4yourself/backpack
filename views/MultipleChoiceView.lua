@@ -1,4 +1,4 @@
---- Base class for MultipleChoiceView. View responsible for rendering the
+	--- Base class for MultipleChoiceView. View responsible for rendering the
 -- multiple choice quiz
 -- @classmod MultipleChoiceView
 local class = require("lib.classy")
@@ -58,7 +58,7 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 	self.answer = {}
 
 	-- Graphics and colors
-	self.question_area_color  = Color(0, 0, 0, 175)
+	self.question_area_color  = Color(1, 1, 1, 175)
 	self.font = Font("data/fonts/DroidSans.ttf", 24, Color(255,255,255,255))
 
 	-- Buttons and grids
@@ -399,7 +399,7 @@ function MultipleChoiceView:render(surface)
 				progress_bar_component_color:clear(bar_component_color:to_table())
 				progress_bar_component_pic:copyfrom(self.answer_false, nil, nil, true)
 			else
-				bar_component_color = Color(0, 0, 0, 50)
+				bar_component_color = Color(1, 1, 1, 50)
 			  progress_bar_component_color:clear(bar_component_color:to_table())
 				progress_bar_component_pic:copyfrom(self.answer_nil, nil, nil, true)
 			end

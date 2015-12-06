@@ -36,8 +36,8 @@ function CityView:__init(profile, remote_control)
 	local color_selected = Color(255, 153, 0, 255)
 	local color_disabled = Color(111, 222, 111, 255) --have not been used yet
 
-	local city_view_selected_color = Color(0, 0, 0, 100)
-	local city_view_color = Color(0, 0, 0, 0)
+	local city_view_selected_color = Color(1, 1, 1, 100)
+	local city_view_color = Color(1, 1, 1, 0)
 
 	-- Create some fonts to write with
 	city_view_small_font = Font("data/fonts/DroidSans.ttf", 20, Color(255, 255, 255, 255))
@@ -221,10 +221,10 @@ function CityView:render(surface)
 	surface:copyfrom(self.images.background, nil, {x = 0, y = 50, width = width, height = height-51}, false)
 
 	--creates some colors
-	local text_color = Color(0, 0, 0,255)
+	local text_color = Color(1, 1, 1, 255)
 	local score_text_color = Color(255, 255, 255, 255)
-	local menu_bar_color = Color(0, 0, 0, 225)
-	local status_bar_color = Color(0, 0, 0, 255)
+	local menu_bar_color = Color(1, 1, 1, 225)
+	local status_bar_color = Color(1, 1, 1, 255)
 	local status_text_color = Color(255, 255, 255, 255)
 	local experience_bar_color = Color(100, 100, 100, 255)
 

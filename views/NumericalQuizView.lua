@@ -293,7 +293,7 @@ function NumericQuizView:render(surface)
 				progress_bar_component_color:clear(bar_component_color:to_table())
 				progress_bar_component_pic:copyfrom(self.answer_false, nil, nil, true)
 			else
-				bar_component_color = Color(0, 0, 0, 50)
+				bar_component_color = Color(1, 1, 1, 50)
 				progress_bar_component_color:clear(bar_component_color:to_table())
 				progress_bar_component_pic:copyfrom(self.answer_nil, nil, nil, true)
 			end
