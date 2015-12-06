@@ -125,23 +125,4 @@ function TestMemory:test_unserialize()
   luaunit.assertEquals(is_open, true)
 end
 
-function TestMemory:test_calculate_reward()
-    local pairs = 8
-    local	memory = Memory(pairs, self.profile, false)
-
-    memory.moves = 8
-    local coins, experience = memory:_calculate_reward()
-    luaunit.assertEquals(coins, 120)
-
-    memory.moves = 10
-    local coins, experience = memory:_calculate_reward()
-    luaunit.assertEquals(experience, 100)
-
-    memory.moves = 16
-    local coins, experience = memory:_calculate_reward()
-    luaunit.assertEquals(experience, 20)
-  end
-
-
-
 return TestMemory

@@ -27,6 +27,18 @@ function View:add_view(view, propagate_dirty)
 	end
 end
 
+function View:remove_view(view)
+	for i, v in ipairs(self.views) do
+		if v == view then
+			table.remove(self.views, i)
+			break
+		end
+	end
+
+	self:stop_listening(view)
+	view:destroy()
+end
+
 --- Destroys the view and all child views
 function View:destroy()
 	for i = 1, #self.views do

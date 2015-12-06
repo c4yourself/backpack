@@ -15,6 +15,8 @@ function Item:__init(id, name, city, description, image_path, price)
 
 end
 
+--- Getters for all different parameters
+
 function Item:get_id()
 	return self.id
 end

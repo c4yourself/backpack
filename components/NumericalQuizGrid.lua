@@ -3,12 +3,12 @@
 -- @classmod NumericalQuizGrid
 
 local class = require("lib.classy")
-local button = require("lib.components.Button")
-local ButtonGrid = require("lib.components.ButtonGrid")
-local NumericalQuizGrid = class("NumericalQuizGrid", ButtonGrid)
+local ButtonGrid = require("components.ButtonGrid")
 local SubSurface = require("lib.view.SubSurface")
 local utils = require("lib.utils")
 local event = require("lib.event")
+
+local NumericalQuizGrid = class("NumericalQuizGrid", ButtonGrid)
 
 --- Constructor for NumericalQuizGrid
 --@param remote_control Remote control or mock to listen to. Defaults to the

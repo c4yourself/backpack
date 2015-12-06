@@ -26,6 +26,7 @@ local config = require("config")
 config.logging.mode = "DISABLED"
 
 -- All tests should be included from here
+TestRectangle = require("test_rectangle")
 TestBit = require("test_bit")
 TestColor = require("test_color")
 TestEvent = require("test_event")
@@ -44,6 +45,7 @@ TestMemory = require("test_memory")
 TestExperienceCalculation = require("test_experiencecalculation")
 TestCity = require("test_City")
 TestCountry = require("test_Country")
+TestItem = require("test_item")
 --Mocks
 TestTimerMock = require("mocks.test_mock_TimerMock")
 TestGfxMock = require("mocks.test_mock_GfxMock")

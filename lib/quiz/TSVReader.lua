@@ -98,8 +98,10 @@ end
 -- @param count representing question[count]
 -- @return question representing the instance of MultipleChoiceQuestion
 function TSVReader:generate_question(count)
-	seed = self.generate_random(#self.question_index,#self.question_index)
-	count = self.question_index[seed[count]]
+	local seed = self.generate_random(#self.question_index,#self.question_index)
+
+	local count = self.question_index[seed[count]]
+
 	local question = MultipleChoiceQuestion(self.image_path,self.questions_table[count][1],self.correct_answers[count],self.choices[count])
 	return question
 end

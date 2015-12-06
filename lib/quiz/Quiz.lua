@@ -31,7 +31,7 @@ function Quiz:get_question()
 end
 
 ---Checks if the users answer to the current question is correct
--- @param anwer
+-- @param answer
 -- @return Boolean to show if the answer was correct or not
 function Quiz:answer(answer)
 	if self.questions[self.current_question] ~= nil then
@@ -74,6 +74,7 @@ function Quiz:generate_multiplechoice_quiz(image_path,quiz_size)
 	local tsvreader = TSVReader(image_path)
 	if tsvreader:get_question("multiple_choice") ~= false then
 		for i = 1, quiz_size,1 do
+
 			local multiplechoicequestion = tsvreader:generate_question(i)
 			self.questions[i] = multiplechoicequestion
 		end
@@ -108,8 +109,21 @@ end
 -- @return false representing don't get question from TSV
 function Quiz:generate_citytour_quiz(image_path,attraction_number)
 	local tsvreader = TSVReader(image_path .. "_city_tour")
+
+	for k,v in pairs(tsvreader.questions_table) do
+		tsvreader.questions_table[k] = nil
+	end
+
+	for k,v in pairs(tsvreader.choices) do
+		tsvreader.choices[k] = nil
+	end
+
+	for k,v in pairs(tsvreader.correct_answers) do
+		tsvreader.correct_answers[k] = nil
+	end
+
 	if tsvreader:get_question("city_tour" .. attraction_number) ~= false then
-			local multiplechoicequestion = tsvreader:generate_question(1)
+			local multiplechoicequestion = tsvreader:generate_question(tonumber(attraction_number))
 			self.questions[1] = multiplechoicequestion
 		return true
 	else
