@@ -25,15 +25,13 @@ function PopUp:__init(remote_control,surface, type, message)
 	self.message_font_height = 18
 
 	self.type = type
-	self.message_head_font = Font("data/fonts/DroidSans.ttf",20, Color(0,0,0,255))
-	self.message_font = Font("data/fonts/DroidSans.ttf",self.message_font_height, Color(0,0,0,255))
-	self.button_font = Font("data/fonts/DroidSans.ttf",25, Color(0,0,0,255))
+	self.message_head_font = Font("data/fonts/DroidSans.ttf", 20, Color(1, 1, 1, 255))
+	self.message_font = Font("data/fonts/DroidSans.ttf", self.message_font_height, Color(1, 1, 1, 255))
+	self.button_font = Font("data/fonts/DroidSans.ttf", 25, Color(1, 1, 1, 255))
 	local indent = 55
 	-- Create buttons positions and size
 	self.button_size = {width=self.width*0.22, height=self.height*0.15}
-	--4*(width-indent)/27, height=4*(height-1)/13}
 
-	--self.button_size = {width = 100, height = 100}
 	self.button_color = Color(255,90,0,255)
 	self.color_selected = Color(255,153,0,255)
 	self.color_disabled = Color(0,0,0,255)
@@ -114,14 +112,11 @@ function PopUp:render(surface)
 	local message_line_pos = first_line_pos + 30
 
 	-- Draw the fonts
-	--self.message_head_font:draw(surface, {x = self.width * 0.44, y = self.height * 0.08}, "Message")
 
 	surface:fill({0,0,0,255}, {width = self.width * 0.5, height = 2, x =self.width * 0.25, y = first_line_pos})
-	--self. message_table = {text = "Are you sure you want to exit?"}
 	local len = string.len(self.message[1])
 	local half_len = len / 2
 	local percent = len / self.width
-	--self.message_font:draw(surface, {x = self.width * 0.5 - len*4, y=self.height * 0.3}, self.message.text)
 
 	for i, text in ipairs(self.message) do
 		--local text_width= width*2/3-2*text_indent
@@ -130,19 +125,9 @@ function PopUp:render(surface)
 		local percent = len / self.width
 		self.message_font:draw(surface, {x = self.width * 0.5 - len*4, y=message_line_pos}, self.message[i])
 		message_line_pos = message_line_pos + self.message_font_height + 5
-		--city_tour_text:draw(surface, {x = width/3+text_indent, y = 50+25*i, width = text_width, height = 25}, text, nil, nil)
 	end
-
-
+	
 	surface:fill({0,0,0,255}, {width = self.width * 0.5, height = 2, x = self.width * 0.25, y = message_line_pos + 30})
-
---	city_tour_attraction_font:draw(surface, {x = height/6, y = height*23/30+5, width = height*0.54*3/5, height = 30}, "Message2", center)
-
-	-- Draw tour text square x-axis
-	--surface:fill({0,0,0,255}, {width = 2/3*width-150, height = 2, x = width/3+95, y =45})
-
-	--Write all the tour text
-	--city_tour_text:draw(surface, {x = width/3+text_indent, y = 50+25*i, width = text_width, height = 25}, "hej", nil, nil)
 
 	--Render buttons
 	self.popup_button_grid:render(surface)
