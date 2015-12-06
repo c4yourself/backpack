@@ -83,7 +83,6 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 						button_exit)
 	local exit_index = self.views.grid:get_last_index()
 	self.views.grid:mark_as_back_button(exit_index)
-
 	self:listen_to(
 		self.views.grid,
 		"back",
@@ -243,10 +242,11 @@ function MultipleChoiceView:render(surface)
 			-- Question area
 			local x = math.ceil(surface:get_width() * 0.2)
 			local y = math.ceil(surface:get_height() * 0.1)
-			self.question_area_width = surface_width - 2 * x
+			--self.question_area_width = surface_width - 2 * x
+			self.question_area_width = surface_width * 0.6
 			self.question_area_height = math.ceil(0.20*surface_height)
 
-			self.question_area = SubSurface(surface, {x = x, y = y,
+			self.question_area = SubSurface(surface, {x = surface_width * 0.2, y = y,
 				height = self.question_area_height,
 				width = self.question_area_width})
 
