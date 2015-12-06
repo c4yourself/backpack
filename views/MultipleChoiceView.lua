@@ -68,12 +68,12 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 	local width = subsurface:get_width()
 
 	local button_color = Color(255, 99, 0, 255)
-	local color_selected = Color(255, 255, 255, 55)
+	local color_selected = Color(255, 153, 0, 255)
 	local color_disabled = Color(111, 222, 111, 255)
 	local button_size = {width = 300, height = 75}
 
 	-- Add back button
-	local button_exit = Button(Color(255,35,35,255), color_selected, color_disabled,
+	local button_exit = Button(button_color, color_selected, color_disabled,
 								true, true, "views.CityView")
 	local exit_position = {x = width*0.2, y = height * 0.67}
 	button_exit:set_textdata("Back to city", Color(255,255,255,255),
@@ -91,7 +91,7 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 	)
 
 	-- Add next button
-	local button_next = Button(Color(250, 169, 0,255), color_selected, color_disabled,
+	local button_next = Button(button_color, color_selected, color_disabled,
 								true, false)
 	local next_position = {x =  width*0.8-300, y = height*0.67}
 	button_next:set_textdata("Next question", Color(255,255,255,255),
