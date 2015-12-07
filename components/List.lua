@@ -23,18 +23,45 @@ end
 
 function List:button_press(key)
 	if key == "up" then
-		self.current_index = math.max(self.current_index - 1, 1)
+		--self.current_index = math.max(self.current_index - 1, 1)
+		if self.current_index == 0 then
+			self.current_index = #self.item_list
+			self.start_index = self.current_index - (self.visible_items - 1)
+			self:trigger("unselect_back")
+		elseif self.current_index - 1 < 1 then
+			self.current_index = 0
+			self:trigger("select_back")
+		else
+			self.current_index = self.current_index -1
+			self:trigger("unselect_back")
+		end
+		--[[
 		if self.current_index < self.start_index then
 			self.start_index = self.current_index
-		end
+		end]]
+
 
 		self:dirty()
 	elseif key == "down" then
-		self.current_index = math.min(self.current_index + 1, #self.item_list)
-
+		--self.current_index = math.min(self.current_index + 1, #self.item_list)
+		if self.current_index == 0 then
+			self.current_index = 1
+			self.start_index = 1
+			self:trigger("unselect_back")
+		elseif self.current_index + 1 > #self.item_list then
+			self.current_index = 0
+			self:trigger("select_back")
+		else
+			self.current_index = self.current_index +1
+			if self.current_index > self.visible_items then
+				self.start_index = self.current_index - (self.visible_items - 1)
+			end
+			self:trigger("unselect_back")
+		end
+		--[[
 		if self.current_index > self.visible_items then
 			self.start_index = self.current_index - (self.visible_items - 1)
-		end
+		end]]
 
 		self:dirty()
 	end
@@ -43,6 +70,10 @@ end
 
 function List:add_list_item(list_item)
 	 table.insert(self.item_list, list_item)
+end
+
+function List:return_curr_index()
+	return self.current_index, #self.item_list
 end
 
 function List:render(surface)
