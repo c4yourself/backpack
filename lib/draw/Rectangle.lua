@@ -23,10 +23,10 @@ function Rectangle:__init(x, y, width, height)
 		error("Invalid rectangle, position and size must be positve")
 	end
 
-	self.x = x
-	self.y = y
-	self.width = width
-	self.height = height
+	self.x = math.floor(x)
+	self.y = math.floor(y)
+	self.width = math.floor(width)
+	self.height = math.floor(height)
 end
 
 --- Returns starting coordinates (upper left corner)
@@ -46,8 +46,8 @@ end
 -- @return True if given rectangle completely fits within this rectangle, else
 --         false.
 function Rectangle:contains(rectangle)
-	local sex, sey = rectangle:get_end()
 	local rx, ry = rectangle:get_start()
+	local sex, sey = rectangle:get_end()
 	local rex, rey = rectangle:get_end()
 
 	return self.x <= rx and self.y <= ry and sex >= rex and sey >= rey

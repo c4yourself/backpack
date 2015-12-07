@@ -15,9 +15,9 @@ local List = require("components.List")
 local ListItem = require("components.ListItem")
 local WorldMap = require("views.WorldMapView")
 local city = require("lib.city")
+local style = require("lib.style")
 
 local TravelView = class("TravelView", View)
-
 
 --- Standard initialiser
 function TravelView:__init(remote_control, surface, profile)
@@ -77,16 +77,17 @@ function TravelView:__init(remote_control, surface, profile)
 	callback
 	)
 
+	self.return_button = style.text_button("Return to " .. self.city.name)
+
 	-- Trigger for if exit button is marked, display in different color
 	self:listen_to(self.list_comp, "select_back", function()
-		self.button_color = {r=250, g=169, b=0, a=255}
+		self.return_button:select(true)
 	end)
 
 	-- Trigger if we're not on the sexit button
 	self:listen_to(self.list_comp, "unselect_back", function()
-		self.button_color = {r=255, g=150, b=0, a=255}
+		self.return_button:select(false)
 	end)
-
 end
 
 --- Standard destroy function
@@ -100,8 +101,6 @@ end
 function TravelView:render(surface)
 	surface:clear({r=0, g=0, b=0, a=255})
 
-	local text_color = {r=0, g=0, b=0}
-	local button_size_1 = {width = 500, height = 100}
 	local topic_surface = SubSurface(surface, {
 		width=surface:get_width(),
 		height=surface:get_height(),
@@ -115,13 +114,7 @@ function TravelView:render(surface)
 	local return_button = SubSurface(surface, {
 		width=250, height=100,
 		x=22, y=surface:get_height()*0.78})
-	return_button:fill(self.button_color)
-
-	self.font:draw(return_button, {
-		width=return_button:get_width(),
-		height=return_button:get_height(),
-		x=0, y=0},
-		"Return to ".. self.city.name, "center", "middle")
+	self.return_button:render(return_button)
 
 	local list_comp_surface = SubSurface(surface,{width=450, height=300,
 		x = 20, y = math.floor(surface:get_height()*0.2)})
@@ -162,7 +155,7 @@ function TravelView:render(surface)
 		height=300,
 		x=577, y=surface:get_height()*0.2})
 
-	world_map_surface:fill({r=65, g=70, b=72, a=255})
+	world_map_surface:clear({r=65, g=70, b=72, a=255})
 	world_map_surface:copyfrom(self.image, nil, {x=5, y=5, width=490, height=290})
 
 	self:dirty(false)
