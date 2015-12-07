@@ -69,7 +69,7 @@ function ConnectFourComponent:press(key)
 				self:focus()
 			end)
 		end
-	elseif key == "exit" then
+	elseif key == "back" then
 		--TODO pop-up
 	--	local exit_popup = subsurface(surface, area(100, 100, 400, 400))
 	--	local color_popup = color(255, 255, 255, 255)
@@ -201,7 +201,7 @@ function ConnectFourComponent:render(surface)
 				local experience = ExpCalc.Calculation(count_x, "Connectfour")
 				self.profile:modify_balance(experience)
 				self.profile:modify_experience(experience)
-				winner_message = {"Congratulations, you won!", "You received " .. experience .. " coins."}
+				winner_message = {"Congratulations, you won!", "You received " .. experience .. " experience."}
 			elseif winner == "O" then
 				winner_message = {"Sorry, you lost!"}
 			end

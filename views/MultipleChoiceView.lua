@@ -1,4 +1,4 @@
-	--- Base class for MultipleChoiceView. View responsible for rendering the
+--- Base class for MultipleChoiceView. View responsible for rendering the
 -- multiple choice quiz
 -- @classmod MultipleChoiceView
 local class = require("lib.classy")
@@ -22,6 +22,9 @@ local PopUpView = require("views.PopUpView")
 local MultipleChoiceView = class("MultipleChoiceView", View)
 
 --- Constructor for MultipleChoiceView
+-- @param remote_control The remote control bound to the memory
+-- @param subsurface {@Surface} or {@SubSurface} to draw the memory on
+-- @param profile The current profile used in the application
 function MultipleChoiceView:__init(remote_control, subsurface, profile)
 	View.__init(self)
 	event.remote_control:off("button_release") -- TODO remove this once the ViewManager is fully implemented
@@ -38,9 +41,10 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 	-- Associate a quiz instance with the MultipleChoiceView
 	self.mult_choice_quiz = Quiz()
 
-	self.quiz_size = 3
+	self.quiz_size = 13
 
 	self.mult_choice_quiz:generate_singlechoice_quiz(self.profile:get_current_city(),self.quiz_size)
+	self.quiz_size = math.min(self.quiz_size, self.mult_choice_quiz.size)
 	self.current_question = 1
 	self.correct_answer_number = 0
 
@@ -166,8 +170,16 @@ function MultipleChoiceView:_submit()
 			self.progress_table[self.current_question] = true
 			self.last_check = self.last_check + 1
 		else
-			self.result_string = "Wrong. You've answered "
-			.. self.correct_answer_number .. " questions correctly this far."
+			local correct_alternative_no = tostring(self.mult_choice_quiz.questions[self.current_question].correct_answers[1])
+			local alternative_map = {}
+			alternative_map["1"] = "A"
+			alternative_map["2"] = "B"
+			alternative_map["3"] = "C"
+			alternative_map["4"] = "D"
+			local correct_alternative = alternative_map[correct_alternative_no]
+			self.result_string = "Wrong. " ..
+								"The correct alternative was alternative "
+								.. correct_alternative .. "."
 			self.progress_table[self.current_question] = false
 			self.last_check=self.last_check + 1
 		end
@@ -226,10 +238,12 @@ end
 -- what should be diplayed next to the user
 -- @param key Key that was pressed
 function MultipleChoiceView:press(key)
-	return
+	if key == "back" then
+		self:_exit()
+	end
 end
 
---Renders this instance of MultipleChoiceView and all its child views, given
+---Renders this instance of MultipleChoiceView and all its child views, given
 -- that it's flagged as dirty
 -- @param surface @{Surface} or @{SubSurface} to render this view on
 function MultipleChoiceView:render(surface)
@@ -415,13 +429,18 @@ function MultipleChoiceView:render(surface)
 			self.profile:modify_balance(experience)
 			self.profile:modify_experience(experience)
 			local type = "message"
-			local message = {"Good job! You received " .. experience .. " coins."}
+			local message = ""
+			if experience == 0 then
+				message = {"Game finished! You received " .. experience .. " experience."}
+			else
+				message = {"Good job! You received " .. experience .. " experience."}
+			end
 			self:_back_to_city(type, message)
 		end
 	self:dirty(false)
 end
 
----Funcion that triggers the end of game pop
+---Function that triggers the end of game pop
 --@param type String representing the type of pop-up.
 --@param message String with message to display
 function MultipleChoiceView:_back_to_city(type, message)

@@ -13,6 +13,7 @@ local Font = require("lib.draw.Font")
 --- Constructor for NumericalInputComponent
 -- @param remote_control Remote control to listen to. Defaults to the global
 --			remote_control instance
+-- @param surface {@Surface} or {@SubSurface} to render the component on
 function NumericalInputComponent:__init(remote_control, surface)
 	View.__init(self)
 	self.input = "Enter your answer here"
@@ -90,7 +91,7 @@ function NumericalInputComponent:render(surface)
 	end
 	self.width = surface:get_width()
 	self.height = surface:get_height()
-	local question_font = Font("data/fonts/DroidSans.ttf", 20, Color(255, 255, 255, 255))
+	local question_font = Font("data/fonts/DroidSans.ttf", 24, Color(255, 255, 255, 255))
 	question_font:draw(surface, {x = 0, y = 0,
 			height = self.height, width = self.width}, self.input,
 			"center", "middle")

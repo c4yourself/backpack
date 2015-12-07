@@ -20,7 +20,9 @@ end
 -- @param callback Callback function to trigger on event type.
 function Event:on(event_type, callback)
 	if self.log then
-		logger.trace("Event listener added for " .. event_type)
+		logger.trace(
+			"Event listener added for " .. event_type .. " (" ..
+			class.name(self) .. ")")
 	end
 	self:_on(event_type, callback, 0)
 end
@@ -30,7 +32,9 @@ end
 -- @param callback Callback function to trigger on event_type
 function Event:once(event_type, callback)
 	if self.log then
-		logger.trace("One time event listener added for " .. event_type)
+		logger.trace(
+			"One time event listener added for " .. event_type .. " (" ..
+			class.name(self) .. ")")
 	end
 	self:_on(event_type, callback, 1)
 end
@@ -40,11 +44,15 @@ end
 -- @param[opt] ... Parameters to pass to callback functions.
 function Event:trigger(event_type, ...)
 	if self.log then
-		logger.trace("Event callbacks triggered for " .. event_type)
+		logger.trace(
+			"Event callbacks triggered for " .. event_type .. " (" ..
+			class.name(self) .. ")")
 	end
 
 	if self.event_callbacks[event_type] == nil then
-		logger.trace("No callbacks bound for " .. event_type)
+		logger.trace(
+			"No callbacks bound for " .. event_type .. " (" .. class.name(self) ..
+			")")
 		return
 	end
 
@@ -83,7 +91,8 @@ function Event:off(event_type, callback)
 
 	if self.log then
 		logger.trace(
-			"Event listener are removed for " .. table.concat(event_types, ", "))
+			"Event listener are removed for " .. table.concat(event_types, ", ") ..
+			" (" .. class.name(self) .. ")")
 	end
 
 	-- Iterate through all callbacks and remove the ones matching the arguments

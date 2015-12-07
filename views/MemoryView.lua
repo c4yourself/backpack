@@ -26,9 +26,9 @@ local MemoryView = class("MemoryView", View)
 -- @param profile The current profile used in the application
 function MemoryView:__init(remote_control, surface, profile)
     View.__init(self)
-	event.remote_control:off("button_release") -- TODO remove this once the ViewManager is fully implemented
+
+	event.remote_control:off("button_release")
   self.surface = surface
-  self.surface:clear(Color(255,255,255,255):to_table())
 
     -- Flags to determine whether a player has moved or pressed submit
 	self.player_moved = false
@@ -42,8 +42,8 @@ function MemoryView:__init(remote_control, surface, profile)
     self.button_grid = MemoryGrid(remote_control)
     self.profile = profile
 
-    self:_set_pairs()
-    --self.pairs = 6 -- TODO For quicker manual testing, remove once done coding
+    --self:_set_pairs()
+    self.pairs = 10
     self.memory = MemoryGame(self.pairs, self.profile)
     self.columns = math.ceil((self.pairs*2)^(1/2))
 
@@ -66,29 +66,26 @@ function MemoryView:__init(remote_control, surface, profile)
     -- Components
     local width = self.surface:get_width()
     local height = self.surface:get_height()
-    local button_size_big = {width = 300, height = 100}
+    local button_size_big = {width = 300, height = 75}
     self.button_1 = Button(self.button_color, self.color_selected,
         self.color_disabled, true, false, "views.PopUpView")
-    self.positions["exit"] = {x = 100, y = 450}
+    self.positions["exit"] = {x = 75, y = 450}
     self.button_1:set_textdata("Back to City", self.text_color,
         {x = 100 + 65, y = 450 + 50 - 16}, 30,
         utils.absolute_path("data/fonts/DroidSans.ttf"))
 
     -- Create the button grid
-    --self.memory_board =  SubSurface(surface,{width = 750, height = 750, x = 0, y = 0})
-    --self.memory_board:clear(Color(0,255,0,255):to_table())
-    local card_color = Color(250, 105, 0, 255)--color.from_html("fa6900ff")
+    local card_color = Color(250, 105, 0, 255)
     local card_color_disabled = Color(111,222,111,255)
     local card_color_selected = Color(250, 105, 0, 255)
     self.button_size = {width = 100, height = 100}
     local x_gap = self.button_size.width + 50
     local y_gap = self.button_size.height + 50
 
-    self.pos_x = 450
-    self.pos_y = 50
+    self.pos_x = 430
+    self.pos_y = 38
 
     for i = 1, self.pairs*2 do
-
         local current_city = self.profile.city
         self.cards[i]  = CardComponent(current_city, self.memory.cards[i], card_color,
         card_color_selected, card_color, true, false)
@@ -170,9 +167,24 @@ function MemoryView:_determine_new_state()
             if self.memory.finished == true then
               local counter  = {self.memory.moves, self.memory.pairs}
               local experience = ExperienceCalculation.Calculation(counter, "Memory")
+              local last_level = (self.profile.experience-(self.profile.experience%100))/100+1
               self.profile:modify_balance(experience)
               self.profile:modify_experience(experience)
-              local message = {"You used " .. self.memory.moves .. " moves and received " .. experience .. " coins."}
+              local city = self.profile:get_city()
+
+              local new_level = (self.profile.experience-(self.profile.experience%100))/100+1
+              local message = ""
+              if experience == 0 then
+                message = {"Game finished! You received " .. experience .. " and "
+                          .. city.country:format_balance(experience) .. "."}
+              elseif last_level == new_level then
+                message = {"Good job! You received " .. experience ..
+                " experience and " .. city.country:format_balance(experience) .. "."}
+              else
+                message = {"Good job! You received " ..
+                                experience .. " experience and "..city.country:format_balance(experience) ..
+                                "." , "You have now reached level " .. new_level .. "!" }
+              end
               local type = "message"
               self:back_to_city(type, message)
             end
@@ -208,23 +220,42 @@ function MemoryView:render(surface)
             grid_callback)
         self.listening_initiated = true
     end
---At this point, we should check the memory states and keep the card that are true in memory.states open
+    --At this point, we should check the memory states and keep
+    -- the card that are true in memory.states open
     if self:is_dirty() then
-        local info_board = SubSurface(surface,{width = 200, height = 300, x = 50, y = 50})
+        -- Draws the left board containing back-button
+        local left_board = SubSurface(surface,{width = 300, height = self.surface:get_height()-150, x = 75, y = 75})
         self.surface:clear(Color(1, 1, 1,255):to_table())
-        info_board:clear(Color(1, 1, 1, 150):to_table())
-
         -- Add the number of turns
         local text = Font("data/fonts/DroidSans.ttf", 30, self.text_color)
         local turns = Font("data/fonts/DroidSans.ttf", 30, self.text_color)
         local turns_text = ""
         if self.memory.moves == nil then
-          turns_text = "No turns..."
+          turns_text = "no turns"
         else
           turns_text = tostring(self.memory.moves)
         end
-        text:draw(info_board, {x = 100, y = 150}, "Turns: " .. turns_text)
-        text:draw(info_board, {x = 100, y = 200}, "Pairs found: " .. tostring(self.memory.found_pairs) .. " / " .. tostring(self.pairs))
+        left_board:clear(Color(250, 105, 0, 255):to_table())
+        left_board:fill({r = 65, g = 70, b = 72, a = 255},
+          {x = 5, y = 5, width = 290, height = self.surface:get_height()-160})
+
+        left_board:fill(Color(250, 105, 0, 255):to_table(),
+            {x = 5, y = 75, width = 290, height = 5})
+
+        text:draw(left_board, {x = 100, y = 20}, tostring(self.pairs) .. " pairs")
+        if turns_text == "1" then
+            text:draw(left_board, {x = 50, y = 150}, "You have made ")
+            text:draw(left_board, {x = 100, y = 200}, turns_text .. " move  ")
+        else
+            text:draw(left_board, {x = 50, y = 150}, "You have made ")
+            text:draw(left_board, {x = 100, y = 200}, turns_text .. " moves ")
+        end
+
+        local right_board = SubSurface(surface,{width = 740, height = 585, x = 410, y = 18})
+        right_board:clear(Color(250, 105, 0, 255):to_table())
+        right_board:fill({r = 0, g = 0, b = 0, a = 255},
+          {x = 5, y = 5, width = 730, height = 575})
+
         gfx.update()
       end
     self:dirty(false)
@@ -235,24 +266,29 @@ function MemoryView:render(surface)
 end
 
 --- Called when the user returns to the CityView
+-- @param type String representing pop-up type
+-- @param message String to be displayed in pop-up
 function MemoryView:back_to_city(type, message)
 
-    local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
+    local subsurface = SubSurface(screen, {width = screen:get_width() * 0.5,
+                                    height = (screen:get_height() - 50) * 0.5,
+                                    x = screen:get_width() * 0.25,
+                                    y = screen:get_height() * 0.25 + 50})
     local popup_view = PopUpView(remote_control,subsurface, type, message)
     self:add_view(popup_view)
     self.button_grid:blur()
     self:blur()
 
     local button_click_func = function(button)
-      if button == "ok" then
-      self:trigger("exit_view")
-      else
-      popup_view:destroy()
-      self.button_grid:focus()
-      self:focus()
-      self:dirty(true)
-      gfx.update()
-    end
+        if button == "ok" then
+            self:trigger("exit_view")
+        else
+            popup_view:destroy()
+            self.button_grid:focus()
+            self:focus()
+            self:dirty(true)
+            gfx.update()
+        end
     end
 
     self:listen_to_once(popup_view, "button_click", button_click_func)
@@ -279,6 +315,7 @@ function MemoryView:destroy()
     view.View.destroy(self)
 end
 
+--- Focuses the MemoryView, i.e. makes it start listening to the remote control
 function MemoryView:focus()
   self:listen_to(
       event.remote_control,
@@ -287,6 +324,7 @@ function MemoryView:focus()
   )
 end
 
+--- Focuses the MemoryView, i.e. makes it stop listening to the remote control
 function MemoryView:blur()
   self:stop_listening(event.remote_control)
 end
