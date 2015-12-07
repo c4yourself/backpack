@@ -1,4 +1,6 @@
-
+--- Base class for TravelView
+-- Gives the player possibility to travel to other cities
+-- @classmod TravelView
 
 local class = require("lib.classy")
 local Color = require("lib.draw.Color")
@@ -16,6 +18,8 @@ local city = require("lib.city")
 
 local TravelView = class("TravelView", View)
 
+
+--- Standard initialiser
 function TravelView:__init(remote_control, surface, profile)
 	View.__init(self)
 
@@ -73,24 +77,28 @@ function TravelView:__init(remote_control, surface, profile)
 	callback
 	)
 
+	-- Trigger for if exit button is marked, display in different color
 	self:listen_to(self.list_comp, "select_back", function()
 		self.button_color = {r=250, g=169, b=0, a=255}
 	end)
 
+	-- Trigger if we're not on the sexit button
 	self:listen_to(self.list_comp, "unselect_back", function()
 		self.button_color = {r=255, g=150, b=0, a=255}
 	end)
 
 end
 
+--- Standard destroy function
 function TravelView:destroy()
 	View.destroy(self)
 	self.image:destroy()
 end
 
+--- Standard render Function
+-- @param surface Is the surfrace to be rendered
 function TravelView:render(surface)
 	surface:clear({r=0, g=0, b=0, a=255})
-
 
 	local text_color = {r=0, g=0, b=0}
 	local button_size_1 = {width = 500, height = 100}
@@ -118,18 +126,20 @@ function TravelView:render(surface)
 	local list_comp_surface = SubSurface(surface,{width=450, height=300,
 		x = 20, y = math.floor(surface:get_height()*0.2)})
 	self.list_comp:render(list_comp_surface)
-	--self.list_comp:on("dirty", function() self:render(surface); gfx.update() end)
+
+	-- Info bar under worldmap
 	dest_info_surface = SubSurface(surface, {
 		width = 500, height = 100,
 		x=577, y=surface:get_height()*0.78})
 
 	dest_info_surface:clear({r=65, g=70, b=72, a=255})
 
+	-- Check which index is currently marked
 	local selected_index = self.list_comp:return_curr_index()
+
+	-- If not exit is marked then display the route
 	if selected_index > 0 then
 		local current_destination = city.cities[self.routes[selected_index][1]]
-
-
 
 		self.font_dest:draw(dest_info_surface, {
 			width=dest_info_surface:get_width(),
@@ -137,6 +147,7 @@ function TravelView:render(surface)
 			x = 0, y = 0},
 			self.city.name .. " to " .. current_destination.name, "center", "middle")
 
+	-- Otherwise we show the exit information
 	else
 		self.font_dest:draw(dest_info_surface, {
 			width=dest_info_surface:get_width(),
@@ -157,7 +168,8 @@ function TravelView:render(surface)
 	self:dirty(false)
 end
 
-
+--- Function that decides what action to take on press of "ok"
+-- @param button Is the button that has been pressed
 function TravelView:_travel(button)
 
 
@@ -165,15 +177,11 @@ function TravelView:_travel(button)
 
 		-- Find index of currently selected travel route
 		local index, max_index
-		--[[
-		for i = 1, #self.list_comp.item_list, 1 do
-			if self.list_comp.item_list[i]._selected == true then
-				index = i
-				break
-			end
-		end]]
+
+		-- Find which index is marked in list
 		index, max_index = self.list_comp:return_curr_index()
 
+		-- If NOT the exit button is marked
 		if index > 0 and index <= max_index then
 			-- Check if we can afford the trip
 			if self.routes[index][3] <= self.profile:get_balance() then
@@ -199,22 +207,18 @@ function TravelView:_travel(button)
 
 			-- Otherwise we can't afford the trip
 			else
-
+				-- Not currently doing anything if so
 			end
+
+		-- If we've chosen to exit
 		else
 			self:destroy()
 			self:trigger("exit_view", self.profile)
 		end
-		-- This is not needed anymore
+
+		-- This is not needed anymore, but can be used for e.g. back via
+		-- 'Back'-button on remote control so I'll leave it
 	elseif button == "4" then
-		--[[ Old Code
-		self:stop_listening(event.remote_control)
-		local city_view = require("views.CityView")
-		cvc = city_view(event.remote_control)
-		self:destroy()
-		cvc:render(screen)
-		gfx.update()
-		]]
 		self:destroy()
 		self:trigger("exit_view", self.profile)
 	end

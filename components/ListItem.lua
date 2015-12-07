@@ -1,3 +1,7 @@
+--- Base class for ListItem
+-- A ListItem is a component of a list (i.e. possible destination for travel)
+-- @classmod ListItem
+
 local class = require("lib.classy")
 local View = require("lib.view.View")
 local Font = require("lib.draw.Font")
@@ -6,6 +10,7 @@ local utils = require("lib.utils")
 
 local ListItem = class("ListItem", View)
 
+--- Standard initialiser
 function ListItem:__init(text_left, icon, money, font, text_position_left, text_position_right, font_highlight, enabled)
 	View.__init(self)
 
@@ -24,14 +29,17 @@ function ListItem:__init(text_left, icon, money, font, text_position_left, text_
 
 end
 
+--- Function to select/deselect a list item
+-- @param status is the status (true/false)
 function ListItem:select(status)
 	self._selected = status
 end
 
+--- Standard render function
 function ListItem:render(surface)
 
 	local icon_height = 40
-
+	-- If the item is the selected on
 	if self._selected then
 		-- Enabled if we can afford, not otherwise
 		if self.enabled then
@@ -45,7 +53,7 @@ function ListItem:render(surface)
 
 		self.font_highlight:draw(surface, self.text_position_right, tostring(self.money))
 
-
+	-- If the item is not the selected one
 	else
 		-- Enabled if we can afford, not otherwise
 		if self.enabled then
@@ -57,10 +65,9 @@ function ListItem:render(surface)
 		self.font:draw(surface, {x = 70, y = 0, height = surface:get_height()}, self.text_left, "left", "middle")
 		self.font:draw(surface, self.text_position_right, tostring(self.money))
 
-		--surface:copyfrom(gfx.loadpng(self.icon), nil, {x=15, y=(surface:get_height()/2)-(icon_height/2),
-		--	width=40, height=icon_height}, true)
 	end
 
+	-- If there's an icon to draw...
 	if self.icon then
 	surface:copyfrom(gfx.loadpng(self.icon), nil, {x=15, y=(surface:get_height()/2)-(icon_height/2),
 		width=40, height=icon_height}, true)
