@@ -171,7 +171,6 @@ function MemoryView:_determine_new_state()
               self.profile:modify_balance(experience)
               self.profile:modify_experience(experience)
               local city = self.profile:get_city()
-
               local new_level = (self.profile.experience-(self.profile.experience%100))/100+1
               local message = ""
               if experience == 0 then

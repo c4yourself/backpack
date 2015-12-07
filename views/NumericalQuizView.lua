@@ -402,8 +402,11 @@ function NumericQuizView:back_to_city()
 	if current_question >= quiz_length then
 		local counter  = self.num_quiz.correct_answers
 		local experience = ExperienceCalculation.Calculation(counter, "Mathquiz")
+		local last_level = (self.profile.experience-(self.profile.experience%100))/100+1
 		self.profile:modify_balance(experience)
 		self.profile:modify_experience(experience)
+		local city = self.profile:get_city()
+		local new_level = (self.profile.experience-(self.profile.experience%100))/100+1
 
 		if experience == 0 then
 
@@ -411,11 +414,17 @@ function NumericQuizView:back_to_city()
 						.. tostring(self.num_quiz.correct_answers) ..
 						" questions correctly ",
 						"and you received " .. experience .. " experience."}
-		else
-			message = {"Good job! You answered "
+		elseif new_level == last_level then
+			message = {"Good job, you answered "
 					.. tostring(self.num_quiz.correct_answers) ..
-					" questions correctly ",
-					"and you received " .. experience .. " experience."}
+					" questions correctly! ",
+					"You received " .. experience .. " experience and " .. city.country:format_balance(experience) .. "."}
+		else
+			message = {"Good job, you answered "
+				.. tostring(self.num_quiz.correct_answers) ..
+				" questions correctly! ",
+				"You received " .. experience .. " experience and " .. city.country:format_balance(experience) .. ".",
+				"You have now reached level " .. new_level .. "!"}
 		end
 		type = "message"
 	else
