@@ -13,6 +13,8 @@ local logger = require("lib.logger")
 
 local surface = class("surface")
 
+surface.log = false
+
 --- Fills the surface with the given color.
 --
 -- Fills the surface with a solid color, using hardware acceleration on set-top
@@ -239,7 +241,17 @@ end
 -- The surface can not be used again after this operation.
 -- @zenterio
 function surface:destroy()
-	logger.trace("Surface destroyed")
+	if surface.log then
+		logger.trace("Surface destroyed")
+	end
+
+	if self.image_data then
+		gfx._free_surface(self)
+	else
+		logger.warn(
+			"Surface destroyed more than once. This is a programming error " ..
+			"perhaps.")
+	end
 	self.image_data = nil
 end
 
@@ -266,7 +278,6 @@ end
 function surface:__init(width, height)
 	if width == nil and height == nil then
 		-- Used when working with images
-		logger.trace("New empty surface")
 		self.image_data = nil
 	else
 		logger.trace(string.format("New surface %dx%d", width, height))
@@ -279,6 +290,10 @@ end
 -- @param path Path to the image
 -- @local
 function surface:_load_image(path)
+	if surface.log then
+		logger.trace("New image surface", path)
+	end
+
 	if not love.filesystem.isFile(path) then
 		error("No such image: " .. tostring(path))
 	end
@@ -291,7 +306,7 @@ function surface:_load_image(path)
 		local fileData, err = love.filesystem.newFileData(imageStream, path)
 		self.image_data = love.image.newImageData(fileData)
 	else
-		logger.error("Error loading image - '"..path.."'")
+		logger.error("Error loading image ", path)
 	end
 end
 

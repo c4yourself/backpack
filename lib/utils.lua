@@ -65,6 +65,18 @@ function utils.delay(delay, callback)
 	timer:start()
 end
 
+function utils.human_size(size)
+	local units = {"B", "kiB", "MiB", "GiB", "TiB"}
+
+	unit = 1
+	while size > 1024 and unit < #units do
+		size = size / 1024
+		unit = unit + 1
+	end
+
+	return string.format("%.2f %s", size, units[unit])
+end
+
 --- Extract table keys.
 -- @param input_table Table to extract keys from
 -- @return A table containing keys of input_table

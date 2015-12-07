@@ -5,10 +5,11 @@
 -- @module emulator.gfx
 -- @alias gfx
 
-local class = require("lib.classy")
 local surface = require("emulator.surface")
 
-local gfx = class("gfx")
+local gfx = {}
+
+gfx._surface_memory = 0
 
 --- New Surface
 --
@@ -24,10 +25,9 @@ local gfx = class("gfx")
 -- @return New instance of surface
 -- @zenterio
 function gfx.new_surface(width, height)
-	--local image_data = surface()
-	--image_data:change_size(width, height)
-	local image_data = surface(width, height)
-	return image_data
+	local surface = surface(width, height)
+	gfx._allocate_surface(surface)
+	return surface
 end
 
 --- Load PNG as a new surface
@@ -46,6 +46,8 @@ end
 function gfx.loadpng(path)
 	local image = surface()
 	image:_load_image(path)
+
+	gfx._allocate_surface(image)
 	return image
 end
 
@@ -63,7 +65,9 @@ end
 -- @zenterio
 function gfx.loadjpeg(path)
 	local image = surface()
-	image:loadImage(path)
+	image:_load_image(path)
+
+	gfx._allocate_surface(image)
 	return image
 end
 
@@ -77,7 +81,7 @@ end
 -- @see emulator.gfx.get_memory_limit
 -- @zenterio
 function gfx.get_memory_use()
-	--Not currently implemented
+	return gfx._surface_memory
 end
 
 
@@ -117,6 +121,20 @@ end
 -- @zenterio
 function gfx.set_auto_update(bool)
 	--Not currently implemented
+end
+
+--- Add surface allocation size to a registry.
+-- @local
+function gfx._allocate_surface(surface)
+	gfx._surface_memory =
+		gfx._surface_memory + 4 * surface:get_width() * surface:get_width()
+end
+
+---Remove surface allocation size to a registry.
+-- @local
+function gfx._free_surface(surface)
+	gfx._surface_memory =
+		gfx._surface_memory - 4 * surface:get_width() * surface:get_width()
 end
 
 --- Surface of screen

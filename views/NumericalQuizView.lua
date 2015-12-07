@@ -359,7 +359,6 @@ function NumericQuizView:render(surface)
 		self:back_to_city()
 	end
 	self:dirty(false)
-	gfx.update()
 end
 
 --- Set up for showing whether the user answered correctly or not. Only works
@@ -437,30 +436,28 @@ function NumericQuizView:back_to_city()
 									x = screen:get_width()*0.25,
 									y = screen:get_height()*0.25+50})
 	local popup_view = PopUpView(remote_control,subsurface, type, message)
-	self:add_view(popup_view)
+	self:add_view(popup_view, true)
 	self.views.grid:blur()
 	self.views.num_input_comp:blur()
 	self:blur()
 
 	local button_click_func = function(button)
 		if button == "ok" then
-		self:trigger("exit_view")
+			self:trigger("exit_view")
 		else
-		popup_view:destroy()
-		self.views.grid:focus()
-		self.views.num_input_comp:focus()
-		self:focus()
-		self._suppress_new_question = true -- Prevents the quiz from
-											-- skipping a question
-		self:dirty(true)
-		gfx.update()
-	end
+			popup_view:destroy()
+			self.views.grid:focus()
+			self.views.num_input_comp:focus()
+			self:focus()
+			self._suppress_new_question = true -- Prevents the quiz from
+												-- skipping a question
+			self:dirty()
+		end
 	end
 
 	self:listen_to_once(popup_view, "button_click", button_click_func)
 	popup_view:render(subsurface)
-	gfx.update()
-
+	self:dirty()
 end
 
 ---Focuses the NumericalQuizView, i.e. makes it listen to the remote control

@@ -71,7 +71,7 @@ end
 function WorldMap:destroy()
 	view.View.destroy(self)
 
-	for _, image in ipairs(self.images) do
+	for _, image in pairs(self.images) do
 		image:destroy()
 	end
 
@@ -100,10 +100,7 @@ end
 
 function WorldMap:_paint_world_map(surface)
 	surface:clear(background_color)
-	--surface:copyfrom(self.images.map)
-	--Since it is always the same world map I changed it
-	--Now it doesn't crash on the box //Fredrik :)
-	surface:copyfrom(gfx.loadpng("data/images/worldmap2.png"), nil, {x = 1, y = 1}, true)
+	surface:copyfrom(self.images.map, nil, {x = 1, y = 1}, true)
 
 	local city_marker = Rectangle(0, 0, 10, 10)
 
