@@ -199,9 +199,19 @@ function ConnectFourComponent:render(surface)
 			if winner == "X" then
 				local count_x = self.connectfour:get_number_of_coins()
 				local experience = ExpCalc.Calculation(count_x, "Connectfour")
+				local last_level = (self.profile.experience-(self.profile.experience%100))/100+1
 				self.profile:modify_balance(experience)
 				self.profile:modify_experience(experience)
-				winner_message = {"Congratulations, you won!", "You received " .. experience .. " experience."}
+				local city = self.profile:get_city()
+				local new_level = (self.profile.experience-(self.profile.experience%100))/100+1
+				if last_level == new_level then
+					winner_message = {"Congratulations, you won!", "You received " .. experience .. " experience and "
+				 								.. city.country:format_balance(experience) .. "."}
+				else
+					winner_message = {"Congratulations, you won!", "You received " .. experience .. " experience and "
+				 								.. city.country:format_balance(experience) .. "." ,
+														"You have now reached level " .. new_level .. "!"}
+				end
 			elseif winner == "O" then
 				winner_message = {"Sorry, you lost!"}
 			end
@@ -304,6 +314,7 @@ function ConnectFourComponent:_back_to_city(type, message)
 
 		local button_click_func = function(button)
 			if button == "ok" then
+			self:destroy()
 			self:trigger("exit_view")
 			else
 			popup_view:destroy()

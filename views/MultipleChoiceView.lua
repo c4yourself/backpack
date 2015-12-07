@@ -424,14 +424,27 @@ function MultipleChoiceView:render(surface)
 		if pop_up_flag then
 			local counter  = self.correct_answer_number
 			local experience = ExperienceCalculation.Calculation(counter, "Multiplechoice")
+			local last_level = (self.profile.experience-(self.profile.experience%100))/100+1
 			self.profile:modify_balance(experience)
 			self.profile:modify_experience(experience)
+			local city = self.profile:get_city()
+			local new_level = (self.profile.experience-(self.profile.experience%100))/100+1
 			local type = "message"
 			local message = ""
 			if experience == 0 then
-				message = {"Game finished! You received " .. experience .. " experience."}
+				message = {"Game finished! You answered " .. tostring(self.correct_answer_number)..
+				" questions correctly and received " .. experience .. " experience."}
+			elseif last_level == new_level then
+				message = {"Good job, you answered "
+						.. tostring(self.correct_answer_number) ..
+						" questions correctly! ",
+						"You received " .. experience .. " experience and " .. city.country:format_balance(experience) .. "."}
 			else
-				message = {"Good job! You received " .. experience .. " experience."}
+				message = {"Good job, you answered "
+					.. tostring(self.correct_answer_number) ..
+					" questions correctly! ",
+					"You received " .. experience .. " experience and " .. city.country:format_balance(experience) .. ".",
+					"You have now reached level " .. new_level .. "!"}
 			end
 			self:_back_to_city(type, message)
 		end
@@ -454,7 +467,7 @@ function MultipleChoiceView:_back_to_city(type, message)
 
     local button_click_func = function(button)
       	if button == "ok" then
-		  	self:destroy()
+		  		self:destroy()
       		self:trigger("exit_view")
       	else
 	      	popup_view:destroy()
