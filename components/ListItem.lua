@@ -16,7 +16,11 @@ function ListItem:__init(text_left, icon, money, font, text_position_left, text_
 	self.text_position_right = text_position_right
 	self.font = font
 	self.font_highlight = font_highlight
-	self.enabled = enabled
+	if enabled ~= nil then
+		self.enabled = enabled
+	else
+		self.enabled = true
+	end
 
 end
 

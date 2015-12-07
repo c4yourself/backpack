@@ -140,7 +140,6 @@ end
 
 function TravelView:_travel(button)
 	if button == "ok" then
-		self:stop_listening(event.remote_control)
 
 		-- Find index of currently selected travel route
 		local index
@@ -153,7 +152,8 @@ function TravelView:_travel(button)
 
 		-- Check if we can afford the trip
 		if self.routes[index][3] <= self.profile:get_balance() then
-
+			self:stop_listening(event.remote_control)
+			
 			-- Find destination city index based on selected city
 			local destination = city.cities[self.city.travel_routes[index][1]]
 
