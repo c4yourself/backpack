@@ -130,10 +130,10 @@ function NumericQuizView:render(surface)
 
 	-- Define input area if it hasn't been done already
 	if not self.input_area_defined then
-		local input_x = math.ceil(surface_width * 0.4)
-		local input_y = math.ceil(surface_height * 0.6)
-		local input_height = 60
-		local input_width = 225
+		local input_x = math.ceil(surface_width * 0.5) - 148
+		local input_y = 450 - 20
+		local input_height = 90
+		local input_width = 225 + 70
 		self.input_area = SubSurface(surface, {x = input_x, y = input_y,
 									height = input_height,
 									width = input_width})
