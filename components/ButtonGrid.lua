@@ -127,12 +127,16 @@ function ButtonGrid:remove_button(index, remove_index)
 	if index <= #self.button_list then
 		table.remove(self.button_list, index)
 		if remove_index == index then
+			for i = 1, #self.button_list do
+				self.button_list[i].button:select(false)
+			end
+			self.button_indicator = index - 1
 			self.button_list[index-1].button:select(true)
 		end
 	else
 		error("Trying to remove a button out of range")
 	end
-	self:dirty(false)
+	self:trigger("dirty")
 
 end
 

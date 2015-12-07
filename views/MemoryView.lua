@@ -42,7 +42,7 @@ function MemoryView:__init(remote_control, surface, profile)
     self.profile = profile
 
     self:_set_pairs()
-    --self.pairs = 6 -- TODO For quicker manual testing, remove once done coding
+    --self.pairs = 2 -- TODO For quicker manual testing, remove once done coding
     self.memory = MemoryGame(self.pairs, self.profile)
     self.columns = math.ceil((self.pairs*2)^(1/2))
 
@@ -171,11 +171,24 @@ function MemoryView:_determine_new_state()
             if self.memory.finished == true then
               local counter  = {self.memory.moves, self.memory.pairs}
               local experience = ExperienceCalculation.Calculation(counter, "Memory")
+              local last_level = (self.profile.experience-(self.profile.experience%100))/100+1
               self.profile:modify_balance(experience)
               self.profile:modify_experience(experience)
-              local message = {"You used " .. self.memory.moves ..
-                                " moves and received " ..
-                                experience .. " experience."}
+              local city = self.profile:get_city()
+
+              local new_level = (self.profile.experience-(self.profile.experience%100))/100+1
+              local message = ""
+              if experience == 0 then
+                message = {"Game finished! You received " .. experience .. " and "
+                          .. city.country:format_balance(experience) .. "."}
+              elseif last_level == new_level then
+                message = {"Good job! You received " .. experience ..
+                " experience and " .. city.country:format_balance(experience) .. "."}
+              else
+                message = {"Good job! You received " ..
+                                experience .. " experience and "..city.country:format_balance(experience) ..
+                                "." , "You have now reached level " .. new_level .. "!" }
+              end
               local type = "message"
               self:back_to_city(type, message)
             end

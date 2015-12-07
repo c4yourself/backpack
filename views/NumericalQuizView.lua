@@ -395,7 +395,7 @@ end
 --- Method for destroying the numerical quiz view and exiting the quiz
 function NumericQuizView:back_to_city()
 	--TODO Add pop-up
-	local message = {""}
+	local message = ""
 	local type = ""
 	local current_question = self.num_quiz.current_question
 	local quiz_length = #self.num_quiz.questions
@@ -405,10 +405,18 @@ function NumericQuizView:back_to_city()
 		self.profile:modify_balance(experience)
 		self.profile:modify_experience(experience)
 
-		message = {"Good job! You answered "
+		if experience == 0 then
+
+			message = {"Game finished! You answered "
+						.. tostring(self.num_quiz.correct_answers) ..
+						" questions correctly ",
+						"and you received " .. experience .. " experience."}
+		else
+			message = {"Good job! You answered "
 					.. tostring(self.num_quiz.correct_answers) ..
 					" questions correctly ",
 					"and you received " .. experience .. " experience."}
+		end
 		type = "message"
 	else
 		message = {"Are you sure you want to exit?"}
