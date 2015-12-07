@@ -395,7 +395,7 @@ function ConnectFour:computer_AI(x_column)
 
 	local counter = 0
 repeat
-	if random_probability < 8 then
+--	if random_probability < 8 then
 		counter = counter + 1
 			local random_close = math.random(-1, 1)
 			random_column = x_column + random_close
@@ -405,10 +405,10 @@ repeat
 				random_probability = 8
 			end
 
-	elseif random_probability >= 8 then
-		random_column = math.random(1,7)
+--	elseif random_probability >= 8 then
+--		random_column = math.random(1,7)
 
-	end
+--	end
 	until self:is_valid_move("O", random_column)
 
 	return random_column
