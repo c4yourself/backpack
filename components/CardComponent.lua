@@ -26,7 +26,7 @@ function CardComponent:__init(current_city, i, color, color_selected, color_disa
 	self.status = "FACING_DOWN"
 
 	-- Colors
-	self.backside_color = Color(0,0,0,255)
+	self.backside_color = Color(1, 1, 1, 255)
 	self.front_color = Color(255, 255, 255, 255)
 	self.from_img = gfx.loadpng("data/images/memory_pictures/generic/memory_question.png")
 	self.current_city = current_city:lower()

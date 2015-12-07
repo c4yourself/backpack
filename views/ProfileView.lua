@@ -73,16 +73,26 @@ function ProfileView:__init(remote_control, surface, profile)
 	self.button_size = {width = 2.8*width/45, height = 0.5*width/45}
 
 	self.buttons = {}
-	self.buttons[1] = Button(Color(255,90,0,255), Color(255,153,0,255), Color(0,0,0,255), true, true, 1)
-	k = 1
-	while k <= get_size(self.backpack_items) do
-			self.buttons[k+1] = Button(self.button_inactive, self.button_active, self.button_inactive, true, false,k+1)
-			k = k + 1
+	if get_size(self.backpack_items) > 0 then
+		self.buttons[1] = Button(Color(255,90,0,255), Color(255,153,0,255), Color(1, 1, 1, 255), true, false, 1)
+		self.buttons[2] = Button(self.button_inactive, self.button_active, self.button_inactive, true, true,2)
+		k = 2
+		while k <= get_size(self.backpack_items) do
+				self.buttons[k+1] = Button(self.button_inactive, self.button_active, self.button_inactive, true, false,k+1)
+				k = k + 1
+		end
+	else
+		self.buttons[1] = Button(Color(255,90,0,255), Color(255,153,0,255), Color(1, 1, 1, 255), true, true, 1)
+		k = 1
+		while k <= get_size(self.backpack_items) do
+				self.buttons[k+1] = Button(self.button_inactive, self.button_active, self.button_inactive, true, false,k+1)
+				k = k + 1
+		end
 	end
 
 	-- Add the exit button
-	self.font = Font("data/fonts/DroidSans.ttf", 20, Color(0, 0, 0, 255))
-	self.header_font = Font("data/fonts/DroidSans.ttf", 40, Color(0,0,0,255))
+	self.font = Font("data/fonts/DroidSans.ttf", 20, Color(1, 1, 1, 255))
+	self.header_font = Font("data/fonts/DroidSans.ttf", 40, Color(1, 1, 1, 255))
 	self.buttons[1]:set_textdata("Back to City",Color(255,255,255,255), {x = 30, y = 300}, 32, utils.absolute_path("data/fonts/DroidSans.ttf"))
 
 	-- Add them to button grid at the correct place
@@ -190,7 +200,7 @@ function ProfileView:render(surface)
 	self.font:draw(surface, {x=10,y=105}, "Birthday: ")
 	self.font:draw(surface, {x=180, y = 105}, tostring(self.profile:get_date_of_birth()))
 	self.font:draw(surface, {x=10,y=140}, "Level: ")
-	self.font:draw(surface, {x=180, y = 140}, tostring((self.profile:get_experience()-self.profile:get_experience()%100)/100))
+	self.font:draw(surface, {x=180, y = 140}, tostring((self.profile:get_experience()-self.profile:get_experience()%100)/100+1))
 	self.font:draw(surface, {x=10,y=175}, "Experience: ")
 	self.font:draw(surface, {x=180, y = 175}, tostring(self.profile:get_experience()%100))
 

@@ -78,6 +78,17 @@ function MultipleChoiceGrid:select_next()
 	self.button_indicator = self.next_button
 end
 
+--- Method for manually selecting a button in the grid.
+-- @param index Integer specifying the button to be selected. The index should
+--				be key to the button in the grid's button_list.
+function MultipleChoiceGrid:select_button(index)
+	for i = 1, #self.button_list do
+		self.button_list[i].button._selected = false
+	end
+	self.button_list[index].button._selected = true
+	self.button_indicator = index
+end
+
 --- Overloaded press function. Called when the user presses a button and makes
 -- sure to fire the correct event depending on the button pressed
 -- @param button Button that was pressed by the user

@@ -31,6 +31,7 @@ end
 
 --- Sets a view as the active view for this ViewManager, destroys the previous
 -- view and renders the new view
+-- @param view View instance that will become the new top level view
 function ViewManager:set_view(view)
 	if self.view ~= nil then
 		self.view:destroy()
@@ -43,8 +44,8 @@ function ViewManager:set_view(view)
 end
 
 --- Returns the currently active view
--- @Returns view Current top-level view component for this ViewManager
-function ViewManager:get_view(view)
+-- @returns view Current top-level view component for this ViewManager
+function ViewManager:get_view()
 	return self.view
 end
 
