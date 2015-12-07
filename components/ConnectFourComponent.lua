@@ -11,8 +11,6 @@ local subsurface = require("lib.view.SubSurface")
 local area = require("lib.draw.Rectangle")
 local font = require("lib.draw.Font")
 local color = require("lib.draw.Color")
-local button = require("lib.components.Button")
-local button_grid	=	require("lib.components.ButtonGrid")
 local PopUpView = require("views.PopUpView")
 local SubSurface = require("lib.view.SubSurface")
 local ExpCalc = require("lib.scores.experiencecalculation")
@@ -28,7 +26,6 @@ function ConnectFourComponent:__init(remote_control, subsurface, profile)
 	self.profile = profile
 	self.connectfour = ConnectFour()
 	self.current_column = 4
-	print("focus i init")
 	self:focus()
 
 	-- self:listen_to(
@@ -62,7 +59,6 @@ function ConnectFourComponent:press(key)
 	elseif key == "ok" then
 
 		self.connectfour:move(self.connectfour:get_player(), self.current_column)
-		print("blur i press ok")
 		self:blur()
 		--self:stop_listening(event.remote_control)
 		self:dirty()
@@ -96,8 +92,7 @@ end
 -- @param width_coinbox, width of a single coinbox
 -- @param height_coinbox, height of a single coinbox
 function ConnectFourComponent:top_row(surface, column, width_coinbox, height_coinbox)
-	print("toprow")
-	local posx = 0.35*surface:get_width()
+	local posx = 0.41*surface:get_width()
 	local posy = 0.1*surface:get_height() - 0.5*height_coinbox
 	local current_color = {r = 0, g = 0, b = 0}
 	local color = {r = 0, g = 0, b = 0}
@@ -135,13 +130,13 @@ function ConnectFourComponent:render(surface)
 	local height_coinbox = math.floor((1/7)*(0.8)*surface:get_height())
 	local posy = 0.1*surface:get_height()+ 0.5*height_coinbox
 	local posy_constant = 0.1*surface:get_height()+ 0.5*height_coinbox
-	local posx_constant = 0.35*surface:get_width()
+	local posx_constant = 0.41*surface:get_width()
 
 	self:top_row(surface, self.current_column, width_coinbox, height_coinbox)
 
-	--print the board
+	--prints the board
 	for i = 1, 6 do
-		local posx = 0.35*surface:get_width()
+		local posx = 0.41*surface:get_width()
     for j = 1, 7 do
 			if self.connectfour:get(i,j) == nil then
 				temp_color = {r=255, g=255, b=255}
@@ -160,30 +155,35 @@ function ConnectFourComponent:render(surface)
 
 	--Back to city button
 	local f = font("data/fonts/DroidSans.ttf", 16, color(255, 128, 0, 255))
-	local target1 = area(0.05*surface:get_width(),0.9*surface:get_height()-1.5*height_coinbox, 300, 60)
+	--local f = font("data/fonts/DroidSans.ttf", 16, color(0, 0, 0, 255))
+	local target1 = area(0.05*surface:get_width(),0.9*surface:get_height()-2.0*height_coinbox, 250, 90)
 	surface:clear(color(255, 255, 255, 255):to_table(), target1:to_table())
-	f:draw(surface, target1:to_table(), "Back to city, press Exit", "center", "middle")
+	f:draw(surface, target1:to_table(), "Press Exit to go back to City", "center", "middle")
 
 	--heading
-	local heading = font("data/fonts/DroidSans.ttf", 32, color(255, 128, 0, 255))
-	local target2 = area(0.05*surface:get_width(),0.1*surface:get_height(), 200, 60)
-	heading:draw(surface, target2:to_table(), "Connect Four")
+	--local heading = font("data/fonts/DroidSans.ttf", 32, color(255, 128, 0, 255))
+	--local target2 = area(0.05*surface:get_width(),0.1*surface:get_height(), 200, 60)
+	--heading:draw(surface, target2:to_table(), "Connect Four")
 
 	--text player + yellow box
 	local text_player = font("data/fonts/DroidSans.ttf", 22, color(255, 255, 51, 255))
-	local target3 = area(0.05*surface:get_width(),0.5*surface:get_height()-2*height_coinbox, 200, 60)
+	local target3 = area(0.05*surface:get_width(),0.5*surface:get_height()-3*height_coinbox, 200, 60)
 	text_player:draw(surface, target3:to_table(), "Player")
-		surface:clear(coin_color_player, {x=0.055*surface:get_width(), y=0.5*surface:get_height()-1.5*height_coinbox, width = width_coinbox, height = height_coinbox})
+		surface:clear(coin_color_player, {x=0.055*surface:get_width(), y=0.5*surface:get_height()-2.5*height_coinbox, width = width_coinbox, height = height_coinbox})
+			-- make box to a coin
+	surface:copyfrom(gfx.loadpng("data/images/connect_four/player_coin_cover.png"),nil,{x=0.055*surface:get_width(), y=0.5*surface:get_height()-2.5*height_coinbox, width = width_coinbox, height = height_coinbox}, true)
 
 	--text compunter + red box
 	local text_computer = font("data/fonts/DroidSans.ttf", 22, color(255, 0, 0, 255))
-	local target4 = area(0.05*surface:get_width(),0.5*surface:get_height()+0.1*height_coinbox, 200, 60)
+	local target4 = area(0.05*surface:get_width(),0.5*surface:get_height()-0.9*height_coinbox, 200, 60)
 	text_computer:draw(surface, target4:to_table(), "Computer")
-	surface:clear(coin_color_computer, {x=0.055*surface:get_width(), y=0.5*surface:get_height()+0.5*height_coinbox+8, width = width_coinbox, height = height_coinbox})
+	surface:clear(coin_color_computer, {x=0.055*surface:get_width(), y=0.5*surface:get_height()-0.5*height_coinbox+8, width = width_coinbox, height = height_coinbox})
+			-- make box to a coin
+	surface:copyfrom(gfx.loadpng("data/images/connect_four/player_coin_cover.png"),nil,{x=0.055*surface:get_width(), y=0.5*surface:get_height()-0.5*height_coinbox+8, width = width_coinbox, height = height_coinbox}, true)
 
 	--insert picture over board
-	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect4board.png")),nil,{x=posx_constant, y=posy_constant, width = 7*width_coinbox, height = 6*height_coinbox})
-	surface:copyfrom(gfx.loadpng(utils.absolute_path("data/images/connect4toprow.png")),nil,{x=posx_constant, y=0.1*surface:get_height() - 0.5*height_coinbox, width = 7*width_coinbox, height = height_coinbox})
+	surface:copyfrom(gfx.loadpng("data/images/connect_four/connect4board.png"),nil,{x=posx_constant, y=posy_constant, width = 7*width_coinbox, height = 6*height_coinbox}, true)
+	surface:copyfrom(gfx.loadpng("data/images/connect4toprow.png"),nil,{x=posx_constant, y=0.1*surface:get_height() - 0.5*height_coinbox, width = 7*width_coinbox, height = height_coinbox}, true)
 
 
 	if self.connectfour:_is_full_board() then
@@ -201,7 +201,7 @@ function ConnectFourComponent:render(surface)
 				local experience = ExpCalc.Calculation(count_x, "Connectfour")
 				self.profile:modify_balance(experience)
 				self.profile:modify_experience(experience)
-				winner_message = {"Congratulations, you won!", "You received " .. experience .. " coins."}
+				winner_message = {"Congratulations, you won!", "You received " .. experience .. " experience."}
 			elseif winner == "O" then
 				winner_message = {"Sorry, you lost!"}
 			end

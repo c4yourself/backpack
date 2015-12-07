@@ -4,7 +4,6 @@
 local NumericalInputComponent = require("components.NumericalInputComponent")
 local class = require("lib.classy")
 local View = require("lib.view.View")
-local NumericQuizView = class("NumericQuizView", View)
 local utils = require("lib.utils")
 local event = require("lib.event")
 local view = require("lib.view")
@@ -13,15 +12,17 @@ local NumericQuestion = require("lib.quiz.NumericQuestion")
 local SubSurface = require("lib.view.SubSurface")
 local Color = require("lib.draw.Color")
 local Font = require("lib.draw.Font")
-local NumericalQuizGrid = require("lib.components.NumericalQuizGrid")
-local Button = require("lib.components.Button")
+local NumericalQuizGrid = require("components.NumericalQuizGrid")
+local Button = require("components.Button")
 local ExperienceCalculation = require("lib.scores.experiencecalculation")
 local PopUpView = require("views.PopUpView")
 
+local NumericQuizView = class("NumericQuizView", View)
+
 --- Constructor for NumericQuizView
--- @param remote_control
--- @param subsurface
--- @param profile is the profile playing
+-- @param remote_control Remote control instance to listen to
+-- @param subsurface {@Surface} or {@SubSurface} to draw on
+-- @param profile Profile of the current user
 function NumericQuizView:__init(remote_control, subsurface, profile)
 	View.__init(self)
 	self.remote_control = remote_control
@@ -98,6 +99,7 @@ function NumericQuizView:__init(remote_control, subsurface, profile)
 self:focus()
 end
 
+--- Adjusts the quiz difficulty based on the user's experience
 function NumericQuizView:_set_level()
 	local exp = self.profile:get_experience()
 	if exp <= 100 then
@@ -112,7 +114,7 @@ function NumericQuizView:_set_level()
 end
 
 --- Responds to a 'key' press when the View is active
--- @param key Key that was pressed
+-- @param key Key that was pressed by the user
 function NumericQuizView:press(key)
  	if key == "back" then
 		self:back_to_city()
@@ -286,15 +288,15 @@ function NumericQuizView:render(surface)
 			if self.progress_table[i] == true then
 				bar_component_color = Color(0,255,0,255)
 				progress_bar_component_color:clear(bar_component_color:to_table())
-				progress_bar_component_pic:copyfrom(self.answer_correct)
+				progress_bar_component_pic:copyfrom(self.answer_correct, nil, nil, true)
 			elseif self.progress_table[i] == false then
 				bar_component_color = Color(255,0,0,255)
 				progress_bar_component_color:clear(bar_component_color:to_table())
-				progress_bar_component_pic:copyfrom(self.answer_false)
+				progress_bar_component_pic:copyfrom(self.answer_false, nil, nil, true)
 			else
-				bar_component_color = Color(0, 0, 0, 50)
+				bar_component_color = Color(1, 1, 1, 50)
 				progress_bar_component_color:clear(bar_component_color:to_table())
-				progress_bar_component_pic:copyfrom(self.answer_nil)
+				progress_bar_component_pic:copyfrom(self.answer_nil, nil, nil, true)
 			end
 
 			bar_component_y = bar_component_y + progress_bar_margin +
@@ -396,7 +398,7 @@ function NumericQuizView:back_to_city()
 		message = {"Good job! You answered "
 					.. tostring(self.num_quiz.correct_answers) ..
 					" questions correctly ",
-					"and you received " .. experience .. " coins."}
+					"and you received " .. experience .. " experience."}
 		type = "message"
 	else
 		message = {"Are you sure you want to exit?"}

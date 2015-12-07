@@ -38,7 +38,7 @@ end
 --- Return end coordinates (lower right corner)
 -- @return x, y
 function Rectangle:get_end()
-	return self.x + self.width - 1, self.y + self.width -1
+	return self.x + self.width - 1, self.y + self.height - 1
 end
 
 --- Checks if given rectangle is completely contained within this rectangle

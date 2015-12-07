@@ -1,12 +1,10 @@
-
-
 local class = require("lib.classy")
 local View = require("lib.view.View")
-local ListItem = class("ListItem", View)
 local Font = require("lib.draw.Font")
 local Color = require("lib.draw.Color")
 local utils = require("lib.utils")
 
+local ListItem = class("ListItem", View)
 
 function ListItem:__init(text_left, icon, money, font, text_position_left, text_position_right, font_highlight)
 	View.__init(self)
@@ -18,7 +16,7 @@ function ListItem:__init(text_left, icon, money, font, text_position_left, text_
 	self.text_position_right = text_position_right
 	self.font = font
 	self.font_highlight = font_highlight
-	
+
 end
 
 function ListItem:select(status)
@@ -37,7 +35,7 @@ function ListItem:render(surface)
 
 		self.font_highlight:draw(surface, self.text_position_right, tostring(self.money))
 		surface:copyfrom(gfx.loadpng(self.icon), nil, {x=15, y=(surface:get_height()/2)-(icon_height/2),
-			width=40, height=icon_height})
+			width=40, height=icon_height}, true)
 
 	else
 		surface:clear({r=255, g=150, b=0, a=255})
@@ -45,7 +43,7 @@ function ListItem:render(surface)
 		self.font:draw(surface, self.text_position_right, tostring(self.money))
 
 		surface:copyfrom(gfx.loadpng(self.icon), nil, {x=15, y=(surface:get_height()/2)-(icon_height/2),
-			width=40, height=icon_height})
+			width=40, height=icon_height}, true)
 
 end
 

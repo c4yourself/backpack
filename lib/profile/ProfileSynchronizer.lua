@@ -172,13 +172,16 @@ function ProfileSynchronizer:test_hash()
 	result = server_communication(json_request, "/")
 
 	if result["error"] then
-		--print(result["message"])
+		--logger.trace(result["message"])
 	else
-		--print(result["message"])
+		--logger.trace(result["message"])
 	end
 
 end
 
+
+--- Function for only being able to check if the email has already been used
+-- @param email The email to be checked
 function ProfileSynchronizer:check_email(email)
 
 	local hashkey = hash.hash256(email..self.ttlyawesomekey)

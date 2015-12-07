@@ -4,9 +4,7 @@
 -- @classmod MemoryGrid
 
 local class = require("lib.classy")
-local button = require("lib.components.Button")
-local ButtonGrid = require("lib.components.ButtonGrid")
-local MemoryGrid = class("MemoryGrid", ButtonGrid)
+local ButtonGrid = require("components.ButtonGrid")
 local SubSurface = require("lib.view.SubSurface")
 local utils = require("lib.utils")
 local event = require("lib.event")
@@ -14,6 +12,8 @@ local Font = require("lib.draw.Font")
 local Color = require("lib.draw.Color")
 local view = require("lib.view")
 local logger = require("lib.logger")
+
+local MemoryGrid = class("MemoryGrid", ButtonGrid)
 
 --- Constructor for MemoryGrid.
 -- @param remote_control Remote control or remote control mock to listen to.
@@ -108,7 +108,6 @@ function MemoryGrid:indicate_downward(button_indicator)
 		for k=1, #button_list do
 				local distance = self:distance_to_corner(corner_position, k)
 				shortest_distance_corner = math.min(shortest_distance_corner, distance)
-				--print("the minium distance at the moment is "..shortest_distance_corner)
 		end
 	end
 
@@ -155,7 +154,6 @@ function MemoryGrid:indicate_upward(button_indicator)
 			if button_list[j].y + button_list[j].height <= button_list[indicator].y then
 				local distance = self:button_distance(indicator, j)
 				if shortest_distance_buttons == distance then
-					-- print("the distance is "..distance)
 					nearest_button_index = j
 					break
 				end
@@ -273,9 +271,7 @@ function MemoryGrid:indicate_leftward(button_indicator, direction)
 			if  button_list[indicator].x >= button_list[j].x + button_list[j].width then
 				local distance = self:button_distance(indicator, j)
 				if shortest_distance_buttons == distance then
-					--print("the distance is "..distance)
 					nearest_button_index = j
-					--print("the nearast button is ".. nearest_button_index)
 					break
 				end
 			end
@@ -410,7 +406,7 @@ function MemoryGrid:render(surface)
 end
 
 --- Sets the card status for card with index i to be either facing up or facing
--- down. Triggers dirty if the status has changed. 
+-- down. Triggers dirty if the status has changed.
 --@param status String representing the new status. May be one of the following
 -- 				constants: "FACING_UP", "FACING_DOWN".
 function MemoryGrid:set_card_status(card_index, status)

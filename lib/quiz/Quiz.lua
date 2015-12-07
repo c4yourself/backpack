@@ -31,7 +31,7 @@ function Quiz:get_question()
 end
 
 ---Checks if the users answer to the current question is correct
--- @param answer
+-- @param answer String or Number representing the answer
 -- @return Boolean to show if the answer was correct or not
 function Quiz:answer(answer)
 	if self.questions[self.current_question] ~= nil then
@@ -44,7 +44,14 @@ function Quiz:answer(answer)
 	return self.questions[self.current_question]:is_correct(answer)
 end
 
--- Generates a numerical quiz of a given size and difficulty
+---Generates a numerical quiz of a given size and difficulty
+-- @param level String to determine how difficult the quiz should be. Should be
+-- 				one of the following constants: "BEGINNER", "NOVICE", "ADVANCED",
+-- 				or "EXPERT"
+-- @param quiz_size Integer indicating how many questions the quiz should
+-- 					consist of.
+-- @param image_path String referencing the search path to an image. Used for
+--					image questions.
 function Quiz:generate_numerical_quiz(level, quiz_size, image_path)
 	for i = 1, quiz_size do
 		local question = questiongenerator.generate(level, image_path)
@@ -53,14 +60,14 @@ function Quiz:generate_numerical_quiz(level, quiz_size, image_path)
 end
 
 ---Calculate score of the quiz
--- @param representing how many correct answers of the quiz
+-- @param correct_question_number Number representing how many correct answers
+-- 					of the quiz
 function Quiz:calculate_score(correct_question_number)
-	--maybe some other scoring algorithm
 	self.score = correct_question_number * 2
 end
 
 ---Get the score of the quiz
--- @return self.score
+-- @return The user's score as a Number.
 function Quiz:get_score()
 	return self.score
 end
@@ -73,8 +80,7 @@ end
 function Quiz:generate_multiplechoice_quiz(image_path,quiz_size)
 	local tsvreader = TSVReader(image_path)
 	if tsvreader:get_question("multiple_choice") ~= false then
-		for i = 1, quiz_size,1 do
-
+		for i = 1, quiz_size, 1 do
 			local multiplechoicequestion = tsvreader:generate_question(i)
 			self.questions[i] = multiplechoicequestion
 		end
@@ -92,7 +98,7 @@ end
 function Quiz:generate_singlechoice_quiz(image_path,quiz_size)
 	local tsvreader = TSVReader(image_path)
 	if tsvreader:get_question("single_choice") ~= false then
-		for i = 1, quiz_size,1 do
+		for i = 1, math.min(quiz_size, #tsvreader.questions_table),1 do
 			local multiplechoicequestion = tsvreader:generate_question(i)
 			self.questions[i] = multiplechoicequestion
 		end

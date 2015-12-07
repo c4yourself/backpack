@@ -29,7 +29,9 @@ questiongenerator.var = math.randomseed(questiongenerator.seed)
 -- Input string should be one of the constants in the questiongenerator module,
 -- i.e. BEGINNER, NOVICE, ADVANCED, or EXPERT
 -- @param difficulty String representing the difficulty level
--- @return NumericQuestion
+-- @param image_path String with search path to a image, in case of a image
+--					question.
+-- @return NumericQuestion instance
 function questiongenerator.generate(difficulty, image_path)
 	local operators, operands = questiongenerator._generate_ops(difficulty)
 	local question, answer  = questiongenerator._build_expression(operators, operands)
@@ -38,8 +40,9 @@ function questiongenerator.generate(difficulty, image_path)
 end
 
 --- Generates a set of random operators and a set of random operands
--- @return a table with operands and a table with operators given a difficulty
--- level
+-- @param difficulty String indicating which difficulty to use
+-- @return operators, a table with operands matching the difficulty level
+-- @return operands, a table with operands matching the difficulty level
 function questiongenerator._generate_ops(difficulty)
 	local number_of_operands = questiongenerator.diff_operand_map[difficulty]
 	local tokens = questiongenerator.token_table[difficulty]
@@ -57,6 +60,8 @@ end
 
 ---Builds a mathematical expression given operators and operands
 -- Note: #operands needs to be #operators + 1
+-- @param operators Table with operators to use
+-- @param operands Table with operands to use
 -- @return String representing a mathematical expression and the correct answer
 -- @return Number answer to the question
 function questiongenerator._build_expression(operators, operands)

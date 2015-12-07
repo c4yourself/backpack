@@ -1,3 +1,8 @@
+--- Base class for CityTourView
+-- A CityTourView is the class that handles a city tour
+-- in a city.
+-- @classmod CityTourView
+
 local class = require("lib.classy")
 local Color = require("lib.draw.Color")
 local Font = require("lib.draw.Font")
@@ -6,16 +11,22 @@ local utils = require("lib.utils")
 local event = require("lib.event")
 local view = require("lib.view")
 local SubSurface = require("lib.view.SubSurface")
-local button= require("lib.components.Button")
-local button_grid=require("lib.components.ButtonGrid")
-local CityTourView = class("CityTourView", View)
+local Button = require("components.Button")
+local ButtonGrid = require("components.ButtonGrid")
 local attractions  = require("lib.attractions")
 local PopUpView = require("views.PopUpView")
 local Quiz = require("lib.quiz.Quiz")
 
+local CityTourView = class("CityTourView", View)
+
+--- Constructor for CityTourView
+-- @param remote_control The remote control bound to the CityTourView
+-- @param surface The surface to draw the CityTourView on
+-- @param profile The current profile used in the application
+
 function CityTourView:__init(remote_control, surface, profile)
 	View.__init(self)
-	self.buttonGrid = button_grid(remote_control)
+	self.buttonGrid = ButtonGrid(remote_control)
 	self.city = profile:get_city()
 	self.profile = profile
 	self.city_tour_quiz = Quiz()
@@ -37,14 +48,14 @@ function CityTourView:__init(remote_control, surface, profile)
 	--border_color = Color(0, 0, 0, 255)
 
 	-- Create the fonts
-	city_tour_head_font = Font("data/fonts/DroidSans.ttf", 48, Color(0, 0, 0, 255))
-	city_tour_attraction_font = Font("data/fonts/DroidSans.ttf", 25, Color(0, 0, 0, 255))
-	city_tour_text =  Font("data/fonts/DroidSans.ttf", 20, Color(0, 0, 0, 255))
-	city_tour_question = Font("data/fonts/DroidSans.ttf", 25, Color(0, 0, 0, 255))
+	city_tour_head_font = Font("data/fonts/DroidSans.ttf", 48, Color(1, 1, 1, 255))
+	city_tour_attraction_font = Font("data/fonts/DroidSans.ttf", 25, Color(1, 1, 1, 255))
+	city_tour_text =  Font("data/fonts/DroidSans.ttf", 20, Color(1, 1, 1, 255))
+	city_tour_question = Font("data/fonts/DroidSans.ttf", 25, Color(1, 1, 1, 255))
 	--Create button colors
 	local button_color = Color(255, 99, 0, 255)
 	local color_selected = Color(255, 153, 0, 255)
-	local button_text_color = Color(0, 0, 0, 255)
+	local button_text_color = Color(1, 1, 1, 255)
 
 	-- Create the tour images
 	self.tour_attraction_images = {}
@@ -61,10 +72,10 @@ function CityTourView:__init(remote_control, surface, profile)
 --	self.tour_attraction_image = gfx.loadpng(attractions.attraction.paris[1].pic_url)
 
 	-- Create answer buttons
-	local button_1 = button(button_color, color_selected, color_disabled,true, true, "Correct")
-	local button_2 = button(button_color, color_selected, color_disabled,true, false, "False")
-	local button_3 = button(button_color, color_selected, color_disabled,true, false, "False")
-	local button_4 = button(button_color, color_selected, color_disabled,true, false, "False")
+	local button_1 = Button(button_color, color_selected, color_disabled,true, true, "Correct")
+	local button_2 = Button(button_color, color_selected, color_disabled,true, false, "False")
+	local button_3 = Button(button_color, color_selected, color_disabled,true, false, "False")
+	local button_4 = Button(button_color, color_selected, color_disabled,true, false, "False")
 
 	-- Create text on buttons
 	-- X and y values are not used!
@@ -102,9 +113,6 @@ function CityTourView:__init(remote_control, surface, profile)
 
 -- When an answer is pressed
 	local button_click = function(button)
-		--print(self.city_tour_quiz:answer(button.text))
-		print(button.text)
-		print(self.city_tour_quiz.questions[1].correct_answers[1])
 		attractionpoint = attractionpoint + 1
 		local type = "message"
 		local message = {}
@@ -114,7 +122,6 @@ function CityTourView:__init(remote_control, surface, profile)
 			table.insert(message, "Wrong answer")
 		end
 
-		print(message)
 		local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
     local popup_view = PopUpView(remote_control,subsurface, type, message)
     self:add_view(popup_view)
@@ -144,10 +151,6 @@ function CityTourView:__init(remote_control, surface, profile)
     popup_view:render(subsurface)
     gfx.update()
 
-
-
-
-
 	end
 
 	self:listen_to(
@@ -162,7 +165,6 @@ function CityTourView:__init(remote_control, surface, profile)
 	)
 
 end
-
 
 function CityTourView:render(surface)
 
@@ -193,7 +195,6 @@ function CityTourView:render(surface)
 	local text_height = 75 + 25*table.getn(attractions.attraction[self.city.code][attractionpoint].text)
 	city_tour_question:draw(surface, {x = width/3, y = text_height, width = width*2/3, height = self.buttonGrid.button_list[1].y - text_height}, self.city_tour_quiz.questions[1].question, "center", "middle")
 
-
 	--Render buttons
 	self.buttonGrid:render(surface)
 	self:dirty(false)
@@ -213,7 +214,6 @@ function CityTourView:load_view(button)
 
 		local type = "confirmation"
     local message =  {"Are you sure you want to exit the City Tour?"}
-
 
     local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
     local popup_view = PopUpView(remote_control,subsurface, type, message)
@@ -236,13 +236,7 @@ function CityTourView:load_view(button)
     self:listen_to_once(popup_view, "button_click", button_click_func)
     popup_view:render(subsurface)
     gfx.update()
-			--Stop listening to everything
-			-- TODO
-			-- Start listening to the exit
 	end
 end
-
-
-
 
 return CityTourView

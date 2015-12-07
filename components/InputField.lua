@@ -17,7 +17,7 @@ function InputField:__init(name, position, highlighted)
 	self.highlighted_color = {r=250, g=169, b=0}
 	self.normal_color = {r=255, g=255, b=255}
 	self.font_header = Font("data/fonts/DroidSans.ttf", 40, Color(255, 255, 255, 255))
-	self.font_text = Font("data/fonts/DroidSans.ttf", 40, Color(0, 0, 0, 255))
+	self.font_text = Font("data/fonts/DroidSans.ttf", 40, Color(1, 1, 1, 255))
 	self.highlighted = highlighted or false
   self.text = ""
   self.name = name
@@ -48,7 +48,6 @@ end
 
 function InputField:render(surface)
 	self:dirty(false)
-	--= sys.new_freetype({r=255, g=255, b=255}, 30, {x=self.position["x"],y=self.position["y"]-40}, utils.absolute_path("data/fonts/DroidSans.ttf"))
 	if self.highlighted then
 		surface:fill(self.highlighted_color, {width=500, height=100, x=self.position["x"], y=self.position["y"]})
 	else
@@ -57,7 +56,6 @@ function InputField:render(surface)
   --input_field_title:draw_over_surface(surface, self.name)
   self.font_header:draw(surface, {x=self.position["x"],y=self.position["y"]-40}, self.name)
 
-  --local input_field_text = sys.new_freetype({r=23, g=155, b=23}, 40, {x=self.position["x"]+20,y=self.position["y"]+20}, utils.absolute_path("data/fonts/DroidSans.ttf"))
   --input_field_text:draw_over_surface(surface, self.text)
 	if not self.private then
 		self.font_text:draw(surface, {x=self.position["x"]+20,y=self.position["y"]+20}, self.text)

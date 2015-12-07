@@ -1,46 +1,56 @@
---- NumericalQuizGrid class.
+--- NumericalQuizGrid class. Handles the buttons and the input field for the
+-- @{NumericalQuizView} class.
 -- @classmod NumericalQuizGrid
 
 local class = require("lib.classy")
-local button = require("lib.components.Button")
-local ButtonGrid = require("lib.components.ButtonGrid")
-local NumericalQuizGrid = class("NumericalQuizGrid", ButtonGrid)
+local ButtonGrid = require("components.ButtonGrid")
 local SubSurface = require("lib.view.SubSurface")
 local utils = require("lib.utils")
 local event = require("lib.event")
 
+local NumericalQuizGrid = class("NumericalQuizGrid", ButtonGrid)
+
 --- Constructor for NumericalQuizGrid
+--@param remote_control Remote control or mock to listen to. Defaults to the
+--						global remote_control object.
 function NumericalQuizGrid:__init(remote_control)
 	ButtonGrid.__init(self, remote_control)
 	self.num_input_comp = nil-- Reference the input component
 	self.back_button = nil
 	self.next_button = nil
-
-	--[[local callback = utils.partial(self.press, self)
-	self:listen_to(
-	self.event_listener,
-	"button_press",
-	callback
-	)]]
-
 end
 
+--- Marks the object with the specified index as the input component. This
+-- enables the grid to differentiate between the input field and the other buttons
+--@param index Integer specifying which component in the grid's button_list that
+--				should be marked as the input field
 function NumericalQuizGrid:mark_as_input_comp(index)
 	self.num_input_comp = index
 end
 
+--- Marks the object with the specified index as the quiz's next button.
+-- Enables the grid to differentiate between the next button and the other buttons
+--@param index Integer specifying which component in the grid's button_list that
+--				should be marked as the next button
 function NumericalQuizGrid:mark_as_next_button(index)
 	self.next_button = index
 end
 
+--- Marks the object with the specified index as the quiz's back button.
+-- Enables the grid to differentiate between the back button and the other buttons
+--@param index Integer specifying which component in the grid's button_list that
+--				should be marked as the back button
 function NumericalQuizGrid:mark_as_back_button(index)
 	self.back_button = index
 end
 
+---Fetches the index of the last object added to the grid
 function NumericalQuizGrid:get_last_index()
 	return #self.button_list
 end
 
+---Determines what event should be triggered based on user input.
+--@param button Button that the user released
 function NumericalQuizGrid:release(button)
 	if button == "ok" then
 		--Depending on which button was selected do different stuff
@@ -54,7 +64,8 @@ function NumericalQuizGrid:release(button)
 	end
 end
 
-
+---Determines what event should be triggered based on user input.
+--@param button Button that the user pressed
 function NumericalQuizGrid:press(button)
 	--if not self.paused then
     	if button == "down" then
@@ -85,8 +96,12 @@ function NumericalQuizGrid:press(button)
 	--end
 end
 
---- Makes sure to focus the input component if the user has moved the indicator
--- to it
+--- Checks if the component with the specified index is the input field. If
+-- that's the case the field will be focused. If not the field will be blurred.
+-- Used for making sure the input field is focused when the user moves the
+-- indicator to it.
+--
+-- @param index Integer specifying which component to check
 function NumericalQuizGrid:_check_for_input_component(index)
 	if index == self.num_input_comp then
 		if not self.num_input_comp == nil then
@@ -100,9 +115,10 @@ function NumericalQuizGrid:_check_for_input_component(index)
 	return false
 end
 
---- Providing a subsurface to each button,
+--- Provides a subsurface to each button,
 -- so the button can be rendered with its own render function.
 -- If the button has text, then display the text as well
+-- @param surface @{Surface} or @{SubSurface} to render the grid on.
 function NumericalQuizGrid:render(surface)
 -- If no button is selected when this button_grid is created,
 -- then the first button in the list will be selected.

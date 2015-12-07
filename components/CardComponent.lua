@@ -4,7 +4,7 @@
 
 local class = require("lib.classy")
 local View = require("lib.view.View")
-local Button = require("lib.components.Button")
+local Button = require("components.Button")
 local CardComponent = class("CardComponent", Button)
 local event = require("lib.event")
 local utils = require("lib.utils")
@@ -26,7 +26,7 @@ function CardComponent:__init(current_city, i, color, color_selected, color_disa
 	self.status = "FACING_DOWN"
 
 	-- Colors
-	self.backside_color = Color(0,0,0,255)
+	self.backside_color = Color(1, 1, 1, 255)
 	self.front_color = Color(255, 255, 255, 255)
 	self.from_img = gfx.loadpng("data/images/memory_pictures/generic/memory_question.png")
 	self.current_city = current_city:lower()
@@ -74,16 +74,15 @@ function CardComponent:render(surface)
 	self:dirty(false)
 	if self.status == "FACING_UP" then
 		surface:fill(self.backside_color:to_table())
-		surface:copyfrom(self.memory_img)
+		surface:copyfrom(self.memory_img, nil, nil, true)
 	elseif self.status == "FACING_DOWN" then
 		surface:fill(self.backside_color:to_table())
-		surface:copyfrom(self.from_img)
+		surface:copyfrom(self.from_img, nil, nil, true)
 	elseif not self:is_enabled() then
 		surface:fill(self.color_disabled:to_table())
 	end
 
 	if self:is_selected() then
-		print("IS SELECTED")
 		local margin = 0.30
 		local area = {
 			width = surface.width - 17,

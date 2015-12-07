@@ -107,13 +107,13 @@ function Button:render(surface)
 		surface:fill(self.color_selected:to_table())
 		if self._iconed then
 			self.icon_selected:premultiply()
-			surface:copyfrom(self.icon_selected, nil, {x = self.icon_x, y = self.icon_y, width=self.icon_width, height=self.icon_height})
+			surface:copyfrom(self.icon_selected, nil, {x = self.icon_x, y = self.icon_y, width=self.icon_width, height=self.icon_height}, true)
 		end
 	else
 		surface:fill(self.color:to_table())
 		if self._iconed then
 			self.icon_normal:premultiply()
-			surface:copyfrom(self.icon_normal, nil, {x = self.icon_x, y = self.icon_y, width=self.icon_width, height=self.icon_height})
+			surface:copyfrom(self.icon_normal, nil, {x = self.icon_x, y = self.icon_y, width=self.icon_width, height=self.icon_height}, true)
 		end
 	end
 
