@@ -70,21 +70,6 @@ function NumericalQuizGrid:get_last_index()
 end
 
 ---Determines what event should be triggered based on user input.
---@param button Button that the user released
-function NumericalQuizGrid:release(button)
-	if button == "ok" then
-		--Depending on which button was selected do different stuff
-		if self.button_indicator == self.num_input_comp then
-			self:trigger("submit")
-		elseif self.button_indicator == self.back_button then
-			self:trigger("back")
-		elseif self.button_indicator == self.next_button then
-			self:trigger("next")
-		end
-	end
-end
-
----Determines what event should be triggered based on user input.
 --@param button Button that the user pressed
 function NumericalQuizGrid:press(button)
 	--if not self.paused then
