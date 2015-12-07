@@ -173,7 +173,7 @@ function MemoryView:_determine_new_state()
               local experience = ExperienceCalculation.Calculation(counter, "Memory")
               self.profile:modify_balance(experience)
               self.profile:modify_experience(experience)
-              local message = {"You used " .. self.memory.moves .. " moves and received " .. experience .. " coins."}
+              local message = {"You used " .. self.memory.moves .. " moves and received " .. experience .. " experience."}
               local type = "message"
               self:back_to_city(type, message)
             end
