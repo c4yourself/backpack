@@ -103,7 +103,7 @@ function Store:__init(remote_control, surface, profile)
 	self.item_images = self:loadItemImages()
 
 	-- Add exit button
-	self.button_grid:add_button({x = width/6,y = height-60}, {width = 8*width/45,height = 2*width/45}, self.buttons[k])
+	self.button_grid:add_button({x = width/6-100,y = height-80}, {width = 10*width/45,height = 2.5*width/45}, self.buttons[k])
 
 	-- Add to view
 	self:add_view(self.button_grid, true)
