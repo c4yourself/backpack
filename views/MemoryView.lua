@@ -26,8 +26,9 @@ local MemoryView = class("MemoryView", View)
 -- @param profile The current profile used in the application
 function MemoryView:__init(remote_control, surface, profile)
     View.__init(self)
+
 	event.remote_control:off("button_release")
-    self.surface = Surface
+  self.surface = surface
 
     -- Flags to determine whether a player has moved or pressed submit
 	self.player_moved = false
@@ -42,7 +43,7 @@ function MemoryView:__init(remote_control, surface, profile)
     self.profile = profile
 
     self:_set_pairs()
-    --self.pairs = 2 -- TODO For quicker manual testing, remove once done coding
+
     self.memory = MemoryGame(self.pairs, self.profile)
     self.columns = math.ceil((self.pairs*2)^(1/2))
 
@@ -63,29 +64,28 @@ function MemoryView:__init(remote_control, surface, profile)
     self.text_color = Color(255, 255, 255, 255)
 
     -- Components
-    local width = screen:get_width()
-    local height = screen:get_height()
-    local button_size_big = {width = 300, height = 100}
+    local width = self.surface:get_width()
+    local height = self.surface:get_height()
+    local button_size_big = {width = 300, height = 75}
     self.button_1 = Button(self.button_color, self.color_selected,
         self.color_disabled, true, false, "views.PopUpView")
-    self.positions["exit"] = {x = 100, y = 450}
+    self.positions["exit"] = {x = 75, y = 450}
     self.button_1:set_textdata("Back to City", self.text_color,
         {x = 100 + 65, y = 450 + 50 - 16}, 30,
         utils.absolute_path("data/fonts/DroidSans.ttf"))
 
     -- Create the button grid
-    local card_color = Color(250, 105, 0, 255)--color.from_html("fa6900ff")
+    local card_color = Color(250, 105, 0, 255)
     local card_color_disabled = Color(111,222,111,255)
     local card_color_selected = Color(250, 105, 0, 255)
     self.button_size = {width = 100, height = 100}
     local x_gap = self.button_size.width + 50
     local y_gap = self.button_size.height + 50
 
-    self.pos_x = 450
-    self.pos_y = 50
+    self.pos_x = 430
+    self.pos_y = 38
 
     for i = 1, self.pairs*2 do
-
         local current_city = self.profile.city
         self.cards[i]  = CardComponent(current_city, self.memory.cards[i], card_color,
         card_color_selected, card_color, true, false)
@@ -100,10 +100,6 @@ function MemoryView:__init(remote_control, surface, profile)
         end
 
         self.positions[i] = {x = self.pos_x, y = self.pos_y}
-        --local card_text = tostring(self.memory.cards[i])
-        --local text_position =
-        --self.cards[i]:set_textdata(card_text, self.text_color, text_position,
-        --                            font_size, font_path)
 
         self.button_grid:add_button(self.positions[i],
                                     self.button_size,
@@ -226,20 +222,44 @@ function MemoryView:render(surface)
     --At this point, we should check the memory states and keep
     -- the card that are true in memory.states open
     if self:is_dirty() then
-        surface:clear(Color(1, 1, 1, 255):to_table())
+        -- Draws the left board containing back-button
+        local left_board = SubSurface(surface,{width = 300, height = self.surface:get_height()-150, x = 75, y = 75})
+        self.surface:clear(Color(1, 1, 1,255):to_table())
         -- Add the number of turns
-        local turns_text = Font("data/fonts/DroidSans.ttf", 30, self.text_color)
+        local text = Font("data/fonts/DroidSans.ttf", 30, self.text_color)
         local turns = Font("data/fonts/DroidSans.ttf", 30, self.text_color)
-        turns_text:draw(surface, {x = 100, y = 150}, "Turns")
+        local turns_text = ""
         if self.memory.moves == nil then
-            turns:draw(surface, {x = 100, y = 150}, "No turns...")
+          turns_text = "no turns"
         else
-            turns:draw(surface, {x = 100, y = 200}, tostring(self.memory.moves))
+          turns_text = tostring(self.memory.moves)
         end
+        left_board:clear(Color(250, 105, 0, 255):to_table())
+        left_board:fill({r = 65, g = 70, b = 72, a = 255},
+          {x = 5, y = 5, width = 290, height = self.surface:get_height()-160})
+
+        left_board:fill(Color(250, 105, 0, 255):to_table(),
+            {x = 5, y = 75, width = 290, height = 5})
+
+        text:draw(left_board, {x = 100, y = 20}, tostring(self.pairs) .. " pairs")
+        if turns_text == "1" then
+            text:draw(left_board, {x = 50, y = 150}, "You have made ")
+            text:draw(left_board, {x = 100, y = 200}, turns_text .. " move  ")
+        else
+            text:draw(left_board, {x = 50, y = 150}, "You have made ")
+            text:draw(left_board, {x = 100, y = 200}, turns_text .. " moves ")
+        end
+
+        local right_board = SubSurface(surface,{width = 740, height = 585, x = 410, y = 18})
+        right_board:clear(Color(250, 105, 0, 255):to_table())
+        right_board:fill({r = 0, g = 0, b = 0, a = 255},
+          {x = 5, y = 5, width = 730, height = 575})
+
         gfx.update()
       end
     self:dirty(false)
     -- Render child components
+
     self.button_grid:render(surface)
     --self.button_1:render(surface)
 end
@@ -255,7 +275,6 @@ function MemoryView:back_to_city(type, message)
                                     y = screen:get_height() * 0.25 + 50})
     local popup_view = PopUpView(remote_control,subsurface, type, message)
     self:add_view(popup_view)
-
     self.button_grid:blur()
     self:blur()
 

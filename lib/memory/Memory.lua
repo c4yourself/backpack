@@ -23,6 +23,7 @@ function Memory:__init(pairs, profile, scrambled)
 	self.second_card = nil
 	self.finished = false
 	self.profile = profile
+	self.found_pairs = 0
 
 	for i = 1, self.pairs do
 		table.insert(self.state, false)
@@ -98,6 +99,8 @@ function Memory:match()
 		if self.cards[self.first_card] ~= self.cards[self.second_card] then
 			self.state[self.first_card] = false
 			self.state[self.second_card] = false
+		else
+			self.found_pairs = self.found_pairs + 1
 		end
 		self.first_card = nil
 		self.second_card = nil
@@ -171,25 +174,5 @@ function Memory.unserialize(new_state, profile)
 	end
 	return memory
 end
-
--- function Memory:_calculate_reward()
--- 	local reward_factor = (self.moves * 2) / (2 * self.pairs)
--- 	local reward = 0
--- 	if reward_factor >= 2 then
--- 		reward = 20
--- 	elseif reward_factor >= 1.8 then
--- 		reward = 40
--- 	elseif reward_factor >= 1.6 then
--- 		reward = 60
--- 	elseif reward_factor >= 1.4 then
--- 		reward = 80
--- 	elseif reward_factor >= 1.2 then
--- 		reward = 100
--- 	else
--- 		reward = 120
--- 	end
--- 	return reward, reward
--- end
-
 
 return Memory

@@ -69,7 +69,7 @@ function ConnectFourComponent:press(key)
 				self:focus()
 			end)
 		end
-	elseif key == "exit" then
+	elseif key == "back" then
 		--TODO pop-up
 	--	local exit_popup = subsurface(surface, area(100, 100, 400, 400))
 	--	local color_popup = color(255, 255, 255, 255)
