@@ -27,6 +27,8 @@ function View:add_view(view, propagate_dirty)
 	end
 end
 
+--- Remove a view as a child view to this view
+-- @param view View that shall be removed
 function View:remove_view(view)
 	for i, v in ipairs(self.views) do
 		if v == view then
@@ -89,6 +91,7 @@ end
 
 --- Renders a view
 -- NOTE: Must be overloaded by a subclass
+-- @param surface {@Surface} or {@SubSurface} to render on
 function View:render(surface)
 	error("Render must be overloaded")
 end
