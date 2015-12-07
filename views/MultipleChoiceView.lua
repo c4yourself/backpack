@@ -41,9 +41,10 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 	-- Associate a quiz instance with the MultipleChoiceView
 	self.mult_choice_quiz = Quiz()
 
-	self.quiz_size = 3
+	self.quiz_size = 13
 
 	self.mult_choice_quiz:generate_singlechoice_quiz(self.profile:get_current_city(),self.quiz_size)
+	self.quiz_size = math.min(self.quiz_size, self.mult_choice_quiz.size)
 	self.current_question = 1
 	self.correct_answer_number = 0
 
@@ -169,8 +170,16 @@ function MultipleChoiceView:_submit()
 			self.progress_table[self.current_question] = true
 			self.last_check = self.last_check + 1
 		else
-			self.result_string = "Wrong. You've answered "
-			.. self.correct_answer_number .. " questions correctly this far."
+			local correct_alternative_no = tostring(self.mult_choice_quiz.questions[self.current_question].correct_answers[1])
+			local alternative_map = {}
+			alternative_map["1"] = "A"
+			alternative_map["2"] = "B"
+			alternative_map["3"] = "C"
+			alternative_map["4"] = "D"
+			local correct_alternative = alternative_map[correct_alternative_no]
+			self.result_string = "Wrong. " ..
+								"The correct alternative was alternative "
+								.. correct_alternative .. "."
 			self.progress_table[self.current_question] = false
 			self.last_check=self.last_check + 1
 		end

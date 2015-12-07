@@ -11,6 +11,7 @@ local TSVReader = require("lib.quiz.TSVReader")
 local NumericQuestion = require("lib.quiz.NumericQuestion")
 local Quiz = class("Quiz")
 
+
 ---Constructor for the Quiz class
 function Quiz:__init()
 	self.questions = {}
@@ -102,6 +103,7 @@ function Quiz:generate_singlechoice_quiz(image_path,quiz_size)
 			local multiplechoicequestion = tsvreader:generate_question(i)
 			self.questions[i] = multiplechoicequestion
 		end
+		self.size = math.min(quiz_size, #tsvreader.questions_table)
 		return true
 	else
 		return false

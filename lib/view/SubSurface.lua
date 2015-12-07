@@ -9,13 +9,14 @@ local SubSurface = class("SubSurface")
 -- @param area the size and starting poin(x,y) of this subsurface
 function SubSurface:__init(surface, area)
 	self.surface = surface
-	self.rectangle = area
-	self.x = area.x
-	self.y = area.y
-	self.width = area.width
-	self.height = area.height
-	self.xend = self.x + self.width -- End of Subsurface x
-	self.yend = self.y + self.height -- End of Subsurface y
+
+	self.x = math.min(area.x)
+	self.y = math.min(area.y)
+	self.width = math.min(area.width)
+	self.height = math.min(area.height)
+
+	self.xend = self.x + self.width - 1 -- End of Subsurface x
+	self.yend = self.y + self.height - 1 -- End of Subsurface y
 end
 
 --- Fills desired area of the surface with a solid color.
