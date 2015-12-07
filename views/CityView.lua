@@ -136,17 +136,11 @@ function CityView:button_click(button)
 
 	-- Create instance of the given view
 	local view_class = require(button.transfer_path)
-	--local sub_surface = SubSurface(screen, {
-	--	x = screen:get_width() * 0.05,
-	--	y = screen:get_height() * 0.05 + 50,
-	--	width = screen:get_width() * 0.9,
-	--	height = (screen:get_height() - 50) * 0.9,
-	--})
 	local sub_surface = SubSurface(screen, {
-		x = screen:get_width() * 0.05,
-		y = screen:get_height() * 0.05 + 50,
-		width = screen:get_width(),
-		height = screen:get_height(),
+		x = screen:get_width() * 0.04,
+		y = screen:get_height() * 0.04 + 50,
+		width = screen:get_width() * 0.92,
+		height = (screen:get_height() - 50) * 0.92,
 	})
 	local view = view_class(self.remote_control, sub_surface, self.profile)
 
@@ -265,18 +259,13 @@ function CityView:render(surface)
 
 	-- Insert current sub view on top in a popup window if there is any
 	if self.sub_view then
-		--local sub_surface = SubSurface(surface, {
-		--	x = surface:get_width() * 0.05,
-		--	y = surface:get_height() * 0.05 + 50,
-		--	width = surface:get_width() * 0.9,
-		--	height = (surface:get_height() - 50) * 0.9,
-		--})
 		local sub_surface = SubSurface(surface, {
-			x = 0,
-			y = 50,
-			width = surface:get_width(),
-			height = surface:get_height(),
+			x = surface:get_width() * 0.04,
+			y = surface:get_height() * 0.04 + 50,
+			width = surface:get_width() * 0.92,
+			height = (surface:get_height() - 50) * 0.92,
 		})
+
 		self.sub_view:render(sub_surface)
 	end
 
