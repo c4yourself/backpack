@@ -253,8 +253,6 @@ function CityView:render(surface)
  	-- using the button grid to render all buttons and texts
 	self.button_grid:render(surface)
 
-	--surface:copyfrom(self.images.paris_selected, nil, {x = width/3, y = 0, width=width*2/3, height=height})
-
 	local icon_padding = self.button_grid.button_list[1].width/8
 	surface:copyfrom(self.images.multiple_choice_icon, nil, {x = self.button_grid.button_list[1].x + icon_padding, y = self.button_grid.button_list[1].y + icon_padding, width = self.button_grid.button_list[1].width - 2*icon_padding, height = self.button_grid.button_list[1].height - 2*icon_padding}, true)
 	surface:copyfrom(self.images.math_icon, nil, {x = self.button_grid.button_list[2].x + icon_padding, y = self.button_grid.button_list[2].y + icon_padding, width = self.button_grid.button_list[1].width - 2*icon_padding, height = self.button_grid.button_list[1].height - 2*icon_padding}, true)
