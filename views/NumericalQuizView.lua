@@ -20,9 +20,9 @@ local PopUpView = require("views.PopUpView")
 local NumericQuizView = class("NumericQuizView", View)
 
 --- Constructor for NumericQuizView
--- @param remote_control
--- @param subsurface
--- @param profile is the profile playing
+-- @param remote_control Remote control instance to listen to
+-- @param subsurface {@Surface} or {@SubSurface} to draw on
+-- @param profile Profile of the current user
 function NumericQuizView:__init(remote_control, subsurface, profile)
 	View.__init(self)
 	self.remote_control = remote_control
@@ -96,9 +96,10 @@ function NumericQuizView:__init(remote_control, subsurface, profile)
 	self.progress_counter_font = Font("data/fonts/DroidSans.ttf", 32,
 									Color(255,255,255,255))
 	-- Listeners and callbacks
-self:focus()
+	self:focus()
 end
 
+--- Adjusts the quiz difficulty based on the user's experience
 function NumericQuizView:_set_level()
 	local exp = self.profile:get_experience()
 	if exp <= 100 then
@@ -113,7 +114,7 @@ function NumericQuizView:_set_level()
 end
 
 --- Responds to a 'key' press when the View is active
--- @param key Key that was pressed
+-- @param key Key that was pressed by the user
 function NumericQuizView:press(key)
  	if key == "back" then
 		self:back_to_city()
@@ -142,6 +143,8 @@ function NumericQuizView:render(surface)
 
 		local input_index = self.views.grid:get_last_index()
 		self.views.grid:mark_as_input_comp(input_index)
+		self.views.grid:select_button(input_index)
+		self.views.grid.button_list[input_index].button:focus()
 	end
 
 	-- Render the view as long as it isn't clean already
@@ -200,6 +203,9 @@ function NumericQuizView:render(surface)
 					{x = 0, y = 25, height = self.question_area_height,
 					width = self.question_area_width},
 					output2, "center", "middle")
+			--Highlight the next button and blur the input field
+			self.views.grid:select_button(2)
+			self.views.grid.button_list[3].button:blur()
 			self.answer_flag = false
 		elseif self._suppress_new_question then
 			self.suppress_new_question = false
@@ -359,6 +365,8 @@ end
 --- Set up for showing whether the user answered correctly or not. Only works
 -- when the user has entered an answer in the input field. Triggers dirty
 function NumericQuizView:show_answer()
+	self.views.grid:select_button(2)
+	self.views.grid.button_list[3].button:blur()
 	if self.views.num_input_comp:get_text() ~= "" then
 		if not self.prevent then
 			self.prevent = not self.prevent
@@ -373,6 +381,9 @@ end
 
 --- Set up for the next question in the quiz. Triggers dirty
 function NumericQuizView:next_question()
+	self.views.grid:select_button(3)
+	self.views.grid.button_list[3].button:focus()
+
 	self.answer_flag = false
 	self.prevent = false
 	self.user_answer = nil
@@ -384,7 +395,7 @@ end
 --- Method for destroying the numerical quiz view and exiting the quiz
 function NumericQuizView:back_to_city()
 	--TODO Add pop-up
-	local message = {""}
+	local message = ""
 	local type = ""
 	local current_question = self.num_quiz.current_question
 	local quiz_length = #self.num_quiz.questions
@@ -394,10 +405,18 @@ function NumericQuizView:back_to_city()
 		self.profile:modify_balance(experience)
 		self.profile:modify_experience(experience)
 
-		message = {"Good job! You answered "
+		if experience == 0 then
+
+			message = {"Game finished! You answered "
+						.. tostring(self.num_quiz.correct_answers) ..
+						" questions correctly ",
+						"and you received " .. experience .. " experience."}
+		else
+			message = {"Good job! You answered "
 					.. tostring(self.num_quiz.correct_answers) ..
 					" questions correctly ",
-					"and you received " .. experience .. " coins."}
+					"and you received " .. experience .. " experience."}
+		end
 		type = "message"
 	else
 		message = {"Are you sure you want to exit?"}

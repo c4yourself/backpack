@@ -201,7 +201,7 @@ function ConnectFourComponent:render(surface)
 				local experience = ExpCalc.Calculation(count_x, "Connectfour")
 				self.profile:modify_balance(experience)
 				self.profile:modify_experience(experience)
-				winner_message = {"Congratulations, you won!", "You received " .. experience .. " coins."}
+				winner_message = {"Congratulations, you won!", "You received " .. experience .. " experience."}
 			elseif winner == "O" then
 				winner_message = {"Sorry, you lost!"}
 			end

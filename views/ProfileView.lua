@@ -200,7 +200,7 @@ function ProfileView:render(surface)
 	self.font:draw(surface, {x=10,y=105}, "Birthday: ")
 	self.font:draw(surface, {x=180, y = 105}, tostring(self.profile:get_date_of_birth()))
 	self.font:draw(surface, {x=10,y=140}, "Level: ")
-	self.font:draw(surface, {x=180, y = 140}, tostring((self.profile:get_experience()-self.profile:get_experience()%100)/100))
+	self.font:draw(surface, {x=180, y = 140}, tostring((self.profile:get_experience()-self.profile:get_experience()%100)/100+1))
 	self.font:draw(surface, {x=10,y=175}, "Experience: ")
 	self.font:draw(surface, {x=180, y = 175}, tostring(self.profile:get_experience()%100))
 

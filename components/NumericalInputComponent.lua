@@ -13,6 +13,7 @@ local Font = require("lib.draw.Font")
 --- Constructor for NumericalInputComponent
 -- @param remote_control Remote control to listen to. Defaults to the global
 --			remote_control instance
+-- @param surface {@Surface} or {@SubSurface} to render the component on
 function NumericalInputComponent:__init(remote_control, surface)
 	View.__init(self)
 	self.input = "Enter your answer here"
