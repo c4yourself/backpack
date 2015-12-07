@@ -175,7 +175,7 @@ function MemoryView:_determine_new_state()
               self.profile:modify_experience(experience)
               local message = {"You used " .. self.memory.moves ..
                                 " moves and received " ..
-                                experience .. " coins."}
+                                experience .. " experience."}
               local type = "message"
               self:back_to_city(type, message)
             end

@@ -398,7 +398,7 @@ function NumericQuizView:back_to_city()
 		message = {"Good job! You answered "
 					.. tostring(self.num_quiz.correct_answers) ..
 					" questions correctly ",
-					"and you received " .. experience .. " coins."}
+					"and you received " .. experience .. " experience."}
 		type = "message"
 	else
 		message = {"Are you sure you want to exit?"}
