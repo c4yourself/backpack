@@ -1,4 +1,4 @@
-	--- Base class for MultipleChoiceView. View responsible for rendering the
+--- Base class for MultipleChoiceView. View responsible for rendering the
 -- multiple choice quiz
 -- @classmod MultipleChoiceView
 local class = require("lib.classy")
@@ -22,6 +22,9 @@ local PopUpView = require("views.PopUpView")
 local MultipleChoiceView = class("MultipleChoiceView", View)
 
 --- Constructor for MultipleChoiceView
+-- @param remote_control The remote control bound to the memory
+-- @param subsurface {@Surface} or {@SubSurface} to draw the memory on
+-- @param profile The current profile used in the application
 function MultipleChoiceView:__init(remote_control, subsurface, profile)
 	View.__init(self)
 	event.remote_control:off("button_release") -- TODO remove this once the ViewManager is fully implemented
@@ -229,7 +232,7 @@ function MultipleChoiceView:press(key)
 	return
 end
 
---Renders this instance of MultipleChoiceView and all its child views, given
+---Renders this instance of MultipleChoiceView and all its child views, given
 -- that it's flagged as dirty
 -- @param surface @{Surface} or @{SubSurface} to render this view on
 function MultipleChoiceView:render(surface)
@@ -421,7 +424,7 @@ function MultipleChoiceView:render(surface)
 	self:dirty(false)
 end
 
----Funcion that triggers the end of game pop
+---Function that triggers the end of game pop
 --@param type String representing the type of pop-up.
 --@param message String with message to display
 function MultipleChoiceView:_back_to_city(type, message)

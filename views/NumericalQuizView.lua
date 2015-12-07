@@ -20,9 +20,9 @@ local PopUpView = require("views.PopUpView")
 local NumericQuizView = class("NumericQuizView", View)
 
 --- Constructor for NumericQuizView
--- @param remote_control
--- @param subsurface
--- @param profile is the profile playing
+-- @param remote_control Remote control instance to listen to
+-- @param subsurface {@Surface} or {@SubSurface} to draw on
+-- @param profile Profile of the current user
 function NumericQuizView:__init(remote_control, subsurface, profile)
 	View.__init(self)
 	self.remote_control = remote_control
@@ -99,6 +99,7 @@ function NumericQuizView:__init(remote_control, subsurface, profile)
 self:focus()
 end
 
+--- Adjusts the quiz difficulty based on the user's experience
 function NumericQuizView:_set_level()
 	local exp = self.profile:get_experience()
 	if exp <= 100 then
@@ -113,7 +114,7 @@ function NumericQuizView:_set_level()
 end
 
 --- Responds to a 'key' press when the View is active
--- @param key Key that was pressed
+-- @param key Key that was pressed by the user
 function NumericQuizView:press(key)
  	if key == "back" then
 		self:back_to_city()
