@@ -93,7 +93,7 @@ function WorldMap:render(surface)
 		y = surface:get_height() * (self._origin_position.y + step_y * self._step_index) - 15,
 		width = 30,
 		height = 30
-	}, false)
+	}, true)
 
 	self:dirty(false)
 end

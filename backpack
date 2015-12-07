@@ -58,7 +58,7 @@ elif [ "$1" == "export" ]; then
 	fi
 
 	echo "Packing local files, using $start_file as main file"
-	tar --transform="flags=r;s|$start_file|start.lua|" -cf build.tar "$start_file" config.lua lib/ data/ views/ components/
+	tar --transform="flags=r;s|$start_file|start.lua|" -cf build.tar "$start_file" config.lua lib/ views/ components/
 
 	echo "Starting TFTP server on $ip:9000"
 	python -c 'import tftpy; s = tftpy.TftpServer("."); s.listen("0.0.0.0", 9000)' &

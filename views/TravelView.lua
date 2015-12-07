@@ -32,7 +32,7 @@ function TravelView:__init(remote_control, surface, profile)
 	self:add_view(self.list_comp, true)
 
 	local list_item_position_left = {x=65, y=35}
-	local list_item_position_right = {x=375, y=35}
+	local list_item_position_right = {x=305, y=35}
 
 	local travel_type = {
 		boat = "data/images/boat.png",
@@ -41,17 +41,23 @@ function TravelView:__init(remote_control, surface, profile)
 	}
 
 	self.image = gfx.loadpng("data/images/worldmap1.png")
-
+	local enabled = true
 	for i = 1, #self.routes do
 		local destination = city.cities[self.routes[i][1]]
+		if self.routes[i][3] <= self.profile:get_balance() then
+			enabled = true
+		else
+			enabled = false
+		end
 		local list_item = ListItem(
 			destination.name,
 			travel_type[self.routes[i][2]],
-			self.routes[i][3],
+			self.profile:get_city().country:format_balance(self.routes[i][3]),
 			self.font,
 			list_item_position_left,
 			list_item_position_right,
-			self.font_highlight)
+			self.font_highlight,
+			enabled)
 
 		if i == 1 then
 			list_item:select()
@@ -145,31 +151,42 @@ function TravelView:_travel(button)
 			end
 		end
 
-		-- Find destination city index based on selected city
-		local destination = city.cities[self.city.travel_routes[index][1]]
+		-- Check if we can afford the trip
+		if self.routes[index][3] <= self.profile:get_balance() then
 
-		local transportation = self.list_comp.item_list[index].icon
+			-- Find destination city index based on selected city
+			local destination = city.cities[self.city.travel_routes[index][1]]
 
-		if transportation:sub(13,13) == 'a' then
-			transportation = "aeroplane"
-		elseif transportation:sub(13,13) == 'b' then
-			transportation = "boat"
-		elseif transportation:sub(13,13) == 't' then
-			transportation = "train"
+			local transportation = self.list_comp.item_list[index].icon
+
+			if transportation:sub(13,13) == 'a' then
+				transportation = "aeroplane"
+			elseif transportation:sub(13,13) == 'b' then
+				transportation = "boat"
+			elseif transportation:sub(13,13) == 't' then
+				transportation = "train"
+			end
+
+			local world_map = WorldMap(
+				self.profile, destination, transportation, view.view_manager)
+			view.view_manager:set_view(world_map)
+			world_map:start()
+
+		-- Otherwise we can't afford the trip
+		else
+
 		end
-
-		local world_map = WorldMap(
-			self.profile, destination, transportation, view.view_manager)
-		view.view_manager:set_view(world_map)
-		world_map:start()
 	elseif button == "4" then
+		--[[ Old Code
 		self:stop_listening(event.remote_control)
-		local city_view_copy = require("views.CityViewCopy")
-		cvc = city_view_copy(event.remote_control)
+		local city_view = require("views.CityView")
+		cvc = city_view(event.remote_control)
 		self:destroy()
 		cvc:render(screen)
 		gfx.update()
-
+		]]
+		self:destroy()
+		self:trigger("exit_view", self.profile)
 	end
 end
 
