@@ -17,7 +17,9 @@ local MemoryGrid = class("MemoryGrid", ButtonGrid)
 
 --- Constructor for MemoryGrid.
 -- @param remote_control Remote control or remote control mock to listen to.
-function MemoryGrid:__init(remote_control)
+function MemoryGrid:__init(remote_control, surface)
+	--self.memory_board =  SubSurface(surface,{width = 750, height = 750, x = 0, y = 0})
+	--self.memory_board:clear(Color(0,255,0,255):to_table())
 	ButtonGrid.__init(self, remote_control)
 	self.temp_turned = {}
 	self.turned = {}
@@ -368,6 +370,8 @@ function MemoryGrid:render(surface)
 -- then the first button in the list will be selected.
 -- The indicator always points to the selected button
 	self:dirty(false)
+	--self.memory_board =  SubSurface(surface,{width = 450, height = 450, x = 450, y = 50})
+	--self.memory_board:clear(Color(255,255,255,255):to_table())
 	self.render_surface = surface
 	if self.start_indicator == true then
 		for k = 1 , #self.button_list do
@@ -396,7 +400,7 @@ function MemoryGrid:render(surface)
 		}
 
 		local sub_surface = SubSurface(surface,area)
-
+			--sub_surface:clear(Color(255,255,255,255):to_table())
 			button_data.button:render(sub_surface)
 			if button_data.button.text_available then
 				self:display_text(surface, i)

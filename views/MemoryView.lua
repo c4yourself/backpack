@@ -27,7 +27,8 @@ local MemoryView = class("MemoryView", View)
 function MemoryView:__init(remote_control, surface, profile)
     View.__init(self)
 	event.remote_control:off("button_release") -- TODO remove this once the ViewManager is fully implemented
-  self.surface = Surface
+  self.surface = surface
+  self.surface:clear(Color(255,255,255,255):to_table())
 
     -- Flags to determine whether a player has moved or pressed submit
 	self.player_moved = false
@@ -63,8 +64,8 @@ function MemoryView:__init(remote_control, surface, profile)
     self.text_color = Color(255, 255, 255, 255)
 
     -- Components
-    local width = screen:get_width()
-    local height = screen:get_height()
+    local width = self.surface:get_width()
+    local height = self.surface:get_height()
     local button_size_big = {width = 300, height = 100}
     self.button_1 = Button(self.button_color, self.color_selected,
         self.color_disabled, true, false, "views.PopUpView")
@@ -74,6 +75,8 @@ function MemoryView:__init(remote_control, surface, profile)
         utils.absolute_path("data/fonts/DroidSans.ttf"))
 
     -- Create the button grid
+    --self.memory_board =  SubSurface(surface,{width = 750, height = 750, x = 0, y = 0})
+    --self.memory_board:clear(Color(0,255,0,255):to_table())
     local card_color = Color(250, 105, 0, 255)--color.from_html("fa6900ff")
     local card_color_disabled = Color(111,222,111,255)
     local card_color_selected = Color(250, 105, 0, 255)
@@ -100,10 +103,6 @@ function MemoryView:__init(remote_control, surface, profile)
         end
 
         self.positions[i] = {x = self.pos_x, y = self.pos_y}
-        --local card_text = tostring(self.memory.cards[i])
-        --local text_position =
-        --self.cards[i]:set_textdata(card_text, self.text_color, text_position,
-        --                            font_size, font_path)
 
         self.button_grid:add_button(self.positions[i],
                                     self.button_size,
@@ -211,20 +210,26 @@ function MemoryView:render(surface)
     end
 --At this point, we should check the memory states and keep the card that are true in memory.states open
     if self:is_dirty() then
-        surface:clear(Color(1, 1, 1, 255):to_table())
+        local info_board = SubSurface(surface,{width = 200, height = 300, x = 50, y = 50})
+        self.surface:clear(Color(1, 1, 1,255):to_table())
+        info_board:clear(Color(1, 1, 1, 150):to_table())
+
         -- Add the number of turns
-        local turns_text = Font("data/fonts/DroidSans.ttf", 30, self.text_color)
+        local text = Font("data/fonts/DroidSans.ttf", 30, self.text_color)
         local turns = Font("data/fonts/DroidSans.ttf", 30, self.text_color)
-        turns_text:draw(surface, {x = 100, y = 150}, "Turns")
+        local turns_text = ""
         if self.memory.moves == nil then
-            turns:draw(surface, {x = 100, y = 150}, "No turns...")
+          turns_text = "No turns..."
         else
-            turns:draw(surface, {x = 100, y = 200}, tostring(self.memory.moves))
+          turns_text = tostring(self.memory.moves)
         end
+        text:draw(info_board, {x = 100, y = 150}, "Turns: " .. turns_text)
+        text:draw(info_board, {x = 100, y = 200}, "Pairs found: " .. tostring(self.memory.found_pairs) .. " / " .. tostring(self.pairs))
         gfx.update()
       end
     self:dirty(false)
     -- Render child components
+
     self.button_grid:render(surface)
     --self.button_1:render(surface)
 end
@@ -235,7 +240,6 @@ function MemoryView:back_to_city(type, message)
     local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
     local popup_view = PopUpView(remote_control,subsurface, type, message)
     self:add_view(popup_view)
-
     self.button_grid:blur()
     self:blur()
 
