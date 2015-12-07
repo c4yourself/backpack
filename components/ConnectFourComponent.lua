@@ -131,8 +131,10 @@ function ConnectFourComponent:render(surface)
 	local posy = 0.1*surface:get_height()+ 0.5*height_coinbox
 	local posy_constant = 0.1*surface:get_height()+ 0.5*height_coinbox
 	local posx_constant = 0.41*surface:get_width()
-
 	self:top_row(surface, self.current_column, width_coinbox, height_coinbox)
+
+	surface:copyfrom(gfx.loadpng("data/images/connect_four/connect4-background.png"),nil,{x=posx_constant, y=posy_constant-3, width = 7*width_coinbox+3, height = 6*height_coinbox+3}, true)
+
 
 	--prints the board
 	for i = 1, 6 do
@@ -142,11 +144,14 @@ function ConnectFourComponent:render(surface)
 				temp_color = {r=255, g=255, b=255}
 			elseif self.connectfour:get(i,j) == "X" then
 				temp_color = coin_color_player
+				surface:clear(temp_color, {x=posx, y=posy, width = width_coinbox, height = height_coinbox})
+
 			elseif self.connectfour:get(i,j) == "O" then
 				temp_color = coin_color_computer
+				surface:clear(temp_color, {x=posx, y=posy, width = width_coinbox, height = height_coinbox})
+
 			end
 
-      surface:clear(temp_color, {x=posx, y=posy, width = width_coinbox, height = height_coinbox})
 			posx = posx + width_coinbox
 		end
 
@@ -158,7 +163,7 @@ function ConnectFourComponent:render(surface)
 	--local f = font("data/fonts/DroidSans.ttf", 16, color(0, 0, 0, 255))
 	local target1 = area(0.05*surface:get_width(),0.9*surface:get_height()-2.0*height_coinbox, 250, 90)
 	surface:clear(color(255, 255, 255, 255):to_table(), target1:to_table())
-	f:draw(surface, target1:to_table(), "Press Exit to go back to City", "center", "middle")
+	f:draw(surface, target1:to_table(), "Press Back to go back to City", "center", "middle")
 
 	--heading
 	--local heading = font("data/fonts/DroidSans.ttf", 32, color(255, 128, 0, 255))
