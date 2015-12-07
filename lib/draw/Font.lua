@@ -254,8 +254,8 @@ function Font:draw(surface, rectangle, text, horizontal_align, vertical_align)
 
 	surface:copyfrom(
 		text_surface,
-		text_rectangle,
-		text_rectangle:translate(x, y):translate(rectangle.x, rectangle.y),
+		text_rectangle:to_table(),
+		text_rectangle:translate(x, y):translate(rectangle.x, rectangle.y):to_table(),
 		true)
 
 	text_surface:destroy()
