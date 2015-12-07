@@ -80,8 +80,7 @@ end
 function Quiz:generate_multiplechoice_quiz(image_path,quiz_size)
 	local tsvreader = TSVReader(image_path)
 	if tsvreader:get_question("multiple_choice") ~= false then
-		for i = 1, quiz_size,1 do
-
+		for i = 1, quiz_size, 1 do
 			local multiplechoicequestion = tsvreader:generate_question(i)
 			self.questions[i] = multiplechoicequestion
 		end
@@ -99,7 +98,7 @@ end
 function Quiz:generate_singlechoice_quiz(image_path,quiz_size)
 	local tsvreader = TSVReader(image_path)
 	if tsvreader:get_question("single_choice") ~= false then
-		for i = 1, quiz_size,1 do
+		for i = 1, math.min(quiz_size, #tsvreader.questions_table),1 do
 			local multiplechoicequestion = tsvreader:generate_question(i)
 			self.questions[i] = multiplechoicequestion
 		end
