@@ -475,13 +475,13 @@ function MultipleChoiceView:_back_to_city(type, message)
 	      	popup_view:destroy()
 	      	self.views.grid:focus()
 	      	self:dirty(true)
-	      	gfx.update()
+	      	--gfx.update()
     	end
     end
 
     self:listen_to_once(popup_view, "button_click", button_click_func)
     popup_view:render(subsurface)
-    gfx.update()
+    --gfx.update()
 end
 
 ---Focuses the {@MultipleChoiceView}, which makes it listen to the remote control

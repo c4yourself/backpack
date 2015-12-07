@@ -221,7 +221,7 @@ function ConnectFourComponent:render(surface)
 	end
 
 	self:dirty(false)
-	gfx.update()
+	--gfx.update()
 end
 
 --- Puts a delay on computers move to slow down the process
@@ -320,7 +320,7 @@ function ConnectFourComponent:_back_to_city(type, message)
 			popup_view:destroy()
 			self:focus()
 			self:dirty(true)
-			gfx.update()
+			--gfx.update()
 		end
 		end
 
@@ -328,7 +328,7 @@ function ConnectFourComponent:_back_to_city(type, message)
 --    self:listen_to_once(popup_view,"exit_view",exit_view_func)
 --    self:listen_to_once(popup_view, "destroy", destroy_pop)
     popup_view:render(subsurface)
-    gfx.update()
+    --gfx.update()
   --  self:trigger("exit_view")
 end
 
