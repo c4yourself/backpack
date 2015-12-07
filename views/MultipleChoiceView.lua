@@ -418,7 +418,12 @@ function MultipleChoiceView:render(surface)
 			self.profile:modify_balance(experience)
 			self.profile:modify_experience(experience)
 			local type = "message"
-			local message = {"Good job! You received " .. experience .. " experience."}
+			local message = ""
+			if experience == 0 then
+				message = {"Game finished! You received " .. experience .. " experience."}
+			else
+				message = {"Good job! You received " .. experience .. " experience."}
+			end
 			self:_back_to_city(type, message)
 		end
 	self:dirty(false)
