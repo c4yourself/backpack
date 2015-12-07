@@ -179,6 +179,9 @@ function ProfileSynchronizer:test_hash()
 
 end
 
+
+--- Function for only being able to check if the email has already been used
+-- @param email The email to be checked
 function ProfileSynchronizer:check_email(email)
 
 	local hashkey = hash.hash256(email..self.ttlyawesomekey)

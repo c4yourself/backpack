@@ -10,7 +10,7 @@ local ToggleButton = class("ToggleButton", Button)
 function ToggleButton:__init(color, color_selected, color_disabled, enabled, selected, transfer_path)
 	Button:__init(color, color_selected, color_disabled, enabled, selected, transfer_path)
 	self.toggled = false
-	self.color_toggled = Color(0,0,255,255)
+	self.color_toggled = Color(0, 0, 255, 255)
 end
 
 -- Switches the state for the toggle button

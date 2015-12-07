@@ -17,7 +17,7 @@ function InputField:__init(name, position, highlighted)
 	self.highlighted_color = {r=250, g=169, b=0}
 	self.normal_color = {r=255, g=255, b=255}
 	self.font_header = Font("data/fonts/DroidSans.ttf", 40, Color(255, 255, 255, 255))
-	self.font_text = Font("data/fonts/DroidSans.ttf", 40, Color(0, 0, 0, 255))
+	self.font_text = Font("data/fonts/DroidSans.ttf", 40, Color(1, 1, 1, 255))
 	self.highlighted = highlighted or false
   self.text = ""
   self.name = name

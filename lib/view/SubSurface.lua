@@ -40,8 +40,7 @@ end
 -- @param dest_rectangle the are on subsurface to copy to
 -- @param blend_option
 function SubSurface:copyfrom(src_surface, src_rectangle, dest_rectangle, blend_option)
-	local src_rect = src_surface:_get_rectangle(src_rectangle)
-
+	local src_rect = self:_get_surface_rectangle(src_surface, src_rectangle)
 	local dest_rectangle = self:_get_rectangle(dest_rectangle, src_rect)
 
 	self.surface:copyfrom(src_surface, src_rect, dest_rectangle, blend_option)
@@ -139,6 +138,35 @@ function SubSurface:_get_rectangle(rectangle, defaults)
 	return rect:to_table()
 end
 
+--- Reimplementation of @{emulator.surface:_get_rectangle} which is only
+-- available
+function SubSurface:_get_surface_rectangle(surface, rectangle, defaults)
+	if defaults == nil then
+		defaults = {
+			width = surface:get_width(),
+			height = surface:get_height()
+		}
+	end
+
+	local rect = Rectangle.from_table(rectangle, {
+		width = defaults.width or defaults.w,
+		height = defaults.height or defaults.h
+	})
+
+	local surface_rect = Rectangle.from_surface(surface)
+
+	-- Throw error when trying to draw outside of screen
+	if not surface_rect:contains(rect) then
+		logger.error(string.format(
+			"Rectange start is %dx%d, end is %dx%d. Max is %dx%d",
+			rect:get_start(),
+			rect:get_end(),
+			surface_rect:get_end()))
+		error("Rectangle is out of bounds")
+	end
+
+	return rect:to_table()
+end
 
 
 return SubSurface

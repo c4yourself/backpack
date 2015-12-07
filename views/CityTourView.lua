@@ -38,14 +38,14 @@ function CityTourView:__init(remote_control, surface, profile)
 	--border_color = Color(0, 0, 0, 255)
 
 	-- Create the fonts
-	city_tour_head_font = Font("data/fonts/DroidSans.ttf", 48, Color(0, 0, 0, 255))
-	city_tour_attraction_font = Font("data/fonts/DroidSans.ttf", 25, Color(0, 0, 0, 255))
-	city_tour_text =  Font("data/fonts/DroidSans.ttf", 20, Color(0, 0, 0, 255))
-	city_tour_question = Font("data/fonts/DroidSans.ttf", 25, Color(0, 0, 0, 255))
+	city_tour_head_font = Font("data/fonts/DroidSans.ttf", 48, Color(1, 1, 1, 255))
+	city_tour_attraction_font = Font("data/fonts/DroidSans.ttf", 25, Color(1, 1, 1, 255))
+	city_tour_text =  Font("data/fonts/DroidSans.ttf", 20, Color(1, 1, 1, 255))
+	city_tour_question = Font("data/fonts/DroidSans.ttf", 25, Color(1, 1, 1, 255))
 	--Create button colors
 	local button_color = Color(255, 99, 0, 255)
 	local color_selected = Color(255, 153, 0, 255)
-	local button_text_color = Color(0, 0, 0, 255)
+	local button_text_color = Color(1, 1, 1, 255)
 
 	-- Create the tour images
 	self.tour_attraction_images = {}

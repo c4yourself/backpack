@@ -146,6 +146,10 @@ function surface:copyfrom(src_surface, src_rectangle, dest_rectangle, blend_opti
 		if blend_option then
 			love.graphics.setBlendMode("alpha")
 		else
+			-- Save old color to restore it later
+			local br, bg, bb, ba = love.graphics.getColor()
+			love.graphics.setBackgroundColor(0, 0, 0, 0)
+
 			-- Clear pixels where target will be drawn
 			love.graphics.setScissor(
 				destination_rectangle.x,
@@ -154,6 +158,9 @@ function surface:copyfrom(src_surface, src_rectangle, dest_rectangle, blend_opti
 				destination_rectangle.height)
 			love.graphics.clear()
 			love.graphics.setScissor()
+
+			-- Restore previous color
+			love.graphics.setBackgroundColor(br, bg, bb, ba)
 		end
 
 		drawq(

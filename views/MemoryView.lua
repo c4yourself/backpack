@@ -26,8 +26,8 @@ local MemoryView = class("MemoryView", View)
 -- @param profile The current profile used in the application
 function MemoryView:__init(remote_control, surface, profile)
     View.__init(self)
-	event.remote_control:off("button_release") -- TODO remove this once the ViewManager is fully implemented
-  self.surface = Surface
+	event.remote_control:off("button_release")
+    self.surface = Surface
 
     -- Flags to determine whether a player has moved or pressed submit
 	self.player_moved = false
@@ -173,7 +173,9 @@ function MemoryView:_determine_new_state()
               local experience = ExperienceCalculation.Calculation(counter, "Memory")
               self.profile:modify_balance(experience)
               self.profile:modify_experience(experience)
-              local message = {"You used " .. self.memory.moves .. " moves and received " .. experience .. " coins."}
+              local message = {"You used " .. self.memory.moves ..
+                                " moves and received " ..
+                                experience .. " experience."}
               local type = "message"
               self:back_to_city(type, message)
             end
@@ -209,9 +211,10 @@ function MemoryView:render(surface)
             grid_callback)
         self.listening_initiated = true
     end
---At this point, we should check the memory states and keep the card that are true in memory.states open
+    --At this point, we should check the memory states and keep
+    -- the card that are true in memory.states open
     if self:is_dirty() then
-        surface:clear(Color(0, 0, 0, 255):to_table())
+        surface:clear(Color(1, 1, 1, 255):to_table())
         -- Add the number of turns
         local turns_text = Font("data/fonts/DroidSans.ttf", 30, self.text_color)
         local turns = Font("data/fonts/DroidSans.ttf", 30, self.text_color)
@@ -230,9 +233,14 @@ function MemoryView:render(surface)
 end
 
 --- Called when the user returns to the CityView
+-- @param type String representing pop-up type
+-- @param message String to be displayed in pop-up
 function MemoryView:back_to_city(type, message)
 
-    local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
+    local subsurface = SubSurface(screen, {width = screen:get_width() * 0.5,
+                                    height = (screen:get_height() - 50) * 0.5,
+                                    x = screen:get_width() * 0.25,
+                                    y = screen:get_height() * 0.25 + 50})
     local popup_view = PopUpView(remote_control,subsurface, type, message)
     self:add_view(popup_view)
 
@@ -240,15 +248,15 @@ function MemoryView:back_to_city(type, message)
     self:blur()
 
     local button_click_func = function(button)
-      if button == "ok" then
-      self:trigger("exit_view")
-      else
-      popup_view:destroy()
-      self.button_grid:focus()
-      self:focus()
-      self:dirty(true)
-      gfx.update()
-    end
+        if button == "ok" then
+            self:trigger("exit_view")
+        else
+            popup_view:destroy()
+            self.button_grid:focus()
+            self:focus()
+            self:dirty(true)
+            gfx.update()
+        end
     end
 
     self:listen_to_once(popup_view, "button_click", button_click_func)
@@ -275,6 +283,7 @@ function MemoryView:destroy()
     view.View.destroy(self)
 end
 
+--- Focuses the MemoryView, i.e. makes it start listening to the remote control
 function MemoryView:focus()
   self:listen_to(
       event.remote_control,
@@ -283,6 +292,7 @@ function MemoryView:focus()
   )
 end
 
+--- Focuses the MemoryView, i.e. makes it stop listening to the remote control
 function MemoryView:blur()
   self:stop_listening(event.remote_control)
 end
