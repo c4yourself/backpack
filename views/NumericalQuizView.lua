@@ -96,7 +96,7 @@ function NumericQuizView:__init(remote_control, subsurface, profile)
 	self.progress_counter_font = Font("data/fonts/DroidSans.ttf", 32,
 									Color(255,255,255,255))
 	-- Listeners and callbacks
-self:focus()
+	self:focus()
 end
 
 --- Adjusts the quiz difficulty based on the user's experience
@@ -143,6 +143,8 @@ function NumericQuizView:render(surface)
 
 		local input_index = self.views.grid:get_last_index()
 		self.views.grid:mark_as_input_comp(input_index)
+		self.views.grid:select_button(input_index)
+		self.views.grid.button_list[input_index].button:focus()
 	end
 
 	-- Render the view as long as it isn't clean already
@@ -201,6 +203,9 @@ function NumericQuizView:render(surface)
 					{x = 0, y = 25, height = self.question_area_height,
 					width = self.question_area_width},
 					output2, "center", "middle")
+			--Highlight the next button and blur the input field
+			self.views.grid:select_button(2)
+			self.views.grid.button_list[3].button:blur()
 			self.answer_flag = false
 		elseif self._suppress_new_question then
 			self.suppress_new_question = false
@@ -360,6 +365,8 @@ end
 --- Set up for showing whether the user answered correctly or not. Only works
 -- when the user has entered an answer in the input field. Triggers dirty
 function NumericQuizView:show_answer()
+	self.views.grid:select_button(2)
+	self.views.grid.button_list[3].button:blur()
 	if self.views.num_input_comp:get_text() ~= "" then
 		if not self.prevent then
 			self.prevent = not self.prevent
@@ -374,6 +381,9 @@ end
 
 --- Set up for the next question in the quiz. Triggers dirty
 function NumericQuizView:next_question()
+	self.views.grid:select_button(3)
+	self.views.grid.button_list[3].button:focus()
+
 	self.answer_flag = false
 	self.prevent = false
 	self.user_answer = nil
