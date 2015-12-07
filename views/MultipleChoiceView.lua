@@ -238,7 +238,9 @@ end
 -- what should be diplayed next to the user
 -- @param key Key that was pressed
 function MultipleChoiceView:press(key)
-	return
+	if key == "back" then
+		self:_exit()
+	end
 end
 
 ---Renders this instance of MultipleChoiceView and all its child views, given

@@ -34,16 +34,16 @@ function ListItem:render(surface)
 			self.text_left, "left", "middle")
 
 		self.font_highlight:draw(surface, self.text_position_right, tostring(self.money))
-		surface:copyfrom(gfx.loadpng(self.icon), nil, {x=15, y=(surface:get_height()/2)-(icon_height/2),
-			width=40, height=icon_height}, true)
+		--surface:copyfrom(gfx.loadpng(self.icon), nil, {x=15, y=(surface:get_height()/2)-(icon_height/2),
+		--	width=40, height=icon_height}, true)
 
 	else
 		surface:clear({r=255, g=150, b=0, a=255})
 		self.font:draw(surface, {x = 70, y = 0, height = surface:get_height()}, self.text_left, "left", "middle")
 		self.font:draw(surface, self.text_position_right, tostring(self.money))
 
-		surface:copyfrom(gfx.loadpng(self.icon), nil, {x=15, y=(surface:get_height()/2)-(icon_height/2),
-			width=40, height=icon_height}, true)
+		--surface:copyfrom(gfx.loadpng(self.icon), nil, {x=15, y=(surface:get_height()/2)-(icon_height/2),
+		--	width=40, height=icon_height}, true)
 
 end
 
