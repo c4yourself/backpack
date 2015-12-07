@@ -129,6 +129,9 @@ end
 function CityView:button_click(button)
 	if not button.transfer_path then
 		return
+	elseif button.transfer_path == "exit" then
+		self:exit_city_view()
+		return
 	end
 
 	-- Blur this view to prevent it from reacting to button clicks
