@@ -49,23 +49,7 @@ attractions.attraction = { paris = {
                                             "dated 24 November 1670, as a home and hospital for aged and",
                                             "unwell soldiers."}
                                   },
-                                  {name = "Louvre",
 
-                                  pic_url = "data/images/CityTourLouvre.png",
-                                  text = {"The Louvre Palace or the Louvre Museum is one of the world's",
-                                          "largest museums and a historic monument. Nearly 35,000 objects",
-                                          "from prehistory to the 21st century are exhibited over an",
-                                          "area of 60,600 square meters (652,300 square feet). The Louvre is",
-                                          "the world's most visited museum, receiving more than 9.7 million",
-                                          "visitors in 2012. The museum opened on 10 August 1793 with an",
-                                          "exhibition of 537 paintings, the majority of the works being royal",
-                                          "and confiscated church property. Because of structural problems",
-                                          "with the building, the museum was closed in 1796 until 1801.",
-                                          "The High Renaissance collection includes, Virgin and Child with ",
-                                          "St. Anne, St. John the Baptist, and Madonna of the Rocks and The ",
-                                          "Louvres most popular attraction, Leonardo da Vinci's Mona Lisa."
-                                        }
-                                  }
                           },
 
                           rio_de_janeiro = {
@@ -115,30 +99,14 @@ attractions.attraction = { paris = {
                                       "Rio de Janeiro and Brazil, and is listed as one of the New Seven",
                                       "Wonders of the World."}
                                       },
-                                      {name = "Copacabana beach",
-                                      question = "Which ocean is the Copacabana beach located towards?",
-                                      answers = {"The Atlantic", "The Pacific", "The Red Sea", "The Ocean of Brazil"},
-                                      pic_url = "data/images/CityTourCopacabanaBeach.png",
-                                      text = {"Copacabana beach is located at the Atlantic shore and is a",
-                                      "staggering 4 km is length. There are historic forts at both ends of",
-                                      "Copacabana beach; Fort Copacabana, built in 1914, is at the south",
-                                      "end by Posto Seis and Fort Duque de Caxias, built in 1779, at the",
-                                      "north end. Fort Copacabana, a military base with a wartime museum",
-                                      "that is open to the public, stands at one end of the beach. On the",
-                                      "length of beach fronting the fort, fishermen offer up their morning",
-                                      "catch for sale. Aside for enjoying the beach the visitors can take",
-                                      "a stroll along the promenade that borders the 4 km (2.5 mile) long",
-                                      "beach. Originally built in the 1930s, the walkway features a wave-like",
-                                      "design laid out in black and white stones."}
-                                      }
                                   },
 
                                 bombay = {
                                       {name = "Gateway of India",
 
                                       pic_url = "data/images/CityTourGatewayOfIndia.png",
-                                      text = {"The Gateway of India is a monument built during the British Rule in",
-                                              "Bombay to commemorate the visit of King George V and Queen",
+                                      text = {"The Gateway of India is a monument built during the British Rule",
+                                              "in Bombay to commemorate the visit of King George V and Queen",
                                               "Mary to Bombay, prior to the Delhi Durbar, in December 1911.",
                                               "However, they only got to see a cardboard model of the structure",
                                               "since the construction did not begin til 1915.The structure is a ",
@@ -155,16 +123,16 @@ attractions.attraction = { paris = {
                                       pic_url = "data/images/CityTourHajiAli.png",
                                       text = {"The Haji Ali Dargah was constructed in 1431 in memory of Sayyed",
                                               "Peer Haji Ali Shah Bukhari, who gave up all his worldly possessions",
-                                              "before making a pilgrimage to Mecca. According to legends surrounding",
-                                              "his life, he once saw a poor woman cryng on the road holding an empty",
-                                              "vessel. He asked her what the problem was, she said that she had",
-                                              "stumbled and accidently spilled the oil she was carrying. He asked her to",
-                                              "take him to the spot where she spilt the oil. There, he jabbed a finger into",
-                                              "the soil and the oil gushed out. The overjoyed woman filled up the vessel",
-                                              "and went home. Haji Ali died during his journey to Mecca and the casket",
-                                              "carrying his body, floated back to these shores, getting stuck in the string",
-                                              "of rocky islet just off the shore of Worli. Thus, the Dargah was constructed",
-                                              "there, on an islet 500 meters from the coast, in the middle of Wordli Bay."}
+                                              "before making a pilgrimage to Mecca. According to legends ",
+                                              "surrounding his life, he once saw a woman cryng on the road. He",
+                                              "asked her what the problem was, she said that she had accidently",
+                                              "spilled the oil she was carrying. He asked her to take him  to the",
+                                              "spot where she spilt the oil. There, he jabbed a finger into the ",
+                                              "soil and the oil gushed out. Haji Ali died during his. his journey",
+                                              "to Mecca and the casket carrying his body, floated back to these",
+                                              "shores, getting stuck in the string of rocky islet. Thus the Dargah",
+                                              "was constructed there, on an islet 500 meters from the coast",
+                                              }
                                       },
                                       {name = "Chhatrapati Shivaju Terminus",
 
@@ -179,24 +147,8 @@ attractions.attraction = { paris = {
                                               "Bori Bunder area of Bombay to commemorate the Golden Jubilee of",
                                               "Queen Victoria. Stevens earned the commission to construct the",
                                               "station after a masterpiece watercolor sketch by draughtsman Axel",
-                                              "Haig. The new railway station was built on the location of the Bori",
-                                              "Bunder Station and is one of the busiest railway stations in India."}
+                                              "Haig. The station is one of the busiest railway stations in India."}
                                     },
-                                      {name = "Taj Mahal Palace & Tower",
-
-                                      pic_url = "data/images/CityTourTajMahal.png",
-                                      text = {"The Taj Mahal Palace Hotel is a five-star hotel located in the Colaba",
-                                              "region of Bombay, Maharashtra,India, next to the Gateway of",
-                                              "India. The hotel's original building first opened its doors to guests",
-                                              "on 16 December 1903. Part of the Taj Hotels, Resorts and Palaces,",
-                                              "this hotel is considered the flagship property of the Tata group and",
-                                              "contains 560 rooms and 44 suites and 11 restaurants. From a",
-                                              "historical and architectural point of view, the two buildings that",
-                                              "make up the hotel, the Taj Mahal Palace and the Tower are two",
-                                              "distinct buildings, built at different times and in different",
-                                              "architectural designs."
-                                          }
-                                    }
                                   },
 
                                 london = {
@@ -242,21 +194,6 @@ attractions.attraction = { paris = {
                                                   "treasury, a menagerie, the home of the Royal Mint, a public records",
                                                   "office, and the home of the Crown Jewels of England."}
                                           },
-                                            {name = "Buckingham Palace",
-
-                                            pic_url = "data/images/CityTourBuckinghamPalace.png",
-                                            text = {"Buckingham Palace is the London residence and principal workplace",
-                                                    "of the reigning monarch of the United Kingdom. Located in the City",
-                                                    "of Westminster, the palace is often at the center of state occasions",
-                                                    "and royal hospitality. It has been a focus for the British people at",
-                                                    "times of national rejoicing. Originally known as Buckingham House,",
-                                                    "the building which forms the core of today's palace was a large",
-                                                    "townhouse built for the Duke of Buckingham in 1703 on a site which",
-                                                    "had been in private ownership for at least 150 years. It was",
-                                                    "subsequently acquired by King George III in 1761 as a private",
-                                                    "residence for Queen Charlotte and was known as The Queen's",
-                                                    "House."}
-                                            }
                                       },
 
 
@@ -269,31 +206,27 @@ attractions.attraction = { paris = {
                                                   "copper statue, designed by Frédéric Auguste Bartholdi, a French",
                                                   "sculptor, was built by Gustave Eiffel in France and dedicated on",
                                                   "October 28, 1886.It was a gift to the United States from the people",
-                                                  "of France. The statue is of a robed female figure representing",
-                                                  "Libertas, the Roman goddess, who bears a torch and a tabula ansata",
-                                                  "(a tablet evoking the law) upon which is inscribed the date of the",
-                                                  "American Declaration of Independence, July 4, 1776. A broken chain",
-                                                  "lies at her feet. The statue is an icon of freedom and of the United",
-                                                  "States, and was a welcoming sight to immigrants arriving from",
-                                                  "abroad. The copper statue is 46 meters tall and the whole statue",
-                                                  "including the foundation is a total of 93 meters."}
+                                                  "of France. The statue bears a torch and a tabula ansata upon which",
+                                                  "is inscribed the date of theAmerican Declaration of Independence",
+                                                  "July 4, 1776. A broken chainlies at her feet. The statue is an icon",
+                                                  " of freedom and of the United States, and was a welcoming sight to",
+                                                  "immigrants arriving from abroad. The copper statue is 46 meters.",
+                                                  }
                                           },
                                           {name = "The Empire State Building",
 
                                           pic_url = "data/images/CityTourEmpireStateBuilding.png",
-                                          text = {"The Empire State Building is a 102-story skyscraper located in",
+                                          text = {"The Empire State Building is a 102-floors skyscraper located in",
                                                   "Midtown Manhattan, New York City, on Fifth Avenue between West",
-                                                  "33rd and 34th Streets. It has a roof height of 1,250 feet (381 meters),",
-                                                  "and with its antenna spire included, it stands a total of 1,454 feet",
-                                                  "(443 meters) tall. Its name is derived from the nickname for New",
-                                                  "York, the Empire State. Following the September 11 attacks in 2001,",
-                                                  "the Empire State Building was again the tallest building in New York,",
-                                                  "until One World Trade Center reached a greater height in April 2012.",
-                                                  "The Empire State Building is currently the fifth-tallest completed",
-                                                  "skyscraper in the United States and the 29th-tallest in the world. It",
-                                                  "is also the fifth-tallest freestanding structure in the Americas.",
-                                                  "When measured by pinnacle height, it is the fourth-tallest building in",
-                                                  "the United States."}
+                                                  "33rd and 34th Streets. It has a total height of 1,454 feet (443 meters),",
+                                                  "Its name is derived from the nickname for New York, the Empire State.",
+                                                  "Following the September 11 attacks in 2001, the Empire State Building",
+                                                  "was again the tallest building in New York, until One World Trade Center",
+                                                  "reached a greater height in April 2012.The Empire State Building is",
+                                                  "currently the fifth-tallest completed skyscraper in the United States",
+                                                  "and the 29th-tallest in the world. It is also the fifth-tallest",
+                                                  "freestanding structure in the Americas.",
+                                                  }
                                           },
                                           {name = "Times Square",
 
@@ -308,26 +241,9 @@ attractions.attraction = { paris = {
                                                   "revelers crowd Times Square for the New Year's celebrations. It is",
                                                   "also the hub of the Broadway Theater District and a major center of",
                                                   "the world's entertainment industry. Approximately 330,000 people",
-                                                  "pass through Times Square daily, many of them tourists, making it",
-                                                  "one of the most visited tourist attractions in the world."}
+                                                  "pass through Times Square daily,"
+                                                }
                                           },
-                                          {name = "Central park",
-
-                                          pic_url = "data/images/CityTourCentralPark.png",
-                                          text = {"Central Park is an urban park in middle-upper Manhattan, New York",
-                                                  "City. Central Park is the most visited urban park in the United States",
-                                                  "as well as one of the most filmed locations in the world. It opened in",
-                                                  "1857 on 778 acres (315 ha) of city-owned land. In 1858, Frederick",
-                                                  "Law Olmsted and Calvert Vaux, two soon-to-be famed national",
-                                                  "landscapers and architects, won a design competition to improve",
-                                                  "and expand the park with a plan they titled the Greensward Plan. It",
-                                                  "was designated a National Historic Landmark in 1962. The Park was",
-                                                  "managed for decades by the New York City Department of",
-                                                  "Recreation and Parks and is currently managed by the non-profit",
-                                                  "organization Central Park Conservancy under contract with the",
-                                                  "municipal government in a public-private partnership. A total of 29",
-                                                  "sculptures can be find throughout the park."}
-                                          }
                                       },
 
                                   tokyo = {
@@ -367,20 +283,6 @@ attractions.attraction = { paris = {
                                                   "17.2 million visitors, making it the world's second-most visited",
                                                   "theme park behind the Magic Kingdom at Walt Disney World Resort."}
                                           },
-                                          {name = "Tokyo Tower",
-
-                                          pic_url = "data/images/CityTourTokyoTower.png",
-                                          text = {"Tokyo Tower is a communications and observation tower located in",
-                                                  "Tokyo, Japan. At 333 meters (1092 feet), it is the second tallest",
-                                                  "structure in Japan. Built in 1958, the tower's main sources of",
-                                                  "revenue are tourism and antenna leasing. Around 150 million",
-                                                  "people have visited the tower since its opening. The first floors",
-                                                  "main attractions are the elevators that serve as a direct ride to the",
-                                                  "Main Observatory. The third floor is home to the Guinness World",
-                                                  "records Museum in Tokyo. On the roof of the Foot Town building",
-                                                  "there’s a small amusement park that contains several small rides",
-                                                  "and hosts live performances for children."}
-                                          }
                                       },
 
                                   sydney = {
@@ -427,24 +329,6 @@ attractions.attraction = { paris = {
                                                   "suffered decay until its restoration and return to its original",
                                                   "use in the late twentieth century."}
                                           },
-                                          {name = "The Harbour Bridge",
-
-                                          pic_url = "data/images/CityTourQueenHarbourBridge.png",
-                                          text = {"The Sydney Harbour Bridge is a bridge across Sydney Harbor that",
-                                                  "carries rail, vehicular, bicycle, and pedestrian traffic. The",
-                                                  "dramatic view of the bridge,the harbor, and the nearby Sydney Opera",
-                                                  "House is an iconic image of Sydney, and Australia. The bridge is",
-                                                  "nicknamed \"The Coathanger\" because of its arch-based design or is",
-                                                  "simply called \"The Bridge\" by Sydney residents. Under the direction",
-                                                  "of Dr J.J.C. Bradfield of the NSW Department of Public Works, the",
-                                                  "bridge was designed and built by British firm Dorman Long and Co Ltd",
-                                                  "of Middlesbrough and opened in 1932. The bridge's design was",
-                                                  "influenced by the Hell Gate Bridge in New York City. One of the",
-                                                  "ongoing tourist attractions of the bridge has been the south-east",
-                                                  "pylon, which is accessed via the pedestrian walkway across the",
-                                                  "bridge, and then a climb to the top of the pylon of about 200",
-                                                  "steps."}
-                                                }
                                         },
 
 
@@ -491,21 +375,6 @@ attractions.attraction = { paris = {
                                                   "nickname the City of a Thousand Minarets."
                                                 }
                                           },
-                                          {name = "The Citadel",
-                                        
-                                          pic_url = "data/images/CityTourTheCitadel.png",
-                                          text = {"The Citadel was fortified by the Ayyubid ruler Salah al-Di (Saladin)",
-                                                  "between 1176 and 1183 CE, to protect it from the Crusaders.",
-                                                  "Only a few years after defeating the Fatimid Caliphate, Saladin",
-                                                  "set out to build a wall that would surround both Cairo and Fustat.",
-                                                  "Saladin is recorded as saying, With a wall I will make the two ",
-                                                  "(cities of Cairo and Fustat) into a unique whole, so that one army ",
-                                                  "may defend them both; and I believe it is good to encircle them",
-                                                  "with a single wall from the bank of the Nile to the bank of the ",
-                                                  "Nile”. The Citadel would be the centerpiece ofthe wall. It is now a",
-                                                  "preserved historic site, with mosques and museums."
-                                                }
-                                          }
                                   }
 
 }
