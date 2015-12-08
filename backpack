@@ -58,7 +58,7 @@ elif [ "$1" == "export" ]; then
 	fi
 
 	echo "Packing local files, using $start_file as main file"
-	tar --transform="flags=r;s|$start_file|start.lua|" -cf build.tar "$start_file" config.lua lib/ views/ components/
+	tar --transform="flags=r;s|$start_file|start.lua|" -zcf build.tar.gz "$start_file" config.lua lib/ views/ components/
 
 	echo "Starting TFTP server on $ip:9000"
 	python -c 'import tftpy; s = tftpy.TftpServer("."); s.listen("0.0.0.0", 9000)' &
@@ -66,7 +66,7 @@ elif [ "$1" == "export" ]; then
 
 	echo "Connecting through telnet to set-top box at $box_ip"
 	echo
-	./backpack_upload_file $box_ip $ip build.tar
+	./backpack_upload_file $box_ip $ip build.tar.gz
 	echo
 	echo
 
@@ -74,7 +74,7 @@ elif [ "$1" == "export" ]; then
 	kill $tftp_pid
 
 	echo "Removing local file package"
-	rm build.tar
+	rm build.tar.gz
 elif [ "$1" == "lint" ]; then
 	for file in $(find . -name '*.lua' ! -name 'serpent.lua' ! -name 'classy.lua' ! -name 'luaunit.lua'); do
 		correct_count=$(grep -Pn $'^[\t]+[^\t ]' "$file"|wc -l)
