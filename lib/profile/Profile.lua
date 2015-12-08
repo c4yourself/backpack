@@ -324,4 +324,11 @@ function Profile:modify_experience(number)
 	return self.experience
 end
 
+function Profile:get_level()
+	return
+		(self.experience - (self.experience % 100)) / 100 + 1,
+		self.experience % 100,
+		100
+end
+
 return Profile

@@ -16,6 +16,7 @@ local utils = require("lib.utils")
 local view = require("lib.view")
 local PopUpView = require("views.PopUpView")
 local ProfileManager = require("lib.profile.ProfileManager")
+local TopBarView = require("views.TopBarView")
 local CityView = class("CityView", view.View)
 
 --- Constructor for CityView
@@ -29,6 +30,8 @@ function CityView:__init(profile, remote_control)
 	--Instance of the  current profile, can be used to get name, sex etc
 	self.profile = profile
 	self.button_grid = ButtonGrid(self.remote_control)
+
+	self.top_bar = TopBarView(self.profile)
 
 	local text_color = Color(111, 189, 88, 255)
 	-- Create some button colors
@@ -93,7 +96,6 @@ function CityView:__init(profile, remote_control)
 	-- Preload images for increased performance
 	self.images = {
 		background = gfx.loadpng("data/images/"..self.profile.city..".png"),
-		coin = gfx.loadpng("data/images/coinIcon.png"),
 
 		math_icon = gfx.loadpng("data/images/MathIcon.png"),
 		flight_icon = gfx.loadpng("data/images/FlightIcon.png"),
@@ -106,7 +108,6 @@ function CityView:__init(profile, remote_control)
 	}
 
 	-- Premultiple images with transparency to make them render properly
-	self.images.coin:premultiply()
 	self.images.math_icon:premultiply()
 	self.images.flight_icon:premultiply()
 	self.images.flight_icon:premultiply()
@@ -230,48 +231,6 @@ function CityView:render(surface)
 	city_view_large_font:draw(surface, {x=width/6-65, y=60}, "Mini Games")
 	city_view_large_font:draw(surface, {x=width/6-45, y=(height-50)/2+60}, "Options")
 
-	-- Implement status bar
-	surface:fill(status_bar_color:to_table(), {width=width, height=50, x=0, y=0})
-	surface:fill(score_text_color:to_table(), {width=150, height=30, x=285,y=10})
-	if self.profile.experience / 500 ~= 1 then
-		--TODO: No negative values allowed! The self.profile.experience needs to be calculated properly externally before used here.
-		surface:fill(experience_bar_color:to_table(), {width=math.ceil(148*(1-(self.profile.experience%100)/100)), height=28, x=434-148*(1-(self.profile.experience%100)/100), y=11})
-	end
-
-	-- Add info to statusbar
-	city_view_large_font:draw(
-		surface,
-		{x = 30, y = 0, height = 50},
-		self.profile.name,
-		nil,
-		"middle") -- Profile name
-	city_view_small_font:draw(
-		surface,
-		{x = 200, y = 0, height = 50},
-		"Level: " .. tostring((self.profile.experience - (self.profile.experience % 100)) / 100 + 1),
-		nil,
-		"middle") -- Profile level
-	city_view_small_font:draw(
-		surface,
-		{x = 440, y = 0, height = 50},
-		tostring(self.profile.experience % 100 .. "/100"),
-		nil,
-		"middle") -- Profile experience
-	city_view_small_font:draw(
-		surface,
-		{x = width - 150, y = 0, height = 50},
-		city.country:format_balance(self.profile.balance),
-		nil,
-		"middle") -- Profile cash
-	city_view_large_font:draw(
-		surface,
-		{x = width / 2, y = 0, height = 50},
-		self.profile:get_city().name,
-		nil,
-		"middle") -- City name
-
-	surface:copyfrom(self.images.coin, nil, {x = width - 190, y = 10, width = 30, height = 30}, true) -- Coin
-
  	-- using the button grid to render all buttons and texts
 	self.button_grid:render(surface)
 
@@ -303,6 +262,12 @@ function CityView:render(surface)
 		}))
 	end
 
+	self.top_bar:render(SubSurface(surface, {
+		x = 0,
+		y = 0,
+		width = surface:get_width(),
+		height = 60,
+	}))
 
 	self:dirty(false)
 end
@@ -313,6 +278,8 @@ function CityView:destroy()
 	for k,v in pairs(self.images) do
 		self.images[k]:destroy()
 	end
+
+	self.top_bar:destroy()
 end
 
 function CityView:load_view(button)
