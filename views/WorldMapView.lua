@@ -13,7 +13,8 @@ local view = require("lib.view")
 
 local WorldMap = class("WorldMapView", view.View)
 
-local background_color = {r = 119, g = 151, b = 255}
+--local background_color = {r = 119, g = 151, b = 255}
+local background_color = {r = 0x41, g = 0x46, b = 0x48, a = 0xff}
 local city_color = {r = 0, g = 0, b = 0}
 
 local city_positions = {
@@ -51,7 +52,7 @@ function WorldMap:__init(profile, destination, method, view_manager)
 
 
 	self.images = {
-		map = gfx.loadpng("data/images/worldmap2.png"),
+		map = gfx.loadpng("data/images/worldmap22.png"),
 		vehicle = gfx.loadpng(
 			"data/images/travel_screen/" .. self.method .. "_" .. direction .. ".png")
 	}
