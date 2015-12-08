@@ -210,8 +210,9 @@ function ProfileSelection:render(surface)
 			surface:fill(self:pickColor(self.leftMenuCurrentValue), {width=500, height=100, x=100, y=(250)})
 		end
 
-		if (200-self.profile_index*diff_y+diff_y*counter)>0 and (200-self.profile_index*diff_y+diff_y*counter)<screen:get_height() then
-			self.font_button:draw(surface, {x=120,y=(200-self.profile_index*diff_y+diff_y*counter)}, self.profile_list[key].name)
+		local y_pos = (200-self.profile_index*diff_y+diff_y*counter)
+		if y_pos>0 and y_pos<screen:get_height() then
+			self.font_button:draw(surface, {x=120,y=y_pos}, self.profile_list[key].name)
 		end
 
 		counter=counter+1
