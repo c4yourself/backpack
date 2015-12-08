@@ -29,6 +29,15 @@ function ListItem:__init(text_left, icon, money, font, text_position_left, text_
 
 end
 
+--- Standard destroy function
+function ListItem:destroy()
+	View.destroy(self)
+
+	if self.icon then
+		self.icon:destroy()
+	end
+end
+
 --- Function to select/deselect a list item
 -- @param status is the status (true/false)
 function ListItem:select(status)
@@ -69,12 +78,18 @@ function ListItem:render(surface)
 
 	-- If there's an icon to draw...
 	if self.icon then
-	surface:copyfrom(gfx.loadpng(self.icon), nil, {x=15, y=(surface:get_height()/2)-(icon_height/2),
-		width=40, height=icon_height}, true)
+		surface:copyfrom(
+			self.icon,
+			nil,
+			{
+				x = 15,
+				y = (surface:get_height() / 2) - (icon_height / 2),
+				width=40,
+				height = icon_height
+			},
+			true)
 	end
-
-self:dirty(false)
-
+	self:dirty(false)
 end
 
 return ListItem

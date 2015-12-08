@@ -67,7 +67,7 @@ function InputField:render(surface)
 		self.font_text:draw(surface, {x=self.position["x"]+20,y=self.position["y"]+20}, password_dummie)
 		logger:trace(self.text)
 	end
-  gfx.update()
+  --gfx.update()
 end
 
 

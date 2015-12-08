@@ -55,7 +55,7 @@ function TravelView:__init(remote_control, surface, profile)
 		end
 		local list_item = ListItem(
 			destination.name,
-			travel_type[self.routes[i][2]],
+			gfx.loadpng(travel_type[self.routes[i][2]]),
 			self.profile:get_city().country:format_balance(self.routes[i][3]),
 			self.font,
 			list_item_position_left,
@@ -94,6 +94,7 @@ end
 function TravelView:destroy()
 	View.destroy(self)
 	self.image:destroy()
+	self.list_comp:destroy()
 end
 
 --- Standard render Function
@@ -164,10 +165,7 @@ end
 --- Function that decides what action to take on press of "ok"
 -- @param button Is the button that has been pressed
 function TravelView:_travel(button)
-
-
 	if button == "ok" then
-
 		-- Find index of currently selected travel route
 		local index, max_index
 
@@ -183,18 +181,11 @@ function TravelView:_travel(button)
 				-- Find destination city index based on selected city
 				local destination = city.cities[self.city.travel_routes[index][1]]
 
-				local transportation = self.list_comp.item_list[index].icon
-
-				if transportation:sub(13,13) == 'a' then
-					transportation = "aeroplane"
-				elseif transportation:sub(13,13) == 'b' then
-					transportation = "boat"
-				elseif transportation:sub(13,13) == 't' then
-					transportation = "train"
-				end
-
 				local world_map = WorldMap(
-					self.profile, destination, transportation, view.view_manager)
+					self.profile,
+					destination,
+					self.routes[index][2],
+					view.view_manager)
 				view.view_manager:set_view(world_map)
 				world_map:start()
 
