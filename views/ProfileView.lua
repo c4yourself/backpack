@@ -4,7 +4,6 @@ local class = require("lib.classy")
 local View = require("lib.view.View")
 local view = require("lib.view")
 local event = require("lib.event")
-local ProfileView = class("ProfileView", view.View)
 local BackEndStore = require("lib.store.BackEndStore")
 local Profile = require("lib.profile.Profile")
 local event = require("lib.event")
@@ -16,6 +15,8 @@ local Font = require("lib.draw.Font")
 local Button = require("components.Button")
 local ButtonGrid=require("components.ButtonGrid")
 local ProfileManager = require("lib.profile.ProfileManager")
+
+local ProfileView = class("ProfileView", view.View)
 
 -- Get size of Table
 -- @param a Is the table to get ther size of
@@ -112,22 +113,11 @@ function ProfileView:__init(remote_control, surface, profile)
 		j = j+1
 	end
 
-	-- Create list of item images
-	--self.item_images = self:loadItemImages()
-
 	-- Add to view
-	self.add_view(self.button_grid, false)
-
-	local button_render = function()
-		self:render(self.surface)
-		gfx.update()
-	end
-
-	self:listen_to(self.button_grid,"dirty",button_render)
+	self:add_view(self.button_grid, true)
 
 	-- Function that makes us exit when pressing the correct button
 	local button_callback = function(button)
-
 		-- Get the current index of button that is selected
 		selected_index = button.transfer_path
 		local exit = false
@@ -141,18 +131,16 @@ function ProfileView:__init(remote_control, surface, profile)
 			self:destroy()
 			self:trigger("exit_view")
 		end
-
 	end
 
 	-- Instance remote control and mapps it to pressing enter
 	self:listen_to(self.button_grid,"button_click",	button_callback)
-	self.item_images = self:loadItemImages()
-
+	self.item_images = self:_load_item_images()
 end
 
 -- Load all the images for the items
 -- @param none
-function ProfileView:loadItemImages()
+function ProfileView:_load_item_images()
 	local ret_list = {}
 
 	if #self.backpack_items>0 then
@@ -168,8 +156,6 @@ end
 -- Render view function
 -- @param surface is the surface to draw on
 function ProfileView:render(surface)
-
-
 	-- Creates local variables for height and width
 	local height = self.surface:get_height()
 	local width = self.surface:get_width()
@@ -223,16 +209,20 @@ function ProfileView:render(surface)
 		self.font:draw(surface, {x = 180, y = 485}, self.profile:get_city().country:format_balance(item_selected:get_price()))
 	end
 
+	self:dirty(false)
 end
 
 
 -- Function to destory images
 function ProfileView:destroy()
-  view.View.destroy(self)
-  for k,v in pairs(self.item_images) do
-     self.item_images[k]:destroy()
-  end
+	view.View.destroy(self)
+
+	for k,v in pairs(self.item_images) do
+		self.item_images[k]:destroy()
+	end
+
 	self.backpack:destroy()
+	self.room:destroy()
 end
 
 return ProfileView
