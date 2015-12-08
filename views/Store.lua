@@ -103,23 +103,12 @@ function Store:__init(remote_control, surface, profile)
 	self.item_images = self:loadItemImages()
 
 	-- Add exit button
-	self.button_grid:add_button({x = width/6,y = height-60}, {width = 8*width/45,height = 2*width/45}, self.buttons[k])
+	self.button_grid:add_button({x = width/6-100,y = height-80}, {width = 10*width/45,height = 2.5*width/45}, self.buttons[k])
 
 	-- Add to view
-	self.add_view(self.button_grid, false)
-
-	-- Some fix for movement
-	--self:listen_to(event.remote_control, "button_release", function() self:dirty() end)
-	local button_render = function()
-		self.message["message"] = "Select item to purchase or sell"
-		self:render(self.surface)
-		gfx.update()
-	end
-
-	self:listen_to(self.button_grid,"dirty",button_render)
+	self:add_view(self.button_grid, true)
 
 	local button_callback = function(button)
-
 		-- Get the current index of button that is selected
 		selected_index = button.transfer_path
 		local continue = true
@@ -149,8 +138,7 @@ function Store:__init(remote_control, surface, profile)
 
 			self.item_images = self:loadItemImages()
 
-			self:render(self.surface)
-			gfx.update()
+			self:dirty()
 		end
 	end
 
@@ -286,6 +274,7 @@ function Store:render(surface)
 	self.font:draw(surface, {x = 2.9*width/4, y = height/8+130}, self.message["message"])
 	--Draw header
 
+	self:dirty(false)
 end
 
 

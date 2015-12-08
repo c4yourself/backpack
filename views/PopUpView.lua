@@ -31,14 +31,14 @@ function PopUp:__init(remote_control,surface, type, message)
 	self.message_font_height = 18
 
 	self.type = type
-	self.message_font = Font("data/fonts/DroidSans.ttf",self.message_font_height, Color(0,0,0,255))
+	self.message_font = Font("data/fonts/DroidSans.ttf",self.message_font_height, Color(1, 1, 1, 255))
 	self.button_size = {width=self.width*0.22, height=self.height*0.15}
 
 -- Sets the colors for the buttons and the button text.
-	self.button_color = Color(255,90,0,255)
-	self.color_selected = Color(255,153,0,255)
-	self.color_disabled = Color(0,0,0,255)
-	self.text_color = Color(255,255,255,255)
+	self.button_color = Color(255, 90, 0, 255)
+	self.color_selected = Color(255, 153, 0, 255)
+	self.color_disabled = Color(1, 1, 1, 255)
+	self.text_color = Color(255, 255, 255, 255)
 
 -- Calls the functions for creating the buttons.
 	if self.type == "message" then

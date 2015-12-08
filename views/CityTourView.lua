@@ -1,3 +1,8 @@
+--- Base class for CityTourView
+-- A CityTourView is the class that handles a city tour
+-- in a city.
+-- @classmod CityTourView
+
 local class = require("lib.classy")
 local Color = require("lib.draw.Color")
 local Font = require("lib.draw.Font")
@@ -14,6 +19,11 @@ local Quiz = require("lib.quiz.Quiz")
 
 local CityTourView = class("CityTourView", View)
 
+--- Constructor for CityTourView
+-- @param remote_control The remote control bound to the CityTourView
+-- @param surface The surface to draw the CityTourView on
+-- @param profile The current profile used in the application
+
 function CityTourView:__init(remote_control, surface, profile)
 	View.__init(self)
 	self.buttonGrid = ButtonGrid(remote_control)
@@ -26,16 +36,6 @@ function CityTourView:__init(remote_control, surface, profile)
 
 	--To keep track of which attraction to display. Increments every time a user answer a question
 	attractionpoint = 1
-
-	-- math.randomseed(os.time())
-	-- local order_table = {{1,2,3,4},{1,2,4,3},{1,3,2,4},{1,3,4,2},{1,4,2,3},{1,4,3,2},{2,1,3,4},{2,1,4,3},{2,3,1,4},{2,3,4,1},{2,4,1,3},{2,4,3,1},
-	-- 											{3,1,2,4},{3,1,4,2},{3,2,1,4},{3,2,4,1},{3,4,1,2},{3,4,2,1},{4,1,2,3},{4,1,3,2},{4,2,1,3},{4,2,3,1},{4,3,1,2},{4,3,2,1}}
-	-- local random_order = math.random(table.getn(order_table))
-	-- attractionpoint = order_table[random_order][#order_table[random_order]]
-
-
-	-- Create some colors
-	--border_color = Color(0, 0, 0, 255)
 
 	-- Create the fonts
 	city_tour_head_font = Font("data/fonts/DroidSans.ttf", 48, Color(1, 1, 1, 255))
@@ -50,16 +50,11 @@ function CityTourView:__init(remote_control, surface, profile)
 	-- Create the tour images
 	self.tour_attraction_images = {}
 
+	-- Iterate through attractions and create an image for each
 	for k,v in pairs(attractions.attraction[self.city.code]) do
-		table.insert(self.tour_attraction_images, gfx.loadpng(attractions.attraction[self.city.code][k].pic_url))
+		tmp_image = gfx.loadpng(attractions.attraction[self.city.code][k].pic_url)
+		table.insert(self.tour_attraction_images, tmp_image)
 	end
-
-
-	-- = {gfx.loadpng(attractions.attraction[self.city.code][1].pic_url),
-	-- 															gfx.loadpng(attractions.attraction[self.city.code][2].pic_url]),
-	-- 															gfx.loadpng(attractions.attraction[self.city.code][3])
-	-- Create the tour image
---	self.tour_attraction_image = gfx.loadpng(attractions.attraction.paris[1].pic_url)
 
 	-- Create answer buttons
 	local button_1 = Button(button_color, color_selected, color_disabled,true, true, "Correct")
@@ -77,6 +72,7 @@ function CityTourView:__init(remote_control, surface, profile)
 
 	local text_height = 75+25*table.getn(attractions.attraction[self.city.code][attractionpoint].text)
 	local indent = 100
+
 	-- Create buttons positions and size
 	local button_size = {width=9/36*width+5, height=3*(height-text_height)/13}
 	local position_1 = {x = width / 3 + indent, y = 5/4*button_size.height+text_height}
@@ -141,10 +137,6 @@ function CityTourView:__init(remote_control, surface, profile)
     popup_view:render(subsurface)
     gfx.update()
 
-
-
-
-
 	end
 
 	self:listen_to(
@@ -159,7 +151,6 @@ function CityTourView:__init(remote_control, surface, profile)
 	)
 
 end
-
 
 function CityTourView:render(surface)
 
@@ -190,7 +181,6 @@ function CityTourView:render(surface)
 	local text_height = 75 + 25*table.getn(attractions.attraction[self.city.code][attractionpoint].text)
 	city_tour_question:draw(surface, {x = width/3, y = text_height, width = width*2/3, height = self.buttonGrid.button_list[1].y - text_height}, self.city_tour_quiz.questions[1].question, "center", "middle")
 
-
 	--Render buttons
 	self.buttonGrid:render(surface)
 	self:dirty(false)
@@ -210,7 +200,6 @@ function CityTourView:load_view(button)
 
 		local type = "confirmation"
     local message =  {"Are you sure you want to exit the City Tour?"}
-
 
     local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
     local popup_view = PopUpView(remote_control,subsurface, type, message)
@@ -233,13 +222,7 @@ function CityTourView:load_view(button)
     self:listen_to_once(popup_view, "button_click", button_click_func)
     popup_view:render(subsurface)
     gfx.update()
-			--Stop listening to everything
-			-- TODO
-			-- Start listening to the exit
 	end
 end
-
-
-
 
 return CityTourView

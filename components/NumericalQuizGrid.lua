@@ -20,6 +20,26 @@ function NumericalQuizGrid:__init(remote_control)
 	self.next_button = nil
 end
 
+--- Selects the next button and deselects all other buttons.
+function NumericalQuizGrid:select_next()
+	for i = 1, #self.button_list do
+		self.button_list[i].button._selected = false
+	end
+	self.button_list[self.next_button].button._selected = true
+	self.button_indicator = self.next_button
+end
+
+--- Method for manually selecting a button in the grid.
+-- @param index Integer specifying the button to be selected. The index should
+--				be key to the button in the grid's button_list.
+function NumericalQuizGrid:select_button(index)
+	for i = 1, #self.button_list do
+		self.button_list[i].button._selected = false
+	end
+	self.button_list[index].button._selected = true
+	self.button_indicator = index
+end
+
 --- Marks the object with the specified index as the input component. This
 -- enables the grid to differentiate between the input field and the other buttons
 --@param index Integer specifying which component in the grid's button_list that
@@ -47,21 +67,6 @@ end
 ---Fetches the index of the last object added to the grid
 function NumericalQuizGrid:get_last_index()
 	return #self.button_list
-end
-
----Determines what event should be triggered based on user input.
---@param button Button that the user released
-function NumericalQuizGrid:release(button)
-	if button == "ok" then
-		--Depending on which button was selected do different stuff
-		if self.button_indicator == self.num_input_comp then
-			self:trigger("submit")
-		elseif self.button_indicator == self.back_button then
-			self:trigger("back")
-		elseif self.button_indicator == self.next_button then
-			self:trigger("next")
-		end
-	end
 end
 
 ---Determines what event should be triggered based on user input.

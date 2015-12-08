@@ -129,6 +129,9 @@ end
 function CityView:button_click(button)
 	if not button.transfer_path then
 		return
+	elseif button.transfer_path == "exit" then
+		self:exit_city_view()
+		return
 	end
 
 	-- Blur this view to prevent it from reacting to button clicks
@@ -136,17 +139,11 @@ function CityView:button_click(button)
 
 	-- Create instance of the given view
 	local view_class = require(button.transfer_path)
-	--local sub_surface = SubSurface(screen, {
-	--	x = screen:get_width() * 0.05,
-	--	y = screen:get_height() * 0.05 + 50,
-	--	width = screen:get_width() * 0.9,
-	--	height = (screen:get_height() - 50) * 0.9,
-	--})
 	local sub_surface = SubSurface(screen, {
-		x = screen:get_width() * 0.05,
-		y = screen:get_height() * 0.05 + 50,
-		width = screen:get_width(),
-		height = screen:get_height(),
+		x = screen:get_width() * 0.04,
+		y = screen:get_height() * 0.04 + 50,
+		width = screen:get_width() * 0.92,
+		height = (screen:get_height() - 50) * 0.92,
 	})
 	local view = view_class(self.remote_control, sub_surface, self.profile)
 
@@ -168,7 +165,7 @@ end
 -- Calls a pop up for exiting the city view to the profile
 function CityView:exit_city_view()
 	local type = "confirmation"
-	local message =  {"Are you sure you want to exit the City View?"}
+	local message =  {"Are you sure you want to exit?"}
 	local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
 	local popup_view = PopUpView(self.remote_control,subsurface, type, message)
 
@@ -253,33 +250,28 @@ function CityView:render(surface)
  	-- using the button grid to render all buttons and texts
 	self.button_grid:render(surface)
 
-	--surface:copyfrom(self.images.paris_selected, nil, {x = width/3, y = 0, width=width*2/3, height=height})
-	local icon_indent = 3
-	surface:copyfrom(self.images.multiple_choice_icon, nil, {x = self.button_grid.button_list[1].x + icon_indent, y = self.button_grid.button_list[1].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent}, true)
-	surface:copyfrom(self.images.math_icon, nil, {x = self.button_grid.button_list[2].x + icon_indent, y = self.button_grid.button_list[2].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent}, true)
-	surface:copyfrom(self.images.memory_icon, nil, {x = self.button_grid.button_list[3].x + icon_indent, y = self.button_grid.button_list[3].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent}, true)
-	surface:copyfrom(self.images.four_in_a_row_icon, nil, {x = self.button_grid.button_list[4].x + icon_indent, y = self.button_grid.button_list[4].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent}, true)
-	surface:copyfrom(self.images.store_icon, nil, {x = self.button_grid.button_list[5].x + icon_indent, y = self.button_grid.button_list[5].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent}, true)
-	surface:copyfrom(self.images.user_icon, nil, {x = self.button_grid.button_list[6].x + icon_indent, y = self.button_grid.button_list[6].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent}, true)
-	surface:copyfrom(self.images.flight_icon, nil, {x = self.button_grid.button_list[7].x + icon_indent, y = self.button_grid.button_list[7].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent}, true)
-	surface:copyfrom(self.images.exit_icon, nil, {x = self.button_grid.button_list[8].x + icon_indent, y = self.button_grid.button_list[8].y + icon_indent, width = self.button_grid.button_list[1].width - 2*icon_indent, height = self.button_grid.button_list[1].height - 2*icon_indent}, true)
+	local icon_padding = self.button_grid.button_list[1].width/8
+	surface:copyfrom(self.images.multiple_choice_icon, nil, {x = self.button_grid.button_list[1].x + icon_padding, y = self.button_grid.button_list[1].y + icon_padding, width = self.button_grid.button_list[1].width - 2*icon_padding, height = self.button_grid.button_list[1].height - 2*icon_padding}, true)
+	surface:copyfrom(self.images.math_icon, nil, {x = self.button_grid.button_list[2].x + icon_padding, y = self.button_grid.button_list[2].y + icon_padding, width = self.button_grid.button_list[1].width - 2*icon_padding, height = self.button_grid.button_list[1].height - 2*icon_padding}, true)
+	surface:copyfrom(self.images.memory_icon, nil, {x = self.button_grid.button_list[3].x + icon_padding, y = self.button_grid.button_list[3].y + icon_padding, width = self.button_grid.button_list[1].width - 2*icon_padding, height = self.button_grid.button_list[1].height - 2*icon_padding}, true)
+	surface:copyfrom(self.images.four_in_a_row_icon, nil, {x = self.button_grid.button_list[4].x + icon_padding, y = self.button_grid.button_list[4].y + icon_padding, width = self.button_grid.button_list[1].width - 2*icon_padding, height = self.button_grid.button_list[1].height - 2*icon_padding}, true)
+	surface:copyfrom(self.images.store_icon, nil, {x = self.button_grid.button_list[5].x + icon_padding, y = self.button_grid.button_list[5].y + icon_padding, width = self.button_grid.button_list[1].width - 2*icon_padding, height = self.button_grid.button_list[1].height - 2*icon_padding}, true)
+	surface:copyfrom(self.images.user_icon, nil, {x = self.button_grid.button_list[6].x + icon_padding, y = self.button_grid.button_list[6].y + icon_padding, width = self.button_grid.button_list[1].width - 2*icon_padding, height = self.button_grid.button_list[1].height - 2*icon_padding}, true)
+	surface:copyfrom(self.images.flight_icon, nil, {x = self.button_grid.button_list[7].x + icon_padding, y = self.button_grid.button_list[7].y + icon_padding, width = self.button_grid.button_list[1].width - 2*icon_padding, height = self.button_grid.button_list[1].height - 2*icon_padding}, true)
+	surface:copyfrom(self.images.exit_icon, nil, {x = self.button_grid.button_list[8].x + icon_padding, y = self.button_grid.button_list[8].y + icon_padding, width = self.button_grid.button_list[1].width - 2*icon_padding, height = self.button_grid.button_list[1].height - 2*icon_padding}, true)
 
 	-- Insert current sub view on top in a popup window if there is any
 	if self.sub_view then
-		--local sub_surface = SubSurface(surface, {
-		--	x = surface:get_width() * 0.05,
-		--	y = surface:get_height() * 0.05 + 50,
-		--	width = surface:get_width() * 0.9,
-		--	height = (surface:get_height() - 50) * 0.9,
-		--})
 		local sub_surface = SubSurface(surface, {
-			x = 0,
-			y = 50,
-			width = surface:get_width(),
-			height = surface:get_height(),
+			x = surface:get_width() * 0.04,
+			y = surface:get_height() * 0.04 + 50,
+			width = surface:get_width() * 0.92,
+			height = (surface:get_height() - 50) * 0.92,
 		})
+
 		self.sub_view:render(sub_surface)
 	end
+
 
 	self:dirty(false)
 end

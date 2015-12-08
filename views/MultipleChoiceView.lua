@@ -41,9 +41,10 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 	-- Associate a quiz instance with the MultipleChoiceView
 	self.mult_choice_quiz = Quiz()
 
-	self.quiz_size = 3
+	self.quiz_size = 10
 
 	self.mult_choice_quiz:generate_singlechoice_quiz(self.profile:get_current_city(),self.quiz_size)
+	self.quiz_size = math.min(self.quiz_size, self.mult_choice_quiz.size)
 	self.current_question = 1
 	self.correct_answer_number = 0
 
@@ -169,8 +170,16 @@ function MultipleChoiceView:_submit()
 			self.progress_table[self.current_question] = true
 			self.last_check = self.last_check + 1
 		else
-			self.result_string = "Wrong. You've answered "
-			.. self.correct_answer_number .. " questions correctly this far."
+			local correct_alternative_no = tostring(self.mult_choice_quiz.questions[self.current_question].correct_answers[1])
+			local alternative_map = {}
+			alternative_map["1"] = "A"
+			alternative_map["2"] = "B"
+			alternative_map["3"] = "C"
+			alternative_map["4"] = "D"
+			local correct_alternative = alternative_map[correct_alternative_no]
+			self.result_string = "Wrong. " ..
+								"The correct alternative was alternative "
+								.. correct_alternative .. "."
 			self.progress_table[self.current_question] = false
 			self.last_check=self.last_check + 1
 		end
@@ -229,7 +238,9 @@ end
 -- what should be diplayed next to the user
 -- @param key Key that was pressed
 function MultipleChoiceView:press(key)
-	return
+	if key == "back" then
+		self:_exit()
+	end
 end
 
 ---Renders this instance of MultipleChoiceView and all its child views, given
@@ -415,10 +426,28 @@ function MultipleChoiceView:render(surface)
 		if pop_up_flag then
 			local counter  = self.correct_answer_number
 			local experience = ExperienceCalculation.Calculation(counter, "Multiplechoice")
+			local last_level = (self.profile.experience-(self.profile.experience%100))/100+1
 			self.profile:modify_balance(experience)
 			self.profile:modify_experience(experience)
+			local city = self.profile:get_city()
+			local new_level = (self.profile.experience-(self.profile.experience%100))/100+1
 			local type = "message"
-			local message = {"Good job! You received " .. experience .. " experience."}
+			local message = ""
+			if experience == 0 then
+				message = {"Game finished! You answered " .. tostring(self.correct_answer_number)..
+				" questions correctly and received " .. experience .. " experience."}
+			elseif last_level == new_level then
+				message = {"Good job, you answered "
+						.. tostring(self.correct_answer_number) ..
+						" questions correctly! ",
+						"You received " .. experience .. " experience and " .. city.country:format_balance(experience) .. "."}
+			else
+				message = {"Good job, you answered "
+					.. tostring(self.correct_answer_number) ..
+					" questions correctly! ",
+					"You received " .. experience .. " experience and " .. city.country:format_balance(experience) .. ".",
+					"You have now reached level " .. new_level .. "!"}
+			end
 			self:_back_to_city(type, message)
 		end
 	self:dirty(false)
@@ -440,19 +469,19 @@ function MultipleChoiceView:_back_to_city(type, message)
 
     local button_click_func = function(button)
       	if button == "ok" then
-		  	self:destroy()
+		  		self:destroy()
       		self:trigger("exit_view")
       	else
 	      	popup_view:destroy()
 	      	self.views.grid:focus()
 	      	self:dirty(true)
-	      	gfx.update()
+	      	--gfx.update()
     	end
     end
 
     self:listen_to_once(popup_view, "button_click", button_click_func)
     popup_view:render(subsurface)
-    gfx.update()
+    --gfx.update()
 end
 
 ---Focuses the {@MultipleChoiceView}, which makes it listen to the remote control

@@ -1,3 +1,7 @@
+--- Base class for List
+-- The list is used in TravelView to display the available destinations
+-- @classmod List
+
 local class = require("lib.classy")
 local View = require("lib.view.View")
 local SubSurface = require("lib.view.SubSurface")
@@ -6,6 +10,7 @@ local utils = require("lib.utils")
 
 local List = class("List", View)
 
+--- Standard initialiser
 function List:__init(visible_items)
 	View.__init(self)
 
@@ -21,19 +26,53 @@ function List:__init(visible_items)
 
 end
 
+--- Function to check the pressed key
+-- @param key Is the key that has been pressed
 function List:button_press(key)
+
+	-- Move upward...
 	if key == "up" then
-		self.current_index = math.max(self.current_index - 1, 1)
-		if self.current_index < self.start_index then
-			self.start_index = self.current_index
+
+		-- If we have marked the exit button
+		if self.current_index == 0 then
+			self.current_index = #self.item_list
+			self.start_index = self.current_index - (self.visible_items - 1)
+			self:trigger("unselect_back")
+
+		-- Otherwise if we're at the top of the list we mark exit
+		elseif self.current_index - 1 < 1 then
+			self.current_index = 0
+			self:trigger("select_back")
+
+		-- Normal move upwards
+		else
+			self.current_index = self.current_index -1
+			self:trigger("unselect_back")
 		end
 
 		self:dirty()
-	elseif key == "down" then
-		self.current_index = math.min(self.current_index + 1, #self.item_list)
 
-		if self.current_index > self.visible_items then
-			self.start_index = self.current_index - (self.visible_items - 1)
+	-- Move downward...
+	elseif key == "down" then
+
+		-- If we're currently on exit button
+		if self.current_index == 0 then
+			self.current_index = 1
+			self.start_index = 1
+			self:trigger("unselect_back")
+
+		-- If we're moving down from the last item..
+		elseif self.current_index + 1 > #self.item_list then
+			self.current_index = 0
+			self:trigger("select_back")
+
+		-- If normal downward move
+		else
+			self.current_index = self.current_index +1
+			if self.current_index > self.visible_items then
+				self.start_index = self.current_index - (self.visible_items - 1)
+			end
+			self:trigger("unselect_back")
 		end
 
 		self:dirty()
@@ -41,10 +80,18 @@ function List:button_press(key)
 
 end
 
+--- Function to add list_item to List (last)
+-- @param list_item is the item to be added
 function List:add_list_item(list_item)
 	 table.insert(self.item_list, list_item)
 end
 
+--- Function that return the currently selected index (and maximum index)
+function List:return_curr_index()
+	return self.current_index, #self.item_list
+end
+
+--- Standard render function
 function List:render(surface)
 
 	surface:clear({65, 70, 72, 255})
