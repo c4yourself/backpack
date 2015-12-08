@@ -62,7 +62,7 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 	self.answer = {}
 
 	-- Graphics and colors
-	self.question_area_color  = Color(1, 1, 1, 175)
+	self.question_area_color  = Color(65, 70, 72, 255)
 	self.font = Font("data/fonts/DroidSans.ttf", 24, Color(255,255,255,255))
 
 	-- Buttons and grids
@@ -97,7 +97,7 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 	-- Add next button
 	local button_next = Button(button_color, color_selected, color_disabled,
 								true, false)
-	local next_position = {x =  width*0.8-320, y = height*0.67}
+	local next_position = {x =  width*0.8-320, y = subsurface:get_height()-150}
 	button_next:set_textdata("Next question", Color(255,255,255,255),
 							{x = 0, y = 0}, 24,"data/fonts/DroidSans.ttf")
 	self.views.grid:add_button(next_position,
@@ -121,10 +121,10 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 	)
 
 	-- Question buttons
-	local button_position_1 = {x = width*0.35, y = height*0.33}
-	local button_position_2 = {x = width*0.95-300, y = height*0.33}
-	local button_position_3 = {x = width*0.35, y = height*0.47}
-	local button_position_4 = {x = width*0.95-300, y = height*0.47}
+	local button_position_1 = {x = width*0.35, y = height*0.4}
+	local button_position_2 = {x = width*0.95-300, y = height*0.4}
+	local button_position_3 = {x = width*0.35, y = height*0.55}
+	local button_position_4 = {x = width*0.95-300, y = height*0.55}
 
 	self.question_button_1 = ToggleButton(button_color, color_selected,
 							color_disabled, true, false, "")
@@ -258,18 +258,23 @@ function MultipleChoiceView:render(surface)
 		-- If the areas haven't been defined yet, define them
 		if not self.areas_defined then
 			-- Question area
-			local x = math.ceil(surface:get_width() * 0.2)
-			local y = math.ceil(surface:get_height() * 0.1)
+			local x = 400
+			local y = 75
 			--self.question_area_width = surface_width - 2 * x
 			self.question_area_width = surface_width * 0.6
 			self.question_area_height = math.ceil(0.20*surface_height)
 
-			self.question_area = SubSurface(surface, {x = surface_width * 0.35, y = y,
+			self.question_area_back = SubSurface(surface, {x = surface_width * 0.35, y = y,
 				height = self.question_area_height,
 				width = self.question_area_width})
 
+			self.question_area = SubSurface(surface, {x = surface_width * 0.35 + 5, y = y + 5 ,
+				height = self.question_area_height - 10,
+				width = self.question_area_width - 10})
+
 			self.areas_defined = true
 		end
+		self.question_area_back:clear(Color(250, 105, 0, 255):to_table())
 		self.question_area:clear(self.question_area_color:to_table())
 
 		-- If the view is marked as dirty, re-render it
