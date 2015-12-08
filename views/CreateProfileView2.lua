@@ -57,7 +57,7 @@ function CreateProfileView2:__init(remote_control, email, password)
 	local exit_keyboard_callback = function()
 		self.hasActiveKeyboard = false
 		self.keyboard:set_active(false)
-		surface:destroy(self.keyboard)
+		--surface:destroy(self.keyboard)
 		--self.active_field:render(screen)
 		self:render(screen)
 		gfx.update()
