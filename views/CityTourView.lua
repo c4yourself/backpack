@@ -30,6 +30,7 @@ function CityTourView:__init(remote_control, surface, profile)
 	self.city = profile:get_city()
 	self.profile = profile
 	self.city_tour_quiz = Quiz()
+	self:add_view(self.buttonGrid, true)
 
 	local width = screen:get_width() * 0.9
 	local height = (screen:get_height() - 50) * 0.9
@@ -52,8 +53,8 @@ function CityTourView:__init(remote_control, surface, profile)
 
 	-- Iterate through attractions and create an image for each
 	for k,v in pairs(attractions.attraction[self.city.code]) do
-		tmp_path = attractions.attraction[self.city.code][k].pic_url
-		table.insert(self.tour_attraction_images, gfx.loadpng("data/images/CityTourArcDeTriomphe.png"))
+		--tmp_path = attractions.attraction[self.city.code][k].pic_url
+		table.insert(self.tour_attraction_images, gfx.loadpng(attractions.attraction[self.city.code][k].pic_url))
 	end
 
 	-- Create answer buttons
@@ -69,7 +70,7 @@ function CityTourView:__init(remote_control, surface, profile)
 	button_3:set_textdata(self.city_tour_quiz.questions[1].Choices[3], button_text_color, nil, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
 	button_4:set_textdata(self.city_tour_quiz.questions[1].Choices[4], button_text_color, nil, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
 
-	local text_height = 75 + 25 * table.getn(attractions.attraction[self.city.code][attractionpoint].text)
+	local text_height = 75 + 25 * #attractions.attraction[self.city.code][attractionpoint].text
 	local indent = 100
 
 	-- Create buttons positions and size
@@ -92,15 +93,9 @@ function CityTourView:__init(remote_control, surface, profile)
 	callback
 	)
 
-	-- Callback function for button grid dirty
-	local button_callback = function()
-		self.buttonGrid:render(surface)
-		gfx.update()
-	end
-
 -- Callback function for when an answer is pressed
 	local button_click = function(button)
-		attractionpoint = attractionpoint + 1
+
 		local type = "message"
 		local message = {}
 		if self.city_tour_quiz.questions[1].Choices[self.city_tour_quiz.questions[1].correct_answers[1]] == button.text then
@@ -108,15 +103,22 @@ function CityTourView:__init(remote_control, surface, profile)
 		else
 			table.insert(message, "Wrong answer")
 		end
-		local subsurface = SubSurface(screen,{width = screen:get_width() * 0.5, height = (screen:get_height() - 50) * 0.5, x = screen:get_width() * 0.25, y = screen:get_height() * 0.25 + 50})
-    local popup_view = PopUpView(remote_control,subsurface, type, message)
-    self:add_view(popup_view)
+
+		local subsurface = SubSurface(screen,{width = screen:get_width() * 0.5,
+																	height = (screen:get_height() - 50) * 0.5,
+																	x = screen:get_width() * 0.25,
+																	y = screen:get_height() * 0.25 + 50})
+
+    self.popup_view = PopUpView(remote_control,subsurface, type, message)
+    self:add_view(self.popup_view, true)
     self.buttonGrid:blur()
 
 		-- Functions that listens to the pop up
     local button_click_func = function(button)
+			attractionpoint = attractionpoint + 1
       if button == "ok" then
-      	popup_view:destroy()
+      	self.popup_view:destroy()
+				self.popup_view = nil
       	self.buttonGrid:focus()
 				if table.getn(attractions.attraction[self.city.code]) == attractionpoint - 1  then
 					self:trigger("exit_view")
@@ -126,22 +128,15 @@ function CityTourView:__init(remote_control, surface, profile)
 					button_2:set_textdata(self.city_tour_quiz.questions[1].Choices[2], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
 					button_3:set_textdata(self.city_tour_quiz.questions[1].Choices[3], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
 					button_4:set_textdata(self.city_tour_quiz.questions[1].Choices[4], button_text_color, {x=200, y=200}, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
-					self:render(surface)
-					gfx.update()
 				end
     	end
+			self:dirty()
     end
-    self:listen_to_once(popup_view, "button_click", button_click_func)
-    popup_view:render(subsurface)
-    gfx.update()
-	end
 
-	-- Listen to button grid dirty
-	self:listen_to(
-		self.buttonGrid,
-		"dirty",
-		button_callback
-	)
+    self:listen_to_once(self.popup_view, "button_click", button_click_func)
+    self:dirty()
+
+	end
 
 	-- Listen to button click
 	self:listen_to(
@@ -182,6 +177,16 @@ function CityTourView:render(surface)
 
 	--Render buttons
 	self.buttonGrid:render(surface)
+
+	-- Render popup
+	if self.popup_view then
+		local sub_surface = SubSurface(screen,{width = screen:get_width() * 0.5,
+																	height = (screen:get_height() - 50) * 0.5,
+																	x = screen:get_width() * 0.25,
+																	y = screen:get_height() * 0.25 + 50})
+		self.popup_view:render(sub_surface)
+	end
+
 	self:dirty(false)
 end
 
@@ -202,8 +207,9 @@ function CityTourView:load_view(button)
     local message =  {"Are you sure you want to exit the City Tour?"}
     local subsurface = SubSurface(screen,{width = screen:get_width() * 0.5, height = (screen:get_height() - 50) * 0.5, x = screen:get_width() * 0.25, y = screen:get_height() * 0.25 + 50})
     local popup_view = PopUpView(remote_control,subsurface, type, message)
-    self:add_view(popup_view)
+    self:add_view(popup_view, true)
     self.buttonGrid:blur()
+
     local button_click_func = function(button)
     if button == "ok" then
     	self:trigger("exit_view")
@@ -211,12 +217,12 @@ function CityTourView:load_view(button)
 			popup_view:destroy()
     	self.buttonGrid:focus()
     	self:dirty(true)
-    	gfx.update()
+
   	end
   end
     self:listen_to_once(popup_view, "button_click", button_click_func)
     popup_view:render(subsurface)
-    gfx.update()
+
 	end
 end
 

@@ -30,6 +30,10 @@ function NumericQuizView:__init(remote_control, subsurface, profile)
 	self.surface = subsurface
 	self.profile = profile
 
+-- For de-bugging, TODO remove
+	self.next_counter = 0
+	self.show_answer_counter = 0
+
 -- Flags
 	self.answer_flag = false
 	self.quiz_flag = false
@@ -366,10 +370,8 @@ end
 --- Set up for showing whether the user answered correctly or not. Only works
 -- when the user has entered an answer in the input field. Triggers dirty
 function NumericQuizView:show_answer()
-
 	if self.views.num_input_comp:get_text() ~= "" then
 		if not self.prevent then
-
 			self.prevent = not self.prevent
 			self.answer_flag = true
 			self.user_answer = tonumber(self.views.num_input_comp:get_text())
@@ -384,7 +386,6 @@ end
 
 --- Set up for the next question in the quiz. Triggers dirty
 function NumericQuizView:next_question()
-
 	if not self.prevent then
 		self.views.grid:select_button(3)
 		self.views.grid.button_list[3].button:focus()
