@@ -72,6 +72,10 @@ function Color:__init(red, green, blue, alpha)
 
 end
 
+function Color:__tostring()
+	return string.format("<%s %s>", class.name(self), self:to_html())
+end
+
 function Color:__eq(other)
 	if not class.is_a(other, Color) then
 		error("Color must be compared to another Color instance")
@@ -83,6 +87,19 @@ function Color:__eq(other)
 		self.blue == other.blue and
 		self.alpha == other.alpha
 end
+
+function Color:__lt(other)
+	if not class.is_a(other, Color) then
+		error("Color must be compared to another Color instance")
+	end
+
+	return
+		self.red < other.red or
+		self.green < other.green or
+		self.blue < other.blue or
+		self.alpha < other.alpha
+end
+
 
 --- Blend this color with a given color.
 -- Returns a new instance of the blended color.

@@ -23,7 +23,7 @@ local PopUp = class("PopUp",View)
 function PopUp:__init(remote_control,surface, type, message)
 	View:__init(self)
 	self.popup_button_grid = ButtonGrid(remote_control)
-	self:add_view(self.popup_button_grid)
+	self:add_view(self.popup_button_grid, true)
 
 	self.width = screen:get_width() * 0.5
 	self.height = screen:get_height() * 0.5
@@ -54,10 +54,10 @@ function PopUp:__init(remote_control,surface, type, message)
 	callback
 	)
 
-	local button_callback = function()
-		self.popup_button_grid:render(surface)
-		gfx.update()
-	end
+	-- local button_callback = function()
+	-- 	self.popup_button_grid:render(surface)
+	-- 	gfx.update()
+	-- end
 
 -- Triggers different events depending on which buttons that were pressed.
 	local button_click = function(button)
@@ -70,11 +70,11 @@ function PopUp:__init(remote_control,surface, type, message)
 		end
 	end
 
-	self:listen_to(
-		self.popup_button_grid,
-		"dirty",
-		button_callback
-		)
+	-- self:listen_to(
+	-- 	self.popup_button_grid,
+	-- 	"dirty",
+	-- 	button_callback
+	-- 	)
 
 	self:listen_to(
 			self.popup_button_grid,
@@ -131,6 +131,7 @@ function PopUp:render(surface)
 
 	surface:fill({0,0,0,255}, {width = self.width * 0.5, height = 2, x = self.width * 0.25, y = message_line_pos + 30})
 	self.popup_button_grid:render(surface)
+	self:dirty(false)
 end
 
 -- If back is pressed then exit_view is triggered.

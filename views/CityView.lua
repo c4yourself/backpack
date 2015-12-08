@@ -167,9 +167,9 @@ function CityView:exit_city_view()
 	local type = "confirmation"
 	local message =  {"Are you sure you want to exit?"}
 	local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
-	local popup_view = PopUpView(self.remote_control,subsurface, type, message)
+	self.popup_view = PopUpView(self.remote_control,subsurface, type, message)
 
-	self:add_view(popup_view)
+	self:add_view(self.popup_view)
 	self:blur()
 
 	local button_click_func = function(button)
@@ -178,16 +178,17 @@ function CityView:exit_city_view()
 			local profile_selection = ProfileSelection(self.remote_control)
 			view.view_manager:set_view(profile_selection)
 		else
-			popup_view:destroy()
+			self.popup_view:destroy()
+			self.popup_view = nil
 			self:focus()
 			self:dirty(true)
-			gfx.update()
+
 		end
 	end
 
-	self:listen_to_once(popup_view, "button_click", button_click_func)
-	popup_view:render(subsurface)
-	gfx.update()
+	self:listen_to_once(self.popup_view, "button_click", button_click_func)
+
+	self:dirty(true)
 end
 
 function CityView:blur()
@@ -272,6 +273,13 @@ function CityView:render(surface)
 		self.sub_view:render(sub_surface)
 	end
 
+	if self.popup_view then
+		local sub_surface = SubSurface(screen,{width = screen:get_width() * 0.5,
+																	height = (screen:get_height() - 50) * 0.5,
+																	x = screen:get_width() * 0.25,
+																	y = screen:get_height() * 0.25 + 50})
+		self.popup_view:render(sub_surface)
+	end
 
 	self:dirty(false)
 end

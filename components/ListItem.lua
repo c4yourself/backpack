@@ -54,7 +54,7 @@ function ListItem:render(surface)
 		if self.enabled then
 			surface:clear({r=250, g=169, b=0, a=255})
 		else
-			surface:clear({r=5, g=5, b=5, a=155})
+			surface:clear({r=170, g=170, b=170, a=255})
 		end
 
 		self.font_highlight:draw(surface, {x = 70, y = 0, height = surface:get_height()},
@@ -68,7 +68,7 @@ function ListItem:render(surface)
 		if self.enabled then
 			surface:clear({r=255, g=150, b=0, a=255})
 		else
-			surface:clear({r=25, g=25, b=25, a=55})
+			surface:clear({r=140, g=140, b=140, a=255})
 		end
 
 		self.font:draw(surface, {x = 70, y = 0, height = surface:get_height()}, self.text_left, "left", "middle")
