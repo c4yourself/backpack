@@ -364,14 +364,14 @@ end
 --- Set up for showing whether the user answered correctly or not. Only works
 -- when the user has entered an answer in the input field. Triggers dirty
 function NumericQuizView:show_answer()
-	self.views.grid:select_button(2)
-	self.views.grid.button_list[3].button:blur()
 	if self.views.num_input_comp:get_text() ~= "" then
 		if not self.prevent then
 			self.prevent = not self.prevent
 			self.answer_flag = true
 			self.user_answer = tonumber(self.views.num_input_comp:get_text())
 			self.views.num_input_comp:set_text(nil)
+			self.views.grid:select_button(2)
+			self.views.grid.button_list[3].button:blur()
 			self:dirty(false)
 			self:dirty(true)
 		end
@@ -380,15 +380,17 @@ end
 
 --- Set up for the next question in the quiz. Triggers dirty
 function NumericQuizView:next_question()
-	self.views.grid:select_button(3)
-	self.views.grid.button_list[3].button:focus()
+	if not self.prevent then
+		self.views.grid:select_button(3)
+		self.views.grid.button_list[3].button:focus()
 
-	self.answer_flag = false
-	self.prevent = false
-	self.user_answer = nil
-	self.views.num_input_comp:set_text(nil)
-	self:dirty(false)
-	self:dirty(true)
+		self.answer_flag = false
+		self.prevent = false
+		self.user_answer = nil
+		self.views.num_input_comp:set_text(nil)
+		self:dirty(false)
+		self:dirty(true)
+	end
 end
 
 --- Method for destroying the numerical quiz view and exiting the quiz
