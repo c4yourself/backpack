@@ -54,7 +54,7 @@ end
 -- NumericalInputComponent responds to a button press even
 --@param button Button that was pressed by the user
 function NumericalInputComponent:press(button)
-	if button == "red" then
+	if button == "info" then
 		if #self.input > 0 then
 			if #self.input == 1 then
 					self:set_text(nil)
