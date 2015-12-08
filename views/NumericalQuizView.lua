@@ -29,6 +29,10 @@ function NumericQuizView:__init(remote_control, subsurface, profile)
 	self.surface = subsurface
 	self.profile = profile
 
+-- For de-bugging, TODO remove
+	self.next_counter = 0
+	self.show_answer_counter = 0
+
 -- Flags
 	self.answer_flag = false
 	self.quiz_flag = false
@@ -124,6 +128,11 @@ end
 --- Renders a NumericQuizView and all its child views on specified 'surface'
 -- @param surface Surface or SubSurface to render upon
 function NumericQuizView:render(surface)
+	print("\n" .. "\n" .. "\n" .. "\n" .. "\n" .. "\n" .. "\n" .. "\n")
+	print("Show answer counter:" .. tostring(self.show_answer_counter))
+	print("Next counter:" .. tostring(self.next_counter))
+	print("\n" .. "\n" .. "\n" .. "\n" .. "\n" .. "\n" .. "\n" .. "\n")
+
 	local surface_width = math.ceil(surface:get_width())
 	local surface_height = math.ceil(surface:get_height())
 	self._pop_up_flag = false
@@ -364,6 +373,7 @@ end
 --- Set up for showing whether the user answered correctly or not. Only works
 -- when the user has entered an answer in the input field. Triggers dirty
 function NumericQuizView:show_answer()
+	self.show_answer_counter = self.show_answer_counter + 1
 	if self.views.num_input_comp:get_text() ~= "" then
 		if not self.prevent then
 			self.prevent = not self.prevent
@@ -380,6 +390,7 @@ end
 
 --- Set up for the next question in the quiz. Triggers dirty
 function NumericQuizView:next_question()
+	self.next_counter = self.next_counter + 1
 	if not self.prevent then
 		self.views.grid:select_button(3)
 		self.views.grid.button_list[3].button:focus()
