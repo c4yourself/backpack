@@ -234,6 +234,12 @@ function Font:draw(surface, rectangle, text, horizontal_align, vertical_align)
 	-- glyph dimension properties.
 	local text_surface = self:_get_text_surface(text, nil, background_color)
 
+	if background_color ~= nil then
+		-- If we use the target's background Color, bounding box always need to
+		-- be calculated.
+		bbox = self:_get_bounding_box(text_surface, background_color)
+	end
+
 	local x
 	if horizontal_align == nil or horizontal_align == "left" then
 		x = 0
