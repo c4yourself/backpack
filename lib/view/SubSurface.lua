@@ -60,9 +60,8 @@ end
 -- @param y the y cordinate to return color for
 -- @return int color values for this pixel
 function SubSurface:get_pixel(x, y)
-	x = x + self.x
-	y = y + self.y
-	r, g, b, a = self.surface:get_pixel( x, y )
+	local x, y = self.area:translate(x, y):get_start()
+	r, g, b, a = self.surface:get_pixel(x, y)
 	return r, g, b, a
 end
 
@@ -71,8 +70,7 @@ end
 -- @param y the y cordinate to set color for
 -- @param color the color to set at this pixel
 function SubSurface:set_pixel(x, y, color)
-	x = x + self.x
-	y = y + self.y
+	local x, y = self.area:translate(x, y):get_start()
 	self.surface:set_pixel(x, y, color)
 end
 

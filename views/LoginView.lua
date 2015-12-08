@@ -60,7 +60,7 @@ function LoginView:__init(remote_control, profile_selection)
 	local exit_keyboard_callback = function()
 		self.hasActiveKeyboard = false
 		self.keyboard:set_active(false)
-		surface:destroy(self.keyboard)
+		--surface:destroy(self.keyboard)
 		self:render(screen)
 		gfx.update()
 	end
@@ -95,7 +95,7 @@ function LoginView:render(surface)
 	self.button_cancel:render(self.button_cancel_surface)
 	self.button_login:render(self.button_login_surface)
 	self.button_cancel_text:draw(surface, {x=700+190, y=530+20}, "Cancel")
-	self.button_login_text:draw(surface, {x=700+200, y=380+20}, "Login")
+	self.button_login_text:draw(surface, {x=700+200, y=380+20}, "Log in")
 
 
 end
@@ -130,6 +130,7 @@ function LoginView:load_view(button)
 				self.content_list[self.content_pointer]:select(true)
 			end
 			self:render(screen)
+			gfx.update()
 		elseif button == "up" then
 			if self.content_pointer == 1 then
 				self.content_list[self.content_pointer]:select(false)
@@ -149,6 +150,7 @@ function LoginView:load_view(button)
 				self.content_list[self.content_pointer]:select(true)
 			end
 			self:render(screen)
+			gfx.update()
 		elseif button == "ok" then
 			if self.content_pointer == 1 or self.content_pointer == 2 then
 				self.render_ticket = true
@@ -156,6 +158,7 @@ function LoginView:load_view(button)
 				self.keyboard:new_input(self.active_field.text)
 				self.hasActiveKeyboard = true
 				self:render(screen)
+				gfx.update()
 			elseif self.content_pointer == 3 then
 				--logger:trace("detta står i email: " .. self.email_input_field:get_text())
 				--logger:trace("detta står i password: " .. self.password_input_field:get_text())
@@ -181,7 +184,7 @@ function LoginView:load_view(button)
 				--gfx.update()
 			end
 		end
-		gfx.update()
+
 	end
 end
 

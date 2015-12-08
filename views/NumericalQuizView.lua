@@ -55,12 +55,12 @@ function NumericQuizView:__init(remote_control, subsurface, profile)
 
 	local height = math.ceil(subsurface:get_height())
 	local width = math.ceil(subsurface:get_width())
-	local button_size = {width = 185, height = 70}
+	local button_size = {width = 300, height = 75}
 
 	-- Add exit button
 	local button_exit = Button(button_color, color_selected, color_disabled,
 								true, false, "views.CityView")
-	local exit_position = {x = 0.1*width, y = 450}
+	local exit_position = {x = 75, y = 450}
 	button_exit:set_textdata("Back to city", Color(255,255,255,255),
 							{x = 0, y = 0}, 24,"data/fonts/DroidSans.ttf")
 	self.views.grid:add_button(exit_position,
@@ -72,11 +72,11 @@ function NumericQuizView:__init(remote_control, subsurface, profile)
 	-- Add next button
 	local button_next = Button(button_color, color_selected, color_disabled,
 								true, false, "")
-	local next_position = {x = 0.9 * width - button_size.width , y = exit_position.y}
+	local next_position = {x = 840 , y = 420}
 	button_next:set_textdata("Next question", Color(255,255,255,255),
 							{x = 0, y = 0}, 24,"data/fonts/DroidSans.ttf")
 	self.views.grid:add_button(next_position,
-						button_size,
+						{width = 230, height = 75},
 						button_next)
 	local next_index = self.views.grid:get_last_index()
 	self.views.grid:mark_as_next_button(next_index)
@@ -139,9 +139,9 @@ function NumericQuizView:render(surface)
 
 	-- Define input area if it hasn't been done already
 	if not self.input_area_defined then
-		local input_x = math.ceil(surface_width * 0.5) - 148
-		local input_y = 450 - 20
-		local input_height = 90
+		local input_x = surface_width * 0.465 -50
+		local input_y = 420
+		local input_height = 75
 		local input_width = 225 + 70
 		self.input_area = SubSurface(surface, {x = input_x, y = input_y,
 									height = input_height,
@@ -156,28 +156,52 @@ function NumericQuizView:render(surface)
 		self.views.grid.button_list[input_index].button:focus()
 	end
 
+
+
+
 	-- Render the view as long as it isn't clean already
 	if self:is_dirty() then
 		local color = nil -- Background color for the quiz
 		surface:clear(color)
+		-- Game info box
+		local left_board = SubSurface(surface,{width = 300, height = surface:get_height()-150, x = 75, y = 75})
+		left_board:clear(Color(250, 105, 0, 255):to_table())
+		left_board:fill({r = 65, g = 70, b = 72, a = 255},
+			{x = 5, y = 5, width = 290, height = surface:get_height()-160})
+		left_board:fill(Color(250, 105, 0, 255):to_table(),
+			{x = 5, y = 75, width = 290, height = 5})
+		local text_color = Color(255,255,255,255)
+		local text = Font("data/fonts/DroidSans.ttf", 30, text_color)
+		text:draw(left_board, {x = 50, y = 20}, "Numerical Quiz" )
+		text:draw(left_board, {x = 72, y = 130}, "Question " .. self.num_quiz.current_question)
 		-- Define other areas if it hasn't been done already
 		if not self.areas_defined then
+			-- Game info box
+			-- local left_board = SubSurface(surface,{width = 300, height = surface:get_height()-150, x = 75, y = 75})
+			-- left_board:clear(Color(250, 105, 0, 255):to_table())
+			-- left_board:fill({r = 65, g = 70, b = 72, a = 255},
+			-- 	{x = 5, y = 5, width = 290, height = surface:get_height()-160})
+			-- left_board:fill(Color(250, 105, 0, 255):to_table(),
+			-- 	{x = 5, y = 75, width = 290, height = 5})
+			-- local text_color = Color(255,255,255,255)
+			-- local text = Font("data/fonts/DroidSans.ttf", 30, text_color)
+			-- text:draw(left_board, {x = 50, y = 20}, "Numerical Quiz")
+			-- text:draw(left_board, {x = 72, y = 130}, "Question .. self.num_quiz.current_question")
 			--Progress counter
 			local progress_margin = 26
 			self.counter_width = 72
 			self.counter_height = 72
-			self.x_counter = math.ceil(surface_width - progress_margin -
-										self.counter_width)
-			self.y_counter = progress_margin
+			self.x_counter = 50
+			self.y_counter = 250
 			self.progress_counter_area = SubSurface(surface, {x = self.x_counter,
 										y = self.y_counter,
 										height = self.counter_height,
 										width = self.counter_width})
 			--Question area
-			local x = surface_width * 0.3
+			local x = surface_width * 0.465 -50
 			local y = surface_height * 0.2
 
-			self.question_area_width = surface_width*0.4
+			self.question_area_width = surface_width*0.4 +100
 			self.question_area_height = 0.3*surface_height
 
 			self.question_area = SubSurface(surface, {x = x, y = y,
@@ -260,25 +284,30 @@ function NumericQuizView:render(surface)
 		end
 
 		-- Render the Progress counter
-		self.progress_counter_area:clear(self.progress_counter_color:to_table())
-		local current_question = self.num_quiz.current_question
-		local quiz_length = #self.num_quiz.questions
-		local current_question = math.min(self.num_quiz.current_question,
-												quiz_length)
-		self.progress_counter_font:draw(self.progress_counter_area,
-									{x = 0, y = 0, height = self.counter_height,
-									width = self.counter_width},
-									tostring(current_question) .. "/" ..
-									tostring(quiz_length), "center", "middle")
+
+		-- self.progress_counter_area:clear(self.progress_counter_color:to_table())
+		-- local current_question = self.num_quiz.current_question
+		-- local quiz_length = #self.num_quiz.questions
+		-- local current_question = math.min(self.num_quiz.current_question,
+		-- 										quiz_length)
+
+
+		-- self.progress_counter_font:draw(self.progress_counter_area,
+		-- 							{x = 0, y = 0, height = self.counter_height,
+		-- 							width = self.counter_width},
+		-- 							tostring(current_question) .. "/" ..
+		-- 							tostring(quiz_length), "center", "middle")
 
 		-- Render the Progress bar
 		local bar_component_width = 35
 		local bar_component_height = 35
 		local progress_bar_margin = 10
+		local progress_bar_margin_x = 10
+		local progress_bar_margin_y = 24
 		local bar_component_x = self.x_counter + self.counter_width -
-								bar_component_width
-		local bar_component_y = self.y_counter + progress_bar_margin +
-								self.counter_height
+								bar_component_width + 32
+		local bar_component_y = self.y_counter + progress_bar_margin_y +
+								self.counter_height - 30
 		local quiz_length = #self.progress_table
 
 		-- Create a progress bar and color its boxes
@@ -313,8 +342,16 @@ function NumericQuizView:render(surface)
 				progress_bar_component_pic:copyfrom(self.answer_nil, nil, nil, true)
 			end
 
-			bar_component_y = bar_component_y + progress_bar_margin +
-								bar_component_height
+			--bar_component_x = bar_component_x + progress_bar_margin + progress_bar_margin_x
+				--				bar_component_width
+
+			bar_component_x = bar_component_x + bar_component_width + progress_bar_margin_x
+			if i % 5 == 0 then
+					bar_component_x = self.x_counter + self.counter_width -
+																	bar_component_width + 32
+					bar_component_y = bar_component_y + progress_bar_margin_y +
+																	bar_component_height - 17
+			end
 		end
 		self.prevent = false
 		self._suppress_new_question = false

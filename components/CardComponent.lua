@@ -71,7 +71,8 @@ function CardComponent:render(surface)
 	if self:is_selected() then
 		local margin = 0.30
 		local area = {
-			width = surface:get_width() - 17,
+			--width = surface:get_width() - 17,
+			width = surface:get_width(),
 			height = 10,
 			x = 0,
 			y = surface:get_height() - 10
