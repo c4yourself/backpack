@@ -165,7 +165,7 @@ end
 -- Calls a pop up for exiting the city view to the profile
 function CityView:exit_city_view()
 	local type = "confirmation"
-	local message =  {"Are you sure you want to exit the City View?"}
+	local message =  {"Are you sure you want to exit?"}
 	local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
 	local popup_view = PopUpView(self.remote_control,subsurface, type, message)
 
