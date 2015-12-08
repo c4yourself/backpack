@@ -410,6 +410,11 @@ function NumericQuizView:render(surface)
 	if self._pop_up_flag == true then
 		self._suppress_new_question = true
 		self:back_to_city()
+		local subsurface = SubSurface(screen,{width = screen:get_width()*0.5,
+										height = (screen:get_height()-50)*0.5,
+										x = screen:get_width()*0.25,
+										y = screen:get_height()*0.25+50})
+		self.sub_view:render(subsurface)
 	elseif self.pop_up_flag_2 then
 		local subsurface = SubSurface(screen,{width = screen:get_width()*0.5,
 										height = (screen:get_height()-50)*0.5,
