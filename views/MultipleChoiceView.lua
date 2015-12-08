@@ -41,7 +41,7 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 	-- Associate a quiz instance with the MultipleChoiceView
 	self.mult_choice_quiz = Quiz()
 
-	self.quiz_size = 13
+	self.quiz_size = 10
 
 	self.mult_choice_quiz:generate_singlechoice_quiz(self.profile:get_current_city(),self.quiz_size)
 	self.quiz_size = math.min(self.quiz_size, self.mult_choice_quiz.size)
@@ -426,14 +426,27 @@ function MultipleChoiceView:render(surface)
 		if pop_up_flag then
 			local counter  = self.correct_answer_number
 			local experience = ExperienceCalculation.Calculation(counter, "Multiplechoice")
+			local last_level = (self.profile.experience-(self.profile.experience%100))/100+1
 			self.profile:modify_balance(experience)
 			self.profile:modify_experience(experience)
+			local city = self.profile:get_city()
+			local new_level = (self.profile.experience-(self.profile.experience%100))/100+1
 			local type = "message"
 			local message = ""
 			if experience == 0 then
-				message = {"Game finished! You received " .. experience .. " experience."}
+				message = {"Game finished! You answered " .. tostring(self.correct_answer_number)..
+				" questions correctly and received " .. experience .. " experience."}
+			elseif last_level == new_level then
+				message = {"Good job, you answered "
+						.. tostring(self.correct_answer_number) ..
+						" questions correctly! ",
+						"You received " .. experience .. " experience and " .. city.country:format_balance(experience) .. "."}
 			else
-				message = {"Good job! You received " .. experience .. " experience."}
+				message = {"Good job, you answered "
+					.. tostring(self.correct_answer_number) ..
+					" questions correctly! ",
+					"You received " .. experience .. " experience and " .. city.country:format_balance(experience) .. ".",
+					"You have now reached level " .. new_level .. "!"}
 			end
 			self:_back_to_city(type, message)
 		end
@@ -456,19 +469,19 @@ function MultipleChoiceView:_back_to_city(type, message)
 
     local button_click_func = function(button)
       	if button == "ok" then
-		  	self:destroy()
+		  		self:destroy()
       		self:trigger("exit_view")
       	else
 	      	popup_view:destroy()
 	      	self.views.grid:focus()
 	      	self:dirty(true)
-	      	gfx.update()
+	      	--gfx.update()
     	end
     end
 
     self:listen_to_once(popup_view, "button_click", button_click_func)
     popup_view:render(subsurface)
-    gfx.update()
+    --gfx.update()
 end
 
 ---Focuses the {@MultipleChoiceView}, which makes it listen to the remote control

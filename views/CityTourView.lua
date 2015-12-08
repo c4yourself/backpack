@@ -37,16 +37,6 @@ function CityTourView:__init(remote_control, surface, profile)
 	--To keep track of which attraction to display. Increments every time a user answer a question
 	attractionpoint = 1
 
-	-- math.randomseed(os.time())
-	-- local order_table = {{1,2,3,4},{1,2,4,3},{1,3,2,4},{1,3,4,2},{1,4,2,3},{1,4,3,2},{2,1,3,4},{2,1,4,3},{2,3,1,4},{2,3,4,1},{2,4,1,3},{2,4,3,1},
-	-- 											{3,1,2,4},{3,1,4,2},{3,2,1,4},{3,2,4,1},{3,4,1,2},{3,4,2,1},{4,1,2,3},{4,1,3,2},{4,2,1,3},{4,2,3,1},{4,3,1,2},{4,3,2,1}}
-	-- local random_order = math.random(table.getn(order_table))
-	-- attractionpoint = order_table[random_order][#order_table[random_order]]
-
-
-	-- Create some colors
-	--border_color = Color(0, 0, 0, 255)
-
 	-- Create the fonts
 	city_tour_head_font = Font("data/fonts/DroidSans.ttf", 48, Color(1, 1, 1, 255))
 	city_tour_attraction_font = Font("data/fonts/DroidSans.ttf", 25, Color(1, 1, 1, 255))
@@ -60,16 +50,11 @@ function CityTourView:__init(remote_control, surface, profile)
 	-- Create the tour images
 	self.tour_attraction_images = {}
 
+	-- Iterate through attractions and create an image for each
 	for k,v in pairs(attractions.attraction[self.city.code]) do
-		table.insert(self.tour_attraction_images, gfx.loadpng(attractions.attraction[self.city.code][k].pic_url))
+		tmp_image = gfx.loadpng(attractions.attraction[self.city.code][k].pic_url)
+		table.insert(self.tour_attraction_images, tmp_image)
 	end
-
-
-	-- = {gfx.loadpng(attractions.attraction[self.city.code][1].pic_url),
-	-- 															gfx.loadpng(attractions.attraction[self.city.code][2].pic_url]),
-	-- 															gfx.loadpng(attractions.attraction[self.city.code][3])
-	-- Create the tour image
---	self.tour_attraction_image = gfx.loadpng(attractions.attraction.paris[1].pic_url)
 
 	-- Create answer buttons
 	local button_1 = Button(button_color, color_selected, color_disabled,true, true, "Correct")
@@ -87,6 +72,7 @@ function CityTourView:__init(remote_control, surface, profile)
 
 	local text_height = 75+25*table.getn(attractions.attraction[self.city.code][attractionpoint].text)
 	local indent = 100
+
 	-- Create buttons positions and size
 	local button_size = {width=9/36*width+5, height=3*(height-text_height)/13}
 	local position_1 = {x = width / 3 + indent, y = 5/4*button_size.height+text_height}

@@ -359,7 +359,6 @@ function NumericQuizView:render(surface)
 		self:back_to_city()
 	end
 	self:dirty(false)
-	gfx.update()
 end
 
 --- Set up for showing whether the user answered correctly or not. Only works
@@ -404,8 +403,11 @@ function NumericQuizView:back_to_city()
 	if current_question >= quiz_length then
 		local counter  = self.num_quiz.correct_answers
 		local experience = ExperienceCalculation.Calculation(counter, "Mathquiz")
+		local last_level = (self.profile.experience-(self.profile.experience%100))/100+1
 		self.profile:modify_balance(experience)
 		self.profile:modify_experience(experience)
+		local city = self.profile:get_city()
+		local new_level = (self.profile.experience-(self.profile.experience%100))/100+1
 
 		if experience == 0 then
 
@@ -413,11 +415,17 @@ function NumericQuizView:back_to_city()
 						.. tostring(self.num_quiz.correct_answers) ..
 						" questions correctly ",
 						"and you received " .. experience .. " experience."}
-		else
-			message = {"Good job! You answered "
+		elseif new_level == last_level then
+			message = {"Good job, you answered "
 					.. tostring(self.num_quiz.correct_answers) ..
-					" questions correctly ",
-					"and you received " .. experience .. " experience."}
+					" questions correctly! ",
+					"You received " .. experience .. " experience and " .. city.country:format_balance(experience) .. "."}
+		else
+			message = {"Good job, you answered "
+				.. tostring(self.num_quiz.correct_answers) ..
+				" questions correctly! ",
+				"You received " .. experience .. " experience and " .. city.country:format_balance(experience) .. ".",
+				"You have now reached level " .. new_level .. "!"}
 		end
 		type = "message"
 	else
@@ -430,30 +438,28 @@ function NumericQuizView:back_to_city()
 									x = screen:get_width()*0.25,
 									y = screen:get_height()*0.25+50})
 	local popup_view = PopUpView(remote_control,subsurface, type, message)
-	self:add_view(popup_view)
+	self:add_view(popup_view, true)
 	self.views.grid:blur()
 	self.views.num_input_comp:blur()
 	self:blur()
 
 	local button_click_func = function(button)
 		if button == "ok" then
-		self:trigger("exit_view")
+			self:trigger("exit_view")
 		else
-		popup_view:destroy()
-		self.views.grid:focus()
-		self.views.num_input_comp:focus()
-		self:focus()
-		self._suppress_new_question = true -- Prevents the quiz from
-											-- skipping a question
-		self:dirty(true)
-		gfx.update()
-	end
+			popup_view:destroy()
+			self.views.grid:focus()
+			self.views.num_input_comp:focus()
+			self:focus()
+			self._suppress_new_question = true -- Prevents the quiz from
+												-- skipping a question
+			self:dirty()
+		end
 	end
 
 	self:listen_to_once(popup_view, "button_click", button_click_func)
 	popup_view:render(subsurface)
-	gfx.update()
-
+	self:dirty()
 end
 
 ---Focuses the NumericalQuizView, i.e. makes it listen to the remote control

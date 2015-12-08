@@ -52,20 +52,6 @@ function CardComponent:__init(current_city, i, color, color_selected, color_disa
 	elseif i == 10 then
 		self.memory_img = gfx.loadpng("data/images/memory_pictures/generic/memory_bat.png")
 	end
-	--
-	-- if i == 1  or i == 6 then
-	-- 	self.memory_img = gfx.loadpng("data/images/memory_pictures/"..self.current_city.."/memory_"..self.current_city.."_1.png")
-	-- elseif i == 2 or i == 5 then
-	-- 	self.memory_img = gfx.loadpng("data/images/memory_pictures/"..self.current_city.."/memory_"..self.current_city.."_2.png")
-	-- elseif i == 3 or i == 8 then
-	-- 	self.memory_img = gfx.loadpng("data/images/memory_pictures/"..self.current_city.."/memory_"..self.current_city.."_3.png")
-	-- elseif i == 4 or i == 7 then
-	-- 	self.memory_img = gfx.loadpng("data/images/memory_pictures/"..self.current_city.."/memory_"..self.current_city.."_4.png")
-	-- elseif i == 9 or i == 12 then
-	-- 	self.memory_img = gfx.loadpng("data/images/memory_pictures/generic/memory_boat.png")
-	-- elseif i == 10 or i == 11 then
-	-- 	self.memory_img = gfx.loadpng("data/images/memory_pictures/generic/memory_bus.png")
-	-- end
 end
 
 --Renders a CardComponent on the specified SubSurface
@@ -85,10 +71,10 @@ function CardComponent:render(surface)
 	if self:is_selected() then
 		local margin = 0.30
 		local area = {
-			width = surface.width - 17,
+			width = surface:get_width() - 17,
 			height = 10,
 			x = 0,
-			y = surface.height - 10
+			y = surface:get_height() - 10
 		}
 		local sub_surface = SubSurface(surface,area)
 		sub_surface:fill(self.color_selected:to_table())
