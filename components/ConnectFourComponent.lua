@@ -29,12 +29,13 @@ function ConnectFourComponent:__init(remote_control, subsurface, profile)
 	self.images = {
 		background = gfx.loadpng("data/images/connect_four/connect4-background.png"),
 		board = gfx.loadpng("data/images/connect_four/connect4board.png"),
-		player_coin_cover = gfx.loadpng("data/images/connect_four/player_coin_cover.png"),
+		player_coin_cover_red = gfx.loadpng("data/images/connect_four/player_coin_cover_red.png"),
+		player_coin_cover_yellow = gfx.loadpng("data/images/connect_four/player_coin_cover_yellow.png"),
 		top_row_cover = gfx.loadpng("data/images/connect4toprow.png"),
 	}
 
 	self.button_font = Font(
-		"data/fonts/DroidSans.ttf", 16, Color(255, 128, 0, 255))
+		"data/fonts/DroidSans.ttf", 21, Color(255, 255, 255, 255))
 	self.player_font = Font(
 		"data/fonts/DroidSans.ttf", 22, Color(255, 255, 51, 255))
 	self.computer_font = Font(
@@ -134,7 +135,7 @@ function ConnectFourComponent:render(surface)
 	local posx_constant = 0.41*surface:get_width()
 	self:top_row(surface, self.current_column, width_coinbox, height_coinbox)
 
-	surface:copyfrom(self.images.background,nil,{x=posx_constant, y=posy_constant-3, width = 7*width_coinbox+3, height = 6*height_coinbox+3}, true)
+	surface:copyfrom(self.images.background,nil,{x=posx_constant, y=posy_constant-4, width = 7*width_coinbox+4, height = 6*height_coinbox+4}, true)
 
 
 	--prints the board
@@ -159,39 +160,49 @@ function ConnectFourComponent:render(surface)
 		posy = posy + height_coinbox
 	end
 
+	local left_board = SubSurface(surface,{width = 300, height = surface:get_height()-150, x = 75, y = 75})
+
+	left_board:clear(Color(250, 105, 0, 255):to_table())
+	left_board:fill({r = 65, g = 70, b = 72, a = 255},
+		{x = 5, y = 5, width = 290, height = surface:get_height()-160})
+
+	left_board:fill(Color(250, 105, 0, 255):to_table(),
+		{x = 5, y = 75, width = 290, height = 5})
+	local text_color = Color(255,255,255,255)
+	local text = Font("data/fonts/DroidSans.ttf", 30, text_color)
+		text:draw(left_board, {x = 65, y = 20}, "ConnectFour")
+
 	--Back to city button
 	local target1 = Rectangle(
-		0.05 * surface:get_width(),
-		0.9 * surface:get_height() - 2.0 * height_coinbox,
-		250,
-		90)
-	surface:clear(draw.colors.white:to_table(), target1:to_table())
+		80,
+		445,
+		290,
+		78)
+	surface:clear(Color(250, 105, 0, 255):to_table(), target1:to_table())
 	self.button_font:draw(surface, target1:to_table(), "Press Back to go back to City", "center", "middle")
 
 
 	--text player + yellow circle
 	local target3 = Rectangle(
-		0.05 * surface:get_width(),
-		0.5 * surface:get_height() - 3 * height_coinbox,
+		0.09 * surface:get_width(),
+		0.62 * surface:get_height() - 3 * height_coinbox,
 		200,
 		60)
 	self.player_font:draw(surface, target3:to_table(), "Player")
-	surface:clear(coin_color_player, {x=0.055*surface:get_width(), y=0.5*surface:get_height()-2.5*height_coinbox, width = width_coinbox, height = height_coinbox})
-	surface:copyfrom(self.images.player_coin_cover,nil,{x=0.055*surface:get_width(), y=0.5*surface:get_height()-2.5*height_coinbox, width = width_coinbox, height = height_coinbox}, true)
+	surface:copyfrom(self.images.player_coin_cover_yellow,nil,{x=0.09*surface:get_width(), y=0.62*surface:get_height()-2.5*height_coinbox, width = width_coinbox, height = height_coinbox}, true)
 
 	--text computer + red circle
 	local target4 = Rectangle(
-		0.05 * surface:get_width(),
-		0.5 * surface:get_height() - 0.9 * height_coinbox,
+		0.09 * surface:get_width(),
+		0.58 * surface:get_height() - 0.9 * height_coinbox,
 		200,
 		60)
 	self.computer_font:draw(surface, target4:to_table(), "Computer")
-	surface:clear(coin_color_computer, {x=0.055*surface:get_width(), y=0.5*surface:get_height()-0.5*height_coinbox+8, width = width_coinbox, height = height_coinbox})
-	surface:copyfrom(self.images.player_coin_cover,nil,{x=0.055*surface:get_width(), y=0.5*surface:get_height()-0.5*height_coinbox+8, width = width_coinbox, height = height_coinbox}, true)
+	surface:copyfrom(self.images.player_coin_cover_red,nil,{x=0.09*surface:get_width(), y=0.58*surface:get_height()-0.5*height_coinbox+8, width = width_coinbox, height = height_coinbox}, true)
 
 	--insert picture over board
 	surface:copyfrom(self.images.board,nil,{x=posx_constant, y=posy_constant, width = 7*width_coinbox, height = 6*height_coinbox}, true)
-	surface:copyfrom(self.images.top_row_cover,nil,{x=posx_constant, y=0.1*surface:get_height() - 0.5*height_coinbox, width = 7*width_coinbox, height = height_coinbox}, true)
+	surface:copyfrom(self.images.top_row_cover,nil,{x=posx_constant, y=0.1*surface:get_height() - 0.5*height_coinbox-4, width = 7*width_coinbox, height = height_coinbox}, true)
 
 	if self.connectfour:_is_full_board() then
 		utils.delay(2500, function()

@@ -333,35 +333,6 @@ function ConnectFour:_check_three_in_a_column(row, column)
 	return false
 end
 
-function ConnectFour: _check_three_in_a_row()
-	--row
-
-	local count = 1
-
-	for row1 = 1, 6 do
-		for column = 2, 7 do
-			if self:get(7-row1, column) ~=nil and self:get(7-row1, column) == self:get(7-row1, column-1) then
-				count = count + 1
-
-				if count == 3 and row1~=1 and self:get(7-row1, column+1) == nil and self:get(7-row1-1, column+1) ~= nil then
-
-					return column+1
-				end
-				if count == 3 and row1==1 and self:get(7-row1, column+1) == nil then
-
-					return column+1
-				end
-			else
-				count = 1
-			end
-		end
-	end
-
-	return nil
-
-
-
-end
 
 --- Decides which column the computer should choose during next move
 -- @param x_column , column for the last put coin by the player
@@ -372,7 +343,7 @@ function ConnectFour:computer_AI(x_column)
 	local random_probability = math.random(1,10) --probability
 
 	--check if there's three in a row
---[[	for i = 1, 7 do
+	for i = 1, 7 do
 		local row = self:get_current_row(i)
 
 		if row > 0 then
@@ -381,13 +352,8 @@ function ConnectFour:computer_AI(x_column)
 				return i
 			end
 		end
-	end ]]--
+	end
 
-
---[[	local make_move2 = self:_check_three_in_a_row(row)
-	if make_move2 ~= nil then
-		return make_move2
-	end ]]--
 
 	if self:get_player() ~= "O" then
 		error("Computer AI called when player turn")
@@ -395,7 +361,7 @@ function ConnectFour:computer_AI(x_column)
 
 	local counter = 0
 repeat
---	if random_probability < 8 then
+	if random_probability < 8 then
 		counter = counter + 1
 			local random_close = math.random(-1, 1)
 			random_column = x_column + random_close
@@ -405,10 +371,10 @@ repeat
 				random_probability = 8
 			end
 
---	elseif random_probability >= 8 then
---		random_column = math.random(1,7)
+	elseif random_probability >= 8 then
+		random_column = math.random(1,7)
 
---	end
+	end
 	until self:is_valid_move("O", random_column)
 
 	return random_column

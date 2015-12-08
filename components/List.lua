@@ -84,6 +84,7 @@ end
 -- @param list_item is the item to be added
 function List:add_list_item(list_item)
 	 table.insert(self.item_list, list_item)
+	 self:add_view(list_item)
 end
 
 --- Function that return the currently selected index (and maximum index)

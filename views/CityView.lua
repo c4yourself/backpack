@@ -279,9 +279,10 @@ end
 -- Destroys all images and views when leaving cityview
 function CityView:destroy()
 	view.View.destroy(self)
-	for k,v in pairs(self.images) do
-		self.images[k]:destroy()
+	for _, image in pairs(self.images) do
+		image:destroy()
 	end
+	self.images = nil
 end
 
 function CityView:load_view(button)

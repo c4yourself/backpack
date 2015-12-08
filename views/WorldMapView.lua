@@ -1,3 +1,6 @@
+---A WorldMap is a view which purpose is to show
+--the trip a player wants to do
+--@classmod WorldMap
 local city = require("lib.city")
 local CityView = require("views.CityView")
 local class = require("lib.classy")
@@ -24,6 +27,11 @@ local city_positions = {
 	tokyo = {x = 1120/1280, y = 195/720},
 }
 
+---Constructor of WorldMap
+--@param profile is the players profile
+--@param destination is wher the player wants to travel
+--@param method is which vehicle the player wants to use
+--@param view_manager is needed to set the next CityView
 function WorldMap:__init(profile, destination, method, view_manager)
 	view.View.__init(self)
 
@@ -53,6 +61,7 @@ function WorldMap:__init(profile, destination, method, view_manager)
 	self._step_index = 0
 end
 
+---Starts the timer and triggers the painting of the trip
 function WorldMap:start()
 	self.timer = sys.new_timer(10, function()
 		self._step_index = math.min(self._step_index + 1, self._step_count)
@@ -78,6 +87,7 @@ function WorldMap:destroy()
 
 	self.timer = nil
 end
+
 --- Renders a loading screen which shows the traveling path
 -- @param surface is the screen with is drawn on
 function WorldMap:render(surface)
@@ -99,6 +109,8 @@ function WorldMap:render(surface)
 	self:dirty(false)
 end
 
+---Paints the actual trip
+--@param surface is the screen with is drawn on
 function WorldMap:_paint_world_map(surface)
 	surface:clear(background_color)
 	surface:copyfrom(self.images.map, nil, {x = 1, y = 1}, true)
