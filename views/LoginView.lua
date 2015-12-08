@@ -60,7 +60,7 @@ function LoginView:__init(remote_control, profile_selection)
 	local exit_keyboard_callback = function()
 		self.hasActiveKeyboard = false
 		self.keyboard:set_active(false)
-		surface:destroy(self.keyboard)
+		--surface:destroy(self.keyboard)
 		self:render(screen)
 		gfx.update()
 	end
@@ -95,7 +95,7 @@ function LoginView:render(surface)
 	self.button_cancel:render(self.button_cancel_surface)
 	self.button_login:render(self.button_login_surface)
 	self.button_cancel_text:draw(surface, {x=700+190, y=530+20}, "Cancel")
-	self.button_login_text:draw(surface, {x=700+200, y=380+20}, "Login")
+	self.button_login_text:draw(surface, {x=700+200, y=380+20}, "Log in")
 
 
 end

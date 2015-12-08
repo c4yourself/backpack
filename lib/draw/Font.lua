@@ -130,7 +130,6 @@ function Font:_get_bounding_box(surface)
 			-- If alpha value is not 0 we assume we have found text
 			local c = surface:get_pixel(x, y)
 			if c.r ~= bg.r or c.g ~= bg.g or c.b ~= bg.b or c.a ~= bg.a then
-				logger.trace("MIN", c)
 				min_x = math.min(min_x, x)
 				max_x = math.max(max_x, x)
 
@@ -148,7 +147,6 @@ function Font:_get_bounding_box(surface)
 				-- If alpha value is not 0 we assume we have found text
 				local c = surface:get_pixel(x, y)
 				if c.r ~= bg.r or c.g ~= bg.g or c.b ~= bg.b or c.a ~= bg.a then
-					logger.trace("MAX", c)
 					max_x = math.max(max_x, x)
 					found_pixels = true
 					break
