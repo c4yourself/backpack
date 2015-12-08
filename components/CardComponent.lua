@@ -71,10 +71,10 @@ function CardComponent:render(surface)
 	if self:is_selected() then
 		local margin = 0.30
 		local area = {
-			width = surface.width - 17,
+			width = surface:get_width() - 17,
 			height = 10,
 			x = 0,
-			y = surface.height - 10
+			y = surface:get_height() - 10
 		}
 		local sub_surface = SubSurface(surface,area)
 		sub_surface:fill(self.color_selected:to_table())
