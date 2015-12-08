@@ -94,17 +94,31 @@ function CreateProfileView2:render(surface)
 	self.button_text:draw(surface, {x=980+50, y=530+15}, "Create")
 end
 
+--- Function to check that input fulfills the database settings
+function CreateProfileView2:control_length()
+
+	if #self.input_field.text > 20 then
+		return false
+	elseif #self.input_field2.text > 10 then
+		return false
+	else
+		return true
+	end
+end
+
 --- Safeguards for incorrect input goes here.
 -- @param
 function CreateProfileView2:control_input()
 	local ok_input = true
-	--local profile_man = ProfileManager()
+
 	if self.input_field.text == "" then --Control for non-empty string
 		ok_input = false
-	-- elseif self.input_field2.text == "" then -- Date of birth input control
-	-- 	ok_input = false
 	end
-	return ok_input
+	if self:control_length() then
+		return ok_input
+	else
+		return false
+	end
 end
 
 --- A Cancel button call to return to profile selection.

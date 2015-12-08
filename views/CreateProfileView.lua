@@ -73,6 +73,18 @@ function CreateProfileView:__init(remote_control)
 	)
 end
 
+--- Function to check that the input fulfills database settings
+function CreateProfileView:control_length()
+	if #self.input_field.text > 50 then
+		return false
+	elseif #self.input_field2.text > 30 then
+		return false
+	elseif #self.input_field3.text > 30 then
+		return false
+	else
+		return true
+	end
+end
 --- Safeguards for incorrect inputs go here.
 -- @param
 function CreateProfileView:control_input()
@@ -89,7 +101,11 @@ function CreateProfileView:control_input()
 	elseif profile_man:check_email(self.input_field.text)==false then
 		ok_input = false
 	end
-	return ok_input
+	if self:control_length() then
+		return ok_input
+	else
+		return false
+	end
 end
 
 --- Draws the view on given surface.
