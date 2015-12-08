@@ -3,9 +3,12 @@
 
 local class = require("lib.classy")
 local Event = require("lib.event.Event")
+local logger = require("lib.logger")
 local utils = require("lib.utils")
 
 local View = class("View", Event)
+
+View.log = true
 
 --- Constructor for View
 function View:__init()
@@ -41,8 +44,12 @@ function View:remove_view(view)
 	view:destroy()
 end
 
---- Destroys the view and all child views
+--- Destroys the view and all child views and stops listening to events.
 function View:destroy()
+	if View.log then
+		logger.trace("Destroying view " .. class.name(self))
+	end
+
 	for i = 1, #self.views do
 		local view = self.views[i]
 		view:destroy()
