@@ -2,19 +2,17 @@
 --@classmod ConnectFourComponent
 
 local class = require("lib.classy")
+local Color = require("lib.draw.Color")
 local ConnectFour = require("lib.connectfour.ConnectFour")
+local draw = require("lib.draw")
 local event = require("lib.event")
-local Font = require("lib.draw.Font")
-local View = require("lib.view.View")
-local utils = require("lib.utils")
-local subsurface = require("lib.view.SubSurface")
-local area = require("lib.draw.Rectangle")
-local font = Font
-local color = require("lib.draw.Color")
-local PopUpView = require("views.PopUpView")
-local SubSurface = require("lib.view.SubSurface")
 local ExpCalc = require("lib.scores.experiencecalculation")
-
+local Font = require("lib.draw.Font")
+local PopUpView = require("views.PopUpView")
+local Rectangle = require("lib.draw.Rectangle")
+local SubSurface = require("lib.view.SubSurface")
+local utils = require("lib.utils")
+local View = require("lib.view.View")
 
 local ConnectFourComponent = class("ConnectFourComponent", View)
 
@@ -36,11 +34,11 @@ function ConnectFourComponent:__init(remote_control, subsurface, profile)
 	}
 
 	self.button_font = Font(
-		"data/fonts/DroidSans.ttf", 16, color(255, 128, 0, 255))
+		"data/fonts/DroidSans.ttf", 16, Color(255, 128, 0, 255))
 	self.player_font = Font(
-		"data/fonts/DroidSans.ttf", 22, color(255, 255, 51, 255))
+		"data/fonts/DroidSans.ttf", 22, Color(255, 255, 51, 255))
 	self.computer_font = Font(
-		"data/fonts/DroidSans.ttf", 22, color(255, 0, 0, 255))
+		"data/fonts/DroidSans.ttf", 22, Color(255, 0, 0, 255))
 end
 
 function ConnectFourComponent:destroy()
@@ -162,29 +160,38 @@ function ConnectFourComponent:render(surface)
 	end
 
 	--Back to city button
-	local target1 = area(0.05*surface:get_width(),0.9*surface:get_height()-2.0*height_coinbox, 250, 90)
-	surface:clear(color(255, 255, 255, 255):to_table(), target1:to_table())
+	local target1 = Rectangle(
+		0.05 * surface:get_width(),
+		0.9 * surface:get_height() - 2.0 * height_coinbox,
+		250,
+		90)
+	surface:clear(draw.colors.white:to_table(), target1:to_table())
 	self.button_font:draw(surface, target1:to_table(), "Press Back to go back to City", "center", "middle")
 
 
-	--text player + yellow box
-	local target3 = area(0.05*surface:get_width(),0.5*surface:get_height()-3*height_coinbox, 200, 60)
+	--text player + yellow circle
+	local target3 = Rectangle(
+		0.05 * surface:get_width(),
+		0.5 * surface:get_height() - 3 * height_coinbox,
+		200,
+		60)
 	self.player_font:draw(surface, target3:to_table(), "Player")
 	surface:clear(coin_color_player, {x=0.055*surface:get_width(), y=0.5*surface:get_height()-2.5*height_coinbox, width = width_coinbox, height = height_coinbox})
-	-- make box to a coin
 	surface:copyfrom(self.images.player_coin_cover,nil,{x=0.055*surface:get_width(), y=0.5*surface:get_height()-2.5*height_coinbox, width = width_coinbox, height = height_coinbox}, true)
 
-	--text compunter + red box
-	local target4 = area(0.05*surface:get_width(),0.5*surface:get_height()-0.9*height_coinbox, 200, 60)
+	--text computer + red circle
+	local target4 = Rectangle(
+		0.05 * surface:get_width(),
+		0.5 * surface:get_height() - 0.9 * height_coinbox,
+		200,
+		60)
 	self.computer_font:draw(surface, target4:to_table(), "Computer")
 	surface:clear(coin_color_computer, {x=0.055*surface:get_width(), y=0.5*surface:get_height()-0.5*height_coinbox+8, width = width_coinbox, height = height_coinbox})
-	-- make box to a coin
 	surface:copyfrom(self.images.player_coin_cover,nil,{x=0.055*surface:get_width(), y=0.5*surface:get_height()-0.5*height_coinbox+8, width = width_coinbox, height = height_coinbox}, true)
 
 	--insert picture over board
 	surface:copyfrom(self.images.board,nil,{x=posx_constant, y=posy_constant, width = 7*width_coinbox, height = 6*height_coinbox}, true)
 	surface:copyfrom(self.images.top_row_cover,nil,{x=posx_constant, y=0.1*surface:get_height() - 0.5*height_coinbox, width = 7*width_coinbox, height = height_coinbox}, true)
-
 
 	if self.connectfour:_is_full_board() then
 		utils.delay(2500, function()
