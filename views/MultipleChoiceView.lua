@@ -505,6 +505,7 @@ function MultipleChoiceView:_back_to_city(type, message)
 		  	self:destroy()
       		self:trigger("exit_view")
       	else
+			self.pop_up_flag_2 = false
 	      	popup_view:destroy()
 	      	self.views.grid:focus()
 	      	self:dirty(true)
