@@ -130,7 +130,6 @@ function Font:_get_bounding_box(surface)
 			-- If alpha value is not 0 we assume we have found text
 			local c = surface:get_pixel(x, y)
 			if c.r ~= bg.r or c.g ~= bg.g or c.b ~= bg.b or c.a ~= bg.a then
-				logger.trace("MIN", c)
 				min_x = math.min(min_x, x)
 				max_x = math.max(max_x, x)
 
@@ -148,7 +147,6 @@ function Font:_get_bounding_box(surface)
 				-- If alpha value is not 0 we assume we have found text
 				local c = surface:get_pixel(x, y)
 				if c.r ~= bg.r or c.g ~= bg.g or c.b ~= bg.b or c.a ~= bg.a then
-					logger.trace("MAX", c)
 					max_x = math.max(max_x, x)
 					found_pixels = true
 					break
@@ -217,17 +215,37 @@ function Font:draw(surface, rectangle, text, horizontal_align, vertical_align)
 		return
 	end
 
+	-- Reserve variable for bounding box if needed
+	local bbox
+
+	-- Calculate background color of what we are drawing on. This is needed since
+	-- it is impossible to draw onto a transparent surface and then copy that
+	-- information if the background is brighter than the actual font.
 	local background_color = Color.from_table(
 		surface:get_pixel(rectangle.x, rectangle.y))
+
+	if background_color < self.color then
+		background_color = nil
+	end
+
+	-- Create a new surface where the width is guessed using pre calculated
+	-- glyph dimension properties.
 	local text_surface = self:_get_text_surface(text, nil, background_color)
-	local bbox = self:_get_bounding_box(text_surface, background_color)
+
+	if background_color ~= nil then
+		-- If we use the target's background Color, bounding box always need to
+		-- be calculated.
+		bbox = self:_get_bounding_box(text_surface, background_color)
+	end
 
 	local x
 	if horizontal_align == nil or horizontal_align == "left" then
 		x = 0
 	elseif horizontal_align == "center" then
+		bbox = bbox or self:_get_bounding_box(text_surface, background_color)
 		x = math.max(0, rectangle.width / 2 - bbox.max_x / 2)
 	elseif horizontal_align == "right" then
+		bbox = bbox or self:_get_bounding_box(text_surface, background_color)
 		x = math.max(0, rectangle.width - bbox.max_x)
 	else
 		error(
@@ -244,6 +262,7 @@ function Font:draw(surface, rectangle, text, horizontal_align, vertical_align)
 			0,
 			rectangle.height / 2 - (glyph_data.bottom - glyph_data.top) / 2 - glyph_data.top)
 	elseif vertical_align == "bottom" then
+		bbox = bbox or self:_get_bounding_box(text_surface, background_color)
 		y = math.max(0, rectangle.height - 1 - bbox.max_y)
 	else
 		error(
@@ -254,14 +273,14 @@ function Font:draw(surface, rectangle, text, horizontal_align, vertical_align)
 	local text_rectangle = Rectangle(
 		0,
 		0,
-		bbox.max_x + 1,
-		bbox.max_y + 1)
+		bbox and bbox.max_x + 1 or text_surface:get_width(),
+		bbox and bbox.max_y + 1 or text_surface:get_height())
 
 	surface:copyfrom(
 		text_surface,
 		text_rectangle:to_table(),
 		text_rectangle:translate(x, y):translate(rectangle.x, rectangle.y):to_table(),
-		false)
+		true)
 
 	text_surface:destroy()
 end

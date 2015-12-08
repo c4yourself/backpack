@@ -78,12 +78,12 @@ function MemoryView:__init(remote_control, surface, profile)
     local card_color = Color(250, 105, 0, 255)
     local card_color_disabled = Color(111,222,111,255)
     local card_color_selected = Color(250, 105, 0, 255)
-    self.button_size = {width = 100, height = 100}
-    local x_gap = self.button_size.width + 50
+    self.button_size = {width = 80, height = 100}
+    local x_gap = self.button_size.width + 67
     local y_gap = self.button_size.height + 50
 
-    self.pos_x = 430
-    self.pos_y = 38
+    self.pos_x = 445
+    self.pos_y = 36
 
     for i = 1, self.pairs*2 do
         local current_city = self.profile.city
@@ -219,9 +219,12 @@ function MemoryView:render(surface)
             grid_callback)
         self.listening_initiated = true
     end
+
     --At this point, we should check the memory states and keep
     -- the card that are true in memory.states open
     if self:is_dirty() then
+
+
         -- Draws the left board containing back-button
         local left_board = SubSurface(surface,{width = 300, height = self.surface:get_height()-150, x = 75, y = 75})
         self.surface:clear(Color(1, 1, 1,255):to_table())
@@ -256,11 +259,63 @@ function MemoryView:render(surface)
           {x = 5, y = 5, width = 730, height = 575})
 
         gfx.update()
-      end
-    self:dirty(false)
-    -- Render child components
 
+
+        -- Render child components
+        local x_gap = self.button_size.width + 67
+        local y_gap = self.button_size.height + 50
+        self.extra_pos_x = 431
+        self.extra_pos_y = 26
+
+      for i = 1, self.pairs*2 do
+            if i == 1 then
+                self.extra_pos_x = self.extra_pos_x
+            elseif ((i-1) % self.columns == 0) then
+                self.extra_pos_y = self.extra_pos_y + y_gap
+                self.extra_pos_x = self.extra_pos_x - (self.columns - 1) * x_gap
+            else
+                self.extra_pos_x = self.extra_pos_x + x_gap
+            end
+
+
+        local extra_card_board = SubSurface(surface,{width = 100, height = 110, x = self.extra_pos_x, y = self.extra_pos_y})
+        extra_card_board:clear(Color(250, 105, 0, 255):to_table())
+
+        local extra_black_rectangle = SubSurface(surface,{width = 96, height = 106, x = self.extra_pos_x + 2, y = self.extra_pos_y + 3})
+        extra_black_rectangle:clear(Color(0, 0, 0, 255):to_table())
+
+    end
+        self.pos_x = 435
+        self.pos_y = 30
+
+        for i = 1, self.pairs*2 do
+            if i == 1 then
+                self.pos_x = self.pos_x
+            elseif ((i-1) % self.columns == 0) then
+                self.pos_y = self.pos_y + y_gap
+                self.pos_x = self.pos_x - (self.columns - 1) * x_gap
+            else
+                self.pos_x = self.pos_x + x_gap
+            end
+
+
+        local card_board = SubSurface(surface,{width = 100, height = 110, x = self.pos_x, y = self.pos_y})
+
+
+        card_board:clear(Color(250, 105, 0, 255):to_table())
+
+        local black_rectangle = SubSurface(surface,{width = 96, height = 106, x = self.pos_x + 2, y = self.pos_y + 3})
+        black_rectangle:clear(Color(0, 0, 0, 255):to_table())
+
+
+        end
+      end
+
+
+
+    self:dirty(false)
     self.button_grid:render(surface)
+
     --self.button_1:render(surface)
 end
 
