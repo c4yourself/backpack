@@ -3,12 +3,12 @@
 -- @classmod MultipleChoiceGrid
 
 local class = require("lib.classy")
-local button = require("lib.components.Button")
-local NumericalQuizGrid = require("lib.components.NumericalQuizGrid")
-local MultipleChoiceGrid = class("MultipleChoiceGrid", NumericalQuizGrid)
+local NumericalQuizGrid = require("components.NumericalQuizGrid")
 local SubSurface = require("lib.view.SubSurface")
 local utils = require("lib.utils")
 local event = require("lib.event")
+
+local MultipleChoiceGrid = class("MultipleChoiceGrid", NumericalQuizGrid)
 
 --- Constructor for NumericalQuizGrid
 -- @param remote_control A remote control or mock object to listen to. Defaults
@@ -76,6 +76,17 @@ function MultipleChoiceGrid:select_next()
 	end
 	self.button_list[self.next_button].button._selected = true
 	self.button_indicator = self.next_button
+end
+
+--- Method for manually selecting a button in the grid.
+-- @param index Integer specifying the button to be selected. The index should
+--				be key to the button in the grid's button_list.
+function MultipleChoiceGrid:select_button(index)
+	for i = 1, #self.button_list do
+		self.button_list[i].button._selected = false
+	end
+	self.button_list[index].button._selected = true
+	self.button_indicator = index
 end
 
 --- Overloaded press function. Called when the user presses a button and makes

@@ -1,15 +1,16 @@
 --- A type of button that can be toggled on or off
 
 local class = require("lib.classy")
-local Button = require("lib.components.Button")
-local ToggleButton = class("ToggleButton", Button)
+local Button = require("components.Button")
 local Color = require("lib.draw.Color")
+
+local ToggleButton = class("ToggleButton", Button)
 
 -- Contructor for the ToggleButton class
 function ToggleButton:__init(color, color_selected, color_disabled, enabled, selected, transfer_path)
 	Button:__init(color, color_selected, color_disabled, enabled, selected, transfer_path)
 	self.toggled = false
-	self.color_toggled = Color(0,0,255,255)
+	self.color_toggled = Color(0, 0, 255, 255)
 end
 
 -- Switches the state for the toggle button

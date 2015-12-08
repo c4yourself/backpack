@@ -4,7 +4,7 @@
 
 local class = require("lib.classy")
 local View = require("lib.view.View")
-local Button = require("lib.components.Button")
+local Button = require("components.Button")
 local CardComponent = class("CardComponent", Button)
 local event = require("lib.event")
 local utils = require("lib.utils")
@@ -26,23 +26,31 @@ function CardComponent:__init(current_city, i, color, color_selected, color_disa
 	self.status = "FACING_DOWN"
 
 	-- Colors
-	self.backside_color = Color(0,0,0,255)
+	self.backside_color = Color(1, 1, 1, 255)
 	self.front_color = Color(255, 255, 255, 255)
 	self.from_img = gfx.loadpng("data/images/memory_pictures/generic/memory_question.png")
 	self.current_city = current_city:lower()
 
-	if i == 1  or i == 6 then
+	if i == 1 then
 		self.memory_img = gfx.loadpng("data/images/memory_pictures/"..self.current_city.."/memory_"..self.current_city.."_1.png")
-	elseif i == 2 or i == 5 then
+	elseif i == 2 then
 		self.memory_img = gfx.loadpng("data/images/memory_pictures/"..self.current_city.."/memory_"..self.current_city.."_2.png")
-	elseif i == 3 or i == 8 then
+	elseif i == 3 then
 		self.memory_img = gfx.loadpng("data/images/memory_pictures/"..self.current_city.."/memory_"..self.current_city.."_3.png")
-	elseif i == 4 or i == 7 then
+	elseif i == 4 then
 		self.memory_img = gfx.loadpng("data/images/memory_pictures/"..self.current_city.."/memory_"..self.current_city.."_4.png")
-	elseif i == 9 or i == 12 then
+	elseif i == 5 then
 		self.memory_img = gfx.loadpng("data/images/memory_pictures/generic/memory_boat.png")
-	elseif i == 10 or i == 11 then
+	elseif i == 6 then
 		self.memory_img = gfx.loadpng("data/images/memory_pictures/generic/memory_bus.png")
+	elseif i == 7 then
+		self.memory_img = gfx.loadpng("data/images/memory_pictures/generic/memory_plane.png")
+	elseif i == 8 then
+		self.memory_img = gfx.loadpng("data/images/memory_pictures/generic/memory_train.png")
+	elseif i == 9 then
+		self.memory_img = gfx.loadpng("data/images/memory_pictures/generic/memory_dog.png")
+	elseif i == 10 then
+		self.memory_img = gfx.loadpng("data/images/memory_pictures/generic/memory_bat.png")
 	end
 end
 
@@ -51,10 +59,11 @@ end
 function CardComponent:render(surface)
 	self:dirty(false)
 	if self.status == "FACING_UP" then
-		surface:copyfrom(self.memory_img)
+		surface:fill(self.backside_color:to_table())
+		surface:copyfrom(self.memory_img, nil, nil, true)
 	elseif self.status == "FACING_DOWN" then
 		surface:fill(self.backside_color:to_table())
-		surface:copyfrom(self.from_img)
+		surface:copyfrom(self.from_img, nil, nil, true)
 	elseif not self:is_enabled() then
 		surface:fill(self.color_disabled:to_table())
 	end
@@ -62,10 +71,10 @@ function CardComponent:render(surface)
 	if self:is_selected() then
 		local margin = 0.30
 		local area = {
-			width = surface.width - 17,
+			width = surface:get_width() - 17,
 			height = 10,
 			x = 0,
-			y = surface.height - 10
+			y = surface:get_height() - 10
 		}
 		local sub_surface = SubSurface(surface,area)
 		sub_surface:fill(self.color_selected:to_table())

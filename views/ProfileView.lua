@@ -1,10 +1,9 @@
--- The view class store
--- @classmod Store
+-- The view class ProfileView
+-- @classmod ProfileView
 local class = require("lib.classy")
 local View = require("lib.view.View")
 local view = require("lib.view")
 local event = require("lib.event")
-local ProfileView = class("ProfileView", view.View)
 local BackEndStore = require("lib.store.BackEndStore")
 local Profile = require("lib.profile.Profile")
 local event = require("lib.event")
@@ -13,9 +12,11 @@ local utils = require("lib.utils")
 local SubSurface = require("lib.view.SubSurface")
 local Color = require("lib.draw.Color")
 local Font = require("lib.draw.Font")
-local Button = require("lib.components.Button")
-local ButtonGrid=require("lib.components.ButtonGrid")
+local Button = require("components.Button")
+local ButtonGrid=require("components.ButtonGrid")
 local ProfileManager = require("lib.profile.ProfileManager")
+
+local ProfileView = class("ProfileView", view.View)
 
 -- Get size of Table
 -- @param a Is the table to get ther size of
@@ -25,7 +26,7 @@ local function get_size(a)
 	return i
 end
 
---- Constructor for Store
+--- Constructor for ProfileView
 -- @param event_listener Remote control to listen to
 function ProfileView:__init(remote_control, surface, profile)
 	-- Add some internal variables that we will want to use later
@@ -40,6 +41,7 @@ function ProfileView:__init(remote_control, surface, profile)
 	self.profile = profile
 	self.remote_control = remote_control
 	self.item_positions = {}
+	self.image_positions = {}
 	self.item_images = {}
 	self.message = {["message"] = "Select item to purchase or sell"}
 
@@ -63,62 +65,59 @@ function ProfileView:__init(remote_control, surface, profile)
 	-- Creates local variables for height and width
 	local height = self.surface:get_height()
 	local width = self.surface:get_width()
-	--print("The height is: "..height.." and the width is: "..width)
-	-- 1152, 603, 829
 
 	-- Get the profiles backpack items
 	self.backpack_items = self.backendstore:returnBackPackItems(self.profile:get_inventory())
 
 
 	-- Create the number of buttons that correspond to items in backpack
-	self.button_size = {width = 2.5*width/45, height = 2.5*width/45}
+	self.button_size = {width = 2.8*width/45, height = 0.5*width/45}
 
 	self.buttons = {}
-	self.buttons[1] = Button(self.exit_inactive, self.button_active, self.exit_inactive, true, true, 1)
-	k = 1
-	while k <= get_size(self.backpack_items) do
-			self.buttons[k+1] = Button(self.button_inactive, self.button_active, self.button_inactive, true, false,k+1)
-			k = k + 1
+	if get_size(self.backpack_items) > 0 then
+		self.buttons[1] = Button(Color(255,90,0,255), Color(255,153,0,255), Color(1, 1, 1, 255), true, false, 1)
+		self.buttons[2] = Button(self.button_inactive, self.button_active, self.button_inactive, true, true,2)
+		k = 2
+		while k <= get_size(self.backpack_items) do
+				self.buttons[k+1] = Button(self.button_inactive, self.button_active, self.button_inactive, true, false,k+1)
+				k = k + 1
+		end
+	else
+		self.buttons[1] = Button(Color(255,90,0,255), Color(255,153,0,255), Color(1, 1, 1, 255), true, true, 1)
+		k = 1
+		while k <= get_size(self.backpack_items) do
+				self.buttons[k+1] = Button(self.button_inactive, self.button_active, self.button_inactive, true, false,k+1)
+				k = k + 1
+		end
 	end
 
 	-- Add the exit button
-	self.font = Font("data/fonts/DroidSans.ttf", 20, Color(0, 0, 0, 255))
-	self.header_font = Font("data/fonts/DroidSans.ttf", 40, Color(0,0,0,255))
-	self.buttons[1]:set_textdata("Exit",Color(255,255,0,255), {x = 30, y = 300}, 20, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	self.font = Font("data/fonts/DroidSans.ttf", 20, Color(1, 1, 1, 255))
+	self.header_font = Font("data/fonts/DroidSans.ttf", 40, Color(1, 1, 1, 255))
+	self.buttons[1]:set_textdata("Back to City",Color(255,255,255,255), {x = 30, y = 300}, 32, utils.absolute_path("data/fonts/DroidSans.ttf"))
 
 	-- Add them to button grid at the correct place
 
 	-- Add exit button
-	self.button_grid:add_button({x = 162-3*width/45,y = height-60}, {width = 6*width/45,height = 2*width/45}, self.buttons[1])
+	self.button_grid:add_button({x = 10,y = height-85}, {width = 300,height = 75}, self.buttons[1])
 
 	row = 1
 	j = 1
 	own_items = 0
 	while j <= get_size(self.backpack_items) do
-		self.item_positions[j+1] = {x = 10+(j-1)*(self.button_size.width+15),
+		self.image_positions[j+1] = {x = 10+(j-1)*(self.button_size.width+8),
 																y = 295}
-		--[[self.item_positions[j+1] = {x = width/2+20+((j-1)-2*(row-1))*130,
-																y = 320}]]
+		self.item_positions[j+1] = {x = 10+(j-1)*(self.button_size.width+8),
+																y = 355}
 		self.button_grid:add_button(self.item_positions[j+1], self.button_size, self.buttons[j+1])
 		j = j+1
 	end
 
-	-- Create list of item images
-	--self.item_images = self:loadItemImages()
-
 	-- Add to view
-	self.add_view(self.button_grid, false)
-
-	local button_render = function()
-		self:render(self.surface)
-		gfx.update()
-	end
-
-	self:listen_to(self.button_grid,"dirty",button_render)
+	self:add_view(self.button_grid, true)
 
 	-- Function that makes us exit when pressing the correct button
 	local button_callback = function(button)
-
 		-- Get the current index of button that is selected
 		selected_index = button.transfer_path
 		local exit = false
@@ -132,18 +131,16 @@ function ProfileView:__init(remote_control, surface, profile)
 			self:destroy()
 			self:trigger("exit_view")
 		end
-
 	end
 
 	-- Instance remote control and mapps it to pressing enter
 	self:listen_to(self.button_grid,"button_click",	button_callback)
-	self.item_images = self:loadItemImages()
-
+	self.item_images = self:_load_item_images()
 end
 
 -- Load all the images for the items
 -- @param none
-function ProfileView:loadItemImages()
+function ProfileView:_load_item_images()
 	local ret_list = {}
 
 	if #self.backpack_items>0 then
@@ -159,8 +156,6 @@ end
 -- Render view function
 -- @param surface is the surface to draw on
 function ProfileView:render(surface)
-
-
 	-- Creates local variables for height and width
 	local height = self.surface:get_height()
 	local width = self.surface:get_width()
@@ -171,12 +166,12 @@ function ProfileView:render(surface)
 	surface:copyfrom(self.room, nil, {x=324, y = 0}, true)
 	surface:copyfrom(self.backpack, nil, {x=2*width/3, y = height - 300}, true)
 
-	-- Print the buttons
+	-- Prints the buttons
 	self.button_grid:render(surface)
 
-	-- Print the items
+	-- Prints the items
 	for i = 1, #self.item_images do
-		surface:copyfrom(self.item_images[i], nil, self.item_positions[i+1], true)
+		surface:copyfrom(self.item_images[i], nil, self.image_positions[i+1], true)
 	end
 
 	--Draw header
@@ -190,8 +185,10 @@ function ProfileView:render(surface)
 	self.font:draw(surface, {x=180, y = 70}, self.profile:get_name())
 	self.font:draw(surface, {x=10,y=105}, "Birthday: ")
 	self.font:draw(surface, {x=180, y = 105}, tostring(self.profile:get_date_of_birth()))
-	self.font:draw(surface, {x=10,y=140}, "Experience: ")
-	self.font:draw(surface, {x=180, y = 140}, tostring(self.profile:get_experience()))
+	self.font:draw(surface, {x=10,y=140}, "Level: ")
+	self.font:draw(surface, {x=180, y = 140}, tostring((self.profile:get_experience()-self.profile:get_experience()%100)/100+1))
+	self.font:draw(surface, {x=10,y=175}, "Experience: ")
+	self.font:draw(surface, {x=180, y = 175}, tostring(self.profile:get_experience()%100))
 
 	--Draw Inventory header
 	self.header_font:draw(surface, {x=10,y = 230}, "Inventory")
@@ -209,19 +206,23 @@ function ProfileView:render(surface)
 		self.font:draw(surface, {x=10, y = 450}, "Bought in: ")
 		self.font:draw(surface, {x = 180, y = 450}, item_selected:get_city())
 		self.font:draw(surface, {x=10, y = 485}, "Original price: ")
-		self.font:draw(surface, {x = 180, y = 485}, tostring(item_selected:get_price()))
+		self.font:draw(surface, {x = 180, y = 485}, self.profile:get_city().country:format_balance(item_selected:get_price()))
 	end
 
+	self:dirty(false)
 end
 
 
 -- Function to destory images
 function ProfileView:destroy()
-  view.View.destroy(self)
-  for k,v in pairs(self.item_images) do
-     self.item_images[k]:destroy()
-  end
+	view.View.destroy(self)
+
+	for k,v in pairs(self.item_images) do
+		self.item_images[k]:destroy()
+	end
+
 	self.backpack:destroy()
+	self.room:destroy()
 end
 
 return ProfileView

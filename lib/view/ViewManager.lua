@@ -12,6 +12,8 @@ local utils = require("lib.utils")
 
 local ViewManager = class("ViewManager", Event)
 
+ViewManager.log = true
+
 --- Constructor for ViewManager
 -- @param surface Surface that views will be rendered on, defaults to screen
 -- @param view top-level view component
@@ -31,8 +33,13 @@ end
 
 --- Sets a view as the active view for this ViewManager, destroys the previous
 -- view and renders the new view
+-- @param view View instance that will become the new top level view
 function ViewManager:set_view(view)
 	if self.view ~= nil then
+		if ViewManager.log then
+			logger.trace("Destroying previous view " .. class.name(self.view))
+		end
+
 		self.view:destroy()
 		self:stop_listening()
 	end
@@ -43,8 +50,8 @@ function ViewManager:set_view(view)
 end
 
 --- Returns the currently active view
--- @Returns view Current top-level view component for this ViewManager
-function ViewManager:get_view(view)
+-- @returns view Current top-level view component for this ViewManager
+function ViewManager:get_view()
 	return self.view
 end
 
@@ -57,8 +64,13 @@ function ViewManager:render()
 
 	local start_time = os.clock()
 	self.view:render(self.surface)
-	logger.debug(string.format(
-		"Rendered in %.2f seconds", os.clock() - start_time))
+
+	if ViewManager.log then
+		logger.debug(string.format(
+			"Rendered in %.2f seconds, using %s",
+			os.clock() - start_time,
+			utils.human_size(gfx.get_memory_use())))
+	end
 
 	self:trigger("render", self)
 end

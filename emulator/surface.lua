@@ -1,7 +1,7 @@
 --- An area (pixmap) in graphics memory.
 --
 -- Part of Zenterio Lua API.  Color format is 32-bit RGBA. Surfaces are
--- constructed using @{emulator.gfx:new_surface|gfx:new_surface}.
+-- constructed using @{emulator.gfx.new_surface|gfx.new_surface}.
 --
 -- @classmod emulator.surface
 -- @alias surface
@@ -12,6 +12,8 @@ local Rectangle = require("lib.draw.Rectangle")
 local logger = require("lib.logger")
 
 local surface = class("surface")
+
+surface.log = true
 
 --- Fills the surface with the given color.
 --
@@ -102,11 +104,12 @@ end
 --
 -- @param src_surface Surface to copy pixels from.
 -- @param src_rectangle Source rectangle on surface to copy from. Defaults to
---                      entire surface.
+--                      entire surface. Omitted area will be cropped.
 -- @param dest_rectangle Destination rectangle on this surface to copy to.
 --                       Defaults src_rectangle's width and height at position
 --                       {x = 0, y = 0}.
 -- @param blend_option true if alpha blending should occur, otherwise false.
+--                     Default is false.
 -- @zenterio
 function surface:copyfrom(src_surface, src_rectangle, dest_rectangle, blend_option)
 	local source_rectangle = src_surface:_get_rectangle(src_rectangle)
@@ -120,25 +123,51 @@ function surface:copyfrom(src_surface, src_rectangle, dest_rectangle, blend_opti
 	local canvas = love.graphics.newCanvas(
 		self.image_data:getWidth(), self.image_data:getHeight())
 
+	-- Calculate Quad of source surface to draw (normally entire surface)
+	local cropping = love.graphics.newQuad(
+		source_rectangle.x,
+		source_rectangle.y,
+		source_rectangle.width,
+		source_rectangle.height,
+		src_surface:get_width(),
+		src_surface:get_height())
+
+	-- Determine draw function to use. Compatibility with Love 0.8
+	local drawq = love.graphics.draw
+	if love.graphics.drawq then
+		drawq = love.graphics.drawq
+	end
+
 	canvas:renderTo(function()
 		-- Set blend mode to premultiplied to make alpha transparency work
 		-- correctly. If left to alpha transparent pixels will darken for every
 		-- call to :copyfrom.
 		love.graphics.setBlendMode("premultiplied")
 		love.graphics.draw(love.graphics.newImage(self.image_data))
-		love.graphics.setBlendMode("alpha")
 
-		if blend_option ~= false then
+		if blend_option then
 			love.graphics.setBlendMode("alpha")
 		else
-			if not pcall(love.graphics.setBlendMode, "replace") then
-				logger.warn(
-					"Replace blend mode not supported by this version of Love")
-			end
+			-- Save old color to restore it later
+			local br, bg, bb, ba = love.graphics.getColor()
+			love.graphics.setBackgroundColor(0, 0, 0, 0)
+
+			-- Clear pixels where target will be drawn
+			love.graphics.setScissor(
+				destination_rectangle.x,
+				destination_rectangle.y,
+				destination_rectangle.width,
+				destination_rectangle.height)
+			love.graphics.clear()
+			love.graphics.setScissor()
+
+			-- Restore previous color
+			love.graphics.setBackgroundColor(br, bg, bb, ba)
 		end
 
-		love.graphics.draw(
+		drawq(
 			love.graphics.newImage(src_surface.image_data),
+			cropping,
 			destination_rectangle.x,
 			destination_rectangle.y,
 			0,
@@ -212,7 +241,17 @@ end
 -- The surface can not be used again after this operation.
 -- @zenterio
 function surface:destroy()
-	logger.trace("Surface destroyed")
+	if surface.log then
+		logger.trace("Surface destroyed")
+	end
+
+	if self.image_data then
+		gfx._free_surface(self)
+	else
+		logger.warn(
+			"Surface destroyed more than once. This is a programming error " ..
+			"perhaps.")
+	end
 	self.image_data = nil
 end
 
@@ -239,10 +278,11 @@ end
 function surface:__init(width, height)
 	if width == nil and height == nil then
 		-- Used when working with images
-		logger.trace("New empty surface")
 		self.image_data = nil
 	else
-		logger.trace(string.format("New surface %dx%d", width, height))
+		if surface.log then
+			logger.trace(string.format("New surface %dx%d", width, height))
+		end
 		self.image_data = love.image.newImageData(width, height)
 	end
 end
@@ -252,6 +292,10 @@ end
 -- @param path Path to the image
 -- @local
 function surface:_load_image(path)
+	if surface.log then
+		logger.trace("New image surface", path)
+	end
+
 	if not love.filesystem.isFile(path) then
 		error("No such image: " .. tostring(path))
 	end
@@ -264,7 +308,7 @@ function surface:_load_image(path)
 		local fileData, err = love.filesystem.newFileData(imageStream, path)
 		self.image_data = love.image.newImageData(fileData)
 	else
-		logger.error("Error loading image - '"..path.."'")
+		logger.error("Error loading image ", path)
 	end
 end
 

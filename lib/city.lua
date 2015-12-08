@@ -9,7 +9,7 @@ city.Country = require("lib.city.Country")
 city.countries = {
 	aus = city.Country("Australia", "aus", "A$%.2f", 0.16),
 	bra = city.Country("Brazil", "bra", "R$%.2f", 0.43),
-	egy = city.Country("Egypt", "egy", "%.2f ج.م", 0.9),
+	egy = city.Country("Egypt", "egy", "%.2fE£", 0.9),
 	fra = city.Country("France", "fra", "%.2f €", 0.11),
 	ind = city.Country("India", "ind", "₹%.2f", 7.6),
 	jpn = city.Country("Japan", "jpn", "¥%.2f", 14),
@@ -51,7 +51,7 @@ city.cities = {
 	new_york = city.City("new_york", "New York", city.countries.usa, {
 		{"london", "boat", 4000},
 		{"london", "plane", 6000},
-		{"rio", "plane", 5000},
+		{"rio_de_janeiro", "plane", 5000},
 		{"tokyo", "plane", 8000},
 	}),
 
@@ -73,7 +73,7 @@ city.cities = {
 		{"tokyo", "boat", 3000},
 		{"tokyo", "plane", 5000},
 		{"bombay", "plane", 7500},
-		{"rio", "plane", 4000}
+		{"rio_de_janeiro", "plane", 4000}
 	}),
 }
 

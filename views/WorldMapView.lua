@@ -13,51 +13,28 @@ local WorldMap = class("WorldMapView", view.View)
 local background_color = {r = 119, g = 151, b = 255}
 local city_color = {r = 0, g = 0, b = 0}
 
-local cities = {
-	new_york = {
-		name = "New York",
-		position = {x = 349/1280, y = 194/720}
-	},
-	rio_de_janeiro = {
-		name = "Rio de Janeiro",
-		position = {x = 477/1280, y = 403/720}
-	},
-	london = {
-		name = "London",
-		position = {x = 620/1280, y = 130/720}
-	},
-	paris = {
-		name ="Paris",
-		position = {x = 635/1280, y = 155/720}
-	},
-	cairo = {
-		name = "Cairo",
-		position = {x = 730/1280, y = 225/720}
-	},
-	bombay = {
-		name = "Bombay",
-		position = {x = 892/1280, y = 257/720}
-	},
-	sidney = {
-		name = "Sidney",
-		position = {x = 1177/1280, y = 433/720}
-	},
-	tokyo = {
-		name = "Tokyo",
-		position = {x = 1120/1280, y = 195/720}
-	}
+local city_positions = {
+	bombay = {x = 892/1280, y = 257/720},
+	cairo = {x = 730/1280, y = 225/720},
+	london = {x = 620/1280, y = 130/720},
+	new_york = {x = 349/1280, y = 194/720},
+	paris = {x = 635/1280, y = 155/720},
+	rio_de_janeiro = {x = 477/1280, y = 403/720},
+	sydney = {x = 1177/1280, y = 433/720},
+	tokyo = {x = 1120/1280, y = 195/720},
 }
 
-function WorldMap:__init(origin, destination, method, view_manager)
+function WorldMap:__init(profile, destination, method, view_manager)
 	view.View.__init(self)
 
-	self.origin = origin
+	self.profile = profile
+	self.origin = profile:get_city()
 	self.destination = destination
 	self.method = method
 	self.view_manager = view_manager or view.view_manager
 
-	self._origin_position = cities[origin.code].position
-	self._destination_position = cities[destination.code].position
+	self._origin_position = city_positions[self.origin.code]
+	self._destination_position = city_positions[self.destination.code]
 
 	local direction = "right"
 	if self._origin_position.x > self._destination_position.x then
@@ -68,8 +45,9 @@ function WorldMap:__init(origin, destination, method, view_manager)
 	self.images = {
 		map = gfx.loadpng("data/images/worldmap2.png"),
 		vehicle = gfx.loadpng(
-			"data/images/" .. self.method .. ({left = "1", right = "2"})[direction] .. ".png")
+			"data/images/travel_screen/" .. self.method .. "_" .. direction .. ".png")
 	}
+	self.images.vehicle:premultiply()
 
 	self._step_count = 50
 	self._step_index = 0
@@ -82,9 +60,9 @@ function WorldMap:start()
 		if self._step_index == self._step_count then
 			self.timer:stop()
 
-			-- TODO: Fix this to use profile instead
-			--self.view_manager:set_view(
-			--	CityView(event.remote_control, Profile("Andreas", nil, nil, nil, self.destination.code)))
+			self.profile.city = self.destination.code
+			self.view_manager:set_view(
+				CityView(self.profile, event.remote_control))
 		end
 
 		self:dirty()
@@ -94,7 +72,7 @@ end
 function WorldMap:destroy()
 	view.View.destroy(self)
 
-	for _, image in ipairs(self.images) do
+	for _, image in pairs(self.images) do
 		image:destroy()
 	end
 
@@ -116,21 +94,21 @@ function WorldMap:render(surface)
 		y = surface:get_height() * (self._origin_position.y + step_y * self._step_index) - 15,
 		width = 30,
 		height = 30
-	}, false)
+	}, true)
 
 	self:dirty(false)
 end
 
 function WorldMap:_paint_world_map(surface)
 	surface:clear(background_color)
-	surface:copyfrom(self.images.map)
+	surface:copyfrom(self.images.map, nil, {x = 1, y = 1}, true)
 
 	local city_marker = Rectangle(0, 0, 10, 10)
 
-	for city_code, city_data in pairs(cities) do
+	for city_code, city_position in pairs(city_positions) do
 		surface:clear(city_color, city_marker:translate(
-			city_data.position.x * surface:get_width() - city_marker.width  / 2,
-			city_data.position.y * surface:get_height() - city_marker.height  / 2):to_table())
+			city_position.x * surface:get_width() - city_marker.width  / 2,
+			city_position.y * surface:get_height() - city_marker.height  / 2):to_table())
 	end
 end
 

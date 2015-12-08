@@ -4,8 +4,7 @@ local attractions = {}
 
 attractions.attraction = { paris = {
                                     {name = "The Eiffel Tower",
-                                    question = "How tall is the Eiffel Tower?",
-                                    answers = {"324 meters", "564 meters", "137 meters", "401 meters"},
+
                                     pic_url = "data/images/CityTourEiffelTower.png",
                                     text = {"The Eiffel Tower is named after the engineer Gustave Eiffel, whose ",
                                             "company designed and built the tower. It was finished in 1889 and",
@@ -20,8 +19,7 @@ attractions.attraction = { paris = {
                                             "over 300 steps."}
                                     },
                                     {name = "Arc de Triomphe",
-                                    question = "When was Arc de Triomphe finished?",
-                                    answers = {"2001", "1836", "1993", "700"},
+
                                     pic_url = "data/images/CityTourArcDeTriomphe.png",
                                     text = {"One of the most famous monuments in Paris is called Arc de",
                                             "Triomphe. It was designed by Jean Chalgrin and built between 1806",
@@ -35,8 +33,8 @@ attractions.attraction = { paris = {
                                             "Revolution and Empire are engraved."}
                                     },
                                     {name = "Les Invalides",
-                                    question = "Who of the following is buried here?",
-                                    answers = {"Gustave Eiffel", "Jean Chalgrin", "Philippe Pétain", "Napoleon Bonaparte"},
+
+
                                     pic_url = "data/images/CityTourLesInvalides.png",
                                     text = {"Les Invalides is officially known as L'Hôtel national des Invalides",
                                             "It is a complex of buildings containing museums and",
@@ -52,8 +50,7 @@ attractions.attraction = { paris = {
                                             "unwell soldiers."}
                                   },
                                   {name = "Louvre",
-                                  question = "Around how many objects are exhibited in the museum?",
-                                  answers = {"35,000", "100,000", "156", "2,000"},
+
                                   pic_url = "data/images/CityTourLouvre.png",
                                   text = {"The Louvre Palace or the Louvre Museum is one of the world's",
                                           "largest museums and a historic monument. Nearly 35,000 objects",
@@ -73,8 +70,7 @@ attractions.attraction = { paris = {
 
                           rio_de_janeiro = {
                                       {name = "Lagoa Neighborhood",
-                                      question = "What is the Lagoon in Rio called?",
-                                      answers = {"Lagoon of Rio", "Rodrigo de Fretias Lagoon", "The great lagoon of Brazil", "De Gávea Lagoon"},
+
                                       pic_url = "data/images/CityTourLagoa.png",
                                       text = {"Lagoa (English: Lagoon) is a beautiful residential neighborhood in",
                                       "Rio de Janeiro, Brazil. It’s located around the Rodrigo deFreitas",
@@ -91,8 +87,7 @@ attractions.attraction = { paris = {
                                       "lagoon."}
                                       },
                                       {name = "Tijuca National Park",
-                                      question = "When was Tijuca declared a National Park?",
-                                      answers = {"1991", "1971", "1969", "1983"},
+
                                       pic_url = "data/images/CityTourTijucaForest.png",
                                       text = {"The Tijuca Forest is a tropical rainforest in the city of Rio de Janeiro,",
                                       "Brazil. In 1961 Tijuca Forest was declared a National Park. The Forest",
@@ -105,8 +100,7 @@ attractions.attraction = { paris = {
                                       "most famous one being the Cascatinha Waterfall."}
                                       },
                                       {name = "Christ the Redeemer",
-                                      question = "Christ the Redeemer was created by whom?",
-                                      answers = {"Heitor da Silva Costa", "Paul Landowski", "Raymond Gayrard", "Pierre Hébert"},
+
                                       pic_url = "data/images/CityTourChristTheRedeemer.png",
                                       text = {"Christ the Redeemer is an Art Deco statue of Jesus Christ in Rio",
                                       "de Janeiro, Brazil, created by French sculptor Paul Landowski and",
@@ -141,8 +135,7 @@ attractions.attraction = { paris = {
 
                                 bombay = {
                                       {name = "Gateway of India",
-                                      question = "How high is the arch of the strucutre?",
-                                      answers = {"32 metres", "15 metres", "26 metres", "50 metres"},
+
                                       pic_url = "data/images/CityTourGatewayOfIndia.png",
                                       text = {"The Gateway of India is a monument built during the British Rule in",
                                               "Bombay to commemorate the visit of King George V and Queen",
@@ -158,30 +151,23 @@ attractions.attraction = { paris = {
                                               }
                                     },
                                       {name = "Haji Ali Mosque/mausoleum",
-                                      question = "According to legends, Haji Ali once jabbed a finger into the soil making what gush out?",
-                                      answers = {"Gold", "Water", "Wine", "Oil"},
+
                                       pic_url = "data/images/CityTourHajiAli.png",
-                                      text = {"The Haji Ali Dargah was constructed in 1431 in memory of a wealthy",
-                                              "Muslim merchant, Sayyed Peer Haji Ali Shah Bukhari, who gave up all",
-                                              "his worldly possessions before making a pilgrimage to Mecca. Hailing",
-                                              "from Bukhara, in present day Uzbekistan, Bukhari travelled around the",
-                                              "world in the early to mid 15th century, and eventually settled in",
-                                              "present day Bombay. According to legends surrounding his life, he",
-                                              "once saw a poor woman crying on the road, holding an empty vessel. He",
-                                              "asked her what the problem was, she sobbed that her husband would",
-                                              "thrash her as she stumbled and accidentally spilled the oil she was",
-                                              "carrying. He asked her to take him to the spot where she spilt the",
-                                              "oil. There, he jabbed a finger into the soil and the oil gushed out.",
-                                              "The overjoyed woman filled up the vessel and went home. Haji Ali died",
-                                              "during his journey to Mecca and miraculously the casket carrying his",
-                                              "body, floated back to these shores, getting stuck in the string of",
-                                              "rocky islets just off the shore of Worli. Thus, the Dargah was",
-                                              "constructed there, on a tiny islet located 500 meters from the coast,",
-                                              "in the middle of Worli Bay."}
+                                      text = {"The Haji Ali Dargah was constructed in 1431 in memory of Sayyed",
+                                              "Peer Haji Ali Shah Bukhari, who gave up all his worldly possessions",
+                                              "before making a pilgrimage to Mecca. According to legends surrounding",
+                                              "his life, he once saw a poor woman cryng on the road holding an empty",
+                                              "vessel. He asked her what the problem was, she said that she had",
+                                              "stumbled and accidently spilled the oil she was carrying. He asked her to",
+                                              "take him to the spot where she spilt the oil. There, he jabbed a finger into",
+                                              "the soil and the oil gushed out. The overjoyed woman filled up the vessel",
+                                              "and went home. Haji Ali died during his journey to Mecca and the casket",
+                                              "carrying his body, floated back to these shores, getting stuck in the string",
+                                              "of rocky islet just off the shore of Worli. Thus, the Dargah was constructed",
+                                              "there, on an islet 500 meters from the coast, in the middle of Wordli Bay."}
                                       },
                                       {name = "Chhatrapati Shivaju Terminus",
-                                      question = "How many years did it take to build the station?",
-                                      answers = {"12", "8", "14", "10"},
+
                                       pic_url = "data/images/CityTourVictoriaStation.png",
                                       text = {"Chhatrapati Shivaji Terminus (previously Victoria Terminus) is a",
                                               "UNESCO World Heritage historic railway station in  Maharashtra,",
@@ -197,8 +183,7 @@ attractions.attraction = { paris = {
                                               "Bunder Station and is one of the busiest railway stations in India."}
                                     },
                                       {name = "Taj Mahal Palace & Tower",
-                                      question = "When was the Taj Mahal Palace opened?",
-                                      answers = {"1903", "1191", "1913", "1921"},
+
                                       pic_url = "data/images/CityTourTajMahal.png",
                                       text = {"The Taj Mahal Palace Hotel is a five-star hotel located in the Colaba",
                                               "region of Bombay, Maharashtra,India, next to the Gateway of",
@@ -216,8 +201,7 @@ attractions.attraction = { paris = {
 
                                 london = {
                                           {name = "The Big Ben and Parliament",
-                                          question = "The Big Ben is ..",
-                                          answers = {"A radio tower", "An observatory", "A clock tower", "A sculpture"},
+
                                           pic_url = "data/images/CityTourBigBen.png",
                                           text = {"Big Ben is the nickname for the Great Bell of the clock at the north",
                                           "end of the Palace of Westminster in London, and often extended to",
@@ -232,8 +216,7 @@ attractions.attraction = { paris = {
                                           "establishing shot of films set in London."}
                                         },
                                         {name = "British Museum",
-                                        question = "In what area of London is the museum located?",
-                                        answers = {"Bloomsbury", "Botany Bay", "Bulls Cross", "Bickley"},
+
                                         pic_url = "data/images/CityTourBritishMuseum.png",
                                         text = {"The British Museum is a museum dedicated to human history, art,",
                                                 "and culture, located in the Bloomsbury area of London. Its",
@@ -247,8 +230,7 @@ attractions.attraction = { paris = {
                                                 "the site of the current museum building."}
                                         },
                                           {name = "Tower of London",
-                                          question = "The Tower of London has another name, what is it?",
-                                          answers = {"The Fortress of the Queen", "Her Majesty’s Royal Palace and Fortress", "Elizabeth’s Tower", "The Fortress of London"},
+
                                           pic_url = "data/images/CityTourTowerOfLondon.png",
                                           text = {"Her Majesty's Royal Palace and Fortress, known as the Tower of",
                                                   "London, is a historic castle located on the north bank of the River",
@@ -261,8 +243,7 @@ attractions.attraction = { paris = {
                                                   "office, and the home of the Crown Jewels of England."}
                                           },
                                             {name = "Buckingham Palace",
-                                            question = "What was Buckingham Palace called first?",
-                                            answers = {"Buckingham House ", "Buckingham Tower ", "The big Buckingham Residence ", "Buckingham House of the King"},
+
                                             pic_url = "data/images/CityTourBuckinghamPalace.png",
                                             text = {"Buckingham Palace is the London residence and principal workplace",
                                                     "of the reigning monarch of the United Kingdom. Located in the City",
@@ -281,8 +262,7 @@ attractions.attraction = { paris = {
 
                                 new_york = {
                                           {name = "The Statue of Liberty",
-                                          question = "After being delivered to USA by ship, the Statue of Liberty was finally unveiled in New York. What year was this?",
-                                          answers = {"1854", "1895", "1869", "1886"},
+
                                           pic_url = "data/images/CityTourStatueOfLiberty.png",
                                           text = {"The Statue of Liberty is a colossal neoclassical sculpture on Liberty",
                                                   "Island in New York Harbor in New York City, in the United States. The",
@@ -299,8 +279,7 @@ attractions.attraction = { paris = {
                                                   "including the foundation is a total of 93 meters."}
                                           },
                                           {name = "The Empire State Building",
-                                          question = "What’s the total height of The Empire State Building?",
-                                          answers = {"443 meters (1453 feet)", "325 meters (1066 feet)", "286 meters (938 feet)", "417 meters (1368 feet)"},
+
                                           pic_url = "data/images/CityTourEmpireStateBuilding.png",
                                           text = {"The Empire State Building is a 102-story skyscraper located in",
                                                   "Midtown Manhattan, New York City, on Fifth Avenue between West",
@@ -317,8 +296,7 @@ attractions.attraction = { paris = {
                                                   "the United States."}
                                           },
                                           {name = "Times Square",
-                                          question = "What is Times Square sometimes referred to other than its original name?",
-                                          answers = {"The Center of the Universe", "The Great Square of New York", "The Empire Square", "Square of Light"},
+
                                           pic_url = "data/images/CityTourTimesSquare.png",
                                           text = {"Times Square is a major commercial intersection and neighborhood",
                                                   "in Midtown Manhattan, New York City, at the junction of Broadway",
@@ -334,8 +312,7 @@ attractions.attraction = { paris = {
                                                   "one of the most visited tourist attractions in the world."}
                                           },
                                           {name = "Central park",
-                                          question = "Central Park became a National Historic Landmark what year?",
-                                          answers = {"1962", "1945", "1974", "1938"},
+
                                           pic_url = "data/images/CityTourCentralPark.png",
                                           text = {"Central Park is an urban park in middle-upper Manhattan, New York",
                                                   "City. Central Park is the most visited urban park in the United States",
@@ -355,8 +332,7 @@ attractions.attraction = { paris = {
 
                                   tokyo = {
                                           {name = "Tokyo Skytree",
-                                          question = "The Tokyo Skytree is the tallest building in Japan, how tall is it?",
-                                          answers = {"634 meters (2080 feet)", "645 meters (2116 feet)", "673 meters (2208 feet)", "643 meters (2109 feet)"},
+
                                           pic_url = "data/images/CityTourTokyoSkytree.png",
                                           text = {"The Tokyo Skytree is a broadcasting, restaurant, and observation",
                                                   "tower in Tokyo. It became the tallest structure in Japan in 2010 and",
@@ -367,8 +343,7 @@ attractions.attraction = { paris = {
                                                   "with the tower opening to the public on 22 May 2012."}
                                         },
                                           {name = "Sensōji Temple",
-                                          question = "What type of temple is Sensō-ji?",
-                                          answers = {"A Hindu Temple", "A Muslim Temple", "A Buddhist Temple", "A Christian Temple"},
+
                                           pic_url = "data/images/CityTourSensojiTemple.png",
                                           text = {"Sensō-ji is an ancient Buddhist temple located in Asakusa, Tokyo,",
                                                   "Japan. It is Tokyo's oldest temple, and one of its most significant",
@@ -382,8 +357,7 @@ attractions.attraction = { paris = {
                                                   "later and is a symbol of rebirth and peace to the Japanese people."}
                                           },
                                           {name = "Tokyo Disneyland",
-                                          question = "How many themes does Tokyo Disneyland have?",
-                                          answers = {"10", "9", "7", "8"},
+
                                           pic_url = "data/images/CityTourTokyoDisneyland.png",
                                           text = {"Tokyo Disneyland is a 115-acre (47 ha) theme park at near Tokyo.",
                                                   "The park has seven themed areas. They are the World Bazaar, the",
@@ -394,8 +368,7 @@ attractions.attraction = { paris = {
                                                   "theme park behind the Magic Kingdom at Walt Disney World Resort."}
                                           },
                                           {name = "Tokyo Tower",
-                                          question = "Tokyo Tower is the second tallest building in Japan, how tall is it?",
-                                          answers = {"333 meters (1092 feet)", "334 meters (1095 feet)", "353 meters (1158 feet)", "323 meters (1059 feet)"},
+
                                           pic_url = "data/images/CityTourTokyoTower.png",
                                           text = {"Tokyo Tower is a communications and observation tower located in",
                                                   "Tokyo, Japan. At 333 meters (1092 feet), it is the second tallest",
@@ -412,8 +385,7 @@ attractions.attraction = { paris = {
 
                                   sydney = {
                                           {name = "Sydney Opera House",
-                                          question = "When was the building formally opened by Queen Elizaberg II?",
-                                          answers = {"1973", "1975", "1983", "1979"},
+
                                           pic_url = "data/images/CityTourSydneyOperaHouse.png",
                                           text = {"The Sydney Opera House is a multi-venue performing arts center in",
                                                   "Sydney, Australia. It is situated on Bennelong Point in Sydney",
@@ -428,8 +400,7 @@ attractions.attraction = { paris = {
                                                   "people."}
                                         },
                                           {name = "Sydney Tower",
-                                          question = "The Sydney Tower is the talles structure in Sydney, how tall is it?",
-                                          answers = {"299 meters (980 feet)", "339 meters (1112 feet)", "309 meters (1014 feet)", "319 meters (1046 feet)"},
+
                                           pic_url = "data/images/CityTourSydneyTower.png",
                                           text = {"Sydney Tower is Sydney's tallest structure and the second tallest",
                                                   "observation tower in the Southern Hemisphere. The tower stands 309",
@@ -444,8 +415,7 @@ attractions.attraction = { paris = {
                                                   "Public access to the tower began in August 1981."}
                                           },
                                           {name = "The Queen Victoria Building",
-                                          question = "When was the building finished?",
-                                          answers = {"1898", "1893", "1891", "1885"},
+
                                           pic_url = "data/images/CityTourQueenVictoriaBuilding.png",
                                           text = {"The Queen Victoria Building (or QVB), is a late nineteenth-century",
                                                   "building architect George McRae in the central business district",
@@ -456,16 +426,31 @@ attractions.attraction = { paris = {
                                                   "used for a variety of other purposes, underwent re-modelling and",
                                                   "suffered decay until its restoration and return to its original",
                                                   "use in the late twentieth century."}
-                                        }
+                                          },
+                                          {name = "The Harbour Bridge",
 
-
-                                      },
+                                          pic_url = "data/images/CityTourQueenHarbourBridge.png",
+                                          text = {"The Sydney Harbour Bridge is a bridge across Sydney Harbor that",
+                                                  "carries rail, vehicular, bicycle, and pedestrian traffic. The",
+                                                  "dramatic view of the bridge,the harbor, and the nearby Sydney Opera",
+                                                  "House is an iconic image of Sydney, and Australia. The bridge is",
+                                                  "nicknamed \"The Coathanger\" because of its arch-based design or is",
+                                                  "simply called \"The Bridge\" by Sydney residents. Under the direction",
+                                                  "of Dr J.J.C. Bradfield of the NSW Department of Public Works, the",
+                                                  "bridge was designed and built by British firm Dorman Long and Co Ltd",
+                                                  "of Middlesbrough and opened in 1932. The bridge's design was",
+                                                  "influenced by the Hell Gate Bridge in New York City. One of the",
+                                                  "ongoing tourist attractions of the bridge has been the south-east",
+                                                  "pylon, which is accessed via the pedestrian walkway across the",
+                                                  "bridge, and then a climb to the top of the pylon of about 200",
+                                                  "steps."}
+                                                }
+                                        },
 
 
                                   cairo = {
                                          {name = "Pyramid of Giza",
-                                         question = "What is the Great Pyramid of Giza called?",
-                                         answers = {"Pyramid of Pharao", "Pyramid of Cheops", "Pyramid of Cairo", "Pyramid of Egypt"},
+
                                          pic_url = "data/images/CityTourPyramidOfGiza.png",
                                          text = {"The Great Pyramid of Giza (also known as the Pyramid ",
                                                   "of Khufu or the Pyramid of Cheops) is the oldest and largest of",
@@ -479,8 +464,7 @@ attractions.attraction = { paris = {
                                                 }
                                           },
                                           {name = "Egyptian museum",
-                                          question = "How many objects were lost during the Egyptian revolution?",
-                                          answers = {"50", "100", "25", "60"},
+
                                           pic_url = "data/images/CityTourEgyptianMuseum.png",
                                           text = {"The Museum of Egyptian Antiquities, known commonly as the",
                                                    "Egyptian Museum or Museum of Cairo, in Cairo, Egypt, is home to",
@@ -508,8 +492,7 @@ attractions.attraction = { paris = {
                                                 }
                                           },
                                           {name = "The Citadel",
-                                          question = "What was the purpose of fortifying The Citadel?",
-                                          answers = {"Protect it from the Crusaders", "Protect it from Thieves", "Make it look better", "Make it a prison"},
+                                        
                                           pic_url = "data/images/CityTourTheCitadel.png",
                                           text = {"The Citadel was fortified by the Ayyubid ruler Salah al-Di (Saladin)",
                                                   "between 1176 and 1183 CE, to protect it from the Crusaders.",

@@ -345,12 +345,10 @@ function ConnectFour:computer_AI(x_column)
 	--check if there's three in a row
 	for i = 1, 7 do
 		local row = self:get_current_row(i)
-		print("before check three " .. i .. row)
 
 		if row > 0 then
 		local make_move = self:_check_three_in_a_column(row, i)
 			if make_move == true then
-				print("column from check_three")
 				return i
 			end
 		end
@@ -363,17 +361,17 @@ function ConnectFour:computer_AI(x_column)
 
 	local counter = 0
 repeat
-	if random_probability < 8 then
+	if random_probability < 2 then
 		counter = counter + 1
 			local random_close = math.random(-1, 1)
 			random_column = x_column + random_close
 
 
 			if counter == 5 then
-				random_probability = 8
+				random_probability = 2
 			end
 
-	elseif random_probability >= 8 then
+	elseif random_probability >= 2 then
 		random_column = math.random(1,7)
 
 	end

@@ -1,32 +1,26 @@
---- Base class for CreateProfileView
--- A CityView is the input field in a numerical quiz. It responds
--- to numerical input on the remote.
--- @classmod CreateProfileView
-
 local class = require("lib.classy")
 local view = require("lib.view")
 local View = require("lib.view.View")
 local event = require("lib.event")
 local utils = require("lib.utils")
 local SubSurface = require("lib.view.SubSurface")
-local button= require("lib.components.Button")
-local button_grid	=	require("lib.components.ButtonGrid")
+local Button = require("components.Button")
 local InputField	=	require("components.InputField")
 local BinaryButton	=	require("components.BinaryButton")
 local Font = require("lib.draw.Font")
 local Color = require("lib.draw.Color")
 local logger = require("lib.logger")
 local Profile = require("lib.profile.Profile")
+local ProfileManager = require("lib.profile.ProfileManager")
 local KeyboardComponent	=	require("components.KeyboardComponent")
 local CreateProfileView2 = require("views.CreateProfileView2")
 local CreateProfileView = class("CreateProfileView", View)
 
---- Constructor for CityView
--- @param event_listener Remote control to listen to
-function CreateProfileView:__init(remote_control, return_view)
+--- Constructor
+-- @param remote_control
+function CreateProfileView:__init(remote_control)
 	View.__init(self)
 	self.remote_control = remote_control
-	self.return_view = return_view
 
 	self.button_text = Font("data/fonts/DroidSans.ttf", 40, Color(255, 255, 255, 255))
 	self.input_field = InputField("Mail:", {x = 700, y = 80}, true)
@@ -40,8 +34,8 @@ function CreateProfileView:__init(remote_control, return_view)
 	local color_selected = Color(255, 153, 0, 255)
 	local color_disabled = Color(111, 222, 111, 255)
 
-	self.button_cancel = button(button_color, color_selected, color_disabled, true, false, "views.ProfileSelection")
-	self.button_login = button(button_color, color_selected, color_disabled, true, false, "views.ProfileSelection")
+	self.button_cancel = Button(button_color, color_selected, color_disabled, true, false, "views.ProfileSelection")
+	self.button_login = Button(button_color, color_selected, color_disabled, true, false, "views.ProfileSelection")
 	self.button_cancel_surface = SubSurface(screen, {width=220, height=75, x=700, y=530})
 	self.button_login_surface = SubSurface(screen, {width=220, height=75, x=980, y=530})
 
@@ -76,19 +70,36 @@ function CreateProfileView:__init(remote_control, return_view)
 		event.remote_control,
 		"button_release",
 		self.callback
-		--utils.partial(self.load_view, self)
 	)
 end
 
-function CreateProfileView:render(surface)
-	-- -- Resets the surface and draws the background
+--- Safeguards for incorrect inputs go here.
+-- @param
+function CreateProfileView:control_input()
+	local ok_input = true
+	local profile_man = ProfileManager()
+	if self.input_field.text == "" then --Control for non-empty string, should check for special characters such as @.
+		ok_input = false
+	elseif self.input_field2.text == "" or self.input_field3.text == "" then
+		ok_input = false
+	elseif self.input_field2.text ~= self.input_field3.text then
+		ok_input = false
+	elseif profile_man:load(self.input_field.text) ~= false then
+		ok_input = false
+	elseif profile_man:check_email(self.input_field.text)==false then
+		ok_input = false
+	end
+	return ok_input
+end
 
+--- Draws the view on given surface.
+-- @param surface
+function CreateProfileView:render(surface)
 	surface:clear(self.background_color)
 
 	if self.hasActiveKeyboard==true then
 		self.keyboard:render(screen)
 	end
-
 
 	self.input_field:render(surface)
 	self.input_field2:render(surface)
@@ -99,13 +110,12 @@ function CreateProfileView:render(surface)
 	self.button_text:draw(surface, {x=980+70, y=530+15}, "Next")
 end
 
+--- Runs when a remote control button is pressed..
+-- @param button
 function CreateProfileView:load_view(button)
-
-	-- TODO set mappings to RC
 	if self.hasActiveKeyboard == true then
 		if self.render_ticket == true then
 			self.render_ticket = false
-			--self.keyboard:render(screen)
 		end
 			self.keyboard:button_press(button)
 	else
@@ -138,11 +148,16 @@ function CreateProfileView:load_view(button)
 				self:render(screen)
 				gfx.update()
 			elseif self.content_pointer == 4 then
-				--view.view_manager:set_view(self.return_view)
+				local ProfileSelection=require("views.ProfileSelection")
+				local profile_selection = ProfileSelection(event.remote_control)
+				view.view_manager:set_view(profile_selection)
 			elseif self.content_pointer == 5 then
-				--if self.input_field2.text == self.input_field3.text then
-				self.create_profile_2 = CreateProfileView2(self.remote_control, self.return_view, self.input_field.text, self.input_field2.text)
-				view.view_manager:set_view(self.create_profile_2)
+				if self:control_input() then
+					self.create_profile_2 = CreateProfileView2(self.remote_control, self.input_field.text, self.input_field2.text)
+					view.view_manager:set_view(self.create_profile_2)
+				else
+					--Error message pop-up
+				end
 			end
 		end
 	end

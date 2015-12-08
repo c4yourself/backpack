@@ -4,7 +4,6 @@ local class = require("lib.classy")
 local View = require("lib.view.View")
 local view = require("lib.view")
 local event = require("lib.event")
-local Store = class("Store", view.View)
 local BackEndStore = require("lib.store.BackEndStore")
 local Profile = require("lib.profile.Profile")
 local event = require("lib.event")
@@ -13,9 +12,11 @@ local utils = require("lib.utils")
 local SubSurface = require("lib.view.SubSurface")
 local Color = require("lib.draw.Color")
 local Font = require("lib.draw.Font")
-local Button = require("lib.components.Button")
-local ButtonGrid=require("lib.components.ButtonGrid")
+local Button = require("components.Button")
+local ButtonGrid=require("components.ButtonGrid")
 local ProfileManager = require("lib.profile.ProfileManager")
+
+local Store = class("Store", view.View)
 
 -- Get size of Table
 -- @param a Is the table to get ther size of
@@ -41,14 +42,16 @@ function Store:__init(remote_control, surface, profile)
 	self.profile = profile
 	self.remote_control = remote_control
 	self.item_positions = {}
+	self.image_positions = {}
 	self.item_images = {}
 	self.message = {["message"] = "Select item to purchase or sell"}
 
 
 	-- Some colors
-	self.background_color = Color(255, 255, 204, 255)
-	self.button_active = Color(255, 51, 51, 255)
-	self.button_inactive = Color(255, 153, 153, 255)
+	--self.background_color = Color(255, 255, 204, 255)
+	self.background_color = Color(30, 35, 35, 255)
+	self.button_active = Color(255, 153, 0, 255)
+	self.button_inactive = Color(255, 99, 0, 255)
 
 	-- Creates local variables for height and width
 	local height = self.surface:get_height()
@@ -61,7 +64,7 @@ function Store:__init(remote_control, surface, profile)
 	self.backpack_items = self.backendstore:returnBackPackItems(self.profile:get_inventory())
 
 	-- Create the number of buttons that correspond to items in backpack + items for sale
-	self.button_size = {width = 2.5*width/45, height = 2.5*width/45}
+	self.button_size = {width = 2.9*width/45, height = 0.5*width/45}
 
 	self.buttons = {}
 	self.buttons[1] = Button(self.background_color, self.button_active, self.background_color, true, true,1)
@@ -72,10 +75,10 @@ function Store:__init(remote_control, surface, profile)
 	end
 
 	-- Add the exit button
-	self.font = Font("data/fonts/DroidSans.ttf", 20, Color(0, 0, 0, 255))
-	self.header_font = Font("data/fonts/DroidSans.ttf", 40, Color(0,0,0,255))
+	self.font = Font("data/fonts/DroidSans.ttf", 20, Color(255, 255, 255, 255))
+	self.header_font = Font("data/fonts/DroidSans.ttf", 40, Color(255,255,255,255))
 	self.buttons[k] = Button(self.button_inactive, self.button_active, self.button_inactive, true, false, k)
-	self.buttons[k]:set_textdata("Exit",Color(255,0,0,255), {x = 100, y = 300}, 20, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	self.buttons[k]:set_textdata("Back to City",Color(255,255,255,255), {x = 100, y = 300}, 30, utils.absolute_path("data/fonts/DroidSans.ttf"))
 
 	-- Add them to button grid at the correct place
 	row = 1
@@ -83,7 +86,9 @@ function Store:__init(remote_control, surface, profile)
 	own_items = 0
 	while j <= get_size(self.items) + get_size(self.backpack_items) do
 		self.item_positions[j] = {x = width/2-100+((j-1)-2*(row-1))*130+own_items*185,
-																y = 30 + 105*(row-1-0.8*own_items) + own_items*205}
+																y = 85 + 105*(row-1-0.8*own_items) + own_items*205}
+		self.image_positions[j] = {x = width/2-100+((j-1)-2*(row-1))*130+own_items*185,
+														y = 25 + 105*(row-1-0.8*own_items) + own_items*205}
 		self.button_grid:add_button(self.item_positions[j], self.button_size, self.buttons[j])
 		j = j+1
 		if (j-1) % 2 == 0 then
@@ -98,31 +103,21 @@ function Store:__init(remote_control, surface, profile)
 	self.item_images = self:loadItemImages()
 
 	-- Add exit button
-	self.button_grid:add_button({x = width/6,y = height-60}, {width = 6*width/45,height = 2*width/45}, self.buttons[k])
+	self.button_grid:add_button({x = width/6-100,y = height-80}, {width = 10*width/45,height = 2.5*width/45}, self.buttons[k])
 
 	-- Add to view
-	self.add_view(self.button_grid, false)
-
-	-- Some fix for movement
-	--self:listen_to(event.remote_control, "button_release", function() self:dirty() end)
-	local button_render = function()
-		self:render(self.surface)
-		gfx.update()
-	end
-
-	self:listen_to(self.button_grid,"dirty",button_render)
+	self:add_view(self.button_grid, true)
 
 	local button_callback = function(button)
-
 		-- Get the current index of button that is selected
 		selected_index = button.transfer_path
 		local continue = true
+
 
 		-- If we have selected on of the purchasable items
 		if selected_index <= get_size(self.items) then
 
 			self.message["message"] = self:purchase_item(selected_index)
-
 		-- Elseif we have sold one of our items
 		elseif selected_index <= (get_size(self.items) + get_size(self.backpack_items)) then
 
@@ -142,14 +137,13 @@ function Store:__init(remote_control, surface, profile)
 			end
 
 			self.item_images = self:loadItemImages()
-			self:render(self.surface)
-			gfx.update()
+
+			self:dirty()
 		end
 	end
 
 	-- Instance remote control and mapps it to pressing enter
 	self:listen_to(self.button_grid,"button_click",	button_callback)
-
 
 end
 
@@ -194,7 +188,9 @@ function Store:insert_button()
 	end
 	own_items = 1
 	table.insert(self.item_positions, add_index, {x = width/2-100+((add_index-1)-2*(row-1))*130+own_items*185,
-															y = 30 + 105*(row-1-0.8*own_items) + own_items*205})
+															y = 85 + 105*(row-1-0.8*own_items) + own_items*205})
+	table.insert(self.image_positions, add_index,{x = width/2-100+((j-1)-2*(row-1))*130+own_items*185,
+															y = 25 + 105*(row-1-0.8*own_items) + own_items*205})
 	-- Add to button grid
 	self.button_grid:insert_button(self.item_positions[add_index], self.button_size, self.buttons[add_index],add_index)
 
@@ -225,7 +221,6 @@ end
 -- @param surface is the surface to draw on
 function Store:render(surface)
 
-
 	-- Creates local variables for height and width
 	local height = self.surface:get_height()
 	local width = self.surface:get_width()
@@ -241,12 +236,12 @@ function Store:render(surface)
 
 	-- Print the items
 	for i = 1, #self.item_images do
-		surface:copyfrom(self.item_images[i], nil, self.item_positions[i], true)
+		surface:copyfrom(self.item_images[i], nil, self.image_positions[i], true)
 	end
 
 	-- Draw balacne
 	local coins = self.profile:get_balance()
-	local local_coins = self.profile:get_city().country:universal_to_local_currency(coins)
+	local local_coins = self.profile:get_city().country:format_balance(coins)
 	self.font:draw(surface, {x = 2.9*width/4, y = height/8},"Coins: "..local_coins)
 
 	--Draw item info is one is selected, exit info otherwise
@@ -270,16 +265,16 @@ function Store:render(surface)
 		self.font:draw(surface, {x = 2.9*width/4, y = height/8+45}, "Item: " .. item:get_name())
 		self.font:draw(surface, {x = 2.9*width/4, y = height/8+70}, "Description: "..item:get_description())
 		if selected_item_index <= get_size(self.items) then
-			self.font:draw(surface, {x = 2.9*width/4, y = height/8+95}, "Purchase price: " .. self.profile:get_city().country:universal_to_local_currency(item:get_price()))
+			self.font:draw(surface, {x = 2.9*width/4, y = height/8+95}, "Purchase price: " .. self.profile:get_city().country:format_balance(item:get_price()))
 		else
 			self.font:draw(surface, {x = 2.9*width/4, y = height/8+95},
-			"Sale price: "..self.profile:get_city().country:universal_to_local_currency(self.backendstore:returnOfferPrice(item, self.current_city)))
+			"Sale price: "..self.profile:get_city().country:format_balance(self.backendstore:returnOfferPrice(item, self.current_city)))
 		end
 	end
 	self.font:draw(surface, {x = 2.9*width/4, y = height/8+130}, self.message["message"])
 	--Draw header
-	self.header_font:draw(surface, {x=10,y=10}, "Store")
 
+	self:dirty(false)
 end
 
 

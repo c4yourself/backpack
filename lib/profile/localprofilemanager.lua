@@ -3,6 +3,7 @@
 
 local class = require("lib.classy")
 --local lfs = require("lfs")
+local json = require("lib.dkjson")
 local utils = require("lib.utils")
 local Profile = require("lib.profile.Profile")
 local localprofilemanager = class("localprofilemanager")
@@ -19,7 +20,7 @@ function localprofilemanager:save(profile)
 	--generate a file and write date into it
 	file:write("{\n")
 	file:write("\t\t\"badges\": " .. profile:get_badges_string() .. ",\n")
-	file:write("\t\t\"balance\": " .. profile:get_experience() .. ",\n")
+	file:write("\t\t\"balance\": " .. profile:get_balance() .. ",\n")
 	file:write("\t\t\"date_of_birth\": \"" .. profile:get_date_of_birth() .. "\",\n")
 	file:write("\t\t\"email_address\": \"" .. profile:get_email_address() .. "\",\n")
 	file:write("\t\t\"experience\": " .. profile:get_experience() .. ",\n")
@@ -36,11 +37,12 @@ function localprofilemanager:save(profile)
 	local profile_list = {}
 	local path = utils.absolute_path("data/profile/profile.config")
 	local profile_name = profile:get_email_address()
+
 	if self:check_config(profile_name) ~= true then
 		for line in io.lines(path) do
 			table.insert(profile_list,line)
 		end
-		table.insert(profile_list,profile:get_email_address())
+		table.insert(profile_list,1,profile:get_email_address())
 
 		local file = io.open(path,"w+");
 		for i = 1, #profile_list, 1 do
@@ -64,82 +66,18 @@ function localprofilemanager:load(profile_email)
 
 	--check the file exist or not
 	if self:check_config(profile_email) == true then
+		local file = io.open(path,"rb")
+		local file_content = file:read("*all")
+		file:close()
+		local profile_table = json.decode(file_content, 1, nil)
 
-		--open the file by io
-		for line in io.lines(path) do
-
-			--match name
-			if string.match(line,"\"name\"") ~= nil then
-				local tmp = {}
-				tmp = utils.split(line," ")
-				_,_,_,name = string.find(tmp[2],"([\"'])(.-)%1")
-			end
-
-			--match email_address
-			if string.match(line,"\"email_address\"") ~= nil then
-				local tmp = {}
-				tmp = utils.split(line," ")
-				_,_,_,email_address = string.find(tmp[2],"([\"'])(.-)%1")
-			end
-
-			--match date_of_birth
-			if string.match(line,"\"date_of_birth\"") ~= nil then
-				local tmp = {}
-				tmp = utils.split(line," ")
-				_,_,_,date_of_birth = string.find(tmp[2],"([\"'])(.-)%1")
-			end
-
-			--match sex
-			if string.match(line,"\"sex\"") ~= nil then
-				local tmp = {}
-				tmp = utils.split(line," ")
-				_,_,_,sex = string.find(tmp[2],"([\"'])(.-)%1")
-			end
-
-			--match city
-			if string.match(line,"\"city\"") ~= nil then
-				local tmp = {}
-				tmp = utils.split(line," ")
-				_,_,_,tmp_city = string.find(tmp[2],"([\"'])(.-)%1")
-			end
-
-			--match token
-			if string.match(line,"\"login_token\"") ~= nil then
-				local tmp = {}
-				tmp = utils.split(line," ")
-				_,_,_,token = string.find(tmp[2],"([\"'])(.-)%1")
-			end
-
-			--match inventory
-			if string.match(line,"\"inventory\"") ~= nil then
-				local tmp = {}
-				tmp = utils.split(line," ")
-				_,_,_,inventory = string.find(tmp[2],"([\"'])(.-)%1")
-			end
-
-			--match balance
-			if string.match(line,"\"balance\"") ~= nil then
-				balance = tonumber(string.sub(line,string.find(line," ")+1,string.find(line,",")-1))
-			end
-
-			--match experience
-			if string.match(line,"\"experience\"") ~= nil then
-				experience = tonumber(string.sub(line,string.find(line," ")+1,string.find(line,",")-1))
-			end
-
-			--match id
-			if string.match(line,"\"id\"") ~= nil then
-				id = tonumber(string.sub(line,string.find(line," ")+1,string.find(line,",")-1))
-			end
-		end
-
-		--generate a profile instance
-		profile_tmp = Profile(name,email_address,date_of_birth,sex,city.cities[tmp_city])
-		profile_tmp:set_balance(balance)
-		profile_tmp:set_experience(experience)
-		profile_tmp:set_inventory(inventory)
-		profile_tmp:set_login_token(token)
-		profile_tmp:set_id(id)
+		profile_tmp = Profile(profile_table.name, profile_table.email_address, profile_table.date_of_birth,
+													profile_table.sex, city.cities[profile_table.city])
+		profile_tmp:set_balance(tonumber(profile_table.balance))
+		profile_tmp:set_experience(tonumber(profile_table.experience))
+		profile_tmp:set_inventory(profile_table.inventory)
+		profile_tmp:set_login_token(profile_table.login_token)
+		profile_tmp:set_id(profile_table.id)
 		io.close()
 
 		return profile_tmp
@@ -229,7 +167,9 @@ function localprofilemanager:check_config(profile_email)
 	local result = false
 	for line in io.lines(path) do
 		if string.find(line,profile_email) ~= nil then
-			result = true
+			if #line == #profile_email then
+				result = true
+			end
 		end
 	end
 	io.close()
