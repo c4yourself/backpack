@@ -28,7 +28,7 @@ function ConnectFourComponent:__init(remote_control, subsurface, profile)
 
 	self.images = {
 		background = gfx.loadpng("data/images/connect_four/connect4-background.png"),
-		board = gfx.loadpng("data/images/connect_four/connect4board.png"),
+		board = gfx.loadpng("data/images/connect_four/connect4board1.png"),
 		player_coin_cover_red = gfx.loadpng("data/images/connect_four/player_coin_cover_red.png"),
 		player_coin_cover_yellow = gfx.loadpng("data/images/connect_four/player_coin_cover_yellow.png"),
 		top_row_cover = gfx.loadpng("data/images/connect4toprow.png"),
