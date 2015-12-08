@@ -263,13 +263,19 @@ function CityView:render(surface)
 	-- Insert current sub view on top in a popup window if there is any
 	if self.sub_view then
 		local sub_surface = SubSurface(surface, {
-			x = surface:get_width() * 0.04,
-			y = surface:get_height() * 0.04 + 50,
-			width = surface:get_width() * 0.92,
-			height = (surface:get_height() - 50) * 0.92,
+			x = surface:get_width() * 0.04 - 5,
+			y = surface:get_height() * 0.04 + 50 - 5,
+			width = surface:get_width() * 0.92 + 10,
+			height = (surface:get_height() - 50) * 0.92 + 10,
 		})
+		sub_surface:clear({r=65, g=70, b=72, a=255})
 
-		self.sub_view:render(sub_surface)
+		self.sub_view:render(SubSurface(sub_surface, {
+			x = 5,
+			y = 5,
+			width = sub_surface:get_width() - 10,
+			height = sub_surface:get_height() - 10,
+		}))
 	end
 
 
