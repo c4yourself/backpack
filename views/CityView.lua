@@ -245,7 +245,7 @@ function CityView:render(surface)
 	city_view_small_font:draw(surface, {x=width-100, y=15}, city.country:format_balance(self.profile.balance)) -- Profile cash
 	city_view_large_font:draw(surface, {x=width/2, y=15}, self.profile:get_city().name .. " ", center) -- City name
 
-	surface:copyfrom(self.images.coin, nil, {x = width-145, y = 10, width = 25, height = 25}, true) -- Coin
+	surface:copyfrom(self.images.coin, nil, {x = width-145, y = 15, width = 25, height = 25}, true) -- Coin
 
  	-- using the button grid to render all buttons and texts
 	self.button_grid:render(surface)

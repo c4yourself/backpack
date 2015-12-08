@@ -52,8 +52,8 @@ function CityTourView:__init(remote_control, surface, profile)
 
 	-- Iterate through attractions and create an image for each
 	for k,v in pairs(attractions.attraction[self.city.code]) do
-		tmp_image = gfx.loadpng(attractions.attraction[self.city.code][k].pic_url)
-		table.insert(self.tour_attraction_images, tmp_image)
+		tmp_path = attractions.attraction[self.city.code][k].pic_url
+		table.insert(self.tour_attraction_images, gfx.loadpng(tmp_path))
 	end
 
 	-- Create answer buttons
