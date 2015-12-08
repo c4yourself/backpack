@@ -13,7 +13,7 @@ local logger = require("lib.logger")
 
 local surface = class("surface")
 
-surface.log = false
+surface.log = true
 
 --- Fills the surface with the given color.
 --
@@ -280,7 +280,9 @@ function surface:__init(width, height)
 		-- Used when working with images
 		self.image_data = nil
 	else
-		logger.trace(string.format("New surface %dx%d", width, height))
+		if surface.log then
+			logger.trace(string.format("New surface %dx%d", width, height))
+		end
 		self.image_data = love.image.newImageData(width, height)
 	end
 end
