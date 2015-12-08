@@ -55,7 +55,8 @@ function TravelView:__init(remote_control, surface, profile)
 		end
 		local list_item = ListItem(
 			destination.name,
-			gfx.loadpng(travel_type[self.routes[i][2]]),
+			nil,
+		--	gfx.loadpng(travel_type[self.routes[i][2]]),
 			self.profile:get_city().country:format_balance(self.routes[i][3]),
 			self.font,
 			list_item_position_left,
