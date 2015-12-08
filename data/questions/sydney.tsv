@@ -1,19 +1,19 @@
 single_choice	What is the capital city of Australia?	Sydney;Canberra;Melbourne;Brisbane	2
 single_choice	Which Australian animal carries its babies in a pouch?	Lion;Tiger;Kangaroo;Zebra	3
 single_choice	What is the name of the indigenous population of Australia?	Aboriginals;Maya people;Indians;Cowboys	1
-single_choice	The character Taz from the cartoon serie Looney tunes is a…?	Tarsier;Tapir;Tasmanian devil;Tiger	3
-single_choice	Together with Sir Alexander Fleming, the Australian pharmacologist and pathologist Howard Florey received the Nobel Prize for discovering…?	Penicillin;Life on Mars;Camera lenses;Gene Manipulation	1
+single_choice	The character Taz from the cartoon serie Looney tunes is a...?	Tarsier;Tapir;Tasmanian devil;Tiger	3
+single_choice	Together with Sir Alexander Fleming, the Australian pharmacologist and pathologist Howard Florey received the Nobel Prize for discovering...?	Penicillin;Life on Mars;Camera lenses;Gene Manipulation	1
 single_choice	91 percent of Australia is covered by…?	Dessert;Vegetation;Water;People	1
 single_choice	Which Australian animal loves to eat eucalyptus leaves?	Dingo;Kangaroo;Wombats;Koala	4
 single_choice	The world's largest reef system is found off the north-eastern coast of Australia, what is the name of this reef?	Apo Reef;Great Barrier Reef;Red Sea Coral Reef;Andros Barrier Reef	2
-single_choice	The Sydney Opera House was designed by Jørn Utzon, where was he from?	Australia;Usa;Germany;Denmark	4
+single_choice	The Sydney Opera House was designed by Joern Utzon, where was he from?	Australia;Usa;Germany;Denmark	4
 single_choice	What architect designed the Sydney Tower?	Glenn Murcutt;Shane Thompson;Taylor Cullity;Donald Crone	4
-numeric	How long is Nile river which is the longest in the world?(km)	6670	
-numeric	How high is Qomolangma which is the highest in the world?(m)	8844	
-numeric	How many countries and regions are there in the world?	230	
-numeric	How many countries and regions are there in Europe?	45	
-numeric	How many countries and regions are there in Asia?	49	
-numeric	How many countries and regions are there in North America?	28	
-numeric	How many countries and regions are there in South America?	13	
-numeric	How many countries and regions are there in Africa?	56	
-numeric	How many countries and regions are there in Oceania?	30	
+numeric	How long is Nile river which is the longest in the world?(km)	6670
+numeric	How high is Qomolangma which is the highest in the world?(m)	8844
+numeric	How many countries and regions are there in the world?	230
+numeric	How many countries and regions are there in Europe?	45
+numeric	How many countries and regions are there in Asia?	49
+numeric	How many countries and regions are there in North America?	28
+numeric	How many countries and regions are there in South America?	13
+numeric	How many countries and regions are there in Africa?	56
+numeric	How many countries and regions are there in Oceania?	30

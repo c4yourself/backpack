@@ -1,11 +1,11 @@
 single_choice	In what country is Tokyo the capital city?	South Korea;Israel;India;Japan	4
 single_choice	Which of the following sports is the national sport in Japan?	Soccer;Sumo Wrestling;Swimming;Golf	2
-single_choice	Which of these dishes consisting of cooked rice combined with seafood, vegetables and sometimes fruit, is today considered a Japanese dish?	Fish and chips;Spaghetti Bolognese;Sushi;Pizza	3
-single_choice	The Sony Playstation introduced in 1994 and the Nintendo Wii released in 2006 both contributed to a successful Japanese industry, which industry?	Food;Video gaming;Sport;Car	2
-single_choice	Around 35 million people lives in Tokyo which makes the city...	The smallest city in the world;The dirtiest city in the world;The most expensive city in the world;The most populated city in the world	4
-single_choice	Manga and Anime are world famous Japanese comics and films/tv-shows. Which of these tv-shows refers to the Japanese animation style?	Pokémon, Digimon and Sailor Moon;Looney tunes, SpongeBob SquarePants and Spider man;Batman, Superman and Avengers;Starwars Rebels, Dino adventurees and Bob the builder	1
+single_choice	Which of these dishes is today considered a Japanese dish?	Fish and chips;Spaghetti Bolognese;Sushi;Pizza	3
+single_choice	Sony and Nintendo both contributed to a successful Japanese industry, which one?	Food;Video gaming;Sport;Car	2
+single_choice	Around 35 million people lives in Tokyo which makes it	The smallest city;The dirtiest city;The most expensive city;The most populated city	4
+single_choice	Manga and Anime are world famous Japanese comics and films/tv-shows. Which of these tv-shows refers to the Japanese animation style?	Pokemon & Digimon;Looney tunes;Superman;Bob the builder	1
 single_choice	What is the name of the sword carried by Japanese warriors?	Sushi;Samurai;Kimono;Sumo	2
-single_choice	Japan has the fastest way of travelling by what vehicle?	Car;Airplane;Train;Buss	3
+single_choice	Japan has the fastest way of travelling by what vehicle?	Car;Airplane;Train;Bus	3
 numeric	How long is Nile river which is the longest in the world?(km)	6670
 numeric	How high is Qomolangma which is the highest in the world?(m)	8844
 numeric	How many countries and regions are there in the world?	230
