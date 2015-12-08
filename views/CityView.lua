@@ -148,7 +148,7 @@ function CityView:button_click(button)
 	local view = view_class(self.remote_control, sub_surface, self.profile)
 
 	-- Listen to when child view is closed
-	self:listen_to_once(view, "exit_view", function()
+		self:listen_to_once(view, "exit_view", function()
 		self:remove_view(view)
 		self:focus()
 		self.sub_view = nil
