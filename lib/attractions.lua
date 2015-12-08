@@ -13,7 +13,7 @@ attractions.attraction = { paris = {
                                             "Tower in 2011. The tower is 324 meters tall and its base is 125 meters",
                                             "wide. The Eiffel Tower was the tallest man-made structure in the",
                                             "world for 41 years. Today it is the second-tallest structure in France.",
-                                            "The tower has three levels for visitors, with restaurants on the first",
+                                            " The tower has three levels for visitors, with restaurants on the first",
                                             "and second. The third level observatory's upper platform is 276 m",
                                             "above the ground. The climb from ground level to the first level is",
                                             "over 300 steps."}
@@ -67,7 +67,7 @@ attractions.attraction = { paris = {
                                       "worth visiting for its stunning views, fantastic nature and ",
                                       "city complex. It attracts quite a number of visitors during the",
                                       "Christmas holidays due to its famous and gigantic Christmas tree,",
-                                      "which is built over a floating platform that moves around the",
+                                      " which is built over a floating platform that moves around the",
                                       "lagoon."}
                                       },
                                       {name = "Tijuca National Park",
@@ -216,7 +216,7 @@ attractions.attraction = { paris = {
                                           {name = "The Empire State Building",
 
                                           pic_url = "data/images/CityTourEmpireStateBuilding.png",
-                                          text = {"The Empire State Building is a 102-floors skyscraper located in",
+                                          text = {"The Empire State Building is a 102-floor skyscraper located in",
                                                   "Midtown Manhattan, New York City, on Fifth Avenue between West",
                                                   "33rd and 34th Streets. It has a total height of 1,454 feet (443 meters),",
                                                   "Its name is derived from the nickname for New York, the Empire State.",
@@ -358,7 +358,7 @@ attractions.attraction = { paris = {
                                                    "the museum was broken into, and two mummies were reportedly",
                                                    "destroyed. Several artifacts were also shown to have been damaged.",
                                                    "Around 50 objects were lost. Since then 25 objects have been found,",
-                                                   "as of October 2015, it is open to the public."
+                                                     "as of October 2015, it is open to the public."
                                                    }
                                           },
                                           {name = "Al-Azhar mosque",
