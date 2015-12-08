@@ -1,5 +1,5 @@
 #!/usr/bin/expect
-set timeout 20
+set timeout -1
 
 set host [lindex $argv 0]
 set remote [lindex $argv 1]
@@ -14,7 +14,7 @@ expect " # "
 send "tftp -g -r $file $remote 9000\n"
 
 expect " # "
-send "tar -xf build.tar\n"
+send "tar -zxf build.tar.gz\n"
 
 # Start application
 expect -re "\n(.*?) # " {
