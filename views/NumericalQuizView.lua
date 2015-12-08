@@ -458,6 +458,7 @@ function NumericQuizView:back_to_city()
 			self:focus()
 			self._suppress_new_question = true -- Prevents the quiz from
 												-- skipping a question
+			self:dirty(false)
 			self:dirty()
 		end
 	end

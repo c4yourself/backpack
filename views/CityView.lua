@@ -239,13 +239,13 @@ function CityView:render(surface)
 	end
 
 	-- Add info to statusbar
-	city_view_large_font:draw(surface,  {x=10, y=10}, self.profile.name) -- Profile name
+	city_view_large_font:draw(surface,  {x=30, y=10}, self.profile.name) -- Profile name
 	city_view_small_font:draw(surface, {x=200, y=15}, "Level: " ..tostring((self.profile.experience-(self.profile.experience%100))/100+1)) -- Profile level
-	city_view_small_font:draw(surface, {x=440, y=15}, tostring(self.profile.experience%100 .. "/100")) -- Profile experience
-	city_view_small_font:draw(surface, {x=width-100, y=15}, city.country:format_balance(self.profile.balance)) -- Profile cash
-	city_view_large_font:draw(surface, {x=width/2, y=15}, self.profile:get_city().name, center) -- City name
+	city_view_small_font:draw(surface, {x=440, y=15}, tostring(self.profile.experience%100 .. "/100 ")) -- Profile experience
+	city_view_small_font:draw(surface, {x=width-150, y=15}, city.country:format_balance(self.profile.balance)) -- Profile cash
+	city_view_large_font:draw(surface, {x=width/2, y=15}, self.profile:get_city().name .. " ", center) -- City name
 
-	surface:copyfrom(self.images.coin, nil, {x = width-145, y = 10, width = 30, height = 30}, true) -- Coin
+	surface:copyfrom(self.images.coin, nil, {x = width-185, y = 18, width = 25, height = 25}, true) -- Coin
 
  	-- using the button grid to render all buttons and texts
 	self.button_grid:render(surface)
