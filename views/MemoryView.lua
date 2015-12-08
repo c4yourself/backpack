@@ -42,8 +42,7 @@ function MemoryView:__init(remote_control, surface, profile)
     self.button_grid = MemoryGrid(remote_control)
     self.profile = profile
 
-    --self:_set_pairs()
-    self.pairs = 10
+    self:_set_pairs()
 
     self.memory = MemoryGame(self.pairs, self.profile)
     self.columns = math.ceil((self.pairs*2)^(1/2))
