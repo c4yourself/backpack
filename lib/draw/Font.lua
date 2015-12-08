@@ -59,7 +59,7 @@ function Font:_get_text_surface(text, width)
 	if width == nil then
 		-- Default to the greatest probable size, based on the width of "M"
 		width = math.min(
-			#text * self._glyph_properties.width + self._glyph_properties.left+2,
+			#text * self._glyph_properties.width + self._glyph_properties.left+5,
 			screen:get_width())
 	end
 
