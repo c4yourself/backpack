@@ -233,7 +233,7 @@ function ProfileSelection:render(surface)
 
 	--Draws button: Fetch Profile
 	surface:fill(self:pickColor(1), {width=500, height=100, x=700, y=button_start_height+button_height_diff*0})
-	self.font_button:draw(surface, {x=700+50,y=35+button_start_height+button_height_diff*0}, "Fetch Profile")
+	self.font_button:draw(surface, {x=700+50,y=35+button_start_height+button_height_diff*0}, "Log In")
 
 	--Draws button: Continue Game
 	surface:fill(self:pickColor(2), {width=500, height=100, x=700, y=button_start_height+button_height_diff*1})
