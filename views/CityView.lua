@@ -242,23 +242,33 @@ function CityView:render(surface)
 	city_view_large_font:draw(
 		surface,
 		{x = 30, y = 0, height = 50},
-		self.profile.name) -- Profile name
+		self.profile.name,
+		nil,
+		"middle") -- Profile name
 	city_view_small_font:draw(
 		surface,
 		{x = 200, y = 0, height = 50},
-		"Level: " .. tostring((self.profile.experience - (self.profile.experience % 100)) / 100 + 1)) -- Profile level
+		"Level: " .. tostring((self.profile.experience - (self.profile.experience % 100)) / 100 + 1),
+		nil,
+		"middle") -- Profile level
 	city_view_small_font:draw(
 		surface,
 		{x = 440, y = 0, height = 50},
-		tostring(self.profile.experience % 100 .. "/100")) -- Profile experience
+		tostring(self.profile.experience % 100 .. "/100"),
+		nil,
+		"middle") -- Profile experience
 	city_view_small_font:draw(
 		surface,
 		{x = width - 150, y = 0, height = 50},
-		city.country:format_balance(self.profile.balance)) -- Profile cash
+		city.country:format_balance(self.profile.balance),
+		nil,
+		"middle") -- Profile cash
 	city_view_large_font:draw(
 		surface,
 		{x = width / 2, y = 0, height = 50},
-		self.profile:get_city().name, nil, "middle") -- City name
+		self.profile:get_city().name,
+		nil,
+		"middle") -- City name
 
 	surface:copyfrom(self.images.coin, nil, {x = width - 190, y = 10, width = 30, height = 30}, true) -- Coin
 

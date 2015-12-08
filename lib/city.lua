@@ -9,11 +9,11 @@ city.Country = require("lib.city.Country")
 city.countries = {
 	aus = city.Country("Australia", "aus", "A$%.2f", 0.16),
 	bra = city.Country("Brazil", "bra", "R$%.2f", 0.43),
-	egy = city.Country("Egypt", "egy", "%.2fE£", 0.9),
-	fra = city.Country("France", "fra", "%.2f €", 0.11),
-	ind = city.Country("India", "ind", "₹%.2f", 7.6),
-	jpn = city.Country("Japan", "jpn", "¥%.2f", 14),
-	gbr = city.Country("United Kingdom", "gbr", "£%.2f", 0.08),
+	egy = city.Country("Egypt", "egy", "%.2f EGP", 0.9),
+	fra = city.Country("France", "fra", "%.2f EUR", 0.11),
+	ind = city.Country("India", "ind", "%.2f INR", 7.6),
+	jpn = city.Country("Japan", "jpn", "%.2f JPY", 14),
+	gbr = city.Country("United Kingdom", "gbr", "%.2f GPB", 0.08),
 	usa = city.Country("United States", "usa", "$%.2f", 0.12),
 }
 
