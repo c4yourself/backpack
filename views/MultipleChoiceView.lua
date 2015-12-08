@@ -228,9 +228,12 @@ end
 --- Destroys the quiz view and exits teh mini game. Triggered when the user
 -- presses the back to city button
 function MultipleChoiceView:_exit()
-	local type = "confirmation"
+	self.pop_up_flag_2 = true
+	self:dirty(false)
+	self:dirty(true)
+	--[[local type = "confirmation"
 	local message = {"Are you sure you want to exit?"}
-	self:_back_to_city(type, message)
+	self:_back_to_city(type, message)]]
 end
 
 
@@ -475,6 +478,10 @@ function MultipleChoiceView:render(surface)
 					"You have now reached level " .. new_level .. "!"}
 			end
 			self:_back_to_city(type, message)
+		elseif self.pop_up_flag_2 then
+			local type = "confirmation"
+			local message = {"Are you sure you want to exit?"}
+			self:_back_to_city(type, message)
 		end
 	self:dirty(false)
 end
@@ -495,19 +502,17 @@ function MultipleChoiceView:_back_to_city(type, message)
 
     local button_click_func = function(button)
       	if button == "ok" then
-		  		self:destroy()
+		  	self:destroy()
       		self:trigger("exit_view")
       	else
 	      	popup_view:destroy()
 	      	self.views.grid:focus()
-	      	self:dirty(true)
-	      	--gfx.update()
+	      	self:dirty(true
     	end
     end
 
     self:listen_to_once(popup_view, "button_click", button_click_func)
     popup_view:render(subsurface)
-    --gfx.update()
 end
 
 ---Focuses the {@MultipleChoiceView}, which makes it listen to the remote control
