@@ -242,7 +242,7 @@ end
 -- what should be diplayed next to the user
 -- @param key Key that was pressed
 function MultipleChoiceView:press(key)
-	if key == "back" then
+	if key == "red" then
 		self:_exit()
 	end
 end

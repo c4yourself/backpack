@@ -148,7 +148,7 @@ function CityView:button_click(button)
 	local view = view_class(self.remote_control, sub_surface, self.profile)
 
 	-- Listen to when child view is closed
-		self:listen_to_once(view, "exit_view", function()
+	self:listen_to_once(view, "exit_view", function()
 		self:remove_view(view)
 		self:focus()
 		self.sub_view = nil
@@ -165,11 +165,11 @@ end
 -- Calls a pop up for exiting the city view to the profile
 function CityView:exit_city_view()
 	local type = "confirmation"
-	local message =  {"Are you sure you want to exit?"}
+	local message =  {"Are you sure you want to exit the City View?"}
 	local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
-	self.popup_view = PopUpView(self.remote_control,subsurface, type, message)
+	local popup_view = PopUpView(self.remote_control,subsurface, type, message)
 
-	self:add_view(self.popup_view)
+	self:add_view(popup_view)
 	self:blur()
 
 	local button_click_func = function(button)
@@ -178,17 +178,16 @@ function CityView:exit_city_view()
 			local profile_selection = ProfileSelection(self.remote_control)
 			view.view_manager:set_view(profile_selection)
 		else
-			self.popup_view:destroy()
-			self.popup_view = nil
+			popup_view:destroy()
 			self:focus()
 			self:dirty(true)
-
+			gfx.update()
 		end
 	end
 
-	self:listen_to_once(self.popup_view, "button_click", button_click_func)
-
-	self:dirty(true)
+	self:listen_to_once(popup_view, "button_click", button_click_func)
+	popup_view:render(subsurface)
+	gfx.update()
 end
 
 function CityView:blur()
@@ -240,13 +239,13 @@ function CityView:render(surface)
 	end
 
 	-- Add info to statusbar
-	city_view_large_font:draw(surface,  {x=30, y=10}, self.profile.name) -- Profile name
+	city_view_large_font:draw(surface,  {x=10, y=10}, self.profile.name) -- Profile name
 	city_view_small_font:draw(surface, {x=200, y=15}, "Level: " ..tostring((self.profile.experience-(self.profile.experience%100))/100+1)) -- Profile level
-	city_view_small_font:draw(surface, {x=440, y=15}, tostring(self.profile.experience%100 .. "/100 ")) -- Profile experience
-	city_view_small_font:draw(surface, {x=width-150, y=15}, city.country:format_balance(self.profile.balance)) -- Profile cash
-	city_view_large_font:draw(surface, {x=width/2, y=15}, self.profile:get_city().name .. " ", center) -- City name
+	city_view_small_font:draw(surface, {x=440, y=15}, tostring(self.profile.experience%100 .. "/100")) -- Profile experience
+	city_view_small_font:draw(surface, {x=width-100, y=15}, city.country:format_balance(self.profile.balance)) -- Profile cash
+	city_view_large_font:draw(surface, {x=width/2, y=15}, self.profile:get_city().name, center) -- City name
 
-	surface:copyfrom(self.images.coin, nil, {x = width-185, y = 18, width = 25, height = 25}, true) -- Coin
+	surface:copyfrom(self.images.coin, nil, {x = width-145, y = 10, width = 30, height = 30}, true) -- Coin
 
  	-- using the button grid to render all buttons and texts
 	self.button_grid:render(surface)
@@ -273,13 +272,6 @@ function CityView:render(surface)
 		self.sub_view:render(sub_surface)
 	end
 
-	if self.popup_view then
-		local sub_surface = SubSurface(screen,{width = screen:get_width() * 0.5,
-																	height = (screen:get_height() - 50) * 0.5,
-																	x = screen:get_width() * 0.25,
-																	y = screen:get_height() * 0.25 + 50})
-		self.popup_view:render(sub_surface)
-	end
 
 	self:dirty(false)
 end
@@ -287,14 +279,13 @@ end
 -- Destroys all images and views when leaving cityview
 function CityView:destroy()
 	view.View.destroy(self)
-	for _, image in pairs(self.images) do
-		image:destroy()
+	for k,v in pairs(self.images) do
+		self.images[k]:destroy()
 	end
-	self.images = nil
 end
 
 function CityView:load_view(button)
-	if button == "back" then
+	if button == "red" then
 		self:exit_city_view()
 	end
 end

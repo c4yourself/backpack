@@ -133,7 +133,7 @@ function MemoryView:__init(remote_control, surface, profile)
 --- If user presses "back" key go back to CityView
 -- @param key The key the user is pressing
 function MemoryView:press(key)
-    if key == "back" then
+    if key == "red" then
       local type = "confirmation"
       local message = {"Are you sure you want to exit?"}
       self:back_to_city(type, message)
