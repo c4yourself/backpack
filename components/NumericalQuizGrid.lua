@@ -91,7 +91,7 @@ function NumericalQuizGrid:press(button)
 			self:trigger("dirty")
 		elseif button == "ok" then
 			if self.button_indicator == self.num_input_comp then
-				--self:trigger("submit")
+				self:trigger("submit")
 			elseif self.button_indicator == self.back_button then
 				self:trigger("back")
 			elseif self.button_indicator == self.next_button then

@@ -123,6 +123,9 @@ end
 function NumericQuizView:press(key)
  	if key == "back" then
 		self:back_to_city()
+		self._suppress_new_question = true
+		self:dirty(false)
+		self:dirty(true)
 	end
 end
 
@@ -214,7 +217,7 @@ function NumericQuizView:render(surface)
 			self.views.grid.button_list[3].button:blur()
 			self.answer_flag = false
 		elseif self._suppress_new_question then
-			self.suppress_new_question = false
+			self._suppress_new_question = false
 			-- Show the current question instead of a new one
 			local calculate_text = "Calculate"
 			local question_text = self.question_area_text .. " = ?"
@@ -351,10 +354,16 @@ function NumericQuizView:render(surface)
 		)
 
 		-- Triggered when the exit button is pressed
+		local cb = function()
+			self:back_to_city()
+			self._suppress_new_question = true
+			self:dirty(true)
+			self:dirty(false)
+		end
 		self:listen_to(
 			self.views.grid,
 			"back",
-			utils.partial(self.back_to_city, self)
+			utils.partial(cb, self)
 		)
 
 		self.listening_initiated = true
@@ -363,6 +372,12 @@ function NumericQuizView:render(surface)
 	self.views.grid:render(surface)
 	if self._pop_up_flag == true then
 		self:back_to_city()
+	elseif self.pop_up_flag_2 then
+		local subsurface = SubSurface(screen,{width = screen:get_width()*0.5,
+										height = (screen:get_height()-50)*0.5,
+										x = screen:get_width()*0.25,
+										y = screen:get_height()*0.25+50})
+		self.sub_view:render(subsurface)
 	end
 	self:dirty(false)
 end
@@ -422,7 +437,7 @@ function NumericQuizView:back_to_city()
 						" questions correctly ",
 						"and you received " .. experience .. " experience."}
 		elseif new_level == last_level then
-			message = {"Good job, you answered "
+				message = {"Good job, you answered "
 					.. tostring(self.num_quiz.correct_answers) ..
 					" questions correctly! ",
 					"You received " .. experience .. " experience and " .. city.country:format_balance(experience) .. "."}
@@ -435,6 +450,7 @@ function NumericQuizView:back_to_city()
 		end
 		type = "message"
 	else
+		self.pop_up_flag_2 = true
 		message = {"Are you sure you want to exit?"}
 		type = "confirmation"
 	end
@@ -451,8 +467,12 @@ function NumericQuizView:back_to_city()
 
 	local button_click_func = function(button)
 		if button == "ok" then
+			--popup_view:destroy()
+			self:destroy()
 			self:trigger("exit_view")
 		else
+			-- This is done when cancel is pressed
+			self.pop_up_flag_2 = false
 			popup_view:destroy()
 			self.views.grid:focus()
 			self.views.num_input_comp:focus()
@@ -460,13 +480,12 @@ function NumericQuizView:back_to_city()
 			self._suppress_new_question = true -- Prevents the quiz from
 												-- skipping a question
 			self:dirty(false)
-			self:dirty()
+			self:dirty(true)
 		end
 	end
 
 	self:listen_to_once(popup_view, "button_click", button_click_func)
-	popup_view:render(subsurface)
-	self:dirty()
+	self.sub_view = popup_view
 end
 
 ---Focuses the NumericalQuizView, i.e. makes it listen to the remote control
