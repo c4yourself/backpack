@@ -52,8 +52,8 @@ function CityTourView:__init(remote_control, surface, profile)
 
 	-- Iterate through attractions and create an image for each
 	for k,v in pairs(attractions.attraction[self.city.code]) do
-		tmp_path = attractions.attraction[self.city.code][k].pic_url
-		table.insert(self.tour_attraction_images, gfx.loadpng("data/images/CityTourArcDeTriomphe.png"))
+		--tmp_path = attractions.attraction[self.city.code][k].pic_url
+		--table.insert(self.tour_attraction_images, gfx.loadpng(attractions.attraction[self.city.code][k].pic_url))
 	end
 
 	-- Create answer buttons
@@ -69,7 +69,7 @@ function CityTourView:__init(remote_control, surface, profile)
 	button_3:set_textdata(self.city_tour_quiz.questions[1].Choices[3], button_text_color, nil, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
 	button_4:set_textdata(self.city_tour_quiz.questions[1].Choices[4], button_text_color, nil, 16, utils.absolute_path("data/fonts/DroidSans.ttf"))
 
-	local text_height = 75 + 25 * table.getn(attractions.attraction[self.city.code][attractionpoint].text)
+	local text_height = 75 + 25 * #attractions.attraction[self.city.code][attractionpoint].text
 	local indent = 100
 
 	-- Create buttons positions and size
@@ -160,7 +160,7 @@ function CityTourView:render(surface)
 	local text_indent = 75
 
 	-- Create the picture
-	surface:copyfrom(self.tour_attraction_images[attractionpoint] ,nil ,{ x = height / 6, y = height / 6, width = height * 0.54 * 3 / 5, height = height * 3 / 5}, true)
+	surface:copyfrom( gfx.loadpng("data/images/CityTourTowerOfLondon.png") ,nil ,{ x = height / 6, y = height / 6, width = height * 0.54 * 3 / 5, height = height * 3 / 5}, true)
 
 	-- Draw the fonts
 	city_tour_head_font:draw(surface, {x = height / 6 - 10, y = 20}, "City Tour")
