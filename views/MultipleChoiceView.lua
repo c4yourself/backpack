@@ -507,7 +507,7 @@ function MultipleChoiceView:_back_to_city(type, message)
       	else
 	      	popup_view:destroy()
 	      	self.views.grid:focus()
-	      	self:dirty(true
+	      	self:dirty(true)
     	end
     end
 
