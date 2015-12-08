@@ -64,7 +64,21 @@ end
 
 ---Starts the timer and triggers the painting of the trip
 function WorldMap:start()
-	self.timer = sys.new_timer(10, function()
+	--[[if (self.method == "plane") then
+	self.timer = sys.new_timer(25, function()
+	elseif (self.method == "train") then
+		self.timer = sys.new_timer(25, function()
+	else
+		self.timer = sys.new_timer(25, function()
+	end]]
+
+	local transport = {
+		plane = 40,
+		boat = 160,
+		train = 95
+	}
+
+	self.timer = sys.new_timer(transport[self.method], function()
 		self._step_index = math.min(self._step_index + 1, self._step_count)
 
 		if self._step_index == self._step_count then
