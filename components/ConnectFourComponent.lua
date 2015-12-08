@@ -82,7 +82,7 @@ function ConnectFourComponent:press(key)
 				self:focus()
 			end)
 		end
-	elseif key == "back" then
+	elseif key == "red" then
 		local type = "confirmation"
 		local message =  {"Are you sure you want to exit?"}
 		self:_back_to_city(type, message)

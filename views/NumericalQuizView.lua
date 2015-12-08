@@ -121,7 +121,7 @@ end
 --- Responds to a 'key' press when the View is active
 -- @param key Key that was pressed by the user
 function NumericQuizView:press(key)
- 	if key == "back" then
+ 	if key == "red" then
 		self:back_to_city()
 		self._suppress_new_question = true
 		self:dirty(false)
