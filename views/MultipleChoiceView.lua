@@ -469,7 +469,7 @@ function MultipleChoiceView:render(surface)
 			local message = ""
 			if experience == 0 then
 				message = {"Game finished! You answered " .. tostring(self.correct_answer_number)..
-				" questions correctly and received " .. experience .. " experience."}
+				" questions correctly and",  "received " .. experience .. " experience."}
 			elseif last_level == new_level then
 				message = {"Good job, you answered "
 						.. tostring(self.correct_answer_number) ..
