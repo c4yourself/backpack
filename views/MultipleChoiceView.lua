@@ -79,7 +79,8 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 	-- Add back button
 	local button_exit = Button(button_color, color_selected, color_disabled,
 								true, true, "views.CityView")
-	local exit_position = {x = width*0.2, y = height * 0.67}
+	local exit_position = {x = 75, --width*0.2
+ 												y = 450} --height * 0.67}
 	button_exit:set_textdata("Back to city", Color(255,255,255,255),
 							{x = 0, y = 0}, 24,"data/fonts/DroidSans.ttf")
 	self.views.grid:add_button(exit_position,
@@ -96,7 +97,7 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 	-- Add next button
 	local button_next = Button(button_color, color_selected, color_disabled,
 								true, false)
-	local next_position = {x =  width*0.8-300, y = height*0.67}
+	local next_position = {x =  width*0.8-320, y = height*0.67}
 	button_next:set_textdata("Next question", Color(255,255,255,255),
 							{x = 0, y = 0}, 24,"data/fonts/DroidSans.ttf")
 	self.views.grid:add_button(next_position,
@@ -120,10 +121,10 @@ function MultipleChoiceView:__init(remote_control, subsurface, profile)
 	)
 
 	-- Question buttons
-	local button_position_1 = {x = width*0.2, y = height*0.33}
-	local button_position_2 = {x = width*0.8-300, y = height*0.33}
-	local button_position_3 = {x = width*0.2, y = height*0.47}
-	local button_position_4 = {x = width*0.8-300, y = height*0.47}
+	local button_position_1 = {x = width*0.35, y = height*0.33}
+	local button_position_2 = {x = width*0.95-300, y = height*0.33}
+	local button_position_3 = {x = width*0.35, y = height*0.47}
+	local button_position_4 = {x = width*0.95-300, y = height*0.47}
 
 	self.question_button_1 = ToggleButton(button_color, color_selected,
 							color_disabled, true, false, "")
@@ -260,7 +261,7 @@ function MultipleChoiceView:render(surface)
 			self.question_area_width = surface_width * 0.6
 			self.question_area_height = math.ceil(0.20*surface_height)
 
-			self.question_area = SubSurface(surface, {x = surface_width * 0.2, y = y,
+			self.question_area = SubSurface(surface, {x = surface_width * 0.35, y = y,
 				height = self.question_area_height,
 				width = self.question_area_width})
 
@@ -354,36 +355,51 @@ function MultipleChoiceView:render(surface)
 			pop_up_flag = true
 		end
 
+		local left_board = SubSurface(surface,{width = 300, height = surface:get_height()-150, x = 75, y = 75})
+
+		left_board:clear(Color(250, 105, 0, 255):to_table())
+		left_board:fill({r = 65, g = 70, b = 72, a = 255},
+			{x = 5, y = 5, width = 290, height = surface:get_height()-160})
+
+		left_board:fill(Color(250, 105, 0, 255):to_table(),
+			{x = 5, y = 75, width = 290, height = 5})
+		local text_color = Color(255,255,255,255)
+		local text = Font("data/fonts/DroidSans.ttf", 30, text_color)
+			text:draw(left_board, {x = 50, y = 20}, "Multiple Choice")
+			text:draw(left_board, {x = 72, y = 130}, "Question " .. self.current_question)
+
 		--Progress counter
 		local progress_margin = 26
 		self.counter_width = 72
 		self.counter_height = 72
-		self.x_counter = math.ceil(surface_width - progress_margin -
-									self.counter_width)
-		self.y_counter = progress_margin
+		self.x_counter = 50--math.ceil(surface_width - progress_margin -
+									--self.counter_width)
+		self.y_counter = 250--progress_margin
 		self.progress_counter_area = SubSurface(surface, {x = self.x_counter,
 									y = self.y_counter,
 									height = self.counter_height,
 									width = self.counter_width})
 
 		-- Render the Progress counter
-		self.progress_counter_area:clear(self.progress_counter_color:to_table())
+	--	self.progress_counter_area:clear(self.progress_counter_color:to_table())
 		local current_question = self.current_question
 		local quiz_length = #self.mult_choice_quiz.questions
 		local current_question = math.min(current_question, quiz_length)
-		self.progress_counter_font:draw(self.progress_counter_area,
-									{x = 0, y = 0, height = self.counter_height,
-									width = self.counter_width},
-									tostring(current_question) .. "/" ..
-									tostring(quiz_length), "center", "middle")
+	--	self.progress_counter_font:draw(self.progress_counter_area,
+	--								{x = 0, y = 0, height = self.counter_height,
+	--								width = self.counter_width},
+	--								tostring(current_question) .. "/" ..
+	--								tostring(quiz_length), "center", "middle")
 		-- Render the Progress bar
 		local bar_component_width = 35
 		local bar_component_height = 35
-		local progress_bar_margin = 10
+		local progress_bar_margin_x = 10
+		local progress_bar_margin_y = 24
+
 		local bar_component_x = self.x_counter + self.counter_width -
-								bar_component_width
-		local bar_component_y = self.y_counter + progress_bar_margin +
-								self.counter_height
+								bar_component_width + 32
+		local bar_component_y = self.y_counter + progress_bar_margin_y +
+								self.counter_height - 30
 		local quiz_length = #self.progress_table
 
 		-- Create a progress bar and color its boxes
@@ -417,9 +433,19 @@ function MultipleChoiceView:render(surface)
 			  progress_bar_component_color:clear(bar_component_color:to_table())
 				progress_bar_component_pic:copyfrom(self.answer_nil, nil, nil, true)
 			end
-			bar_component_y = bar_component_y + progress_bar_margin +
-								bar_component_height
+		--	bar_component_y = bar_component_y + progress_bar_margin +
+			--					bar_component_height
+
+			bar_component_x = bar_component_x + bar_component_width + progress_bar_margin_x
+					if i % 5 == 0 then
+							bar_component_x = self.x_counter + self.counter_width -
+																			bar_component_width + 32
+							bar_component_y = bar_component_y + progress_bar_margin_y +
+																			bar_component_height - 17
+					end
 		end
+
+
 		self.prevent = false
 
 		self.views.grid:render(surface)
