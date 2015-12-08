@@ -43,6 +43,10 @@ function CityTourView:__init(remote_control, surface, profile)
 	-- local random_order = math.random(table.getn(order_table))
 	-- attractionpoint = order_table[random_order][#order_table[random_order]]
 
+
+	-- Create some colors
+	--border_color = Color(0, 0, 0, 255)
+
 	-- Create the fonts
 	city_tour_head_font = Font("data/fonts/DroidSans.ttf", 48, Color(1, 1, 1, 255))
 	city_tour_attraction_font = Font("data/fonts/DroidSans.ttf", 25, Color(1, 1, 1, 255))
@@ -57,7 +61,9 @@ function CityTourView:__init(remote_control, surface, profile)
 	self.tour_attraction_images = {}
 
 	for k,v in pairs(attractions.attraction[self.city.code]) do
+		
 		table.insert(self.tour_attraction_images, gfx.loadpng(attractions.attraction[self.city.code][k].pic_url))
+		self.tour_attraction_images[k]:premultiply()
 	end
 
 
