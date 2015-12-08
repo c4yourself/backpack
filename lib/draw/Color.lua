@@ -93,11 +93,20 @@ function Color:__lt(other)
 		error("Color must be compared to another Color instance")
 	end
 
-	return
-		self.red < other.red or
-		self.green < other.green or
-		self.blue < other.blue or
-		self.alpha < other.alpha
+	-- Convert colors to ratios between 0 and 1
+	local sr, sg, sb, sa = self:to_values(1)
+	local or_, og, ob, oa = other:to_values(1)
+
+	-- Multiply every color with the alpha transparency to compare them properly
+	sr = sr * sa
+	sg = sg * sa
+	sb = sb * sa
+
+	or_ = or_ * oa
+	og = og * oa
+	ob = ob * oa
+
+	return sr < or_ and sg < og and sb < ob
 end
 
 
@@ -107,10 +116,8 @@ end
 -- @return A new Color instance
 function Color:blend(other)
 	-- Convert colors to ratios between 0 and 1
-	local sr, sg, sb, sa =
-		self.red / 255, self.green / 255, self.blue / 255, self.alpha / 255
-	local or_, og, ob, oa =
-		other.red / 255, other.green / 255, other.blue / 255, other.alpha / 255
+	local sr, sg, sb, sa = self:to_values(1)
+	local or_, og, ob, oa = other:to_values(1)
 
 	local output_alpha = oa + sa * (1 - oa)
 	local output_red = (or_ * oa + sr * sa * (1 - oa)) / output_alpha
@@ -193,8 +200,16 @@ end
 
 --- Return red, green blue and alpha as separate values.
 -- @return red, gree, blue, alpha
-function Color:to_values()
-	return self.red, self.green, self.blue, self.alpha
+function Color:to_values(normalize)
+	if normalize == nil then
+		normalize = 255
+	end
+
+	return
+		self.red * normalize / 255,
+		self.green * normalize / 255,
+		self.blue * normalize / 255,
+		self.alpha * normalize / 255
 end
 
 --- Create color object from a 32-bit integer.
