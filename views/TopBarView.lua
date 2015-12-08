@@ -19,6 +19,7 @@ function TopBarView:__init(profile)
 	self.border_color = Color(65, 70, 72, 255)
 
 	self.coin_image = gfx.loadpng("data/images/coinIcon.png")
+	self.coin_image:premultiply()
 	self.font = Font("data/fonts/DroidSans.ttf", 20, self.font_color)
 end
 
@@ -59,7 +60,7 @@ function TopBarView:render(surface)
 
 	-- Status bar
 	local experience_offest_x = 285
-	local experience_offest_y = height / 2 - 30 / 2
+	local experience_offest_y = height / 2 - 25 / 2
 	local experience_width = math.ceil(146 * experience / limit)
 
 	surface:clear(
@@ -68,7 +69,7 @@ function TopBarView:render(surface)
 			x = experience_offest_x,
 			y = experience_offest_y,
 			width = 150,
-			height = 30,
+			height = 25,
 		})
 	surface:clear(
 		self.background_color:to_table(),
@@ -76,7 +77,7 @@ function TopBarView:render(surface)
 			x = experience_offest_x + 2,
 			y = experience_offest_y + 2,
 			width = 146,
-			height = 26,
+			height = 21,
 		})
 	if experience_width > 0 then
 		surface:fill(
@@ -85,7 +86,7 @@ function TopBarView:render(surface)
 				x = experience_offest_x + 2,
 				y = experience_offest_y + 2,
 				width = experience_width,
-				height = 26,
+				height = 21,
 			})
 	end
 
