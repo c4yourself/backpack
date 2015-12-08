@@ -126,11 +126,10 @@ end
 function ConnectFourComponent:render(surface)
 	surface:fill({r = 0, g = 0, b = 0, a = 255})
 
-
 	local coin_color_player = {r=255, g=255, b=51}
 	local coin_color_computer = {r=255, g=0, b=0}
 	local temp_color
-	local	width_coinbox = math.floor((1/7)*(0.45)*surface:get_width())
+	local width_coinbox = math.floor((1/7)*(0.45)*surface:get_width())
 	local height_coinbox = math.floor((1/7)*(0.8)*surface:get_height())
 	local posy = 0.1*surface:get_height()+ 0.5*height_coinbox
 	local posy_constant = 0.1*surface:get_height()+ 0.5*height_coinbox
@@ -143,7 +142,7 @@ function ConnectFourComponent:render(surface)
 	--prints the board
 	for i = 1, 6 do
 		local posx = 0.41*surface:get_width()
-    for j = 1, 7 do
+		for j = 1, 7 do
 			if self.connectfour:get(i,j) == nil then
 				temp_color = {r=255, g=255, b=255}
 			elseif self.connectfour:get(i,j) == "X" then
@@ -160,7 +159,7 @@ function ConnectFourComponent:render(surface)
 		end
 
 		posy = posy + height_coinbox
-  end
+	end
 
 	--Back to city button
 	local target1 = area(0.05*surface:get_width(),0.9*surface:get_height()-2.0*height_coinbox, 250, 90)
@@ -222,7 +221,6 @@ function ConnectFourComponent:render(surface)
 	end
 
 	self:dirty(false)
-	--gfx.update()
 end
 
 --- Puts a delay on computers move to slow down the process
@@ -255,11 +253,11 @@ function ConnectFourComponent:delay2(type, message)
 end
 
 function ConnectFourComponent:_back_to_city(type, message)
-    local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
-    local popup_view = PopUpView(remote_control,subsurface, type, message)
-    self:add_view(popup_view)
+	local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
+	local popup_view = PopUpView(remote_control,subsurface, type, message)
+	self:add_view(popup_view)
 
-    self:blur()
+	self:blur()
 
 	local button_click_func = function(button)
 		if button == "ok" then
@@ -273,7 +271,7 @@ function ConnectFourComponent:_back_to_city(type, message)
 	end
 
 	self:listen_to_once(popup_view, "button_click", button_click_func)
-    popup_view:render(subsurface)
+	popup_view:render(subsurface)
 end
 
 function ConnectFourComponent:focus()
