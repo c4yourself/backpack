@@ -160,19 +160,30 @@ function NumericQuizView:render(surface)
 	if self:is_dirty() then
 		local color = nil -- Background color for the quiz
 		surface:clear(color)
+		-- Game info box
+		local left_board = SubSurface(surface,{width = 300, height = surface:get_height()-150, x = 75, y = 75})
+		left_board:clear(Color(250, 105, 0, 255):to_table())
+		left_board:fill({r = 65, g = 70, b = 72, a = 255},
+			{x = 5, y = 5, width = 290, height = surface:get_height()-160})
+		left_board:fill(Color(250, 105, 0, 255):to_table(),
+			{x = 5, y = 75, width = 290, height = 5})
+		local text_color = Color(255,255,255,255)
+		local text = Font("data/fonts/DroidSans.ttf", 30, text_color)
+		text:draw(left_board, {x = 50, y = 20}, "Numerical Quiz" )
+		text:draw(left_board, {x = 72, y = 130}, "Question " .. self.num_quiz.current_question)
 		-- Define other areas if it hasn't been done already
 		if not self.areas_defined then
-
-				local left_board = SubSurface(surface,{width = 300, height = surface:get_height()-150, x = 75, y = 75})
-				left_board:clear(Color(250, 105, 0, 255):to_table())
-				left_board:fill({r = 65, g = 70, b = 72, a = 255},
-					{x = 5, y = 5, width = 290, height = surface:get_height()-160})
-				left_board:fill(Color(250, 105, 0, 255):to_table(),
-					{x = 5, y = 75, width = 290, height = 5})
-				local text_color = Color(255,255,255,255)
-				local text = Font("data/fonts/DroidSans.ttf", 30, text_color)
-				text:draw(left_board, {x = 50, y = 20}, "Numerical Quiz")
-				text:draw(left_board, {x = 72, y = 130}, "Question ")
+			-- Game info box
+			-- local left_board = SubSurface(surface,{width = 300, height = surface:get_height()-150, x = 75, y = 75})
+			-- left_board:clear(Color(250, 105, 0, 255):to_table())
+			-- left_board:fill({r = 65, g = 70, b = 72, a = 255},
+			-- 	{x = 5, y = 5, width = 290, height = surface:get_height()-160})
+			-- left_board:fill(Color(250, 105, 0, 255):to_table(),
+			-- 	{x = 5, y = 75, width = 290, height = 5})
+			-- local text_color = Color(255,255,255,255)
+			-- local text = Font("data/fonts/DroidSans.ttf", 30, text_color)
+			-- text:draw(left_board, {x = 50, y = 20}, "Numerical Quiz")
+			-- text:draw(left_board, {x = 72, y = 130}, "Question .. self.num_quiz.current_question")
 			--Progress counter
 			local progress_margin = 26
 			self.counter_width = 72
