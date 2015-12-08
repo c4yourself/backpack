@@ -202,7 +202,7 @@ end
 	--@param button the pressed button
 function CityTourView:load_view(button)
 
-	if button == "red" then
+	if button == "back" then
 		local type = "confirmation"
     local message =  {"Are you sure you want to exit the City Tour?"}
     local subsurface = SubSurface(screen,{width = screen:get_width() * 0.5, height = (screen:get_height() - 50) * 0.5, x = screen:get_width() * 0.25, y = screen:get_height() * 0.25 + 50})

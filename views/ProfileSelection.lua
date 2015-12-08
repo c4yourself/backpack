@@ -172,7 +172,7 @@ function ProfileSelection:press(key)
 		self:downBtnPress()
 	elseif key == "up" then
 		self:upBtnPress()
-	elseif key == "red" or key == "3" then
+	elseif key == "back" or key == "3" then
 		sys.stop()
 	end
 	self:dirty()

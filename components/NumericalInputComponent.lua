@@ -18,6 +18,7 @@ function NumericalInputComponent:__init(remote_control, surface)
 	View.__init(self)
 	self.input = "Enter your answer here"
 	self.focused = false
+	self.input_flag = false
 	self._selected = false
 	self.test_trigger_flag = false -- variable used for testing
 	if remote_control ~= nil then
@@ -53,10 +54,10 @@ end
 -- NumericalInputComponent responds to a button press even
 --@param button Button that was pressed by the user
 function NumericalInputComponent:press(button)
-	if button == "backspace" then
+	if button == "red" then
 		if #self.input > 0 then
 			if #self.input == 1 then
-				self:set_text("Enter your answer here")
+					self:set_text(nil)
 			end
 			self:set_text(self.input:sub(1,-2))
 		end
@@ -133,7 +134,7 @@ function NumericalInputComponent:set_text(text)
 		self.input = text
 		self:dirty(true)
 	elseif text == nil or text == "Enter your answer here" then
-		self.input = "Enter your answer here"
+		self.input = ""
 		self:dirty(true)
 	else
 		error("Only numerical inputs are accepted")

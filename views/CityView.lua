@@ -285,7 +285,7 @@ function CityView:destroy()
 end
 
 function CityView:load_view(button)
-	if button == "red" then
+	if button == "back" then
 		self:exit_city_view()
 	end
 end

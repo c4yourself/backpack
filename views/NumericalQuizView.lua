@@ -121,7 +121,7 @@ end
 --- Responds to a 'key' press when the View is active
 -- @param key Key that was pressed by the user
 function NumericQuizView:press(key)
- 	if key == "red" then
+ 	if key == "back" then
 		self:back_to_city()
 		self._suppress_new_question = true
 		self:dirty(false)
@@ -434,7 +434,7 @@ function NumericQuizView:show_answer()
 			self.prevent = not self.prevent
 			self.answer_flag = true
 			self.user_answer = tonumber(self.views.num_input_comp:get_text())
-			self.views.num_input_comp:set_text(nil)
+			self.views.num_input_comp:set_text("Enter your answer here")
 			self.views.grid:select_button(2)
 			self.views.grid.button_list[3].button:blur()
 			self:dirty(false)
@@ -452,7 +452,7 @@ function NumericQuizView:next_question()
 		self.answer_flag = false
 		self.prevent = false
 		self.user_answer = nil
-		self.views.num_input_comp:set_text(nil)
+		self.views.num_input_comp:set_text("Enter your answer here")
 		self:dirty(false)
 		self:dirty(true)
 	end
