@@ -93,6 +93,7 @@ end
 
 --- Standard destroy function
 function TravelView:destroy()
+
 	View.destroy(self)
 	self.image:destroy()
 	self.list_comp:destroy()
@@ -188,6 +189,7 @@ function TravelView:_travel(button)
 					self.routes[index][2],
 					view.view_manager)
 				view.view_manager:set_view(world_map)
+				self.profile:set_balance(self.profile:get_balance() - self.routes[index][3])
 				world_map:start()
 
 			-- Otherwise we can't afford the trip
