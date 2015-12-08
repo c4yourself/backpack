@@ -14,6 +14,7 @@ local InputField = class("InputField", View)
 
 function InputField:__init(name, position, highlighted)
 	View.__init(self)
+	--self.surface = surface
 	self.highlighted_color = {r=250, g=169, b=0}
 	self.normal_color = {r=255, g=255, b=255}
 	self.font_header = Font("data/fonts/DroidSans.ttf", 40, Color(255, 255, 255, 255))
@@ -32,6 +33,8 @@ end
 
 function InputField:set_text(text)
 	self.text = text
+	self:render(self.surface)
+	gfx.update()
 end
 
 function InputField:is_highlighted()
@@ -48,6 +51,7 @@ end
 
 function InputField:render(surface)
 	self:dirty(false)
+	self.surface = surface
 	if self.highlighted then
 		surface:fill(self.highlighted_color, {width=500, height=100, x=self.position["x"], y=self.position["y"]})
 	else
