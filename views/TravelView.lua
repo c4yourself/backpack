@@ -39,9 +39,9 @@ function TravelView:__init(remote_control, surface, profile)
 	local list_item_position_right = {x=305, y=35}
 
 	local travel_type = {
-		boat = "data/images/boat.png",
-		plane = "data/images/airplane.png",
-		train = "data/images/train.png"
+		boat = "data/images/travel_screen/boat_right.png",
+		plane = "data/images/travel_screen/plane_right.png",
+		train = "data/images/travel_screen/train_right.png"
 	}
 
 	self.image = gfx.loadpng("data/images/worldmap1.png")
@@ -55,8 +55,7 @@ function TravelView:__init(remote_control, surface, profile)
 		end
 		local list_item = ListItem(
 			destination.name,
-			nil,
-		--	gfx.loadpng(travel_type[self.routes[i][2]]),
+			gfx.loadpng(travel_type[self.routes[i][2]]),
 			self.profile:get_city().country:format_balance(self.routes[i][3]),
 			self.font,
 			list_item_position_left,
