@@ -166,7 +166,6 @@ function NumericalQuizGrid:render(surface)
 			button_data.button:render(sub_surface)
 		end
    end
-   gfx.update()
 end
 
 return NumericalQuizGrid

@@ -86,6 +86,8 @@ function ConnectFourComponent:press(key)
 		local type = "confirmation"
 		local message =  {"Are you sure you want to exit?"}
 		self:_back_to_city(type, message)
+		self:dirty(false)
+		self:dirty(true)
 	end
 end
 
@@ -238,6 +240,11 @@ function ConnectFourComponent:render(surface)
 		end)
 	end
 
+	if self.sub_view ~= nil then
+		local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
+		self.sub_view:render(subsurface)
+	end
+
 	self:dirty(false)
 end
 
@@ -268,12 +275,15 @@ end
 -- @param surface
 function ConnectFourComponent:delay2(type, message)
 	self:_back_to_city(type,message)
+	self:dirty(false)
+	self:dirty(true)
 end
 
 function ConnectFourComponent:_back_to_city(type, message)
 	local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
 	local popup_view = PopUpView(remote_control,subsurface, type, message)
-	self:add_view(popup_view)
+	self.sub_view = popup_view
+	self:add_view(popup_view, true)
 
 	self:blur()
 
@@ -282,6 +292,7 @@ function ConnectFourComponent:_back_to_city(type, message)
 			self:destroy()
 			self:trigger("exit_view")
 		else
+			self.sub_view = nil
 			popup_view:destroy()
 			self:focus()
 			self:dirty(true)
@@ -289,7 +300,7 @@ function ConnectFourComponent:_back_to_city(type, message)
 	end
 
 	self:listen_to_once(popup_view, "button_click", button_click_func)
-	popup_view:render(subsurface)
+	--popup_view:render(subsurface)
 end
 
 function ConnectFourComponent:focus()
