@@ -160,7 +160,7 @@ function CityTourView:render(surface)
 	local text_indent = 75
 
 	-- Create the picture
-	surface:copyfrom( gfx.loadpng(attractions.attraction[self.city.code][1].pic_url) ,nil ,{ x = height / 6, y = height / 6, width = height * 0.54 * 3 / 5, height = height * 3 / 5}, true)
+	surface:copyfrom( gfx.loadpng("data/images/CityTourTowerOfLondon.png") ,nil ,{ x = height / 6, y = height / 6, width = height * 0.54 * 3 / 5, height = height * 3 / 5}, true)
 
 	-- Draw the fonts
 	city_tour_head_font:draw(surface, {x = height / 6 - 10, y = 20}, "City Tour")
