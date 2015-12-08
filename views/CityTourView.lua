@@ -120,7 +120,7 @@ function CityTourView:__init(remote_control, surface, profile)
       	self.popup_view:destroy()
 				self.popup_view = nil
       	self.buttonGrid:focus()
-				if table.getn(attractions.attraction[self.city.code]) == attractionpoint - 1  then
+				if #attractions.attraction[self.city.code] == attractionpoint - 1  then
 					self:trigger("exit_view")
 				else
 					self.city_tour_quiz:generate_citytour_quiz(self.profile:get_current_city(), tostring(attractionpoint))
@@ -163,7 +163,7 @@ function CityTourView:render(surface)
 
 	-- Draw tour text square lines
 	surface:fill({0,0,0,255}, {width = 2 / 3 * width - 150, height = 2, x = width / 3 + text_indent, y = 70})
-	surface:fill({0,0,0,255}, {width = 2 / 3 * width - 150, height = 2, x = width / 3 + text_indent, y = 75 + 25 * table.getn(attractions.attraction[self.city.code][attractionpoint].text)})
+	surface:fill({0,0,0,255}, {width = 2 / 3 * width - 150, height = 2, x = width / 3 + text_indent, y = 75 + 25 * #attractions.attraction[self.city.code][attractionpoint].text})
 
 	--Write all the tour text
 	for i, text in ipairs(attractions.attraction[self.city.code][attractionpoint].text) do
@@ -172,7 +172,7 @@ function CityTourView:render(surface)
 	end
 
 	-- Tour question
-	local text_height = 75 + 25 * table.getn(attractions.attraction[self.city.code][attractionpoint].text)
+	local text_height = 75 + 25 * #attractions.attraction[self.city.code][attractionpoint].text
 	city_tour_question:draw(surface, {x = width / 3, y = text_height, width = width * 2 / 3, height = self.buttonGrid.button_list[1].y - text_height}, self.city_tour_quiz.questions[1].question, "center", "middle")
 
 	--Render buttons
