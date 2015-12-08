@@ -1,15 +1,15 @@
 ---Connect Four GUI
 --@classmod ConnectFourComponent
 
-
 local class = require("lib.classy")
 local ConnectFour = require("lib.connectfour.ConnectFour")
 local event = require("lib.event")
+local Font = require("lib.draw.Font")
 local View = require("lib.view.View")
 local utils = require("lib.utils")
 local subsurface = require("lib.view.SubSurface")
 local area = require("lib.draw.Rectangle")
-local font = require("lib.draw.Font")
+local font = Font
 local color = require("lib.draw.Color")
 local PopUpView = require("views.PopUpView")
 local SubSurface = require("lib.view.SubSurface")
@@ -28,11 +28,27 @@ function ConnectFourComponent:__init(remote_control, subsurface, profile)
 	self.current_column = 4
 	self:focus()
 
-	-- self:listen_to(
-	-- event.remote_control,
-	-- "button_press",
-	-- utils.partial(self.press, self)
-	-- )
+	self.images = {
+		background = gfx.loadpng("data/images/connect_four/connect4-background.png"),
+		board = gfx.loadpng("data/images/connect_four/connect4board.png"),
+		player_coin_cover = gfx.loadpng("data/images/connect_four/player_coin_cover.png"),
+		top_row_cover = gfx.loadpng("data/images/connect4toprow.png"),
+	}
+
+	self.button_font = Font(
+		"data/fonts/DroidSans.ttf", 16, color(255, 128, 0, 255))
+	self.player_font = Font(
+		"data/fonts/DroidSans.ttf", 22, color(255, 255, 51, 255))
+	self.computer_font = Font(
+		"data/fonts/DroidSans.ttf", 22, color(255, 0, 0, 255))
+end
+
+function ConnectFourComponent:destroy()
+	View.destroy(self)
+
+	for _, image in pairs(self.images) do
+		image:destroy()
+	end
 end
 
 --- Responds differently depending on which key pressed on the remote control
@@ -57,10 +73,8 @@ function ConnectFourComponent:press(key)
 		until self.connectfour:get_current_row(self.current_column) ~= 0
 		self:dirty()
 	elseif key == "ok" then
-
 		self.connectfour:move(self.connectfour:get_player(), self.current_column)
 		self:blur()
-		--self:stop_listening(event.remote_control)
 		self:dirty()
 
 		if self.connectfour:get_winner() == nil then
@@ -70,20 +84,10 @@ function ConnectFourComponent:press(key)
 			end)
 		end
 	elseif key == "back" then
-		--TODO pop-up
-	--	local exit_popup = subsurface(surface, area(100, 100, 400, 400))
-	--	local color_popup = color(255, 255, 255, 255)
-	--	local font_popup = font("data/fonts/DroidSans.ttf", 16, color_popup)
-	--	exit_popup:clear({r=255, g=255, b=255}, area(100, 100, 400, 400))
-	--	font_popup:draw(exit_popup, area(30,30,400,400), "Spelare X vann!")
-		--self:trigger("exit_view")
 		local type = "confirmation"
-    --local message = {"Hej hopp"}
-    local message =  {"Are you sure you want to exit?"}
+		local message =  {"Are you sure you want to exit?"}
 		self:_back_to_city(type, message)
-
 	end
-
 end
 
 ---Prints out the top row
@@ -133,7 +137,7 @@ function ConnectFourComponent:render(surface)
 	local posx_constant = 0.41*surface:get_width()
 	self:top_row(surface, self.current_column, width_coinbox, height_coinbox)
 
-	surface:copyfrom(gfx.loadpng("data/images/connect_four/connect4-background.png"),nil,{x=posx_constant, y=posy_constant-3, width = 7*width_coinbox+3, height = 6*height_coinbox+3}, true)
+	surface:copyfrom(self.images.background,nil,{x=posx_constant, y=posy_constant-3, width = 7*width_coinbox+3, height = 6*height_coinbox+3}, true)
 
 
 	--prints the board
@@ -159,36 +163,28 @@ function ConnectFourComponent:render(surface)
   end
 
 	--Back to city button
-	local f = font("data/fonts/DroidSans.ttf", 16, color(255, 128, 0, 255))
-	--local f = font("data/fonts/DroidSans.ttf", 16, color(0, 0, 0, 255))
 	local target1 = area(0.05*surface:get_width(),0.9*surface:get_height()-2.0*height_coinbox, 250, 90)
 	surface:clear(color(255, 255, 255, 255):to_table(), target1:to_table())
-	f:draw(surface, target1:to_table(), "Press Back to go back to City", "center", "middle")
+	self.button_font:draw(surface, target1:to_table(), "Press Back to go back to City", "center", "middle")
 
-	--heading
-	--local heading = font("data/fonts/DroidSans.ttf", 32, color(255, 128, 0, 255))
-	--local target2 = area(0.05*surface:get_width(),0.1*surface:get_height(), 200, 60)
-	--heading:draw(surface, target2:to_table(), "Connect Four")
 
 	--text player + yellow box
-	local text_player = font("data/fonts/DroidSans.ttf", 22, color(255, 255, 51, 255))
 	local target3 = area(0.05*surface:get_width(),0.5*surface:get_height()-3*height_coinbox, 200, 60)
-	text_player:draw(surface, target3:to_table(), "Player")
-		surface:clear(coin_color_player, {x=0.055*surface:get_width(), y=0.5*surface:get_height()-2.5*height_coinbox, width = width_coinbox, height = height_coinbox})
-			-- make box to a coin
-	surface:copyfrom(gfx.loadpng("data/images/connect_four/player_coin_cover.png"),nil,{x=0.055*surface:get_width(), y=0.5*surface:get_height()-2.5*height_coinbox, width = width_coinbox, height = height_coinbox}, true)
+	self.player_font:draw(surface, target3:to_table(), "Player")
+	surface:clear(coin_color_player, {x=0.055*surface:get_width(), y=0.5*surface:get_height()-2.5*height_coinbox, width = width_coinbox, height = height_coinbox})
+	-- make box to a coin
+	surface:copyfrom(self.images.player_coin_cover,nil,{x=0.055*surface:get_width(), y=0.5*surface:get_height()-2.5*height_coinbox, width = width_coinbox, height = height_coinbox}, true)
 
 	--text compunter + red box
-	local text_computer = font("data/fonts/DroidSans.ttf", 22, color(255, 0, 0, 255))
 	local target4 = area(0.05*surface:get_width(),0.5*surface:get_height()-0.9*height_coinbox, 200, 60)
-	text_computer:draw(surface, target4:to_table(), "Computer")
+	self.computer_font:draw(surface, target4:to_table(), "Computer")
 	surface:clear(coin_color_computer, {x=0.055*surface:get_width(), y=0.5*surface:get_height()-0.5*height_coinbox+8, width = width_coinbox, height = height_coinbox})
-			-- make box to a coin
-	surface:copyfrom(gfx.loadpng("data/images/connect_four/player_coin_cover.png"),nil,{x=0.055*surface:get_width(), y=0.5*surface:get_height()-0.5*height_coinbox+8, width = width_coinbox, height = height_coinbox}, true)
+	-- make box to a coin
+	surface:copyfrom(self.images.player_coin_cover,nil,{x=0.055*surface:get_width(), y=0.5*surface:get_height()-0.5*height_coinbox+8, width = width_coinbox, height = height_coinbox}, true)
 
 	--insert picture over board
-	surface:copyfrom(gfx.loadpng("data/images/connect_four/connect4board.png"),nil,{x=posx_constant, y=posy_constant, width = 7*width_coinbox, height = 6*height_coinbox}, true)
-	surface:copyfrom(gfx.loadpng("data/images/connect4toprow.png"),nil,{x=posx_constant, y=0.1*surface:get_height() - 0.5*height_coinbox, width = 7*width_coinbox, height = height_coinbox}, true)
+	surface:copyfrom(self.images.board,nil,{x=posx_constant, y=posy_constant, width = 7*width_coinbox, height = 6*height_coinbox}, true)
+	surface:copyfrom(self.images.top_row_cover,nil,{x=posx_constant, y=0.1*surface:get_height() - 0.5*height_coinbox, width = 7*width_coinbox, height = height_coinbox}, true)
 
 
 	if self.connectfour:_is_full_board() then
@@ -231,13 +227,9 @@ end
 
 --- Puts a delay on computers move to slow down the process
 function ConnectFourComponent:delay()
-
-
-
 	local AI_column = self.connectfour:computer_AI(self.current_column)
 
 	self.connectfour:move("O", AI_column)
-
 
 	repeat
 		if self.connectfour:get_player() == nil then
@@ -253,88 +245,35 @@ function ConnectFourComponent:delay()
 		end
 	until self.connectfour:get_current_row(self.current_column) ~= 0
 
-
-	-- self:listen_to(
-	-- event.remote_control,
-	-- "button_press",
-	-- utils.partial(self.press, self)
-	-- )
-
-		self:dirty(true)
+	self:dirty(true)
 end
 
 ---Delays the winner pop-up after the game have finished
 -- @param surface
 function ConnectFourComponent:delay2(type, message)
-	--self.stop_timer:stop()
 	self:_back_to_city(type,message)
---	self:trigger("exit_view")
 end
 
---[[	repeat
-		if self.connectfour:get_current_row(self.current_column) == 0 then
-
-			if self.current_column == 7 then
-				self.current_column = 1
-			else
-				self.current_column = self.current_column + 1
-			end
-		end
-	until self.connectfour:get_current_row(self.current_column) ~= 0
-end ]]--
-
 function ConnectFourComponent:_back_to_city(type, message)
-    --self:destroy()
-    -- TODO Implement/connect pop-up for quit game
-    -- Appendix 2 in UX design document
-    -- Trigger exit event
-    --local type = "confirmation"
-    --local message = {"Hej hopp"}
-    --local message =  {"Are you sure you want to exit?"}
-
     local subsurface = SubSurface(screen,{width=screen:get_width()*0.5, height=(screen:get_height()-50)*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25+50})
-    --local pop_instance = self.button_grid:display_next_view(self.button_1.transfer_path)
     local popup_view = PopUpView(remote_control,subsurface, type, message)
     self:add_view(popup_view)
-    --local popup_view = PopUpView(remote_control,subsurface,type,message)
 
+    self:blur()
 
-  --  local popup_view = SubSurface(screen,{width=screen:get_width()*0.5, height=screen:get_height()*0.5, x=screen:get_width()*0.25, y=screen:get_height()*0.25})
-    --local pop = PopUpView(remote_control, popup_view, type, message)
-    	self:blur()
-    --self.views.button_grid:stop_listening(self.views.button_grid.event_listener,
-                        --      "button_press",
-                          --    callback)
-    -- local exit_view_func = function()
-    --   --Exit View
-    --   self:trigger("exit_view")
-    -- end
-		--
-    -- local destroy_pop = function()
-    --   popup_view:destroy()
-		-- 	self:focus()
-    --   self:dirty(true)
-    --   gfx.update()
-    -- end
-
-		local button_click_func = function(button)
-			if button == "ok" then
+	local button_click_func = function(button)
+		if button == "ok" then
 			self:destroy()
 			self:trigger("exit_view")
-			else
+		else
 			popup_view:destroy()
 			self:focus()
 			self:dirty(true)
-			--gfx.update()
 		end
-		end
+	end
 
-		self:listen_to_once(popup_view, "button_click", button_click_func)
---    self:listen_to_once(popup_view,"exit_view",exit_view_func)
---    self:listen_to_once(popup_view, "destroy", destroy_pop)
+	self:listen_to_once(popup_view, "button_click", button_click_func)
     popup_view:render(subsurface)
-    --gfx.update()
-  --  self:trigger("exit_view")
 end
 
 function ConnectFourComponent:focus()
@@ -348,7 +287,5 @@ end
 function ConnectFourComponent:blur()
 	self:stop_listening(event.remote_control)
 end
-
-
 
 return ConnectFourComponent
