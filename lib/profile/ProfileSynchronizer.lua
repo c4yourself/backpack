@@ -29,7 +29,8 @@ end
 --- Constructor for ProfileSynchronizer
 function ProfileSynchronizer:__init()
 
-	self.url = "http://localhost:5000"
+	--self.url = "http://localhost:5000"
+	self.url = "http://c4.runfalk.se:80"
 	self.connect_url = "/connect/"
 	self.login_url = "/profile/authenticate/"
 	self.get_profile_url = "/profile/info/"
@@ -41,22 +42,16 @@ function ProfileSynchronizer:__init()
 end
 
 
-
-
-
-
 --- Check if connection to database is working
 -- @return boolean true/false depending on if database is up
 function ProfileSynchronizer:is_connected()
 
-	local server_url = "http://localhost:5000/connect/"
-
 	-- Do request to server
   local request, code = http.request
   {
-    url = server_url,
+    url = self.url..self.connect_url,
   }
-
+	print(code)
 	if code == 200 then
 		return true
 	else
@@ -135,9 +130,7 @@ end
 -- @param data the json data sent with the server request
 -- @param url_extension specific server url depending on server call
 -- @return var the JSON-data returned
-local function server_communication(data, url_extension)
-	-- Base URL for server location
-	local url_base = "http://localhost:5000"
+function ProfileSynchronizer:server_communication(data, url_extension)
 
 	-- return variable
 	local json_response = { }
@@ -145,7 +138,7 @@ local function server_communication(data, url_extension)
 	-- Do request to server
   local request, code = http.request
   {
-    url = url_base..url_extension,
+    url = self.url..url_extension,
     method = "POST",
     headers =
     {
@@ -168,23 +161,25 @@ function ProfileSynchronizer:test_hash()
 
 	local json_request = [[{"hash":"]]..hashkey..[["}]]
 
-  --result = server_communication(token_data, self.get_profile_url)
-	result = server_communication(json_request, "/")
+  result = self:server_communication(json_request, "/")
 
 	if result["error"] then
-		--print(result["message"])
+		--logger.trace(result["message"])
 	else
-		--print(result["message"])
+		--logger.trace(result["message"])
 	end
 
 end
 
+
+--- Function for only being able to check if the email has already been used
+-- @param email The email to be checked
 function ProfileSynchronizer:check_email(email)
 
 	local hashkey = hash.hash256(email..self.ttlyawesomekey)
 	local json_request = [[{"email":"]]..email..[[","zdata_hash":"]]..hashkey..[["}]]
 
-	result = server_communication(json_request, self.email_check_url)
+	result = self:server_communication(json_request, self.email_check_url)
 
 	if result["error"] then
 		return result
@@ -204,7 +199,7 @@ function ProfileSynchronizer:login(email, password)
 	local hashkey = hash.hash256(email..self.ttlyawesomekey)
 	local json_request =  [[{"email":"]]..email..[[","password":"]]..password..[[","zdata_hash":"]]..hashkey..[["}]]
 
-	result = server_communication(json_request, self.login_url)
+	result = self:server_communication(json_request, self.login_url)
 
 	-- Check if we have an error
 	if result["error"] then
@@ -229,7 +224,7 @@ function ProfileSynchronizer:get_profile(token)
 	--local token_data =  [[{"profile_token":"]]..token..[[","zdata_hash":"49aac7d4ad14540a91c14255aa1288e2fdc9a54e53f01d15371e81345f5e3646"}]]
 
 	-- Returned result
-  result = server_communication(token_data, self.get_profile_url)
+  result = self:server_communication(token_data, self.get_profile_url)
 
 	-- Check if we have an error
 	if result["error"] then
@@ -254,7 +249,7 @@ function ProfileSynchronizer:delete_profile(email, password, token)
 
 	local json_request =  [[{"email":"]]..email..[[","password":"]]..password..[[","profile_token":"]]..token..[[","zdata_hash":"]]..hashkey..[["}]]
 
-	result = server_communication(json_request, self.delete_profile_url)
+	result = self:server_communication(json_request, self.delete_profile_url)
 
 	-- Check if we have an error
 	if result["error"] then
@@ -303,7 +298,7 @@ function ProfileSynchronizer:save_profile(profile)
 												[[","zdata_hash":"]]..hashkey..[["}]]
 
 	-- Make the server request
-	result = server_communication(profile_data, self.save_profile_url)
+	result = self:server_communication(profile_data, self.save_profile_url)
 
 	-- Check if we have an error
 	if result["error"] then

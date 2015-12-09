@@ -8,13 +8,13 @@
 local class = require("lib.classy")
 local view = require("lib.view")
 local View = require("lib.view.View")
-local button = require("lib.components.Button")
-local ButtonGrid = class("ButtonGrid",View)
 local SubSurface = require("lib.view.SubSurface")
 local utils = require("lib.utils")
 local event = require("lib.event")
 local Font = require("lib.draw.Font")
 local Color = require("lib.draw.Color")
+
+local ButtonGrid = class("ButtonGrid", View)
 
 --- Constructor for ButtonGrid
 function ButtonGrid:__init(remote_control)
@@ -24,40 +24,22 @@ function ButtonGrid:__init(remote_control)
 															-- the selected button when the button grid is created.
 	self.button_indicator = nil-- the indicator will point to the selected button when rendering occurs.
 
-  if remote_control ~= nil then
-    self.event_listener = remote_control
-  else
-    self.event_listener = event.remote_control
-  end
+	if remote_control ~= nil then
+		self.event_listener = remote_control
+	else
+		self.event_listener = event.remote_control
+	end
 
-  self.callback = utils.partial(self.press, self)
-
-  --self:listen_to(self.event_listener,"button_release",self.callback )
-
-  self:focus()
-
-	--
-	-- local dirtycallback = function()
-	--
-
---("I button grid")
-	-- 	self:dirty(false)
-	-- 	self:dirty(true)
-	-- end
-  -- self:listen_to(
-	--
-  -- "dirty",
-  -- dirtycallback
-  -- )
+	self.callback = utils.partial(self.press, self)
+	self:focus()
 end
 
 -- Starts the buttongrids listener
 function ButtonGrid:focus()
 	self:listen_to(
-	self.event_listener,
-	"button_release",
-	self.callback
-	)
+		self.event_listener,
+		"button_release",
+		self.callback)
 end
 
 -- Stops the buttongrids listener
@@ -75,18 +57,19 @@ function ButtonGrid:add_button(position, button_size, button)
 -- chenck if the button across the screen boundaries
 
 	if position.x >= 0 and button_size.width >= 0
-		 and position.x + button_size.width < 1280
-		 and position.y >= 0 and button_size.height >= 0
-		 and position.y + button_size.height < 720	then
--- if ok, insert each button to the button_list
-	 table.insert(self.button_list,
-	 {button = button,
-	 x = position.x,
-	 y = position.y,
-	 width = button_size.width,
-	 height = button_size.height
-	 })
-
+			and position.x + button_size.width < 1280
+			and position.y >= 0 and button_size.height >= 0
+			and position.y + button_size.height < 720
+	then
+		-- if ok, insert each button to the button_list
+		table.insert(self.button_list, {
+			button = button,
+			x = position.x,
+			y = position.y,
+			width = button_size.width,
+			height = button_size.height
+		})
+		self:add_view(button)
 	else
 		error("screen boundary error")
 	end
@@ -127,12 +110,16 @@ function ButtonGrid:remove_button(index, remove_index)
 	if index <= #self.button_list then
 		table.remove(self.button_list, index)
 		if remove_index == index then
+			for i = 1, #self.button_list do
+				self.button_list[i].button:select(false)
+			end
+			self.button_indicator = index - 1
 			self.button_list[index-1].button:select(true)
 		end
 	else
 		error("Trying to remove a button out of range")
 	end
-	self:dirty(false)
+	self:trigger("dirty")
 
 end
 
@@ -172,11 +159,6 @@ function ButtonGrid:press(button)
 		elseif button == "ok" then
 			for i=1, #self.button_list do
 				if self.button_list[i].button:is_selected() == true then
-
-					--self:display_next_view(self.button_list[i].button.transfer_path)
-				--	gfx.update()
-				--	break
-				-- else
 					self:trigger("button_click", self.button_list[i].button)
 					break
 				end
@@ -192,9 +174,6 @@ function ButtonGrid:render(surface)
 -- If no button is selected when this button_grid is created,
 -- then the first button in the list will be selected.
 -- The indicator always points to the selected button
-
-	self:dirty(false)
-
 	if self.start_indicator == true then
 		for k = 1 , #self.button_list do
 			if self.button_list[k].button:is_selected() then
@@ -208,11 +187,10 @@ function ButtonGrid:render(surface)
 		end
 
 		self.start_indicator = false
-  end
-
+	end
 
 -- Go through the button_list to render all buttons
-    for i=1 , #self.button_list do
+	for i=1 , #self.button_list do
 
 		local button_data = self.button_list[i]
 		local area = {
@@ -224,11 +202,12 @@ function ButtonGrid:render(surface)
 
 		local sub_surface = SubSurface(surface,area)
 			button_data.button:render(sub_surface)
-      if button_data.button.text_available then
+		if button_data.button.text_available then
 			self:display_text(surface, i)
-	   end
-   end
-   gfx.update()
+		end
+	end
+
+	self:dirty(false)
 end
 
 --- When "down" is pressed, the indicator shall follow the down-direction
@@ -250,23 +229,22 @@ function ButtonGrid:indicate_downward(button_indicator)
 		end
 	end
 
-if shortest_distance_buttons ~= 720 then
-	for j=1, #button_list do
-		if  button_list[j].y >= button_list[indicator].y + button_list[indicator].height then
-			local distance = self:button_distance(indicator, j)
-			if shortest_distance_buttons == distance then
-				nearest_button_index = j
-				break
+	if shortest_distance_buttons ~= 720 then
+		for j=1, #button_list do
+			if button_list[j].y >= button_list[indicator].y + button_list[indicator].height then
+				local distance = self:button_distance(indicator, j)
+				if shortest_distance_buttons == distance then
+					nearest_button_index = j
+					break
+				end
 			end
 		end
- end
-end
+	end
 
 	if shortest_distance_buttons == 720 and #button_list ~= 1 then
 		for k=1, #button_list do
 				local distance = self:distance_to_corner(corner_position, k)
 				shortest_distance_corner = math.min(shortest_distance_corner, distance)
-				--print("the minium distance at the moment is "..shortest_distance_corner)
 		end
 	end
 
@@ -308,17 +286,17 @@ function ButtonGrid:indicate_upward(button_indicator)
 		end
 	end
 
-if shortest_distance_buttons ~= 720 then
-	for j=1, #button_list do
-		if button_list[j].y + button_list[j].height <= button_list[indicator].y then
-			local distance = self:button_distance(indicator, j)
-			if shortest_distance_buttons == distance then
-				nearest_button_index = j
-				break
+	if shortest_distance_buttons ~= 720 then
+		for j=1, #button_list do
+			if button_list[j].y + button_list[j].height <= button_list[indicator].y then
+				local distance = self:button_distance(indicator, j)
+				if shortest_distance_buttons == distance then
+					nearest_button_index = j
+					break
+				end
 			end
 		end
- end
-end
+	end
 
 
 	if shortest_distance_buttons == 720 and #button_list ~= 1 then
@@ -366,17 +344,17 @@ function ButtonGrid:indicate_rightward(button_indicator)
 		end
 	end
 
-if shortest_distance_buttons ~= 1280 then
-	for j=1, #button_list do
-		if button_list[j].x >= button_list[indicator].x + button_list[indicator].width then
-			local distance = self:button_distance(indicator, j)
-			if shortest_distance_buttons == distance then
-				nearest_button_index = j
-				break
+	if shortest_distance_buttons ~= 1280 then
+		for j=1, #button_list do
+			if button_list[j].x >= button_list[indicator].x + button_list[indicator].width then
+				local distance = self:button_distance(indicator, j)
+				if shortest_distance_buttons == distance then
+					nearest_button_index = j
+					break
+				end
 			end
 		end
- end
-end
+	end
 
 	if shortest_distance_buttons == 1280 and #button_list ~= 1 then
 		for k=1, #button_list do
@@ -422,19 +400,17 @@ function ButtonGrid:indicate_leftward(button_indicator, direction)
 		end
 	end
 
-if shortest_distance_buttons ~= 1280 then
-	for j=1, #button_list do
-		if  button_list[indicator].x >= button_list[j].x + button_list[j].width then
-			local distance = self:button_distance(indicator, j)
-			if shortest_distance_buttons == distance then
-				--print("the distance is "..distance)
-				nearest_button_index = j
-				--print("the nearast button is ".. nearest_button_index)
-				break
+	if shortest_distance_buttons ~= 1280 then
+		for j=1, #button_list do
+			if button_list[indicator].x >= button_list[j].x + button_list[j].width then
+				local distance = self:button_distance(indicator, j)
+				if shortest_distance_buttons == distance then
+					nearest_button_index = j
+					break
+				end
 			end
 		end
- end
-end
+	end
 
 	if shortest_distance_buttons == 1280 and #button_list ~= 1 then
 		for k=1, #button_list do

@@ -4,9 +4,7 @@
 -- @classmod MemoryGrid
 
 local class = require("lib.classy")
-local button = require("lib.components.Button")
-local ButtonGrid = require("lib.components.ButtonGrid")
-local MemoryGrid = class("MemoryGrid", ButtonGrid)
+local ButtonGrid = require("components.ButtonGrid")
 local SubSurface = require("lib.view.SubSurface")
 local utils = require("lib.utils")
 local event = require("lib.event")
@@ -15,9 +13,13 @@ local Color = require("lib.draw.Color")
 local view = require("lib.view")
 local logger = require("lib.logger")
 
+local MemoryGrid = class("MemoryGrid", ButtonGrid)
+
 --- Constructor for MemoryGrid.
 -- @param remote_control Remote control or remote control mock to listen to.
-function MemoryGrid:__init(remote_control)
+function MemoryGrid:__init(remote_control, surface)
+	--self.memory_board =  SubSurface(surface,{width = 750, height = 750, x = 0, y = 0})
+	--self.memory_board:clear(Color(0,255,0,255):to_table())
 	ButtonGrid.__init(self, remote_control)
 	self.temp_turned = {}
 	self.turned = {}
@@ -108,7 +110,6 @@ function MemoryGrid:indicate_downward(button_indicator)
 		for k=1, #button_list do
 				local distance = self:distance_to_corner(corner_position, k)
 				shortest_distance_corner = math.min(shortest_distance_corner, distance)
-				--print("the minium distance at the moment is "..shortest_distance_corner)
 		end
 	end
 
@@ -155,7 +156,6 @@ function MemoryGrid:indicate_upward(button_indicator)
 			if button_list[j].y + button_list[j].height <= button_list[indicator].y then
 				local distance = self:button_distance(indicator, j)
 				if shortest_distance_buttons == distance then
-					-- print("the distance is "..distance)
 					nearest_button_index = j
 					break
 				end
@@ -273,9 +273,7 @@ function MemoryGrid:indicate_leftward(button_indicator, direction)
 			if  button_list[indicator].x >= button_list[j].x + button_list[j].width then
 				local distance = self:button_distance(indicator, j)
 				if shortest_distance_buttons == distance then
-					--print("the distance is "..distance)
 					nearest_button_index = j
-					--print("the nearast button is ".. nearest_button_index)
 					break
 				end
 			end
@@ -372,6 +370,8 @@ function MemoryGrid:render(surface)
 -- then the first button in the list will be selected.
 -- The indicator always points to the selected button
 	self:dirty(false)
+	--self.memory_board =  SubSurface(surface,{width = 450, height = 450, x = 450, y = 50})
+	--self.memory_board:clear(Color(255,255,255,255):to_table())
 	self.render_surface = surface
 	if self.start_indicator == true then
 		for k = 1 , #self.button_list do
@@ -400,7 +400,7 @@ function MemoryGrid:render(surface)
 		}
 
 		local sub_surface = SubSurface(surface,area)
-
+			--sub_surface:clear(Color(255,255,255,255):to_table())
 			button_data.button:render(sub_surface)
 			if button_data.button.text_available then
 				self:display_text(surface, i)
@@ -410,7 +410,7 @@ function MemoryGrid:render(surface)
 end
 
 --- Sets the card status for card with index i to be either facing up or facing
--- down. Triggers dirty if the status has changed. 
+-- down. Triggers dirty if the status has changed.
 --@param status String representing the new status. May be one of the following
 -- 				constants: "FACING_UP", "FACING_DOWN".
 function MemoryGrid:set_card_status(card_index, status)

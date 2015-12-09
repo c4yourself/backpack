@@ -26,6 +26,7 @@ local config = require("config")
 config.logging.mode = "DISABLED"
 
 -- All tests should be included from here
+TestRectangle = require("test_rectangle")
 TestBit = require("test_bit")
 TestColor = require("test_color")
 TestEvent = require("test_event")

@@ -1,19 +1,19 @@
-single_choice	What is the name of the longest river in the world flowing through 11 countries including Egypt?	Nile;Missisippi River;Mekong River;Amazon River	1
+single_choice	What is the name of the longest river in the world?	Nile;Missisippi River;Mekong River;Amazon River	1
 single_choice	What did the ancient Egyptians call their writing system?	Hieroglyphs;Logographic;Binary;Featural	1
-single_choice Which of the seven wonders of the world can be found in Egypt?	Hanging gardens of Babylon;Great Pyramid of Giza;Lighthouse of Alexandria;Statue of Zeus at Olympia	2
+single_choice	Which of the seven wonders of the world can be found in Egypt?	The gardens of Babylon;Great Pyramid of Giza;Lighthouse of Alexandria;Statue of Zeus at Olympia	2
 single_choice	What do you call the body of a human being or animal embalmed (according to the ancient Egyptian method) as a preparation for burial?	Preservation;Sphinx;Mummy;Griffin	3
 single_choice	What colors does the Egyptian flag consist of?	Black, orange, red;Blue, red, white;Green, red, yellow;Red, white, black	1
-single_choice	The Great Sphinx of Giza is a mythical creature with the head of a human and the body of a...	Camel;Bird;Lion;Crocodile	3
-single_choice	Which of the following items were invented in ancient Egypt?	Car, trains and railways;Calendar, toothpaste and door locks;Telephone, fast food and ropes;Computer, pen and paper	2
-single_choice According to Egyptian history valuable minerals were transported to the country from a sea nearby. The sea is called "sea of salt", but what is its real name?	The dead sea;Salta waters;Heaven of salt;Deep blue sea	1
-single_choice	what was the name of the stone that was used to unlock the meaning of many symbols from the Egyptian writing system?	Rosetta;Vinetta;Rebecca;Viveca	1
-single_choice	Which desert in Africa is the largest in the world?	Sinai Desert;Arabian Desert;Kalahari Desert; Sahara Desert	4
-numeric	How long is Nile river which is the longest in the world?(km)	6670
-numeric	How high is Qomolangma which is the highest in the world?(m)	8844
-numeric	How many countries and regions are there in the world?	230
-numeric	How many countries and regions are there in Europe?	45
-numeric	How many countries and regions are there in Asia?	49
-numeric	How many countries and regions are there in North America?	28
-numeric	How many countries and regions are there in South America?	13
-numeric	How many countries and regions are there in Africa?	56
-numeric	How many countries and regions are there in Oceania?	30
+single_choice	The Great Sphinx of Giza has the head of a human and the body of a...	Camel;Bird;Lion;Crocodile	3
+single_choice	Which of the following items were invented in ancient Egypt?	Cars & railways;Calendar & door locks;Telephone & ropes;Pen & paper	2
+single_choice	What is the name of the prophet of Islam?	Mohammad ;Ali;Al-Azhar;Fatimah	1
+single_choice	What was the name of the stone that was used with the Egyptian writing system?	Rosetta;Vinetta;Rebecca;Viveca	1
+single_choice	Which desert in Africa is the largest in the world?	Sinai Desert;Arabian Desert;Kalahari Desert;Sahara Desert	4
+numeric	How long is Nile river which is the longest in the world?(km)	6670	
+numeric	How high is Qomolangma which is the highest in the world?(m)	8844	
+numeric	How many countries and regions are there in the world?	230	
+numeric	How many countries and regions are there in Europe?	45	
+numeric	How many countries and regions are there in Asia?	49	
+numeric	How many countries and regions are there in North America?	28	
+numeric	How many countries and regions are there in South America?	13	
+numeric	How many countries and regions are there in Africa?	56	
+numeric	How many countries and regions are there in Oceania?	30	

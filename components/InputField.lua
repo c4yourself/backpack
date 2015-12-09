@@ -14,14 +14,15 @@ local InputField = class("InputField", View)
 
 function InputField:__init(name, position, highlighted)
 	View.__init(self)
+	--self.surface = surface
 	self.highlighted_color = {r=250, g=169, b=0}
 	self.normal_color = {r=255, g=255, b=255}
 	self.font_header = Font("data/fonts/DroidSans.ttf", 40, Color(255, 255, 255, 255))
-	self.font_text = Font("data/fonts/DroidSans.ttf", 40, Color(0, 0, 0, 255))
+	self.font_text = Font("data/fonts/DroidSans.ttf", 40, Color(1, 1, 1, 255))
 	self.highlighted = highlighted or false
-  self.text = ""
-  self.name = name
-  self.position = position
+	self.text = ""
+	self.name = name
+	self.position = position
 	self.private = false
 end
 
@@ -32,6 +33,8 @@ end
 
 function InputField:set_text(text)
 	self.text = text
+	self:render(self.surface)
+	gfx.update()
 end
 
 function InputField:is_highlighted()
@@ -47,18 +50,16 @@ function InputField:set_private(status)
 end
 
 function InputField:render(surface)
-	self:dirty(false)
-	--= sys.new_freetype({r=255, g=255, b=255}, 30, {x=self.position["x"],y=self.position["y"]-40}, utils.absolute_path("data/fonts/DroidSans.ttf"))
+	self.surface = surface
 	if self.highlighted then
 		surface:fill(self.highlighted_color, {width=500, height=100, x=self.position["x"], y=self.position["y"]})
 	else
 		surface:fill(self.normal_color, {width=500, height=100, x=self.position["x"], y=self.position["y"]})
 	end
-  --input_field_title:draw_over_surface(surface, self.name)
-  self.font_header:draw(surface, {x=self.position["x"],y=self.position["y"]-40}, self.name)
+	--input_field_title:draw_over_surface(surface, self.name)
+	self.font_header:draw(surface, {x=self.position["x"],y=self.position["y"]-40}, self.name)
 
-  --local input_field_text = sys.new_freetype({r=23, g=155, b=23}, 40, {x=self.position["x"]+20,y=self.position["y"]+20}, utils.absolute_path("data/fonts/DroidSans.ttf"))
-  --input_field_text:draw_over_surface(surface, self.text)
+	--input_field_text:draw_over_surface(surface, self.text)
 	if not self.private then
 		self.font_text:draw(surface, {x=self.position["x"]+20,y=self.position["y"]+20}, self.text)
 	else
@@ -67,9 +68,9 @@ function InputField:render(surface)
 			password_dummie = password_dummie .. "-"
 		end
 		self.font_text:draw(surface, {x=self.position["x"]+20,y=self.position["y"]+20}, password_dummie)
-		logger:trace(self.text)
+		logger.trace(self.text)
 	end
-  gfx.update()
+	self:dirty(false)
 end
 
 

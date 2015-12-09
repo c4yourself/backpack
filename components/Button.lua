@@ -41,6 +41,16 @@ function Button:__init(color, color_selected, color_disabled, enabled, selected,
 	end
 end
 
+--- Standard destroy function
+function Button:destroy()
+	View.destroy(self)
+
+	if self._iconed then
+		self.icon_normal:destroy()
+		self.icon_selected:destroy()
+	end
+end
+
 function Button:set_transfer_path(transfer_path)
 	self.transfer_path = transfer_path
 end
@@ -50,6 +60,8 @@ function Button:add_icon(icon_normal, icon_selected, icon_x, icon_y, icon_width,
 
 	self.icon_selected =  gfx.loadpng(icon_selected)
 	self.icon_normal = gfx.loadpng(icon_normal)
+	self.icon_normal:premultiply()
+	self.icon_selected:premultiply()
 	self.icon_x = icon_x
 	self.icon_y = icon_y
 	self.icon_width = icon_width
@@ -107,13 +119,12 @@ function Button:render(surface)
 		surface:fill(self.color_selected:to_table())
 		if self._iconed then
 			self.icon_selected:premultiply()
-			surface:copyfrom(self.icon_selected, nil, {x = self.icon_x, y = self.icon_y, width=self.icon_width, height=self.icon_height})
+			surface:copyfrom(self.icon_selected, nil, {x = self.icon_x, y = self.icon_y, width=self.icon_width, height=self.icon_height}, true)
 		end
 	else
 		surface:fill(self.color:to_table())
 		if self._iconed then
-			self.icon_normal:premultiply()
-			surface:copyfrom(self.icon_normal, nil, {x = self.icon_x, y = self.icon_y, width=self.icon_width, height=self.icon_height})
+			surface:copyfrom(self.icon_normal, nil, {x = self.icon_x, y = self.icon_y, width=self.icon_width, height=self.icon_height}, true)
 		end
 	end
 

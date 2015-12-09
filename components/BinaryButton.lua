@@ -58,7 +58,7 @@ function BinaryButton:render(surface)
 	end
   self.font_header:draw(surface, {x=self.position["x"],y=self.position["y"]-40}, self.name)
 
-	self.font_text:draw(surface, {x=self.position["x"]+20,y=self.position["y"]+20}, self.text)
+	self.font_text:draw(surface, {x=self.position["x"]+40,y=self.position["y"]+10}, self.text)
   gfx.update()
 end
 

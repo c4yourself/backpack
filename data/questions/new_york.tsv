@@ -1,18 +1,9 @@
-single_choice	What does the stars on the American flag represent?	The 50 civil wars;The 50 states;The 50 presidents in the American history;The 50 lakes and mountains	2
+single_choice	What does the stars on the American flag represent?	The 50 civil wars;The 50 states;The 50 presidents;The 50 Hollywood stars	2
 single_choice	Who discovered America?	Vasco da Gama;Michelangelo;Christopher Columbus;Luciano Pavarotti	3
-single_choice	Which building in New York was the tallest building in the world between 1931-1970 and stands 443 meters high?	One World Trade Center;Empire State Building;John Hancock Center;Princess Tower	2
+single_choice	Which building was the tallest building in the world between 1931-1970?	One World Trade Center;Empire State Building;John Hancock Center;Princess Tower	2
 single_choice	What did the American Thomas Edison invent in 1879?	The light bulb;The telephone;The computer;The oven	1
-single_choice	Which sports are the most popular in USA?	Handball, Cricket, Golf and Soccer;Tennis, Baseball, Wrestling and Swimming;Track & Field, Boxing, Tennis and American Football;Ice Hockey, Basketball, Baseball and American Football	4
+single_choice	Which sports are the most popular in USA?	Soccer;Tennis;Track & Field; American Football	4
 single_choice	What is the name of the first man on the moon?	Lucas Hamilton;Neil Armstrong;Tiger Woods;Benjamin Franklin	2
-single_choice	What is the name of the serie with the characters: Leonardo, Donatello, Michelangelo and Raphael, living in the sewers of New York, fighting evil crooks in the city?	Biker Mice from Mars;Talespin;Darkwing Duck;Teenage Mutant Ninja Turtles	4
-single_choice	What is the name of the capital city of USA?	Washington D.C;New York;Denver;San Fransico	1
+single_choice	In which series do the characters Rachael, Monica and Phoebe appear?	Biker Mice from Mars;Talespin;Darkwing Duck;Friends	4
+single_choice	What is the name of the capital city of USA?	Washington D.C;New York;Denver;San Fransisco	1
 single_choice	What is the name of the president of the United States (2015)?	George W. Bush;Bill Clinton;Abraham Lincoln;Barack Obama	4
-numeric	How long is Nile river which is the longest in the world?(km)	6670
-numeric	How high is Qomolangma which is the highest in the world?(m)	8844
-numeric	How many countries and regions are there in the world?	230
-numeric	How many countries and regions are there in Europe?	45
-numeric	How many countries and regions are there in Asia?	49
-numeric	How many countries and regions are there in North America?	28
-numeric	How many countries and regions are there in South America?	13
-numeric	How many countries and regions are there in Africa?	56
-numeric	How many countries and regions are there in Oceania?	30

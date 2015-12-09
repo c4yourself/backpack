@@ -13,12 +13,11 @@ local CityView = require("views.CityView")
 local LoginView = require("views.LoginView")
 local ProfileSelection = class("ProfileSelection", View)
 
---local ProfileSelection = {}
-
+--- Constructor
+-- @param remote_control
 function ProfileSelection:__init(remote_control)
 	View.__init(self)
-	--event.remote_control:off("button_release") -- TODO remove this once the ViewManager is fully implemented
-	self.remote_control = remote_control
+	self.remote_control = remote_control or event.remote_control
 	self.color = Color()
 
 	--local profile_list =  {"MaxiStormarknad","Bingoberra","Eivar","Skumtomte_90", "D4ngerBoi390KickflippingRainbow", "Wedge", "Biggles"} -- put contents of the scroll frame here, for example item names
@@ -28,7 +27,7 @@ function ProfileSelection:__init(remote_control)
 	self.menu_index = 1
 	self.isLeftMenu = true
 
-	--creates some colors
+	--Creates colors
 	self.button_color = {r=250, g=105, b=0} --color.from_html("#fa6900ff")--{r=0, g=128, b=225}
 	self.button_color_select = {r=250, g=169, b=0}--color.from_html("#faa900ff") --{r=255,g=182,b=193}
 	self.text_color = {r=255, g=255, b=255}--color.from_html("#ffffff52")--{r=0, g=0, b=0}
@@ -40,7 +39,7 @@ function ProfileSelection:__init(remote_control)
 
 	-- Common fonts
 	self.font_header = Font("data/fonts/DroidSans.ttf", 40, Color(255, 255, 255, 255))
-	self.font_button = Font("data/fonts/DroidSans.ttf", 30, Color(255, 255, 255, 255))
+	self.font_button = Font("data/fonts/DroidSans.ttf", 32, Color(255, 255, 255, 255))
 
 	-- Listeners and callbacks
 	self:listen_to(
@@ -50,35 +49,45 @@ function ProfileSelection:__init(remote_control)
 	)
 end
 
-function ProfileSelection:get_profile()
+--- Returns marked profile's name
+-- @param
+function ProfileSelection:get_name()
 	return self.profile_list[self.profile_index+1].name
 end
 
+--- Returns marked profile's email
+-- @param
 function ProfileSelection:get_email()
 	return self.profile_list[self.profile_index+1].email_address
 end
 
+--- Returns marked profile's current city
+-- @param
 function ProfileSelection:get_city()
 	return self.profile_list[self.profile_index+1]:get_city().name
 end
 
+--- Sets the Profile List (i.e. LeftMenu) active/inactive.
+-- @param bool
 function ProfileSelection:setLeftMenu(bool)
 	self.isLeftMenu = bool
 end
 
+--- Calls the Log In View
+-- @param
 function ProfileSelection:callFetchProfile()
-
 	login_view = LoginView(event.remote_control)
 	view.view_manager:set_view(login_view)
-
 end
 
+--- Calls for continuing selected profile's game
+---Otherwise, calls for a log in
+-- @param
 function ProfileSelection:callContinueGame()
 	cur_prof = self.profile_list[self.profile_index+1]
 	result = self.profile_manager:check_login(cur_prof)
 
 	if result["error"] then
-		--print(result["message"])
 		login_view = LoginView(event.remote_control,self)
 		view.view_manager:set_view(login_view)
 	else
@@ -88,11 +97,15 @@ function ProfileSelection:callContinueGame()
 	end
 end
 
+--- Calls for the Create Profile View
+-- @param
 function ProfileSelection:callCreateProfile()
 	create_profile = CreateProfileView(self.remote_control)
 	view.view_manager:set_view(create_profile)
 end
 
+--- Runs when the OK from remote control has been pressed.
+-- @param
 function ProfileSelection:okBtnPress()
 	if self.isLeftMenu then
 		self.isLeftMenu = false
@@ -110,6 +123,8 @@ function ProfileSelection:okBtnPress()
 	end
 end
 
+--- Runs when the DOWN from remote control has been pressed.
+-- @param
 function ProfileSelection:downBtnPress()
 	if self.isLeftMenu then
 		if self.profile_index + 1 > #self.profile_list-1 then
@@ -126,6 +141,8 @@ function ProfileSelection:downBtnPress()
 	end
 end
 
+--- Runs when the UP from remote control has been pressed.
+-- @param
 function ProfileSelection:upBtnPress()
 	if self.isLeftMenu then
 		if self.profile_index - 1 < 0 then
@@ -142,6 +159,8 @@ function ProfileSelection:upBtnPress()
 	end
 end
 
+--- Runs when the any button on the remote control has been pressed.
+-- @param key
 function ProfileSelection:press(key)
 	if key == "right" then
 		self:setLeftMenu(false)
@@ -153,28 +172,14 @@ function ProfileSelection:press(key)
 		self:downBtnPress()
 	elseif key == "up" then
 		self:upBtnPress()
-	elseif key == "back" then
-		--TODO find a way to create the correct city view
-		self:trigger("exit")
+	elseif key == "back" or key == "3" then
+		sys.stop()
 	end
 	self:dirty()
 end
 
-function ProfileSelection.load_view(button)
-	if button == "1" then
-	--	local numerical_quiz_view = NumericalQuizView()
-	--	view.view_manager:set_view(numerical_quiz_view)
-		gfx.update()
-	elseif button == "2" then
-	--	multiplechoice_quiz.render(screen)
-		gfx.update()
-	elseif button == "3" then
-		sys.stop()
-  end
-end
-
-local buttons = {}
-
+--- Sets button color corresponding to active menu index.
+-- @param buttonIndex
 function ProfileSelection:pickColor(buttonIndex)
 	if buttonIndex == -1 then
 		return self.button_color_select
@@ -185,9 +190,9 @@ function ProfileSelection:pickColor(buttonIndex)
 	end
 end
 
--- This functions renders the menu view
+--- Draws the view on the given surface
+-- @param surface
 function ProfileSelection:render(surface)
-	-- Resets the surface and draws the background
 	surface:clear(self.background_color)
 
 	local counter = 1
@@ -205,11 +210,11 @@ function ProfileSelection:render(surface)
 			surface:fill(self:pickColor(self.leftMenuCurrentValue), {width=500, height=100, x=100, y=(250)})
 		end
 
-		if (200-self.profile_index*diff_y+diff_y*counter)>0 then
-			self.font_button:draw(surface, {x=120,y=(200-self.profile_index*diff_y+diff_y*counter)}, self.profile_list[key].name)
+		local y_pos = (200-self.profile_index*diff_y+diff_y*counter)
+		if y_pos>0 and y_pos<screen:get_height() then
+			self.font_button:draw(surface, {x=120,y=y_pos}, self.profile_list[key].name)
 		end
 
-		buttons[counter]= text_button
 		counter=counter+1
  	end
 
@@ -219,7 +224,7 @@ function ProfileSelection:render(surface)
 	self.font_header:draw(surface, {x=50,y=20}, "Select Profile:")
 
 	-- Currently selected profile information
-	self.font_header:draw(surface, {x=700,y=40}, tostring(self:get_profile()))
+	self.font_header:draw(surface, {x=700,y=40}, tostring(self:get_name()))
 	self.font_header:draw(surface, {x=700,y=80}, tostring(self:get_email()))
 	self.font_header:draw(surface, {x=700,y=120}, tostring(self:get_city()))
 
@@ -229,7 +234,7 @@ function ProfileSelection:render(surface)
 
 	--Draws button: Fetch Profile
 	surface:fill(self:pickColor(1), {width=500, height=100, x=700, y=button_start_height+button_height_diff*0})
-	self.font_button:draw(surface, {x=700+50,y=35+button_start_height+button_height_diff*0}, "Fetch Profile")
+	self.font_button:draw(surface, {x=700+50,y=35+button_start_height+button_height_diff*0}, "Log In")
 
 	--Draws button: Continue Game
 	surface:fill(self:pickColor(2), {width=500, height=100, x=700, y=button_start_height+button_height_diff*1})
@@ -243,8 +248,6 @@ function ProfileSelection:render(surface)
 	surface:fill(self:pickColor(4), {width=500, height=100, x=700, y=button_start_height+button_height_diff*3})
 	self.font_button:draw(surface, {x=700+50,y=35+button_start_height+button_height_diff*3}, "Quit")
 
-	-- Instance remote control and mapps it to the buttons
-	--event.remote_control:on("button_release", ProfileSelection.load_view)
 	self:dirty(false)
 end
 

@@ -1,0 +1,17 @@
+single_choice	In what country is Tokyo the capital city?	South Korea;Israel;India;Japan	4
+single_choice	Which of the following sports is the national sport in Japan?	Soccer;Sumo Wrestling;Swimming;Golf	2
+single_choice	Which of these dishes is today considered a Japanese dish?	Fish and chips;Spaghetti Bolognese;Sushi;Pizza	3
+single_choice	Sony and Nintendo both contributed to a successful Japanese industry, which one?	Food;Video gaming;Sport;Car	2
+single_choice	Around 35 million people lives in Tokyo which makes it	The smallest city;The dirtiest city;The most expensive city;The most populated city	4
+single_choice	Manga and Anime are world famous Japanese comics and films/tv-shows. Which of these tv-shows refers to the Japanese animation style?	Pokemon & Digimon;Looney tunes;Superman;Bob the builder	1
+single_choice	What is the name of the sword carried by Japanese warriors?	Sushi;Samurai;Kimono;Sumo	2
+single_choice	Japan has the fastest way of travelling by what vehicle?	Car;Airplane;Train;Bus	3
+numeric	How long is Nile river which is the longest in the world?(km)	6670
+numeric	How high is Qomolangma which is the highest in the world?(m)	8844
+numeric	How many countries and regions are there in the world?	230
+numeric	How many countries and regions are there in Europe?	45
+numeric	How many countries and regions are there in Asia?	49
+numeric	How many countries and regions are there in North America?	28
+numeric	How many countries and regions are there in South America?	13
+numeric	How many countries and regions are there in Africa?	56
+numeric	How many countries and regions are there in Oceania?	30
