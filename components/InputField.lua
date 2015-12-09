@@ -20,9 +20,9 @@ function InputField:__init(name, position, highlighted)
 	self.font_header = Font("data/fonts/DroidSans.ttf", 40, Color(255, 255, 255, 255))
 	self.font_text = Font("data/fonts/DroidSans.ttf", 40, Color(1, 1, 1, 255))
 	self.highlighted = highlighted or false
-  self.text = ""
-  self.name = name
-  self.position = position
+	self.text = ""
+	self.name = name
+	self.position = position
 	self.private = false
 end
 
@@ -50,17 +50,16 @@ function InputField:set_private(status)
 end
 
 function InputField:render(surface)
-	self:dirty(false)
 	self.surface = surface
 	if self.highlighted then
 		surface:fill(self.highlighted_color, {width=500, height=100, x=self.position["x"], y=self.position["y"]})
 	else
 		surface:fill(self.normal_color, {width=500, height=100, x=self.position["x"], y=self.position["y"]})
 	end
-  --input_field_title:draw_over_surface(surface, self.name)
-  self.font_header:draw(surface, {x=self.position["x"],y=self.position["y"]-40}, self.name)
+	--input_field_title:draw_over_surface(surface, self.name)
+	self.font_header:draw(surface, {x=self.position["x"],y=self.position["y"]-40}, self.name)
 
-  --input_field_text:draw_over_surface(surface, self.text)
+	--input_field_text:draw_over_surface(surface, self.text)
 	if not self.private then
 		self.font_text:draw(surface, {x=self.position["x"]+20,y=self.position["y"]+20}, self.text)
 	else
@@ -69,9 +68,9 @@ function InputField:render(surface)
 			password_dummie = password_dummie .. "-"
 		end
 		self.font_text:draw(surface, {x=self.position["x"]+20,y=self.position["y"]+20}, password_dummie)
-		logger:trace(self.text)
+		logger.trace(self.text)
 	end
-  --gfx.update()
+	self:dirty(false)
 end
 
 

@@ -17,7 +17,7 @@ local ProfileSelection = class("ProfileSelection", View)
 -- @param remote_control
 function ProfileSelection:__init(remote_control)
 	View.__init(self)
-	self.remote_control = remote_control
+	self.remote_control = remote_control or event.remote_control
 	self.color = Color()
 
 	--local profile_list =  {"MaxiStormarknad","Bingoberra","Eivar","Skumtomte_90", "D4ngerBoi390KickflippingRainbow", "Wedge", "Biggles"} -- put contents of the scroll frame here, for example item names

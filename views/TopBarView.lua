@@ -60,7 +60,7 @@ function TopBarView:render(surface)
 
 	-- Status bar
 	local experience_offest_x = 285
-	local experience_offest_y = height / 2 - 25 / 2
+	local experience_offest_y = math.floor(height / 2 - 25 / 2)
 	local experience_width = math.ceil(146 * experience / limit)
 
 	surface:clear(

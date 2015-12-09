@@ -41,66 +41,10 @@ end
 function onStart()
 	logger.trace("Started")
 
-	local profile = Profile(
-		"Zen Terio","zen@zenterio.com", "1975-12-11", "M", city.cities.sydney)
-	profile.balance = 6000
-	profile:set_inventory("{4,9,15,27}")
+	profile_selection = ProfileSelection()
+	local splash_screen = SplashView(
+		"data/images/logo.png", profile_selection, view.view_manager)
 
-	view.view_manager:set_view(CityView(profile))
-
-
-	--local city_view = CityView(event.remote_control, profile)
-	--profile_selection = ProfileSelection()
-	--local profile = Profile("Tstar","Tstar@tstar.com",1975,"M", City.cities.cairo)
-	--profile:set_inventory("{3,5,9}")
-	--for i = 1, #profile.inventory do print(profile.inventory[i]) end
-
-	--local city_view = CityView(event.remote_control, profile)
-
-
-	--local splash_screen = SplashView(
-	--	"data/images/logo.png", city_view, view.view_manager)
-
-	--view.view_manager:set_view(profile_selection)
-	--view.view_manager:set_view(splash_screen)
-	--splash_screen:start(50)
-
-	--start connectfour
---[[local cfc = ConnectFourComponent(event.remote_control)
-	view.view_manager:set_view(cfc)
-	gfx.update()
-
-	local callback_dirty =function()
-		cfc:render(screen)
-		gfx.update()
-	end
-	cfc:on("dirty",callback_dirty) ]]--
-
-	--menu.render(screen)
-  	--local city_view = CityView(event.remote_control)
-
-	-- the "up" and "down" buttons are enabled for
-	-- choosing alternatives in city_view_2
-
-
-	--splash_screen:start(50)
-
-	-- local city_view_2 = CityView2(event.remote_control)
-	-- view.view_manager:set_view(city_view_2)
-	-- gfx.update()
-
-
-
-		-- local city_view_2 = CityView2(event.remote_control)
-		-- view.view_manager:set_view(city_view_2)
-		-- gfx.update()
-
-	--local city_view = CityView(event.remote_control)
-	--view.view_manager:set_view(city_view)
-	--gfx.update()
-
-	--local city_view_2 = CityView2(event.remote_control)
-	--view.view_manager:set_view(city_view_2)
-	--gfx.update()
-
+	view.view_manager:set_view(splash_screen)
+	splash_screen:start(40)
 end

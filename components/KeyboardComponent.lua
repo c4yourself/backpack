@@ -154,7 +154,7 @@ function KeyboardComponent:button_press(button)
 		self:render(self.surface)
 		gfx.update()
 	elseif button == "ok" then
-		logger:trace("you have choosen:" .. self:get_marked_letter())
+		logger.trace("you have choosen:" .. self:get_marked_letter())
 		if self:get_marked_letter()=="OK" then
 			--Return to prev. No keyboard active
 			self:trigger("exit")
@@ -174,18 +174,15 @@ function KeyboardComponent:button_press(button)
 		end
 
 		self:trigger("update")
-		-- logger:trace("your string is:" .. self.input_string)
-		-- self:trigger("character_input")
-
 	end
 end
 
 function KeyboardComponent:set_active(active)
 	if(active == false) then
-		logger:trace("keyboard is set: INACTIVE")
+		logger.trace("keyboard is set: INACTIVE")
 		--self.buttonGrid:blur()
 	else
-		logger:trace("keyboard is set: ACTIVE")
+		logger.trace("keyboard is set: ACTIVE")
 		--self.buttonGrid:focus()
 	end
   KeyboardComponent.active = active

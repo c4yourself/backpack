@@ -28,8 +28,7 @@ function LoginView:__init(remote_control, profile_selection)
 	self.background_path = ""
 	self.email_input_field = InputField("Email:", {x = 700, y = 80}, true)
 	self.password_input_field = InputField("Password:", {x = 700, y = 230}, false)
-  self.password_input_field:set_private(true)
-
+	self.password_input_field:set_private(true)
 
 	--Button data
 	local button_color = Color(255, 99, 0, 255)
@@ -60,7 +59,6 @@ function LoginView:__init(remote_control, profile_selection)
 	local exit_keyboard_callback = function()
 		self.hasActiveKeyboard = false
 		self.keyboard:set_active(false)
-		--surface:destroy(self.keyboard)
 		self:render(screen)
 		gfx.update()
 	end
@@ -82,26 +80,21 @@ end
 
 function LoginView:render(surface)
 	-- -- Resets the surface and draws the background
-
 	surface:clear(self.background_color)
 
 	if self.hasActiveKeyboard==true then
 		self.keyboard:render(screen)
 	end
 
-
 	self.email_input_field:render(surface)
-  self.password_input_field:render(surface)
+	self.password_input_field:render(surface)
 	self.button_cancel:render(self.button_cancel_surface)
 	self.button_login:render(self.button_login_surface)
 	self.button_cancel_text:draw(surface, {x=700+190, y=530+20}, "Cancel")
 	self.button_login_text:draw(surface, {x=700+200, y=380+20}, "Log in")
-
-
 end
 
 function LoginView:load_view(button)
-
 	-- TODO set mappings to RC
 	if self.hasActiveKeyboard == true then
 		if self.render_ticket == true then
@@ -160,28 +153,17 @@ function LoginView:load_view(button)
 				self:render(screen)
 				gfx.update()
 			elseif self.content_pointer == 3 then
-				--logger:trace("detta står i email: " .. self.email_input_field:get_text())
-				--logger:trace("detta står i password: " .. self.password_input_field:get_text())
-				--loginProfile = ProfileManager:login(self.email_input_field:get_text(),self.password_input_field:get_text())
 				worked, result = self.profile_manager:login(self.email_input_field:get_text(),self.password_input_field:get_text())
 
 				ProfileSelection = require("views.ProfileSelection")
 				local profile_selection = ProfileSelection(event.remote_control)
 
 				view.view_manager:set_view(profile_selection)
-				--profile_selection:render(screen)
-				--gfx.update()
-
-
 			elseif self.content_pointer == 4 then
-				--logger:trace("INNNNNE" .. self.email_input_field:get_text())
-
 				ProfileSelection = require("views.ProfileSelection")
 				local profile_selection = ProfileSelection(event.remote_control)
 
 				view.view_manager:set_view(profile_selection)
-				--profile_selection:render(screen)
-				--gfx.update()
 			end
 		end
 
