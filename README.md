@@ -36,7 +36,7 @@ This program depends on a number of external libraries:
 
 Hardware
 ========
-The set-top box provided by Zenterio
+The set-top box provided by [Zenterio](http://www.zenterio.com/)
 
 - **CPU:** Broadcom BMIPS5000 V1.1 @ 1305 MHz (Dual core)
 - **RAM:** About 670 MiB (reported as 705540 kB)
@@ -45,33 +45,25 @@ The set-top box provided by Zenterio
 Lua Environment
 ---------------
 - **Lua version:** 5.2
-- **Graphics memory limit:** 10 MiB (one full 720p surface is about 3.5 MiB)
+- **Graphics memory limit:** 50 MiB (one full 720p surface is about 3.5 MiB)
 - **Video output:** 1280x720p
 
 License
 =======
+Copyright (C) 2015 See authors section
 
-The MIT License (MIT)
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-Copyright (c) 2015 See Authors
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 Authors
