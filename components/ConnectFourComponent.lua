@@ -290,6 +290,7 @@ function ConnectFourComponent:_back_to_city(type, message)
 	local button_click_func = function(button)
 		if button == "ok" then
 			self:destroy()
+			popup_view:destroy()
 			self:trigger("exit_view")
 		else
 			self.sub_view = nil
